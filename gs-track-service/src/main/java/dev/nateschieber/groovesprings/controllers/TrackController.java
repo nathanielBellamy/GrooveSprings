@@ -1,5 +1,6 @@
 package dev.nateschieber.groovesprings.controllers;
 
+import dev.nateschieber.groovesprings.entities.Album;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
@@ -7,6 +8,7 @@ import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackGetAllResponse;
+import dev.nateschieber.groovesprings.services.AlbumService;
 import dev.nateschieber.groovesprings.services.TrackService;
 import java.net.URI;
 import java.util.List;
@@ -28,10 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/tracks")
 public class TrackController {
 
+  private final AlbumService albumService;
   private final TrackService trackService;
 
   @Autowired
-  public TrackController(TrackService trackService) {
+  public TrackController(
+      AlbumService albumService,
+      TrackService trackService) {
+    this.albumService = albumService;
     this.trackService = trackService;
   }
 
@@ -57,8 +63,14 @@ public class TrackController {
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity createTrack(@RequestBody TrackCreateDto dto) {
     System.out.println("HERE HERE HERE ");
-    Track track = new Track(dto.title(), dto.duration());
-    Track trackSaved = trackService.save(track, dto.artistId(), dto.albumId());
+    Optional<Album> album = this.albumService.findById(dto.albumId());
+    Track track;
+    if (album.isPresent()) {
+      track = new Track(album.get(), dto.title(), dto.duration());
+    } else {
+      track = new Track(dto.title(), dto.artistId());
+    }
+    Track trackSaved = trackService.save(track, dto.artistId());
 
     URI uri = HttpHelper.uri(trackSaved.getId());
     return ResponseEntity.created(uri).body(new TrackEntityResponse(trackSaved));

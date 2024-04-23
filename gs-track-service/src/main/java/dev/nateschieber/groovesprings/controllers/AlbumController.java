@@ -10,10 +10,10 @@ import dev.nateschieber.groovesprings.rest.responses.album.AlbumEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumGetAllResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumTracksResponse;
 import dev.nateschieber.groovesprings.services.AlbumService;
-import dev.nateschieber.groovesprings.services.AlbumToTrackService;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,14 +32,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AlbumController {
 
   private final AlbumService albumService;
-  private final AlbumToTrackService albumToTrackService;
 
   @Autowired
   public AlbumController(
-      AlbumService albumService,
-      AlbumToTrackService albumToTrackService) {
+      AlbumService albumService) {
     this.albumService = albumService;
-    this.albumToTrackService = albumToTrackService;
   }
 
   @GetMapping
@@ -67,7 +64,7 @@ public class AlbumController {
     if (!album.isPresent()) {
       return ResponseEntity.notFound().build();
     } else {
-      List<Track> tracks = albumToTrackService.findTracksByAlbumId(id);
+      List<Track> tracks = album.get().getTracks().stream().collect(Collectors.toList());
       ResponseEntity<AlbumTracksResponse> resEnt = new ResponseEntity<>(
           new AlbumTracksResponse(album.get(), tracks),
           HttpStatus.OK);
