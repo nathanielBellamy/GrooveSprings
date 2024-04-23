@@ -1,5 +1,7 @@
 package dev.nateschieber.groovesprings.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,6 +14,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,17 +35,25 @@ public class Track {
       joinColumns = @JoinColumn(name = "album_id"),
       inverseJoinColumns = @JoinColumn(name = "track_id")
   )
+  @JsonIgnore
+  // TODO:
+  //  - w/o JsonIgnore we get into an inf loop album -> tracks -> track -> album -> ...
+  //  - look into Json Views
   private Album album;
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "artist_to_track",
+      joinColumns = @JoinColumn(name = "artist_id"),
+      inverseJoinColumns = @JoinColumn(name = "track_id")
+  )
+  private Set<Artist> artists;
 
   public Track() {}
 
-  public Track(String title, long duration) {
-    this.title = title;
-    this.duration = duration;
-  }
-
-  public Track(Album album, String title, long duration) {
-    this.album = album;
+  public Track(List<Artist> artists, Optional<Album> album, String title, long duration) {
+    this.album = album.orElse(null);
+    this.artists = new HashSet<>(artists); // TODO: record order
     this.title = title;
     this.duration = duration;
   }
@@ -64,5 +76,13 @@ public class Track {
 
   public long getDuration() {
     return duration;
+  }
+
+  public Album getAlbum() {
+    return album;
+  }
+
+  public Set<Artist> getArtists() {
+    return artists;
   }
 }

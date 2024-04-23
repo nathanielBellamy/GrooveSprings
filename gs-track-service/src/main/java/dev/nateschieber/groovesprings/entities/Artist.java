@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.util.Set;
 
 @Entity
 @Table(name = "artists")
@@ -16,6 +18,9 @@ public class Artist {
   private long id;
 
   private String name;
+
+  @ManyToMany(mappedBy = "artists")
+  private Set<Track> tracks;
 
   public Artist() {};
 

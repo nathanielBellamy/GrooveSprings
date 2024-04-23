@@ -1,6 +1,7 @@
 package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Album;
+import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
@@ -62,16 +63,7 @@ public class TrackController {
 
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity createTrack(@RequestBody TrackCreateDto dto) {
-    System.out.println("HERE HERE HERE ");
-    Optional<Album> album = this.albumService.findById(dto.albumId());
-    Track track;
-    if (album.isPresent()) {
-      track = new Track(album.get(), dto.title(), dto.duration());
-    } else {
-      track = new Track(dto.title(), dto.artistId());
-    }
-    Track trackSaved = trackService.save(track, dto.artistId());
-
+    Track trackSaved = trackService.createFromDto(dto);
     URI uri = HttpHelper.uri(trackSaved.getId());
     return ResponseEntity.created(uri).body(new TrackEntityResponse(trackSaved));
   }

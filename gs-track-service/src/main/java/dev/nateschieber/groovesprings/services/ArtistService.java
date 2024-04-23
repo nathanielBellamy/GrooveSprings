@@ -11,14 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ArtistService {
   private ArtistRepository artistRepository;
-  private TrackService trackService;
 
   @Autowired
   public ArtistService(
-      ArtistRepository artistRepository,
-      TrackService trackService) {
+      ArtistRepository artistRepository) {
     this.artistRepository = artistRepository;
-    this.trackService = trackService;
   }
 
   public List<Artist> findAll() {
@@ -42,5 +39,9 @@ public class ArtistService {
     Artist savedArtist = this.artistRepository.save(artist);
 
     return savedArtist;
+  }
+
+  public List<Artist> findAllById(List<Long> ids) {
+    return artistRepository.findAllById(ids);
   }
 }
