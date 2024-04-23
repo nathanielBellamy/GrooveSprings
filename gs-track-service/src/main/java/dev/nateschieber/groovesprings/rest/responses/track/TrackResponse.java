@@ -4,6 +4,8 @@ import dev.nateschieber.groovesprings.rest.dtos.track.TrackDto;
 import dev.nateschieber.groovesprings.rest.responses.GsHttpResponse;
 
 public abstract class TrackResponse extends GsHttpResponse {
+  private TrackDto data;
+
   public TrackDto getData() {
     return data;
   }
@@ -11,6 +13,4 @@ public abstract class TrackResponse extends GsHttpResponse {
   public void setData(TrackDto data) {
     this.data = data;
   }
-
-  private TrackDto data;
 }

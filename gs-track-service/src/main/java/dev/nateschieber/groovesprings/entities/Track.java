@@ -1,5 +1,6 @@
 package dev.nateschieber.groovesprings.entities;
 
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,16 @@ public class Track {
     this.albumId = albumId;
     this.title = title;
     this.duration = duration;
+  }
+
+  // useful for updating a track based on dto
+  public Track(long id, TrackEntityDto dto) {
+    this.id = id;
+    Track track = dto.track();
+    this.artistId = track.getArtistId();
+    this.albumId = track.getAlbumId();
+    this.title = track.getTitle();
+    this.duration = track.getDuration();
   }
 
   public long getId() {
