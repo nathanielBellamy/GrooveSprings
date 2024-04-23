@@ -1,6 +1,5 @@
 package dev.nateschieber.groovesprings.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import jakarta.persistence.Entity;
@@ -12,7 +11,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.List;
@@ -35,10 +33,7 @@ public class Track {
       joinColumns = @JoinColumn(name = "album_id"),
       inverseJoinColumns = @JoinColumn(name = "track_id")
   )
-  @JsonIgnore
-  // TODO:
-  //  - w/o JsonIgnore we get into an inf loop album -> tracks -> track -> album -> ...
-  //  - look into Json Views
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private Album album;
 
   @ManyToMany(fetch = FetchType.LAZY)
@@ -47,6 +42,7 @@ public class Track {
       joinColumns = @JoinColumn(name = "artist_id"),
       inverseJoinColumns = @JoinColumn(name = "track_id")
   )
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   private Set<Artist> artists;
 
   public Track() {}
