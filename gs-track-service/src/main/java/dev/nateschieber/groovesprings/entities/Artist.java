@@ -1,12 +1,13 @@
 package dev.nateschieber.groovesprings.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,8 +30,8 @@ public class Artist {
   private String name;
 
   @ManyToMany(mappedBy = "artists")
-  @JsonIgnore
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+  @JsonBackReference
   private Set<Track> tracks;
 
   @ManyToMany(cascade = CascadeType.MERGE )
@@ -40,6 +41,7 @@ public class Artist {
       inverseJoinColumns = @JoinColumn(name = "artist_id")
   )
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+  @JsonManagedReference
   private Set<Album> albums;
 
   public Artist() {};

@@ -1,7 +1,9 @@
 package dev.nateschieber.groovesprings.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.enums.MediaType;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
@@ -45,6 +47,7 @@ public class Track {
       inverseJoinColumns = @JoinColumn(name = "track_id")
   )
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+  @JsonManagedReference
   private Album album;
 
   @ManyToMany(fetch = FetchType.LAZY)
@@ -54,6 +57,7 @@ public class Track {
       inverseJoinColumns = @JoinColumn(name = "track_id")
   )
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+  @JsonManagedReference
   private Set<Artist> artists;
 
   public Track() {}

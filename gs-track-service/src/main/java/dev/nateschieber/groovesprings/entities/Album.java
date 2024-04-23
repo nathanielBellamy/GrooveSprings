@@ -1,5 +1,6 @@
 package dev.nateschieber.groovesprings.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -27,10 +28,12 @@ public class Album {
 
   @OneToMany(mappedBy = "album")
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+  @JsonBackReference
   Set<Track> tracks;
 
   @ManyToMany(mappedBy = "albums")
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+  @JsonBackReference
   Set<Artist> artists;
 
   public Album() {};

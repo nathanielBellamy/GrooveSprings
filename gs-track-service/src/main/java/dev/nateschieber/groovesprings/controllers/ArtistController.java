@@ -10,6 +10,7 @@ import dev.nateschieber.groovesprings.rest.responses.artist.ArtistBulkCreateResp
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistGetAllResponse;
+import dev.nateschieber.groovesprings.rest.responses.artist.ArtistTracksResponse;
 import dev.nateschieber.groovesprings.services.ArtistService;
 import java.net.URI;
 import java.util.List;
@@ -79,6 +80,7 @@ public class ArtistController {
     return ResponseEntity.created(uri).body(new ArtistEntityResponse(artistSaved));
   }
 
+  // TODO: why am I getting a 415 on this one all of a sudden?
   @PostMapping(value = "/bulk/create", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity createArtists(@RequestBody ArtistBulkCreateDto dto) {
     List<Artist> createdArtists = artistService.createAllFromDto(dto);
@@ -100,5 +102,18 @@ public class ArtistController {
   public ResponseEntity deleteArtist(@PathVariable Long id) {
     artistService.deleteById(id);
     return ResponseEntity.ok().body(new ArtistDeleteResponse(id));
+  }
+
+  @GetMapping(value = "/{id}/tracks")
+  public ResponseEntity getArtistTracks(@PathVariable Long id) {
+    Optional<Artist> artist = artistService.findById(id);
+    if (!artist.isPresent()) {
+      return ResponseEntity.notFound().build();
+    } else {
+      ResponseEntity<ArtistTracksResponse> resEnt = new ResponseEntity<>(
+          new ArtistTracksResponse(artist.get()),
+          HttpStatus.OK);
+      return resEnt;
+    }
   }
 }
