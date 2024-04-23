@@ -9,6 +9,9 @@ import dev.nateschieber.groovesprings.repositories.ArtistRepository;
 import dev.nateschieber.groovesprings.repositories.TrackRepository;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +61,12 @@ public class TrackService {
     Track savedTrack = this.trackRepository.save(track);
 
     return savedTrack;
+  }
+
+  public List<Track> findByReleaseYear(int year) {
+    return trackRepository.findByReleaseDateBetween(
+        LocalDate.of(year, 1, 1),
+        LocalDate.of(year, 12, 31)
+    );
   }
 }

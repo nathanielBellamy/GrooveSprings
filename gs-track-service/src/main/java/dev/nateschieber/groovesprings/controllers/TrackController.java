@@ -9,6 +9,7 @@ import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackGetAllResponse;
+import dev.nateschieber.groovesprings.rest.responses.track.TracksByYearResponse;
 import dev.nateschieber.groovesprings.services.AlbumService;
 import dev.nateschieber.groovesprings.services.TrackService;
 import java.net.URI;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -83,5 +85,11 @@ public class TrackController {
   public ResponseEntity deleteTrack(@PathVariable Long id) {
     trackService.deleteById(id);
     return ResponseEntity.ok().body(new TrackDeleteResponse(id));
+  }
+
+  @GetMapping("/year")
+  public ResponseEntity getByReleaseYear(@RequestParam Integer year) {
+    List<Track> tracks = trackService.findByReleaseYear(year);
+    return ResponseEntity.ok().body(new TracksByYearResponse(year, tracks));
   }
 }
