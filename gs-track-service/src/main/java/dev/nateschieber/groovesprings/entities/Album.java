@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.Set;
@@ -25,6 +26,10 @@ public class Album {
   @OneToMany(mappedBy = "album")
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   Set<Track> tracks;
+
+  @ManyToMany(mappedBy = "albums")
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+  Set<Artist> artists;
 
   public Set<Track> getTracks() {
     return tracks;
@@ -55,5 +60,9 @@ public class Album {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Set<Artist> getArtists() {
+    return artists;
   }
 }
