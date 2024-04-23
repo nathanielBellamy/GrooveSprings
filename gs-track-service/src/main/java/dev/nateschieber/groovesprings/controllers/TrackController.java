@@ -1,7 +1,7 @@
 package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Track;
-import dev.nateschieber.groovesprings.helpers.TrackHelper;
+import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackDeleteResponse;
@@ -60,7 +60,7 @@ public class TrackController {
     Track track = new Track(dto.artistId(), dto.albumId(), dto.title(), dto.duration());
     Track trackSaved = trackService.save(track);
 
-    URI uri = TrackHelper.uri(trackSaved.getId());
+    URI uri = HttpHelper.uri(trackSaved.getId());
     return ResponseEntity.created(uri).body(new TrackEntityResponse(trackSaved));
   }
 
