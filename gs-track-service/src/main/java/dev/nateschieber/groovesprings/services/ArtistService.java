@@ -41,6 +41,10 @@ public class ArtistService {
     return savedArtist;
   }
 
+  public void saveAll(List<Artist> artists) {
+    artistRepository.saveAll(artists);
+  }
+
   public List<Artist> findAllById(List<Long> ids) {
     return artistRepository.findAllById(ids);
   }

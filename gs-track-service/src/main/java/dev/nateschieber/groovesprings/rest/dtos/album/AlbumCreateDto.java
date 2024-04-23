@@ -1,3 +1,5 @@
 package dev.nateschieber.groovesprings.rest.dtos.album;
 
-public record AlbumCreateDto(String name) implements AlbumDto { }
+import java.util.List;
+
+public record AlbumCreateDto(String name, List<Long> artistIds) implements AlbumDto { }

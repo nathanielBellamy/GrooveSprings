@@ -1,7 +1,10 @@
 package dev.nateschieber.groovesprings.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +22,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tracks")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "title")
 public class Track {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)

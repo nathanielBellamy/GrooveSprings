@@ -4,6 +4,7 @@ import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
+import dev.nateschieber.groovesprings.rest.responses.artist.ArtistAlbumsResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistGetAllResponse;
@@ -51,6 +52,19 @@ public class ArtistController {
       return resEnt;
     } else {
       return ResponseEntity.notFound().build();
+    }
+  }
+
+  @GetMapping(value="/{id}/albums")
+  public ResponseEntity getArtistAlbums(@PathVariable Long id) {
+    Optional<Artist> artist = artistService.findById(id);
+    if (!artist.isPresent()) {
+      return ResponseEntity.notFound().build();
+    } else {
+      ResponseEntity<ArtistAlbumsResponse> resEnt = new ResponseEntity<>(
+          new ArtistAlbumsResponse(artist.get()),
+          HttpStatus.OK);
+      return resEnt;
     }
   }
 

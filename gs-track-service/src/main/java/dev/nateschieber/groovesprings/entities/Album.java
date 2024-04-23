@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -31,14 +33,11 @@ public class Album {
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   Set<Artist> artists;
 
-  public Set<Track> getTracks() {
-    return tracks;
-  }
-
   public Album() {};
 
-  public Album(String name) {
+  public Album(String name, List<Artist> artists) {
     this.name = name;
+    this.setArtists(new HashSet<>(artists));
   }
 
   public Album(Long id, AlbumEntityDto dto) {
@@ -62,7 +61,15 @@ public class Album {
     this.name = name;
   }
 
+  public Set<Track> getTracks() {
+    return tracks;
+  }
+
   public Set<Artist> getArtists() {
     return artists;
+  }
+
+  public void setArtists(Set<Artist> artists) {
+    this.artists = artists;
   }
 }
