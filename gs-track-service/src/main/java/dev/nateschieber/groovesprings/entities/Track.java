@@ -3,9 +3,11 @@ package dev.nateschieber.groovesprings.entities;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import dev.nateschieber.groovesprings.enums.MediaType;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +17,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +33,10 @@ public class Track {
 
   private String title;
   private long duration;
+  @Enumerated(EnumType.STRING)
+  private MediaType mediaType;
+
+  private LocalDate releaseDate;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinTable(
@@ -51,11 +58,13 @@ public class Track {
 
   public Track() {}
 
-  public Track(List<Artist> artists, Optional<Album> album, String title, long duration) {
+  public Track(List<Artist> artists, Optional<Album> album, String title, long duration, MediaType mediaType, LocalDate releaseDate) {
     this.album = album.orElse(null);
     this.artists = new HashSet<>(artists); // TODO: record order
     this.title = title;
     this.duration = duration;
+    this.mediaType = mediaType;
+    this.releaseDate = releaseDate;
   }
 
   // useful for updating a track based on dto
@@ -64,6 +73,8 @@ public class Track {
     Track track = dto.track();
     this.title = track.getTitle();
     this.duration = track.getDuration();
+    this.mediaType = track.getMediaType();
+    this.releaseDate = track.getReleaseDate();
   }
 
   public long getId() {
@@ -84,5 +95,13 @@ public class Track {
 
   public Set<Artist> getArtists() {
     return artists;
+  }
+
+  public LocalDate getReleaseDate() {
+    return releaseDate;
+  }
+
+  public MediaType getMediaType() {
+    return mediaType;
   }
 }

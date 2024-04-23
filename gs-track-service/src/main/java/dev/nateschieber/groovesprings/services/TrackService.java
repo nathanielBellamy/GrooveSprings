@@ -3,6 +3,7 @@ package dev.nateschieber.groovesprings.services;
 import dev.nateschieber.groovesprings.entities.Album;
 import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.entities.Track;
+import dev.nateschieber.groovesprings.enums.MediaType;
 import dev.nateschieber.groovesprings.repositories.AlbumRepository;
 import dev.nateschieber.groovesprings.repositories.ArtistRepository;
 import dev.nateschieber.groovesprings.repositories.TrackRepository;
@@ -49,7 +50,7 @@ public class TrackService {
   public Track createFromDto(TrackCreateDto dto) {
     Optional<Album> album = albumService.findById(dto.albumId());
     List<Artist> artists = artistService.findAllById(dto.artistIds());
-    Track track = new Track(artists, album, dto.title(), dto.duration());
+    Track track = new Track(artists, album, dto.title(), dto.duration(), dto.mediaType(), dto.releaseDate());
     return trackRepository.save(track);
   }
 

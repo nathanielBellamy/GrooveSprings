@@ -2,6 +2,7 @@ package dev.nateschieber.groovesprings.services;
 
 import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.repositories.ArtistRepository;
+import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistBulkCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
 import java.util.List;
 import java.util.Optional;
@@ -47,5 +48,9 @@ public class ArtistService {
 
   public List<Artist> findAllById(List<Long> ids) {
     return artistRepository.findAllById(ids);
+  }
+
+  public List<Artist> createAllFromDto(ArtistBulkCreateDto dto) {
+    return artistRepository.saveAll(dto.artists());
   }
 }

@@ -74,7 +74,6 @@ public class AlbumController {
 
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity createAlbum(@RequestBody AlbumCreateDto dto) {
-    System.out.println("HERE HERE HERE ");
     Album albumSaved = albumService.createFromDto(dto);
 
     URI uri = HttpHelper.uri(albumSaved.getId());

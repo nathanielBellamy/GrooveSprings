@@ -2,9 +2,11 @@ package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
+import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistBulkCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistAlbumsResponse;
+import dev.nateschieber.groovesprings.rest.responses.artist.ArtistBulkCreateResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistGetAllResponse;
@@ -70,12 +72,17 @@ public class ArtistController {
 
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity createArtist(@RequestBody ArtistCreateDto dto) {
-    System.out.println("HERE HERE HERE ");
     Artist artist = new Artist(dto.name());
     Artist artistSaved = artistService.save(artist);
 
     URI uri = HttpHelper.uri(artistSaved.getId());
     return ResponseEntity.created(uri).body(new ArtistEntityResponse(artistSaved));
+  }
+
+  @PostMapping(value = "/bulk/create", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity createArtists(@RequestBody ArtistBulkCreateDto dto) {
+    List<Artist> createdArtists = artistService.createAllFromDto(dto);
+    return ResponseEntity.ok().body(new ArtistBulkCreateResponse(createdArtists));
   }
 
   @PutMapping(value = "/{id}")
