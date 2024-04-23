@@ -43,10 +43,10 @@ public class TrackController {
 
   @GetMapping(value = "/{id}")
   public ResponseEntity getTrackById(@PathVariable Long id) {
-    Optional<Track> adoption = trackService.findById(id);
-    if (adoption.isPresent()) {
+    Optional<Track> track = trackService.findById(id);
+    if (track.isPresent()) {
       ResponseEntity<TrackEntityResponse> resEnt = new ResponseEntity<>(
-          new TrackEntityResponse(adoption.get()),
+          new TrackEntityResponse(track.get()),
           HttpStatus.OK);
       return resEnt;
     } else {
@@ -57,8 +57,8 @@ public class TrackController {
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity createTrack(@RequestBody TrackCreateDto dto) {
     System.out.println("HERE HERE HERE ");
-    Track track = new Track(dto.artistId(), dto.albumId(), dto.title(), dto.duration());
-    Track trackSaved = trackService.save(track);
+    Track track = new Track(dto.title(), dto.duration());
+    Track trackSaved = trackService.save(track, dto.artistId(), dto.albumId());
 
     URI uri = HttpHelper.uri(trackSaved.getId());
     return ResponseEntity.created(uri).body(new TrackEntityResponse(trackSaved));

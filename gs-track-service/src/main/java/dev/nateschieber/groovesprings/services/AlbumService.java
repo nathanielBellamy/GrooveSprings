@@ -11,14 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class AlbumService {
   private AlbumRepository albumRepository;
-  private TrackService trackService;
 
   @Autowired
   public AlbumService(
-      AlbumRepository albumRepository,
-      TrackService trackService) {
+      AlbumRepository albumRepository) {
     this.albumRepository = albumRepository;
-    this.trackService = trackService;
   }
 
   public List<Album> findAll() {

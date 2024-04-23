@@ -11,10 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class TrackService {
   private final TrackRepository trackRepository;
+  private final AlbumToTrackService albumToTrackService;
 
   @Autowired
-  public TrackService(TrackRepository trackRepository) {
+  public TrackService(
+      TrackRepository trackRepository,
+      AlbumToTrackService albumToTrackService) {
     this.trackRepository = trackRepository;
+    this.albumToTrackService = albumToTrackService;
   }
 
   public List<Track> findAll() {
@@ -34,8 +38,10 @@ public class TrackService {
     return this.trackRepository.save(updatedTrack);
   }
 
-  public Track save(Track track) {
+  public Track save(Track track, long artistId, long albumId) {
     Track savedTrack = this.trackRepository.save(track);
+
+    this.albumToTrackService.joinTracksToAlbum(albumId, List.of(savedTrack));
 
     return savedTrack;
   }

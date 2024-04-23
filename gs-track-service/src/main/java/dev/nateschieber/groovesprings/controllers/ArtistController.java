@@ -43,10 +43,10 @@ public class ArtistController {
 
   @GetMapping(value = "/{id}")
   public ResponseEntity getArtistById(@PathVariable Long id) {
-    Optional<Artist> adoption = artistService.findById(id);
-    if (adoption.isPresent()) {
+    Optional<Artist> artist = artistService.findById(id);
+    if (artist.isPresent()) {
       ResponseEntity<ArtistEntityResponse> resEnt = new ResponseEntity<>(
-          new ArtistEntityResponse(adoption.get()),
+          new ArtistEntityResponse(artist.get()),
           HttpStatus.OK);
       return resEnt;
     } else {

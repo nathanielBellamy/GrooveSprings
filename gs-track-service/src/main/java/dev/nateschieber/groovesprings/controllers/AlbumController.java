@@ -1,13 +1,16 @@
 package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Album;
+import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumGetAllResponse;
+import dev.nateschieber.groovesprings.rest.responses.album.AlbumTracksResponse;
 import dev.nateschieber.groovesprings.services.AlbumService;
+import dev.nateschieber.groovesprings.services.AlbumToTrackService;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -29,10 +32,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AlbumController {
 
   private final AlbumService albumService;
+  private final AlbumToTrackService albumToTrackService;
 
   @Autowired
-  public AlbumController(AlbumService albumService) {
+  public AlbumController(
+      AlbumService albumService,
+      AlbumToTrackService albumToTrackService) {
     this.albumService = albumService;
+    this.albumToTrackService = albumToTrackService;
   }
 
   @GetMapping
@@ -43,14 +50,28 @@ public class AlbumController {
 
   @GetMapping(value = "/{id}")
   public ResponseEntity getAlbumById(@PathVariable Long id) {
-    Optional<Album> adoption = albumService.findById(id);
-    if (adoption.isPresent()) {
+    Optional<Album> album = albumService.findById(id);
+    if (!album.isPresent()) {
+      return ResponseEntity.notFound().build();
+    } else {
       ResponseEntity<AlbumEntityResponse> resEnt = new ResponseEntity<>(
-          new AlbumEntityResponse(adoption.get()),
+          new AlbumEntityResponse(album.get()),
           HttpStatus.OK);
       return resEnt;
-    } else {
+    }
+  }
+
+  @GetMapping(value = "/{id}/tracks")
+  public ResponseEntity getAlbumTracksByAlbumId(@PathVariable Long id) {
+    Optional<Album> album = albumService.findById(id);
+    if (!album.isPresent()) {
       return ResponseEntity.notFound().build();
+    } else {
+      List<Track> tracks = albumToTrackService.findTracksByAlbumId(id);
+      ResponseEntity<AlbumTracksResponse> resEnt = new ResponseEntity<>(
+          new AlbumTracksResponse(album.get(), tracks),
+          HttpStatus.OK);
+      return resEnt;
     }
   }
 

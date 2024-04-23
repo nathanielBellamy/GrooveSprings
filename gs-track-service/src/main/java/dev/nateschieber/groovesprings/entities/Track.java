@@ -14,17 +14,12 @@ public class Track {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private long id;
 
-  private long artistId;
-  private long albumId;
-
   private String title;
   private long duration;
 
   public Track() {}
 
-  public Track(long artistId, long albumId, String title, long duration) {
-    this.artistId = artistId;
-    this.albumId = albumId;
+  public Track(String title, long duration) {
     this.title = title;
     this.duration = duration;
   }
@@ -33,22 +28,12 @@ public class Track {
   public Track(long id, TrackEntityDto dto) {
     this.id = id;
     Track track = dto.track();
-    this.artistId = track.getArtistId();
-    this.albumId = track.getAlbumId();
     this.title = track.getTitle();
     this.duration = track.getDuration();
   }
 
   public long getId() {
     return id;
-  }
-
-  public long getArtistId() {
-    return artistId;
-  }
-
-  public long getAlbumId() {
-    return albumId;
   }
 
   public String getTitle() {
