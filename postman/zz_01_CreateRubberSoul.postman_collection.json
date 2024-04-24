@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "3ec2feb7-ae4c-47bf-a7d0-dc82a0604eec",
 		"name": "zz_01_CreateRubberSoul",
+		"description": "# Create Rubber Soul As First Seed Album\n\n1. creates The Beatles\n2. creates Rubber Soul\n3. creates the first three tracks\n    \n\n## NOTE: This should be run as the first `zz_xx_CreateXXXX` collection.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "34377069"
 	},

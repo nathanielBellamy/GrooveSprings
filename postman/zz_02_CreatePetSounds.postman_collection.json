@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "3fe6a5d2-4f4d-40c1-b410-99c238ed1785",
 		"name": "zz_02_CreatePetSounds",
+		"description": "# Create PetSounds As Second Seed Album\n\n1. creates The Beach Boys\n    \n2. creates Pet Sounds\n    \n3. creates the first three tracks\n    \n\n## NOTE: This should be run as the second `zz_xx_CreateXXXX` collection.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "34377069"
 	},
