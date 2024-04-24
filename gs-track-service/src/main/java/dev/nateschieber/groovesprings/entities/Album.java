@@ -15,9 +15,12 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "albums")
@@ -79,8 +82,10 @@ public class Album {
     this.name = name;
   }
 
-  public Set<Track> getTracks() {
-    return tracks;
+  public List<Track> getTracks() {
+    List<Track> trackList = tracks.stream().collect(Collectors.toList());
+    Collections.sort(trackList, Comparator.comparing(Track::getTrackNumber));
+    return trackList;
   }
 
   public Set<Artist> getArtists() {

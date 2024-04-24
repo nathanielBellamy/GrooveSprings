@@ -64,9 +64,11 @@ public class AlbumController {
     if (!album.isPresent()) {
       return ResponseEntity.notFound().build();
     } else {
-      List<Track> tracks = album.get().getTracks().stream().collect(Collectors.toList());
       ResponseEntity<AlbumTracksResponse> resEnt = new ResponseEntity<>(
-          new AlbumTracksResponse(album.get(), tracks),
+          new AlbumTracksResponse(
+              album.get(),
+              album.get().getTracks()
+          ),
           HttpStatus.OK);
       return resEnt;
     }

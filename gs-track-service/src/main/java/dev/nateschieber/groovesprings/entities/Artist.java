@@ -42,6 +42,7 @@ public class Artist {
   )
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @JsonManagedReference
+  @JsonIgnore
   private Set<Album> albums;
 
   public Artist() {};
