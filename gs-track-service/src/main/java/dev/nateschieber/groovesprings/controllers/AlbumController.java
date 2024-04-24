@@ -1,7 +1,6 @@
 package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Album;
-import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
@@ -13,7 +12,6 @@ import dev.nateschieber.groovesprings.services.AlbumService;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

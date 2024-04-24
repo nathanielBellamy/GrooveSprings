@@ -1,7 +1,5 @@
 package dev.nateschieber.groovesprings.controllers;
 
-import dev.nateschieber.groovesprings.entities.Album;
-import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
