@@ -1,3 +1,4 @@
+name: gs-price-service
 services:
   postgres:
     image: 'postgres:latest'

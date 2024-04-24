@@ -49,7 +49,8 @@ public class AlbumService {
 
   public Album createFromDto(AlbumCreateDto dto) {
     List<Artist> artists = artistService.findAllById(dto.artistIds());
-    Album savedAlbum = albumRepository.save(new Album(dto.name(), artists));
+    Album album = new Album(dto.name(), artists, dto.releaseDate(), dto.genres());
+    Album savedAlbum = albumRepository.save(album);
     // NOTE:
     //   - JPA will update ManyToMany joins only when Artist is updated
     //   - so update the artists here

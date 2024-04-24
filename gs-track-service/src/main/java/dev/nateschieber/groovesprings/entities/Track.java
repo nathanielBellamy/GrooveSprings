@@ -35,6 +35,7 @@ public class Track {
 
   private String title;
   private long duration;
+  private int trackNumber;
   @Enumerated(EnumType.STRING)
   private MediaType mediaType;
 
@@ -62,10 +63,18 @@ public class Track {
 
   public Track() {}
 
-  public Track(List<Artist> artists, Optional<Album> album, String title, long duration, MediaType mediaType, LocalDate releaseDate) {
+  public Track(
+      List<Artist> artists,
+      Optional<Album> album,
+      String title,
+      int trackNumber,
+      long duration,
+      MediaType mediaType,
+      LocalDate releaseDate) {
     this.album = album.orElse(null);
     this.artists = new HashSet<>(artists); // TODO: record order
     this.title = title;
+    this.trackNumber = trackNumber;
     this.duration = duration;
     this.mediaType = mediaType;
     this.releaseDate = releaseDate;
@@ -76,6 +85,7 @@ public class Track {
     this.id = id;
     Track track = dto.track();
     this.title = track.getTitle();
+    this.trackNumber = track.getTrackNumber();
     this.duration = track.getDuration();
     this.mediaType = track.getMediaType();
     this.releaseDate = track.getReleaseDate();
@@ -87,6 +97,10 @@ public class Track {
 
   public String getTitle() {
     return title;
+  }
+
+  public int getTrackNumber() {
+    return trackNumber;
   }
 
   public long getDuration() {

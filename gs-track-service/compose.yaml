@@ -1,3 +1,4 @@
+name: gs-track-service
 services:
   postgres:
     image: 'postgres:latest'
