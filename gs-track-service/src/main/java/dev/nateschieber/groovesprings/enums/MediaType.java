@@ -1,13 +1,13 @@
 package dev.nateschieber.groovesprings.enums;
 
 public enum MediaType {
-  MP3_320,
-  MP3_256,
-  MP3_193,
-  MP3_VAR,
   WAV,
+  ALAC,
+  AAC,
   FLAC,
   OGG,
-  AAC,
-  ALAC
+  MP3_320,
+  MP3_256,
+  MP3_192,
+  MP3_VAR,
 }

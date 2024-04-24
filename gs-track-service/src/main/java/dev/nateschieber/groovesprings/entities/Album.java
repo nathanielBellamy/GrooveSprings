@@ -56,6 +56,7 @@ public class Album {
     this.name = name;
     this.setArtists(new HashSet<>(artists));
     this.genres = genres;
+    this.releaseDate = releaseDate;
   }
 
   public Album(Long id, AlbumEntityDto dto) {
@@ -64,6 +65,7 @@ public class Album {
     this.name = album.getName();
     this.artists = new HashSet<>(album.getArtists());
     this.genres = album.getGenres();
+    this.releaseDate = album.getReleaseDate();
   }
 
   public long getId() {
@@ -98,5 +100,9 @@ public class Album {
 
   public List<Genre> getGenres() {
     return genres;
+  }
+
+  public LocalDate getReleaseDate() {
+    return releaseDate;
   }
 }
