@@ -8,7 +8,7 @@ import dev.nateschieber.groovesprings.rest.responses.album.AlbumDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumGetAllResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumTracksResponse;
-import dev.nateschieber.groovesprings.services.AlbumService;
+import dev.nateschieber.groovesprings.services.entities.AlbumService;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;

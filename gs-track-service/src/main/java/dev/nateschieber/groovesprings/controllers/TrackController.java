@@ -8,7 +8,7 @@ import dev.nateschieber.groovesprings.rest.responses.track.TrackDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackGetAllResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByYearResponse;
-import dev.nateschieber.groovesprings.services.TrackService;
+import dev.nateschieber.groovesprings.services.entities.TrackService;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;

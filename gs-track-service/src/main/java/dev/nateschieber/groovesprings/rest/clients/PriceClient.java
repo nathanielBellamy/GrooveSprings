@@ -5,16 +5,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dev.nateschieber.groovesprings.entities.Price;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.price.PriceEntityDto;
-import dev.nateschieber.groovesprings.rest.responses.price.TrackPriceResponse;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PriceClient {
 
   private static String baseUrl = "http://localhost:5174/api/v1/prices";
@@ -37,7 +39,7 @@ public class PriceClient {
     return HttpRequest.BodyPublishers.ofString(json);
   }
 
-  public Optional<Long> getTrackPrice(Track track) {
+  public Optional<Price> getTrackPrice(Track track) {
     HttpClient client = HttpClient.newHttpClient();
     URI uri = HttpHelper.uri(PriceClient.baseUrl + "/track");
     HttpRequest.BodyPublisher body = toPostBody(track);
@@ -53,9 +55,9 @@ public class PriceClient {
       if (response.statusCode() == 200){
         JsonNode respNode = objectMapper.readValue(response.body(), JsonNode.class);
         JsonNode priceNode = respNode.get("data").get("price");
-        PriceEntityDto dto = objectMapper.convertValue(priceNode, PriceEntityDto.class);
+        Price price = objectMapper.convertValue(priceNode, Price.class);
 
-        return Optional.of(dto.usdCents());
+        return Optional.of(price);
       } else {
         return Optional.empty();
       }

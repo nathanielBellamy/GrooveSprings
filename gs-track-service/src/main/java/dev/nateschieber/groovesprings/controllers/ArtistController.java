@@ -11,7 +11,7 @@ import dev.nateschieber.groovesprings.rest.responses.artist.ArtistDeleteResponse
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistGetAllResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistTracksResponse;
-import dev.nateschieber.groovesprings.services.ArtistService;
+import dev.nateschieber.groovesprings.services.entities.ArtistService;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package dev.nateschieber.groovesprings.services;
+package dev.nateschieber.groovesprings.services.entities;
 
 import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.repositories.ArtistRepository;
