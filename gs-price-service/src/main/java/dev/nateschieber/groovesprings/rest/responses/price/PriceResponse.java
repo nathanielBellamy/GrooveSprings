@@ -1,6 +1,6 @@
-package dev.nateschieber.groovesprings.rest.responses.Price;
+package dev.nateschieber.groovesprings.rest.responses.price;
 
-import dev.nateschieber.groovesprings.rest.dtos.Price.PriceDto;
+import dev.nateschieber.groovesprings.rest.dtos.price.PriceDto;
 import dev.nateschieber.groovesprings.rest.responses.GsHttpResponse;
 
 public abstract class PriceResponse extends GsHttpResponse {

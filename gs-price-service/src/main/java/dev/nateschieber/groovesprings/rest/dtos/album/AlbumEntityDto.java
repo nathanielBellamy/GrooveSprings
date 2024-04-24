@@ -1,7 +1,7 @@
-package dev.nateschieber.groovesprings.rest.dtos.Album;
+package dev.nateschieber.groovesprings.rest.dtos.album;
 
-import dev.nateschieber.groovesprings.rest.dtos.Artist.ArtistEntityDto;
-import dev.nateschieber.groovesprings.rest.dtos.Track.TrackEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import java.time.LocalDate;
 import java.util.List;
 

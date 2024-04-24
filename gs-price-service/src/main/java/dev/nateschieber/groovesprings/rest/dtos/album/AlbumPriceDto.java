@@ -1,4 +1,4 @@
-package dev.nateschieber.groovesprings.rest.dtos.Album;
+package dev.nateschieber.groovesprings.rest.dtos.album;
 
 import dev.nateschieber.groovesprings.entities.Price;
 

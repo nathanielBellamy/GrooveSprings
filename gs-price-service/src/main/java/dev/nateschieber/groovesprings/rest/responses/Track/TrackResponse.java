@@ -1,6 +1,6 @@
 package dev.nateschieber.groovesprings.rest.responses.Track;
 
-import dev.nateschieber.groovesprings.rest.dtos.Track.TrackDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackDto;
 import dev.nateschieber.groovesprings.rest.responses.GsHttpResponse;
 
 public abstract class TrackResponse extends GsHttpResponse {

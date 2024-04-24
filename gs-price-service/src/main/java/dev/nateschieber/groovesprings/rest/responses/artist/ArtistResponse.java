@@ -1,6 +1,6 @@
-package dev.nateschieber.groovesprings.rest.responses.Artist;
+package dev.nateschieber.groovesprings.rest.responses.artist;
 
-import dev.nateschieber.groovesprings.rest.dtos.Artist.ArtistDto;
+import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistDto;
 import dev.nateschieber.groovesprings.rest.responses.GsHttpResponse;
 
 public class ArtistResponse extends GsHttpResponse {

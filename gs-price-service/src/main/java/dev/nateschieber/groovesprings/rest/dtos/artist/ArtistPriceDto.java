@@ -1,4 +1,4 @@
-package dev.nateschieber.groovesprings.rest.dtos.Artist;
+package dev.nateschieber.groovesprings.rest.dtos.artist;
 
 import dev.nateschieber.groovesprings.entities.Price;
 

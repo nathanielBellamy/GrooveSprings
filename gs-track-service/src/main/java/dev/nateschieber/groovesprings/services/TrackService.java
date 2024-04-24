@@ -4,6 +4,7 @@ import dev.nateschieber.groovesprings.entities.Album;
 import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.repositories.TrackRepository;
+import dev.nateschieber.groovesprings.rest.clients.PriceClient;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import java.time.LocalDate;
@@ -33,7 +34,17 @@ public class TrackService {
   }
 
   public Optional<Track> findById(Long id) {
-    return this.trackRepository.findById(id);
+    Optional<Track> track = this.trackRepository.findById(id);
+
+    if (!track.isPresent()) {
+      return Optional.empty();
+    } else {
+      PriceClient pc = new PriceClient();
+      Optional<Long> trackPrice = pc.getTrackPrice(track.get());
+      System.out.println(trackPrice);
+    }
+
+    return track;
   }
 
   public void deleteById(Long id) {

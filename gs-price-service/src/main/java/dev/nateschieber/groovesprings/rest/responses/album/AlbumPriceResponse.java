@@ -1,7 +1,7 @@
-package dev.nateschieber.groovesprings.rest.responses.Album;
+package dev.nateschieber.groovesprings.rest.responses.album;
 
 import dev.nateschieber.groovesprings.entities.Price;
-import dev.nateschieber.groovesprings.rest.dtos.Album.AlbumPriceDto;
+import dev.nateschieber.groovesprings.rest.dtos.album.AlbumPriceDto;
 
 public class AlbumPriceResponse extends AlbumResponse {
   public AlbumPriceResponse(Price price) {

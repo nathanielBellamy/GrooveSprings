@@ -1,12 +1,12 @@
 package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Price;
-import dev.nateschieber.groovesprings.rest.dtos.Album.AlbumEntityDto;
-import dev.nateschieber.groovesprings.rest.dtos.Artist.ArtistEntityDto;
-import dev.nateschieber.groovesprings.rest.dtos.Track.TrackEntityDto;
-import dev.nateschieber.groovesprings.rest.responses.Album.AlbumPriceResponse;
-import dev.nateschieber.groovesprings.rest.responses.Artist.ArtistPriceResponse;
-import dev.nateschieber.groovesprings.rest.responses.Price.AllPricesResponse;
+import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
+import dev.nateschieber.groovesprings.rest.responses.album.AlbumPriceResponse;
+import dev.nateschieber.groovesprings.rest.responses.artist.ArtistPriceResponse;
+import dev.nateschieber.groovesprings.rest.responses.price.AllPricesResponse;
 import dev.nateschieber.groovesprings.rest.responses.Track.TrackPriceResponse;
 import dev.nateschieber.groovesprings.services.PriceService;
 import java.util.List;

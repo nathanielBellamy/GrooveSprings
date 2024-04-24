@@ -1,4 +1,4 @@
-package dev.nateschieber.groovesprings.rest.dtos.Price;
+package dev.nateschieber.groovesprings.rest.dtos.price;
 
 import dev.nateschieber.groovesprings.entities.Price;
 import java.util.List;
