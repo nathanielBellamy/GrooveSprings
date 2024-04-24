@@ -3,6 +3,7 @@ package dev.nateschieber.groovesprings.controllers.priced;
 import dev.nateschieber.groovesprings.entities.priced.PricedTrack;
 import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.AllPricedTracksResponse;
 import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.PricedTrackEntityResponse;
+import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.PricedTracksByReleaseYearResponse;
 import dev.nateschieber.groovesprings.services.pricedEntities.PricedTrackService;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -47,5 +49,15 @@ public class PricedTrackController {
       );
       return resEnt;
     }
+  }
+
+  @GetMapping("/year")
+  public ResponseEntity getPricedTracksByReleaseYear(@RequestParam Integer year) {
+    List<PricedTrack> pricedTracks = pricedTrackService.findByReleaseYear(year);
+    ResponseEntity<PricedTracksByReleaseYearResponse> resEnt = new ResponseEntity<>(
+        new PricedTracksByReleaseYearResponse(year, pricedTracks),
+        HttpStatus.OK
+    );
+    return resEnt;
   }
 }

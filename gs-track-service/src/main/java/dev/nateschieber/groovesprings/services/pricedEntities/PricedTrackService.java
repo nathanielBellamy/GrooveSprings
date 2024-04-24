@@ -30,14 +30,7 @@ public class PricedTrackService implements ITrackService<PricedTrack, TrackEntit
   public List<PricedTrack> findAll() {
     List<Track> tracks = trackService.findAll();
     List<Price> prices = priceClient.getTrackPrices(tracks);
-    return tracks.stream().map(t -> {
-      Optional<Price> price = prices.stream().filter(p -> p.getEntityId() == t.getId()).findFirst();
-      if (!price.isPresent()) {
-        return null;
-      } else {
-        return new PricedTrack(price.get(), t);
-      }
-    }).filter(pt -> pt != null).collect(Collectors.toList());
+    return zipTracksWithPrices(tracks, prices);
   }
 
   @Override
@@ -77,6 +70,19 @@ public class PricedTrackService implements ITrackService<PricedTrack, TrackEntit
 
   @Override
   public List<PricedTrack> findByReleaseYear(int year) {
-    return null;
+    List<Track> tracksForYear = trackService.findByReleaseYear(year);
+    List<Price> prices = priceClient.getTrackPrices(tracksForYear);
+    return zipTracksWithPrices(tracksForYear, prices);
+  }
+
+  private List<PricedTrack> zipTracksWithPrices(List<Track> tracks, List<Price> prices) {
+    return tracks.stream().map(t -> {
+      Optional<Price> price = prices.stream().filter(p -> p.getEntityId() == t.getId()).findFirst();
+      if (!price.isPresent()) {
+        return null;
+      } else {
+        return new PricedTrack(price.get(), t);
+      }
+    }).filter(pt -> pt != null).collect(Collectors.toList());
   }
 }
