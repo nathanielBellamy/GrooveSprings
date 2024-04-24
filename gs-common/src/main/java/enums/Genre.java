@@ -1,4 +1,4 @@
-package dev.nateschieber.groovesprings.enums;
+package enums;
 
 public enum Genre {
   ROCK,
@@ -24,5 +24,10 @@ public enum Genre {
   HIP_HOP,
   COUNTRY,
   WESTERN,
-  CHRISTIAN
+  CHRISTIAN,
+  SAMBA,
+  BOSSANOVA,
+  A_CAPELLA,
+  LIVE,
+  CHORAL
 }

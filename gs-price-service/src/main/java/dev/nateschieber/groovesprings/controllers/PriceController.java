@@ -2,10 +2,12 @@ package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Price;
 import dev.nateschieber.groovesprings.rest.dto.Track.TrackEntityDto;
+import dev.nateschieber.groovesprings.rest.response.Track.TrackPriceResponse;
 import dev.nateschieber.groovesprings.services.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +24,13 @@ public class PriceController {
     this.priceService = priceService;
   }
 
-  @PostMapping("/track")
+  @PostMapping(value = "/track", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity trackPrice(@RequestBody TrackEntityDto dto) {
     Price trackPrice = priceService.priceTrack(dto);
-    // TODO
-    return ResponseEntity.ok().build();
+    ResponseEntity<TrackPriceResponse> resEnt = new ResponseEntity<>(
+        new TrackPriceResponse(trackPrice),
+        HttpStatus.OK
+    );
+    return resEnt;
   }
 }

@@ -13,7 +13,6 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 @Entity
 @Table(name = "prices")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
 public class Price {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -35,4 +34,25 @@ public class Price {
     this.entityId = entityId;
     this.usdCents = usdCents;
   }
+
+  public long getId() {
+    return id;
+  }
+
+  public LocalDateTime getAt() {
+    return at;
+  }
+
+  public EntityType getEntityType() {
+    return entityType;
+  }
+
+  public long getEntityId() {
+    return entityId;
+  }
+
+  public long getUsdCents() {
+    return usdCents;
+  }
+
 }

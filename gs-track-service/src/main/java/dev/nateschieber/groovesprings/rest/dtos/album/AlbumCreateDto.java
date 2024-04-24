@@ -1,6 +1,6 @@
 package dev.nateschieber.groovesprings.rest.dtos.album;
 
-import dev.nateschieber.groovesprings.enums.Genre;
+import enums.Genre;
 import java.time.LocalDate;
 import java.util.List;
 
