@@ -3,7 +3,9 @@ package dev.nateschieber.groovesprings.controllers;
 import dev.nateschieber.groovesprings.entities.Price;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityBulkDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
+import dev.nateschieber.groovesprings.rest.responses.Track.TrackPriceBulkResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumPriceResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistPriceResponse;
 import dev.nateschieber.groovesprings.rest.responses.price.AllPricesResponse;
@@ -46,6 +48,16 @@ public class PriceController {
     Price trackPrice = priceService.priceTrack(dto);
     ResponseEntity<TrackPriceResponse> resEnt = new ResponseEntity<>(
         new TrackPriceResponse(trackPrice),
+        HttpStatus.OK
+    );
+    return resEnt;
+  }
+
+  @PostMapping(value = "bulk/track", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity getTrackPrices(@RequestBody TrackEntityBulkDto dto) {
+    List<Price> trackPrices = priceService.priceTracks(dto);
+    ResponseEntity<TrackPriceBulkResponse> resEnt = new ResponseEntity<>(
+        new TrackPriceBulkResponse( trackPrices ),
         HttpStatus.OK
     );
     return resEnt;

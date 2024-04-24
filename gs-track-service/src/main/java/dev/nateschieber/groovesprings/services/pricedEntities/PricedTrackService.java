@@ -10,6 +10,7 @@ import dev.nateschieber.groovesprings.services.entities.ITrackService;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,15 @@ public class PricedTrackService implements ITrackService<PricedTrack, TrackEntit
   @Override
   public List<PricedTrack> findAll() {
     List<Track> tracks = trackService.findAll();
-    return null;
+    List<Price> prices = priceClient.getTrackPrices(tracks);
+    return tracks.stream().map(t -> {
+      Optional<Price> price = prices.stream().filter(p -> p.getEntityId() == t.getId()).findFirst();
+      if (!price.isPresent()) {
+        return null;
+      } else {
+        return new PricedTrack(price.get(), t);
+      }
+    }).filter(pt -> pt != null).collect(Collectors.toList());
   }
 
   @Override

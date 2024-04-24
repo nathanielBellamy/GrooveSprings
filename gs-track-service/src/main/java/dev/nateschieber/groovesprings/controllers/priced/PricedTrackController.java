@@ -1,8 +1,10 @@
 package dev.nateschieber.groovesprings.controllers.priced;
 
 import dev.nateschieber.groovesprings.entities.priced.PricedTrack;
+import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.AllPricedTracksResponse;
 import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.PricedTrackEntityResponse;
 import dev.nateschieber.groovesprings.services.pricedEntities.PricedTrackService;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,15 @@ public class PricedTrackController {
     this.pricedTrackService = pricedTrackService;
   }
 
+  @GetMapping("")
+  public ResponseEntity getAllPricedTracks() {
+    List<PricedTrack> pricedTracks = pricedTrackService.findAll();
+    ResponseEntity<AllPricedTracksResponse> resEnt = new ResponseEntity<>(
+        new AllPricedTracksResponse(pricedTracks),
+        HttpStatus.OK
+    );
+    return resEnt;
+  }
 
   @GetMapping("/{id}")
   public ResponseEntity getPricedTrackById(@PathVariable Long id) {
