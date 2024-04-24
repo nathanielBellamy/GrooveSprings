@@ -3,6 +3,8 @@ package dev.nateschieber.groovesprings.services;
 import dev.nateschieber.groovesprings.entities.Price;
 import dev.nateschieber.groovesprings.enums.EntityType;
 import dev.nateschieber.groovesprings.repositories.PriceRepository;
+import dev.nateschieber.groovesprings.rest.dto.Album.AlbumEntityDto;
+import dev.nateschieber.groovesprings.rest.dto.Artist.ArtistEntityDto;
 import dev.nateschieber.groovesprings.rest.dto.Track.TrackEntityDto;
 import enums.Genre;
 import java.time.LocalDate;
@@ -22,29 +24,50 @@ public class PriceService {
     this.priceRepository = priceRepository;
   }
 
+  // TODO
+  //   - sales/discount by Duration
+  //   - sales/discount by Genre
+  //   - sales/discount by ReleaseDate
   public Price priceTrack(TrackEntityDto dto) {
-    // TODO
-    //  - sales/discount by Duration
     long duration = dto.duration();
-    // TODO:
-    //   - sales/discount by Genre
     List<Genre> genres = dto.genres();
-    // TODO
-    //   - sales/discount by ReleaseDate
     LocalDate releaseDate = dto.releaseDate();
     return new Price(
         EntityType.TRACK,
         LocalDateTime.now(),
         dto.id(),
-        priceFunction(duration, genres, releaseDate));
+        trackPriceFunction(duration, genres, releaseDate));
   }
 
-  private long priceFunction(long duration, List<Genre> genres, LocalDate releaseDate) {
+  private long trackPriceFunction(long duration, List<Genre> genres, LocalDate releaseDate) {
 
     double durationFactor = ThreadLocalRandom.current().nextDouble() * (duration / 10000d);
     double genresFactor = ThreadLocalRandom.current().nextDouble();
     double releaseDateFactor = ThreadLocalRandom.current().nextDouble() * (releaseDate.getYear() / releaseDate.getDayOfMonth());
 
     return (long) Math.floor((durationFactor * genresFactor * releaseDateFactor) * 10d);
+  }
+
+  public Price priceAlbum(AlbumEntityDto dto) {
+    String name = dto.name();
+    List<ArtistEntityDto> artists = dto.artists();
+    LocalDate releaseDate = dto.releaseDate();
+    List<TrackEntityDto> tracks = dto.tracks();
+
+    // TODO
+
+    long priceUsdCents = (long) Math.floor((ThreadLocalRandom.current().nextDouble() * 1699));
+
+    return new Price(EntityType.ALBUM, LocalDateTime.now(), dto.id(), priceUsdCents);
+  }
+
+
+  public Price priceArtist(ArtistEntityDto dto) {
+
+    // TODO
+
+    long priceUsdCents = (long) Math.floor((ThreadLocalRandom.current().nextDouble() * 10000));
+
+    return new Price(EntityType.ARTIST, LocalDateTime.now(), dto.id(), priceUsdCents);
   }
 }
