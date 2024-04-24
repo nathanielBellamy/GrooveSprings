@@ -76,7 +76,7 @@ public class AlbumController {
   public ResponseEntity createAlbum(@RequestBody AlbumCreateDto dto) {
     Album albumSaved = albumService.createFromDto(dto);
 
-    URI uri = HttpHelper.uri(albumSaved.getId());
+    URI uri = HttpHelper.uri("/albums/" + albumSaved.getId());
     return ResponseEntity.created(uri).body(new AlbumEntityResponse(albumSaved));
   }
 

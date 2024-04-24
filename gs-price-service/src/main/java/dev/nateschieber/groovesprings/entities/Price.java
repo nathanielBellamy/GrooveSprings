@@ -1,7 +1,5 @@
 package dev.nateschieber.groovesprings.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.enums.EntityType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,11 +24,13 @@ public class Price {
   @NotNull
   private long usdCents;
 
-  public Price() {};
+  public Price() {
+    this.at = LocalDateTime.now();
+  };
 
-  public Price(EntityType entityType, LocalDateTime at, long entityId, long usdCents) {
+  public Price(EntityType entityType, long entityId, long usdCents) {
+    this();
     this.entityType = entityType;
-    this.at = at;
     this.entityId = entityId;
     this.usdCents = usdCents;
   }

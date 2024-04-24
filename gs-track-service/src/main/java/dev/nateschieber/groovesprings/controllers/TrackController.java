@@ -8,7 +8,6 @@ import dev.nateschieber.groovesprings.rest.responses.track.TrackDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackGetAllResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByYearResponse;
-import dev.nateschieber.groovesprings.services.AlbumService;
 import dev.nateschieber.groovesprings.services.TrackService;
 import java.net.URI;
 import java.util.List;
@@ -31,14 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/tracks")
 public class TrackController {
 
-  private final AlbumService albumService;
   private final TrackService trackService;
 
   @Autowired
-  public TrackController(
-      AlbumService albumService,
-      TrackService trackService) {
-    this.albumService = albumService;
+  public TrackController(TrackService trackService) {
     this.trackService = trackService;
   }
 
@@ -64,7 +59,7 @@ public class TrackController {
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity createTrack(@RequestBody TrackCreateDto dto) {
     Track trackSaved = trackService.createFromDto(dto);
-    URI uri = HttpHelper.uri(trackSaved.getId());
+    URI uri = HttpHelper.uri("/tracks/" + trackSaved.getId());
     return ResponseEntity.created(uri).body(new TrackEntityResponse(trackSaved));
   }
 

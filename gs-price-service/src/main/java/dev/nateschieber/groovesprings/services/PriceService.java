@@ -3,12 +3,11 @@ package dev.nateschieber.groovesprings.services;
 import dev.nateschieber.groovesprings.entities.Price;
 import dev.nateschieber.groovesprings.enums.EntityType;
 import dev.nateschieber.groovesprings.repositories.PriceRepository;
-import dev.nateschieber.groovesprings.rest.dto.Album.AlbumEntityDto;
-import dev.nateschieber.groovesprings.rest.dto.Artist.ArtistEntityDto;
-import dev.nateschieber.groovesprings.rest.dto.Track.TrackEntityDto;
-import enums.Genre;
+import dev.nateschieber.groovesprings.rest.dtos.Album.AlbumEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.Artist.ArtistEntityDto;
+import dev.nateschieber.groovesprings.enums.Genre;
+import dev.nateschieber.groovesprings.rest.dtos.Track.TrackEntityDto;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,10 @@ public class PriceService {
     this.priceRepository = priceRepository;
   }
 
+  public List<Price> findAll() {
+    return priceRepository.findAll();
+  }
+
   // TODO
   //   - sales/discount by Duration
   //   - sales/discount by Genre
@@ -32,11 +35,12 @@ public class PriceService {
     long duration = dto.duration();
     List<Genre> genres = dto.genres();
     LocalDate releaseDate = dto.releaseDate();
-    return new Price(
-        EntityType.TRACK,
-        LocalDateTime.now(),
-        dto.id(),
-        trackPriceFunction(duration, genres, releaseDate));
+    return priceRepository.save(
+        new Price(
+          EntityType.TRACK,
+          dto.id(),
+          trackPriceFunction(duration, genres, releaseDate))
+    );
   }
 
   private long trackPriceFunction(long duration, List<Genre> genres, LocalDate releaseDate) {
@@ -58,7 +62,9 @@ public class PriceService {
 
     long priceUsdCents = (long) Math.floor((ThreadLocalRandom.current().nextDouble() * 1699));
 
-    return new Price(EntityType.ALBUM, LocalDateTime.now(), dto.id(), priceUsdCents);
+    return priceRepository.save(
+        new Price(EntityType.ALBUM, dto.id(), priceUsdCents)
+    );
   }
 
 
@@ -68,6 +74,8 @@ public class PriceService {
 
     long priceUsdCents = (long) Math.floor((ThreadLocalRandom.current().nextDouble() * 10000));
 
-    return new Price(EntityType.ARTIST, LocalDateTime.now(), dto.id(), priceUsdCents);
+    return priceRepository.save(
+        new Price(EntityType.ARTIST, dto.id(), priceUsdCents)
+    );
   }
 }

@@ -1,17 +1,20 @@
 package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Price;
-import dev.nateschieber.groovesprings.rest.dto.Album.AlbumEntityDto;
-import dev.nateschieber.groovesprings.rest.dto.Artist.ArtistEntityDto;
-import dev.nateschieber.groovesprings.rest.dto.Track.TrackEntityDto;
-import dev.nateschieber.groovesprings.rest.response.Album.AlbumPriceResponse;
-import dev.nateschieber.groovesprings.rest.response.Artist.ArtistPriceResponse;
-import dev.nateschieber.groovesprings.rest.response.Track.TrackPriceResponse;
+import dev.nateschieber.groovesprings.rest.dtos.Album.AlbumEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.Artist.ArtistEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.Track.TrackEntityDto;
+import dev.nateschieber.groovesprings.rest.responses.Album.AlbumPriceResponse;
+import dev.nateschieber.groovesprings.rest.responses.Artist.ArtistPriceResponse;
+import dev.nateschieber.groovesprings.rest.responses.Price.AllPricesResponse;
+import dev.nateschieber.groovesprings.rest.responses.Track.TrackPriceResponse;
 import dev.nateschieber.groovesprings.services.PriceService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +29,16 @@ public class PriceController {
   @Autowired
   public PriceController(PriceService priceService) {
     this.priceService = priceService;
+  }
+
+  @GetMapping("")
+  public ResponseEntity getAllPrices() {
+    List<Price> prices = priceService.findAll();
+    ResponseEntity<AllPricesResponse> resEnt = new ResponseEntity<>(
+      new AllPricesResponse(prices),
+      HttpStatus.OK
+    );
+    return resEnt;
   }
 
   @PostMapping(value = "/track", produces = MediaType.APPLICATION_JSON_VALUE)

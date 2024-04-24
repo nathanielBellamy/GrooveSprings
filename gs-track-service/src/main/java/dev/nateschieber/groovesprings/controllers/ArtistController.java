@@ -76,7 +76,7 @@ public class ArtistController {
     Artist artist = new Artist(dto.name());
     Artist artistSaved = artistService.save(artist);
 
-    URI uri = HttpHelper.uri(artistSaved.getId());
+    URI uri = HttpHelper.uri("/artists/" + artistSaved.getId());
     return ResponseEntity.created(uri).body(new ArtistEntityResponse(artistSaved));
   }
 
