@@ -1,7 +1,7 @@
 package dev.nateschieber.groovesprings.rest.dtos.priced.track;
 
-import dev.nateschieber.groovesprings.entities.priced.PricedTrack;
+import dev.nateschieber.groovesprings.price.pricedEntities.PricedTrack;
 import java.util.List;
 
-public record AllPricedTracksDto(List<PricedTrack> pricedTracks) implements PricedTrackDto {
+public record AllPricedTracksDto(int count, List<PricedTrack> pricedTracks) implements PricedTrackDto {
 }

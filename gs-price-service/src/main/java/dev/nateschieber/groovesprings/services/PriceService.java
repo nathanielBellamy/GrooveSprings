@@ -35,20 +35,17 @@ public class PriceService {
   //   - sales/discount by Genre
   //   - sales/discount by ReleaseDate
   public Price priceTrack(TrackEntityDto dto) {
-    long duration = dto.duration();
-    List<Genre> genres = dto.genres();
-    LocalDate releaseDate = dto.releaseDate();
-    AudioCodec audioCodec = dto.audioCodec();
     return priceRepository.save(
         new Price(
           EntityType.TRACK,
           dto.id(),
-          trackPriceFunction(duration, genres, releaseDate, audioCodec))
+          trackPriceFunction(dto.duration(), dto.genres(), dto.releaseDate(), dto.audioCodec()))
     );
   }
 
   public List<Price> priceTracks(TrackEntityBulkDto dto) {
-    return dto.tracks().stream().map(teDto -> priceTrack(teDto)).collect(Collectors.toList());
+    var res = dto.tracks().stream().map(teDto -> priceTrack(teDto)).collect(Collectors.toList());
+    return res;
   }
 
   private long trackPriceFunction(long duration, List<Genre> genres, LocalDate releaseDate, AudioCodec audioCodec) {

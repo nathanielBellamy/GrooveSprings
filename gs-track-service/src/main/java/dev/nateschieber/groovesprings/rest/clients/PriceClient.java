@@ -5,10 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dev.nateschieber.groovesprings.entities.Price;
+import dev.nateschieber.groovesprings.price.Price;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
-import dev.nateschieber.groovesprings.rest.dtos.price.PriceEntityDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackGetAllDto;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -76,7 +75,7 @@ public class PriceClient {
 
   public List<Price> getTrackPrices(List<Track> tracks) {
 
-    HttpRequest request = priceRequest(new TrackGetAllDto(tracks), "bulk/track");
+    HttpRequest request = priceRequest(new TrackGetAllDto(tracks.size(), tracks), "bulk/track");
 
     try {
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

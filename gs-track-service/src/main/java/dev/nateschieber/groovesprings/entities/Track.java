@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
+import dev.nateschieber.groovesprings.enums.Genre;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -30,11 +32,15 @@ import java.util.Set;
 public class Track {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private long id;
+  private Long id;
 
   private String title;
   private long duration;
   private int trackNumber;
+  @ElementCollection
+  @Enumerated(EnumType.STRING)
+  private List<Genre> genres;
+
   @Enumerated(EnumType.STRING)
   private AudioCodec audioCodec;
 
@@ -63,13 +69,16 @@ public class Track {
   public Track() {}
 
   public Track(
+      Long id,
       List<Artist> artists,
       Optional<Album> album,
       String title,
       int trackNumber,
       long duration,
       AudioCodec audioCodec,
+      List<Genre> genres,
       LocalDate releaseDate) {
+    this.id = id;
     this.album = album.orElse(null);
     this.artists = new HashSet<>(artists); // TODO: record order
     this.title = title;
@@ -77,6 +86,7 @@ public class Track {
     this.duration = duration;
     this.audioCodec = audioCodec;
     this.releaseDate = releaseDate;
+    this.genres = genres;
   }
 
   // useful for updating a track based on dto
@@ -88,6 +98,7 @@ public class Track {
     this.duration = track.getDuration();
     this.audioCodec = track.getAudioCodec();
     this.releaseDate = track.getReleaseDate();
+    this.genres = track.getGenres();
   }
 
   public long getId() {
@@ -120,5 +131,9 @@ public class Track {
 
   public AudioCodec getAudioCodec() {
     return audioCodec;
+  }
+
+  public List<Genre> getGenres() {
+    return genres;
   }
 }

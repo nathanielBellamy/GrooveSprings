@@ -6,6 +6,6 @@ import java.util.List;
 
 public class ArtistGetAllResponse extends ArtistResponse {
   public ArtistGetAllResponse(List<Artist> artists) {
-    this.setData(new ArtistGetAllDto(artists));
+    this.setData(new ArtistGetAllDto(artists.size(), artists));
   }
 }

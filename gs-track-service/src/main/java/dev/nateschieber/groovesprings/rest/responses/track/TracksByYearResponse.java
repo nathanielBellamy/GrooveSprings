@@ -6,6 +6,6 @@ import java.util.List;
 
 public class TracksByYearResponse extends TrackResponse {
   public TracksByYearResponse(Integer year, List<Track> tracks) {
-    this.setData( new TracksByYearDto(year, tracks, tracks.size()) );
+    this.setData( new TracksByYearDto(year, tracks.size(), tracks) );
   }
 }

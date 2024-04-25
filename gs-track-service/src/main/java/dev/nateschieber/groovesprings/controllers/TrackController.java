@@ -89,7 +89,7 @@ public class TrackController {
   }
 
   @GetMapping("/audiocodec")
-  public ResponseEntity getByMediaType(@RequestParam AudioCodec audioCodec) {
+  public ResponseEntity getByAudioCodec(@RequestParam AudioCodec audioCodec) {
     List<Track> tracks = trackService.findByAudioCodec(audioCodec);
     return ResponseEntity.ok().body(new TracksByMediaTypeResponse(audioCodec, tracks));
   }

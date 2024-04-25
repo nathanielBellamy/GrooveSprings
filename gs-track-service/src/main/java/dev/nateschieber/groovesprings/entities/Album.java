@@ -8,6 +8,8 @@ import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
 import dev.nateschieber.groovesprings.enums.Genre;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,12 +30,13 @@ import java.util.stream.Collectors;
 public class Album {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private long id;
+  private Long id;
 
   private String name;
   private LocalDate releaseDate;
 
   @ElementCollection
+  @Enumerated(EnumType.STRING)
   private List<Genre> genres;
 
   @OneToMany(mappedBy = "album")

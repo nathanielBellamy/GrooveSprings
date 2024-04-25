@@ -4,5 +4,5 @@ import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import java.util.List;
 
-public record TracksByMediaTypeDto(AudioCodec audioCodec, List<Track> tracks, int count) implements  TrackDto {
+public record TracksByMediaTypeDto(AudioCodec audioCodec, int count, List<Track> tracks) implements  TrackDto {
 }

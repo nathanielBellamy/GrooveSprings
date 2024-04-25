@@ -7,6 +7,6 @@ import java.util.List;
 
 public class TracksByMediaTypeResponse extends TrackResponse {
   public TracksByMediaTypeResponse(AudioCodec audioCodec, List<Track> tracks) {
-    this.setData( new TracksByMediaTypeDto(audioCodec, tracks, tracks.size()));
+    this.setData( new TracksByMediaTypeDto(audioCodec, tracks.size(), tracks));
   }
 }

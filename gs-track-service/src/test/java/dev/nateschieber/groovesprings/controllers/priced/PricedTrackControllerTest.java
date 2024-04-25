@@ -1,4 +1,4 @@
-package dev.nateschieber.groovesprings.controllers;
+package dev.nateschieber.groovesprings.controllers.priced;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.doReturn;
@@ -8,8 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.CoreMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.nateschieber.groovesprings.controllers.TrackController;
+import dev.nateschieber.groovesprings.controllers.mockData.priced.track.MockPricedTrackFactory;
 import dev.nateschieber.groovesprings.controllers.mockData.track.MockTrackFactory;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
+import dev.nateschieber.groovesprings.services.pricedEntities.PricedTrackService;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,10 +26,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-@WebMvcTest(controllers = TrackController.class)
+@WebMvcTest(controllers = PricedTrackController.class)
 @ExtendWith(MockitoExtension.class)
-public class TrackControllerTest {
-
+public class PricedTrackControllerTest {
   @Autowired
   MockMvc mockMvc;
 
@@ -33,22 +36,20 @@ public class TrackControllerTest {
   private ObjectMapper objectMapper;
 
   @MockBean
-  private TrackService trackService;
+  private PricedTrackService pricedTrackService;
 
   @Test
-  @DisplayName("TrackController#GET/{id} -> FindsById")
-  void TrackController_GetTrack_ReturnsTrack () throws Exception {
+  @DisplayName("PricedTrackController#GET -> FindsAll")
+  void PricedTrackController_GetAllPricedTracks_ReturnsListOfAllPricedTracks () throws Exception {
     doReturn(
-        Optional.of(MockTrackFactory.defaultTracks().get(0))
-    ).when(trackService).findById(1l);
+        MockPricedTrackFactory.defaultPricedTracks()
+    ).when(pricedTrackService).findAll();
 
-    ResultActions res = mockMvc.perform(get("/api/v1/tracks/1"));
+    ResultActions res = mockMvc.perform(get("/api/v1/priced/tracks"));
     res.andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.data.track.title", is("My Fight Song")))
-        .andExpect(jsonPath("$.data.track.genres", hasSize(1)));
+        .andExpect(jsonPath("$.data.count", is(3)))
+        .andExpect(jsonPath("$.data.pricedTracks", isA(ArrayList.class)))
+        .andExpect(jsonPath("$.data.pricedTracks", hasSize(3)));
   }
-
-
-
 }

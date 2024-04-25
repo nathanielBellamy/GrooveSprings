@@ -6,6 +6,6 @@ import java.util.List;
 
 public class TrackGetAllResponse extends TrackResponse {
   public TrackGetAllResponse(List<Track> tracks) {
-    this.setData(new TrackGetAllDto(tracks));
+    this.setData(new TrackGetAllDto(tracks.size(), tracks));
   }
 }

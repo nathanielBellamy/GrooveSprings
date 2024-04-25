@@ -29,5 +29,6 @@ public enum Genre {
   BOSSANOVA,
   A_CAPELLA,
   LIVE,
-  CHORAL
+  CHORAL,
+  ACOUSTIC
 }

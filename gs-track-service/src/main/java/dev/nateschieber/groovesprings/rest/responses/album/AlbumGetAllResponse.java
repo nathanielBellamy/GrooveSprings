@@ -6,6 +6,6 @@ import java.util.List;
 
 public class AlbumGetAllResponse extends AlbumResponse {
   public AlbumGetAllResponse(List<Album> albums) {
-    this.setData(new AlbumGetAllDto(albums));
+    this.setData(new AlbumGetAllDto(albums.size(), albums));
   }
 }

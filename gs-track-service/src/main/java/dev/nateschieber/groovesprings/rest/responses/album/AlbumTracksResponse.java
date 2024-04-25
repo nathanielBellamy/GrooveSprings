@@ -7,6 +7,6 @@ import java.util.List;
 
 public class AlbumTracksResponse extends AlbumResponse {
   public AlbumTracksResponse(Album album, List<Track> tracks) {
-    this.setData(new AlbumTracksDto(album, tracks));
+    this.setData(new AlbumTracksDto(album, tracks.size(), tracks));
   }
 }

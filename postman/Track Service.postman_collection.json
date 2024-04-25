@@ -13,12 +13,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{tracks_base_url}}/1",
+					"raw": "{{tracks_base_url}}/25",
 					"host": [
 						"{{tracks_base_url}}"
 					],
 					"path": [
-						"1"
+						"25"
 					]
 				}
 			},
@@ -92,7 +92,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"artistIds\": [1],\n    \"albumId\": 1,\n    \"title\": \"Taxman\",\n    \"trackNumber\": 1,\n    \"duration\": 161000,\n    \"audioCodec\": \"FLAC\",\n    \"releaseDate\": \"1966-08-05\"\n}",
+					"raw": "{\n\t\"artistIds\": [1],\n    \"albumId\": 1,\n    \"title\": \"Taxman\",\n    \"trackNumber\": 1,\n    \"duration\": 161000,\n    \"audioCodec\": \"FLAC\",\n    \"genres\": [\"ROCK\"],\n    \"releaseDate\": \"1966-08-05\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"

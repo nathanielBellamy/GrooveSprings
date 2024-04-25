@@ -1,8 +1,8 @@
 package dev.nateschieber.groovesprings.services.pricedEntities;
 
-import dev.nateschieber.groovesprings.entities.Price;
+import dev.nateschieber.groovesprings.price.Price;
 import dev.nateschieber.groovesprings.entities.Track;
-import dev.nateschieber.groovesprings.entities.priced.PricedTrack;
+import dev.nateschieber.groovesprings.price.pricedEntities.PricedTrack;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.rest.clients.PriceClient;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
@@ -83,7 +83,7 @@ public class PricedTrackService implements ITrackService<PricedTrack, TrackEntit
     return zipTracksWithPrices(tracksInCodec, prices);
   }
 
-  private List<PricedTrack> zipTracksWithPrices(List<Track> tracks, List<Price> prices) {
+  public static List<PricedTrack> zipTracksWithPrices(List<Track> tracks, List<Price> prices) {
     return tracks.stream().map(t -> {
       Optional<Price> price = prices.stream().filter(p -> p.getEntityId() == t.getId()).findFirst();
       if (!price.isPresent()) {

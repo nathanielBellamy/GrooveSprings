@@ -1,6 +1,6 @@
-package dev.nateschieber.groovesprings.entities.priced;
+package dev.nateschieber.groovesprings.price.pricedEntities;
 
-import dev.nateschieber.groovesprings.entities.Price;
+import dev.nateschieber.groovesprings.price.Price;
 import dev.nateschieber.groovesprings.entities.Track;
 
 public class PricedTrack extends PricedEntity {

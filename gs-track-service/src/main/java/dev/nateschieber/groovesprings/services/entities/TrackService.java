@@ -54,7 +54,16 @@ public class TrackService implements ITrackService<Track, TrackEntityDto, TrackC
   public Track createFromDto(TrackCreateDto dto) {
     Optional<Album> album = albumService.findById(dto.albumId());
     List<Artist> artists = artistService.findAllById(dto.artistIds());
-    Track track = new Track(artists, album, dto.title(), dto.trackNumber(), dto.duration(), dto.audioCodec(), dto.releaseDate());
+    Track track = new Track(
+        null,
+        artists,
+        album,
+        dto.title(),
+        dto.trackNumber(),
+        dto.duration(),
+        dto.audioCodec(),
+        dto.genres(),
+        dto.releaseDate());
     return trackRepository.save(track);
   }
 

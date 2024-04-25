@@ -1,6 +1,6 @@
 package dev.nateschieber.groovesprings.controllers.priced;
 
-import dev.nateschieber.groovesprings.entities.priced.PricedTrack;
+import dev.nateschieber.groovesprings.price.pricedEntities.PricedTrack;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.AllPricedTracksResponse;
 import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.PricedTrackEntityResponse;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/pricedTracks")
+@RequestMapping("/api/v1/priced/tracks")
 public class PricedTrackController {
 
   private PricedTrackService pricedTrackService;
@@ -64,7 +64,7 @@ public class PricedTrackController {
   }
 
   @GetMapping("/audiocodec")
-  public ResponseEntity getPricedTracksByReleaseYear(@RequestParam AudioCodec audioCodec) {
+  public ResponseEntity getPricedTracksByAudioCodec(@RequestParam AudioCodec audioCodec) {
     List<PricedTrack> pricedTracks = pricedTrackService.findByAudioCodec(audioCodec);
     ResponseEntity<PricedTracksByAudioCodecResponse> resEnt = new ResponseEntity<>(
         new PricedTracksByAudioCodecResponse(audioCodec, pricedTracks),

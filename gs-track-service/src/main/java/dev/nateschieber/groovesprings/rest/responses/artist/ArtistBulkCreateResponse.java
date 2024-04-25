@@ -6,6 +6,6 @@ import java.util.List;
 
 public class ArtistBulkCreateResponse extends ArtistResponse {
   public ArtistBulkCreateResponse(List<Artist> artists) {
-    this.setData(new ArtistBulkCreateDto(artists));
+    this.setData(new ArtistBulkCreateDto(artists.size(), artists));
   }
 }
