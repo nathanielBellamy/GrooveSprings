@@ -101,7 +101,7 @@ public class Track {
     this.genres = track.getGenres();
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 

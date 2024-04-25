@@ -9,6 +9,7 @@ import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import dev.nateschieber.groovesprings.services.entities.ITrackService;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,7 +52,6 @@ public class PricedTrackService implements ITrackService<PricedTrack, TrackEntit
 
   @Override
   public void deleteById(Long id) {
-
   }
 
   @Override
@@ -67,6 +67,11 @@ public class PricedTrackService implements ITrackService<PricedTrack, TrackEntit
   @Override
   public PricedTrack save(Track track) {
     return null;
+  }
+
+  @Override
+  public List<PricedTrack> saveAll(List<Track> tracks) {
+    return Collections.emptyList();
   }
 
   @Override

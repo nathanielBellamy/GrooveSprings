@@ -1,13 +1,17 @@
 package dev.nateschieber.groovesprings.services.priced;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 import dev.nateschieber.groovesprings.controllers.mockData.price.MockPriceFactory;
 import dev.nateschieber.groovesprings.controllers.mockData.priced.track.MockPricedTrackFactory;
 import dev.nateschieber.groovesprings.controllers.mockData.track.MockTrackFactory;
 import dev.nateschieber.groovesprings.entities.Track;
+import dev.nateschieber.groovesprings.matchers.price.PriceMatcher;
+import dev.nateschieber.groovesprings.matchers.track.TrackMatcher;
 import dev.nateschieber.groovesprings.price.Price;
 import dev.nateschieber.groovesprings.price.pricedEntities.PricedTrack;
 import dev.nateschieber.groovesprings.rest.clients.PriceClient;
@@ -57,7 +61,6 @@ public class PricedTrackServiceTest {
   @Test
   public void PricedTrackService_findById_returnsPricedTrackById() throws Exception {
     Track mockTrack = MockTrackFactory.defaultTracks().get(0);
-
     Price mockPrice = MockPriceFactory.defaultTrackPrices().get(0);
     doReturn(Optional.of(mockPrice)).when(priceClient).getTrackPrice(any(Track.class));
 
@@ -70,6 +73,26 @@ public class PricedTrackServiceTest {
       assertEquals(mockTrack.getId(), pt.getTrack().getId());
       assertEquals(mockTrack.getTitle(), pt.getTrack().getTitle());
       assertEquals(mockPrice.getId(), pt.getPrice().getId());
+      assertEquals(mockPrice.getUsdCents(), pt.getPrice().getUsdCents());
     }
+  }
+
+  @Test
+  public void PricedTrackService_findAll_returnsAllPricedTracks() throws Exception {
+    List<Track> mockTracks = MockTrackFactory.defaultTracks();
+    List<Track> savedTracks = trackService.saveAll(mockTracks);
+
+    List<Price> mockPrices = MockPriceFactory.defaultTrackPrices();
+
+    doReturn(mockPrices).when(priceClient).getTrackPrices(any());
+
+    List<PricedTrack> pts = pricedTrackService.findAll();
+    assertTrue( new TrackMatcher(pts.get(0).getTrack()).matches(savedTracks.get(0)));
+    assertTrue( new TrackMatcher(pts.get(1).getTrack()).matches(savedTracks.get(1)));
+    assertTrue( new TrackMatcher(pts.get(2).getTrack()).matches(savedTracks.get(2)));
+
+    assertTrue( new PriceMatcher(pts.get(0).getPrice()).matches(mockPrices.get(0)));
+    assertTrue( new PriceMatcher(pts.get(1).getPrice()).matches(mockPrices.get(1)));
+    assertTrue( new PriceMatcher(pts.get(2).getPrice()).matches(mockPrices.get(2)));
   }
 }

@@ -1,5 +1,6 @@
 package dev.nateschieber.groovesprings.price;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.nateschieber.groovesprings.enums.EntityType;
 import java.time.LocalDateTime;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -8,7 +9,9 @@ public class Price {
 
   private long id;
   private LocalDateTime at;
+  @JsonIgnore
   private EntityType entityType;
+  @JsonIgnore
   private Long entityId;
   @NotNull
   private long usdCents;

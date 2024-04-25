@@ -69,9 +69,12 @@ public class TrackService implements ITrackService<Track, TrackEntityDto, TrackC
 
   @Override
   public Track save(Track track) {
-    Track savedTrack = this.trackRepository.save(track);
+    return trackRepository.save(track);
+  }
 
-    return savedTrack;
+  @Override
+  public List<Track> saveAll(List<Track> tracks) {
+    return trackRepository.saveAll(tracks);
   }
 
   @Override

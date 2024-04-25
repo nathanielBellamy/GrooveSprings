@@ -18,6 +18,8 @@ public interface ITrackService<TRACK, ENT_DTO, CREATE_DTO> {
 
   TRACK save(Track track);
 
+  List<TRACK> saveAll(List<Track> tracks);
+
   List<TRACK> findByReleaseYear(int year);
 
   List<TRACK> findByAudioCodec(AudioCodec audioCodec);
