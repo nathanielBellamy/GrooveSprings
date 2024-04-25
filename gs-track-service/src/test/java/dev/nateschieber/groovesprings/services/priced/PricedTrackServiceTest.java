@@ -11,6 +11,7 @@ import dev.nateschieber.groovesprings.controllers.mockData.priced.track.MockPric
 import dev.nateschieber.groovesprings.controllers.mockData.track.MockTrackFactory;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.matchers.price.PriceMatcher;
+import dev.nateschieber.groovesprings.matchers.priced.PricedTrackMatcher;
 import dev.nateschieber.groovesprings.matchers.track.TrackMatcher;
 import dev.nateschieber.groovesprings.price.Price;
 import dev.nateschieber.groovesprings.price.pricedEntities.PricedTrack;
@@ -87,12 +88,8 @@ public class PricedTrackServiceTest {
     doReturn(mockPrices).when(priceClient).getTrackPrices(any());
 
     List<PricedTrack> pts = pricedTrackService.findAll();
-    assertTrue( new TrackMatcher(pts.get(0).getTrack()).matches(savedTracks.get(0)));
-    assertTrue( new TrackMatcher(pts.get(1).getTrack()).matches(savedTracks.get(1)));
-    assertTrue( new TrackMatcher(pts.get(2).getTrack()).matches(savedTracks.get(2)));
-
-    assertTrue( new PriceMatcher(pts.get(0).getPrice()).matches(mockPrices.get(0)));
-    assertTrue( new PriceMatcher(pts.get(1).getPrice()).matches(mockPrices.get(1)));
-    assertTrue( new PriceMatcher(pts.get(2).getPrice()).matches(mockPrices.get(2)));
+    assertTrue( new PricedTrackMatcher(pts.get(0)).matches(new PricedTrack(mockPrices.get(0), savedTracks.get(0))));
+    assertTrue( new PricedTrackMatcher(pts.get(1)).matches(new PricedTrack(mockPrices.get(1), savedTracks.get(1))));
+    assertTrue( new PricedTrackMatcher(pts.get(2)).matches(new PricedTrack(mockPrices.get(2), savedTracks.get(2))));
   }
 }
