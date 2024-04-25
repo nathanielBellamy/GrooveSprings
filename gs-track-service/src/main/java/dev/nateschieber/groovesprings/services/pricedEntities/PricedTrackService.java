@@ -65,7 +65,7 @@ public class PricedTrackService implements ITrackService<PricedTrack, TrackEntit
   }
 
   @Override
-  public PricedTrack save(Track track, long artistId) {
+  public PricedTrack save(Track track) {
     return null;
   }
 

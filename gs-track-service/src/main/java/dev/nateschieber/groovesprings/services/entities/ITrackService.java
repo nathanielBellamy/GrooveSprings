@@ -16,7 +16,7 @@ public interface ITrackService<TRACK, ENT_DTO, CREATE_DTO> {
 
   TRACK createFromDto(CREATE_DTO dto);
 
-  TRACK save(Track track, long artistId);
+  TRACK save(Track track);
 
   List<TRACK> findByReleaseYear(int year);
 

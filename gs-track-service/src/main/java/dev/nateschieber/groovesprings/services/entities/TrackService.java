@@ -68,7 +68,7 @@ public class TrackService implements ITrackService<Track, TrackEntityDto, TrackC
   }
 
   @Override
-  public Track save(Track track, long artistId) {
+  public Track save(Track track) {
     Track savedTrack = this.trackRepository.save(track);
 
     return savedTrack;
