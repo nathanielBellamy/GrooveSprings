@@ -1,6 +1,6 @@
 package dev.nateschieber.groovesprings.enums;
 
-public enum MediaType {
+public enum AudioCodec {
   WAV(1000),
   ALAC(900),
   AAC(800),
@@ -13,7 +13,7 @@ public enum MediaType {
 
   private int priceFactor;
 
-  MediaType(int priceFactor) {
+  AudioCodec(int priceFactor) {
     this.priceFactor = priceFactor;
   }
 

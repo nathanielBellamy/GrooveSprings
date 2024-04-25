@@ -2,7 +2,7 @@ package dev.nateschieber.groovesprings.services;
 
 import dev.nateschieber.groovesprings.entities.Price;
 import dev.nateschieber.groovesprings.enums.EntityType;
-import dev.nateschieber.groovesprings.enums.MediaType;
+import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.repositories.PriceRepository;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
@@ -38,12 +38,12 @@ public class PriceService {
     long duration = dto.duration();
     List<Genre> genres = dto.genres();
     LocalDate releaseDate = dto.releaseDate();
-    MediaType mediaType = dto.mediaType();
+    AudioCodec audioCodec = dto.audioCodec();
     return priceRepository.save(
         new Price(
           EntityType.TRACK,
           dto.id(),
-          trackPriceFunction(duration, genres, releaseDate, mediaType))
+          trackPriceFunction(duration, genres, releaseDate, audioCodec))
     );
   }
 
@@ -51,14 +51,14 @@ public class PriceService {
     return dto.tracks().stream().map(teDto -> priceTrack(teDto)).collect(Collectors.toList());
   }
 
-  private long trackPriceFunction(long duration, List<Genre> genres, LocalDate releaseDate, MediaType mediaType) {
+  private long trackPriceFunction(long duration, List<Genre> genres, LocalDate releaseDate, AudioCodec audioCodec) {
 
     double durationFactor = ThreadLocalRandom.current().nextDouble() * (duration / 10000d);
     double genresFactor = ThreadLocalRandom.current().nextDouble();
     double releaseDateFactor = ThreadLocalRandom.current().nextDouble() * (releaseDate.getYear() / releaseDate.getDayOfMonth());
-    double mediaTypeFactor = ThreadLocalRandom.current().nextDouble() * (mediaType.getPriceFactor() / 100.0);
+    double audioCodecFactor = ThreadLocalRandom.current().nextDouble() * (audioCodec.getPriceFactor() / 10.0);
 
-    return (long) Math.floor((durationFactor * genresFactor * releaseDateFactor * mediaTypeFactor) / 10d);
+    return (long) Math.floor((durationFactor * genresFactor * releaseDateFactor * audioCodecFactor) / 10d);
   }
 
   public Price priceAlbum(AlbumEntityDto dto) {

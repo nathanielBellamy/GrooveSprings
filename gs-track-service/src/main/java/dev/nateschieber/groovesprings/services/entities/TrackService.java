@@ -3,6 +3,7 @@ package dev.nateschieber.groovesprings.services.entities;
 import dev.nateschieber.groovesprings.entities.Album;
 import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.entities.Track;
+import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.repositories.TrackRepository;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
@@ -53,7 +54,7 @@ public class TrackService implements ITrackService<Track, TrackEntityDto, TrackC
   public Track createFromDto(TrackCreateDto dto) {
     Optional<Album> album = albumService.findById(dto.albumId());
     List<Artist> artists = artistService.findAllById(dto.artistIds());
-    Track track = new Track(artists, album, dto.title(), dto.trackNumber(), dto.duration(), dto.mediaType(), dto.releaseDate());
+    Track track = new Track(artists, album, dto.title(), dto.trackNumber(), dto.duration(), dto.audioCodec(), dto.releaseDate());
     return trackRepository.save(track);
   }
 
@@ -70,5 +71,10 @@ public class TrackService implements ITrackService<Track, TrackEntityDto, TrackC
         LocalDate.of(year, 1, 1),
         LocalDate.of(year, 12, 31)
     );
+  }
+
+  @Override
+  public List<Track> findByAudioCodec(AudioCodec audioCodec) {
+    return trackRepository.findByAudioCodec(audioCodec);
   }
 }

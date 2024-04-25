@@ -3,6 +3,7 @@ package dev.nateschieber.groovesprings.services.pricedEntities;
 import dev.nateschieber.groovesprings.entities.Price;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.entities.priced.PricedTrack;
+import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.rest.clients.PriceClient;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
@@ -73,6 +74,13 @@ public class PricedTrackService implements ITrackService<PricedTrack, TrackEntit
     List<Track> tracksForYear = trackService.findByReleaseYear(year);
     List<Price> prices = priceClient.getTrackPrices(tracksForYear);
     return zipTracksWithPrices(tracksForYear, prices);
+  }
+
+  @Override
+  public List<PricedTrack> findByAudioCodec(AudioCodec audioCodec) {
+    List<Track> tracksInCodec = trackService.findByAudioCodec(audioCodec);
+    List<Price> prices = priceClient.getTrackPrices(tracksInCodec);
+    return zipTracksWithPrices(tracksInCodec, prices);
   }
 
   private List<PricedTrack> zipTracksWithPrices(List<Track> tracks, List<Price> prices) {

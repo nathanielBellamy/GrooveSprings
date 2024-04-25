@@ -1,6 +1,7 @@
 package dev.nateschieber.groovesprings.services.entities;
 
 import dev.nateschieber.groovesprings.entities.Track;
+import dev.nateschieber.groovesprings.enums.AudioCodec;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +19,6 @@ public interface ITrackService<TRACK, ENT_DTO, CREATE_DTO> {
   TRACK save(Track track, long artistId);
 
   List<TRACK> findByReleaseYear(int year);
+
+  List<TRACK> findByAudioCodec(AudioCodec audioCodec);
 }

@@ -1,11 +1,10 @@
 package dev.nateschieber.groovesprings.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import dev.nateschieber.groovesprings.enums.MediaType;
+import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,7 +36,7 @@ public class Track {
   private long duration;
   private int trackNumber;
   @Enumerated(EnumType.STRING)
-  private MediaType mediaType;
+  private AudioCodec audioCodec;
 
   private LocalDate releaseDate;
 
@@ -69,14 +68,14 @@ public class Track {
       String title,
       int trackNumber,
       long duration,
-      MediaType mediaType,
+      AudioCodec audioCodec,
       LocalDate releaseDate) {
     this.album = album.orElse(null);
     this.artists = new HashSet<>(artists); // TODO: record order
     this.title = title;
     this.trackNumber = trackNumber;
     this.duration = duration;
-    this.mediaType = mediaType;
+    this.audioCodec = audioCodec;
     this.releaseDate = releaseDate;
   }
 
@@ -87,7 +86,7 @@ public class Track {
     this.title = track.getTitle();
     this.trackNumber = track.getTrackNumber();
     this.duration = track.getDuration();
-    this.mediaType = track.getMediaType();
+    this.audioCodec = track.getAudioCodec();
     this.releaseDate = track.getReleaseDate();
   }
 
@@ -119,7 +118,7 @@ public class Track {
     return releaseDate;
   }
 
-  public MediaType getMediaType() {
-    return mediaType;
+  public AudioCodec getAudioCodec() {
+    return audioCodec;
   }
 }

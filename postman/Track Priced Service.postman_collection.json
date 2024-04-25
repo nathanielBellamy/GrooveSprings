@@ -44,7 +44,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{pricedTracks_base_url}}/year?year=1966",
+					"raw": "{{pricedTracks_base_url}}/year?year=1965",
 					"host": [
 						"{{pricedTracks_base_url}}"
 					],
@@ -54,7 +54,30 @@
 					"query": [
 						{
 							"key": "year",
-							"value": "1966"
+							"value": "1965"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Priced Tracks By Media Type",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{pricedTracks_base_url}}/audiocodec?audioCodec=FLAC",
+					"host": [
+						"{{pricedTracks_base_url}}"
+					],
+					"path": [
+						"audiocodec"
+					],
+					"query": [
+						{
+							"key": "audioCodec",
+							"value": "FLAC"
 						}
 					]
 				}

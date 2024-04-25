@@ -1,5 +1,6 @@
 package dev.nateschieber.groovesprings.controllers;
 
+import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
@@ -7,6 +8,7 @@ import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackGetAllResponse;
+import dev.nateschieber.groovesprings.rest.responses.track.TracksByMediaTypeResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByYearResponse;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
 import java.net.URI;
@@ -84,5 +86,11 @@ public class TrackController {
   public ResponseEntity getByReleaseYear(@RequestParam Integer year) {
     List<Track> tracks = trackService.findByReleaseYear(year);
     return ResponseEntity.ok().body(new TracksByYearResponse(year, tracks));
+  }
+
+  @GetMapping("/audiocodec")
+  public ResponseEntity getByMediaType(@RequestParam AudioCodec audioCodec) {
+    List<Track> tracks = trackService.findByAudioCodec(audioCodec);
+    return ResponseEntity.ok().body(new TracksByMediaTypeResponse(audioCodec, tracks));
   }
 }

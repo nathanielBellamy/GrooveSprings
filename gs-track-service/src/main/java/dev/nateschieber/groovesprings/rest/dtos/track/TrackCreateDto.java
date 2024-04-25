@@ -1,6 +1,6 @@
 package dev.nateschieber.groovesprings.rest.dtos.track;
 
-import dev.nateschieber.groovesprings.enums.MediaType;
+import dev.nateschieber.groovesprings.enums.AudioCodec;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,5 +10,5 @@ public record TrackCreateDto(
     String title,
     int trackNumber,
     long duration,
-    MediaType mediaType,
+    AudioCodec audioCodec,
     LocalDate releaseDate) implements TrackDto { }
