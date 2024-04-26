@@ -13,12 +13,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{pricedTracks_base_url}}/1",
+					"raw": "{{pricedTracks_base_url}}/5",
 					"host": [
 						"{{pricedTracks_base_url}}"
 					],
 					"path": [
-						"1"
+						"5"
 					]
 				}
 			},
@@ -44,7 +44,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{pricedTracks_base_url}}/year?year=1965",
+					"raw": "{{pricedTracks_base_url}}/year?year=1967",
 					"host": [
 						"{{pricedTracks_base_url}}"
 					],
@@ -54,7 +54,7 @@
 					"query": [
 						{
 							"key": "year",
-							"value": "1965"
+							"value": "1967"
 						}
 					]
 				}
@@ -78,6 +78,33 @@
 						{
 							"key": "audioCodec",
 							"value": "FLAC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Priced Tracks By Duration",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{pricedTracks_base_url}}/duration?min=1000&max=200000",
+					"host": [
+						"{{pricedTracks_base_url}}"
+					],
+					"path": [
+						"duration"
+					],
+					"query": [
+						{
+							"key": "min",
+							"value": "1000"
+						},
+						{
+							"key": "max",
+							"value": "200000"
 						}
 					]
 				}

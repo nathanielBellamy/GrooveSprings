@@ -113,6 +113,65 @@
 			"response": []
 		},
 		{
+			"name": "Create Track 400 - Empty Title",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "JSESSIONID",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"artistIds\": [1],\n    \"albumId\": 1,\n    \"title\": \"\",\n    \"trackNumber\": 1,\n    \"duration\": 161000,\n    \"audioCodec\": \"FLAC\",\n    \"genres\": [\"ROCK\"],\n    \"releaseDate\": \"1966-08-05\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{tracks_base_url}}/create",
+					"host": [
+						"{{tracks_base_url}}"
+					],
+					"path": [
+						"create"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
 			"name": "Update Track",
 			"event": [
 				{
@@ -134,7 +193,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"track\": {\n \t  \"artistId\": 1,\n      \"albumId\": 1,\n      \"title\": \"Wow Zow UPDATED\",\n      \"duration\": 1\n    }\n}",
+					"raw": "{\n    \"id\": 202,\n\t\"artistIds\": [1],\n    \"albumId\": 1,\n    \"title\": \"Taxman Updated\",\n    \"trackNumber\": 1,\n    \"duration\": 161000,\n    \"audioCodec\": \"FLAC\",\n    \"genres\": [\"ROCK\"],\n    \"releaseDate\": \"1966-08-05\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -142,12 +201,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{tracks_base_url}}/1",
+					"raw": "{{tracks_base_url}}",
 					"host": [
 						"{{tracks_base_url}}"
-					],
-					"path": [
-						"1"
 					]
 				},
 				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -184,12 +240,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{tracks_base_url}}/2",
+					"raw": "{{tracks_base_url}}/202",
 					"host": [
 						"{{tracks_base_url}}"
 					],
 					"path": [
-						"2"
+						"202"
 					]
 				},
 				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
@@ -266,6 +322,33 @@
 						{
 							"key": "audioCodec",
 							"value": "OGG"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tracks By AudioCodec Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{tracks_base_url}}/duration?min=111000&max=200000",
+					"host": [
+						"{{tracks_base_url}}"
+					],
+					"path": [
+						"duration"
+					],
+					"query": [
+						{
+							"key": "min",
+							"value": "111000"
+						},
+						{
+							"key": "max",
+							"value": "200000"
 						}
 					]
 				}
