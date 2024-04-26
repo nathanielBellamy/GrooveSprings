@@ -14,12 +14,12 @@ import org.antlr.v4.runtime.misc.NotNull;
 public class Price {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private long id;
+  private Long id;
 
   private LocalDateTime at;
 
   private EntityType entityType;
-  private long entityId;
+  private Long entityId;
 
   @NotNull
   private long usdCents;
@@ -28,14 +28,14 @@ public class Price {
     this.at = LocalDateTime.now();
   };
 
-  public Price(EntityType entityType, long entityId, long usdCents) {
+  public Price(EntityType entityType, Long entityId, long usdCents) {
     this();
     this.entityType = entityType;
     this.entityId = entityId;
     this.usdCents = usdCents;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
@@ -47,7 +47,7 @@ public class Price {
     return entityType;
   }
 
-  public long getEntityId() {
+  public Long getEntityId() {
     return entityId;
   }
 

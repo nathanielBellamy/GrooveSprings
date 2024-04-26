@@ -6,6 +6,8 @@ public abstract class PricedEntity {
 
   private Price price;
 
+  public PricedEntity() {}
+
   public PricedEntity(Price price) {
     this.price = price;
   }

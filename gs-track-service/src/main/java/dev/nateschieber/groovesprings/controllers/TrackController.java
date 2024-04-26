@@ -5,12 +5,14 @@ import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackGetAllResponse;
-import dev.nateschieber.groovesprings.rest.responses.track.TracksByMediaTypeResponse;
+import dev.nateschieber.groovesprings.rest.responses.track.TracksByAudioCodecResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByYearResponse;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -58,20 +60,20 @@ public class TrackController {
     }
   }
 
-  @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity createTrack(@RequestBody TrackCreateDto dto) {
+  @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity createTrack(@Valid @RequestBody TrackCreateDto dto) {
     Track trackSaved = trackService.createFromDto(dto);
     URI uri = HttpHelper.uri("/tracks/" + trackSaved.getId());
     return ResponseEntity.created(uri).body(new TrackEntityResponse(trackSaved));
   }
 
-  @PutMapping(value = "/{id}")
-  public ResponseEntity updateTrack(@PathVariable Long id, @RequestBody TrackEntityDto dto) {
-    Optional<Track> loadedTrack = trackService.findById(id);
+  @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity updateTrack(@RequestBody TrackUpdateDto dto) {
+    Optional<Track> loadedTrack = trackService.findById(dto.id());
     if (!loadedTrack.isPresent()){
       return ResponseEntity.notFound().build();
     } else {
-      Track updatedTrack = trackService.update(id, dto);
+      Track updatedTrack = trackService.update(dto);
       return ResponseEntity.ok().body(new TrackEntityResponse(updatedTrack));
     }
   }
@@ -91,6 +93,6 @@ public class TrackController {
   @GetMapping("/audiocodec")
   public ResponseEntity getByAudioCodec(@RequestParam AudioCodec audioCodec) {
     List<Track> tracks = trackService.findByAudioCodec(audioCodec);
-    return ResponseEntity.ok().body(new TracksByMediaTypeResponse(audioCodec, tracks));
+    return ResponseEntity.ok().body(new TracksByAudioCodecResponse(audioCodec, tracks));
   }
 }

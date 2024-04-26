@@ -6,7 +6,9 @@ import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.repositories.TrackRepository;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TrackService implements ITrackService<Track, TrackEntityDto, TrackCreateDto> {
+public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackCreateDto> {
   private final AlbumService albumService;
   private final ArtistService artistService;
   private final TrackRepository trackRepository;
@@ -45,8 +47,8 @@ public class TrackService implements ITrackService<Track, TrackEntityDto, TrackC
   }
 
   @Override
-  public Track update(Long id, TrackEntityDto dto) {
-    Track updatedTrack = new Track(id, dto);
+  public Track update(TrackUpdateDto dto) {
+    Track updatedTrack = new Track(dto);
     return this.trackRepository.save(updatedTrack);
   }
 
@@ -57,7 +59,7 @@ public class TrackService implements ITrackService<Track, TrackEntityDto, TrackC
     Track track = new Track(
         null,
         artists,
-        album,
+        album.orElse(null),
         dto.title(),
         dto.trackNumber(),
         dto.duration(),

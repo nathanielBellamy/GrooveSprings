@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record TrackEntityDto(
-    long id,
+    Long id,
     Long duration,
     LocalDate releaseDate,
     AudioCodec audioCodec,

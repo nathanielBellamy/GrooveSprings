@@ -1,4 +1,4 @@
-package dev.nateschieber.groovesprings.controllers.mockData.track;
+package dev.nateschieber.groovesprings.mockData.track;
 
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
@@ -15,7 +15,7 @@ public class MockTrackFactory {
         new Track(
             1l,
             Collections.emptyList(),
-            Optional.empty(),
+            null,
             "My Fight Song",
             1,
             123000l,
@@ -25,7 +25,7 @@ public class MockTrackFactory {
         new Track(
             2l,
             Collections.emptyList(),
-            Optional.empty(),
+            null,
             "Rhythm of the Night",
             1,
             123000l,
@@ -35,7 +35,7 @@ public class MockTrackFactory {
         new Track(
             3l,
             Collections.emptyList(),
-            Optional.empty(),
+            null,
             "Walk The Line",
             1,
             456000l,

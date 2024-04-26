@@ -8,6 +8,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.nateschieber.groovesprings.price.Price;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
+import dev.nateschieber.groovesprings.rest.dtos.price.client.PriceClientResponseDto;
+import dev.nateschieber.groovesprings.rest.dtos.price.client.TrackPriceClientResponseDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackGetAllDto;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -60,9 +62,10 @@ public class PriceClient {
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (response.statusCode() == 200){
-        JsonNode respNode = objectMapper.readValue(response.body(), JsonNode.class);
-        JsonNode priceNode = respNode.get("data").get("price");
-        Price price = objectMapper.convertValue(priceNode, Price.class);
+        // TODO:
+        // - debug why we're suddenly having trouble deserializing EntityType and EntityId
+        TrackPriceClientResponseDto pcrd = objectMapper.readValue(response.body(), TrackPriceClientResponseDto.class);
+        Price price = pcrd.data().price();
 
         return Optional.of(price);
       } else {

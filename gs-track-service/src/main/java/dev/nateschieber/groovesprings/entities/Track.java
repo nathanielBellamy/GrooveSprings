@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.enums.Genre;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,6 +23,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +38,7 @@ public class Track {
   private Long id;
 
   private String title;
-  private long duration;
+  private Long duration;
   private int trackNumber;
   @ElementCollection
   @Enumerated(EnumType.STRING)
@@ -71,15 +74,15 @@ public class Track {
   public Track(
       Long id,
       List<Artist> artists,
-      Optional<Album> album,
+      Album album,
       String title,
       int trackNumber,
-      long duration,
+      Long duration,
       AudioCodec audioCodec,
       List<Genre> genres,
       LocalDate releaseDate) {
     this.id = id;
-    this.album = album.orElse(null);
+    this.album = album;
     this.artists = new HashSet<>(artists); // TODO: record order
     this.title = title;
     this.trackNumber = trackNumber;
@@ -89,16 +92,14 @@ public class Track {
     this.genres = genres;
   }
 
-  // useful for updating a track based on dto
-  public Track(long id, TrackEntityDto dto) {
-    this.id = id;
-    Track track = dto.track();
-    this.title = track.getTitle();
-    this.trackNumber = track.getTrackNumber();
-    this.duration = track.getDuration();
-    this.audioCodec = track.getAudioCodec();
-    this.releaseDate = track.getReleaseDate();
-    this.genres = track.getGenres();
+  public Track(TrackUpdateDto dto) {
+    this.id = dto.id();
+    this.title = dto.title();
+    this.trackNumber = dto.trackNumber();
+    this.duration = dto.duration();
+    this.audioCodec = dto.audioCodec();
+    this.releaseDate = dto.releaseDate();
+    this.genres = dto.genres();
   }
 
   public Long getId() {
@@ -109,6 +110,10 @@ public class Track {
     return title;
   }
 
+  public void setTitle(String newTitle) {
+    title = newTitle;
+  }
+
   public int getTrackNumber() {
     return trackNumber;
   }
@@ -117,12 +122,20 @@ public class Track {
     return duration;
   }
 
+  public void setDuration(Long newDuration) {
+    duration = newDuration;
+  }
+
   public Album getAlbum() {
     return album;
   }
 
-  public Set<Artist> getArtists() {
-    return artists;
+  public List<Artist> getArtists() {
+    if (artists == null) {
+      return Collections.emptyList();
+    } else {
+      return artists.stream().toList();
+    }
   }
 
   public LocalDate getReleaseDate() {

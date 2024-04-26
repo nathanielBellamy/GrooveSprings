@@ -8,13 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.CoreMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.nateschieber.groovesprings.controllers.TrackController;
-import dev.nateschieber.groovesprings.controllers.mockData.priced.track.MockPricedTrackFactory;
-import dev.nateschieber.groovesprings.controllers.mockData.track.MockTrackFactory;
-import dev.nateschieber.groovesprings.services.entities.TrackService;
+import dev.nateschieber.groovesprings.mockData.priced.track.MockPricedTrackFactory;
 import dev.nateschieber.groovesprings.services.pricedEntities.PricedTrackService;
 import java.util.ArrayList;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

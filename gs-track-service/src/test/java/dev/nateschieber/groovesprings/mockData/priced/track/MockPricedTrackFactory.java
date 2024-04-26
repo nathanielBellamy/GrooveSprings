@@ -1,7 +1,7 @@
-package dev.nateschieber.groovesprings.controllers.mockData.priced.track;
+package dev.nateschieber.groovesprings.mockData.priced.track;
 
-import dev.nateschieber.groovesprings.controllers.mockData.price.MockPriceFactory;
-import dev.nateschieber.groovesprings.controllers.mockData.track.MockTrackFactory;
+import dev.nateschieber.groovesprings.mockData.price.MockPriceFactory;
+import dev.nateschieber.groovesprings.mockData.track.MockTrackFactory;
 import dev.nateschieber.groovesprings.price.Price;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.price.pricedEntities.PricedTrack;

@@ -4,30 +4,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 
-import dev.nateschieber.groovesprings.controllers.mockData.price.MockPriceFactory;
-import dev.nateschieber.groovesprings.controllers.mockData.priced.track.MockPricedTrackFactory;
-import dev.nateschieber.groovesprings.controllers.mockData.track.MockTrackFactory;
+import dev.nateschieber.groovesprings.mockData.price.MockPriceFactory;
+import dev.nateschieber.groovesprings.mockData.track.MockTrackFactory;
 import dev.nateschieber.groovesprings.entities.Track;
-import dev.nateschieber.groovesprings.matchers.price.PriceMatcher;
 import dev.nateschieber.groovesprings.matchers.priced.PricedTrackMatcher;
-import dev.nateschieber.groovesprings.matchers.track.TrackMatcher;
 import dev.nateschieber.groovesprings.price.Price;
 import dev.nateschieber.groovesprings.price.pricedEntities.PricedTrack;
 import dev.nateschieber.groovesprings.rest.clients.PriceClient;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
 import dev.nateschieber.groovesprings.services.pricedEntities.PricedTrackService;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
@@ -71,10 +63,7 @@ public class PricedTrackServiceTest {
       throw new Exception("Unable to load Mock Priced Track - Check your Mocking and Mock Data");
     } else {
       PricedTrack pt = pricedTrack.get();
-      assertEquals(mockTrack.getId(), pt.getTrack().getId());
-      assertEquals(mockTrack.getTitle(), pt.getTrack().getTitle());
-      assertEquals(mockPrice.getId(), pt.getPrice().getId());
-      assertEquals(mockPrice.getUsdCents(), pt.getPrice().getUsdCents());
+      assertTrue( new PricedTrackMatcher(pt).matches(new PricedTrack(mockPrice, mockTrack)));
     }
   }
 

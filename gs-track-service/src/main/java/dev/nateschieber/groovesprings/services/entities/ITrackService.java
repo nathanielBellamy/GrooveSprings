@@ -5,14 +5,14 @@ import dev.nateschieber.groovesprings.enums.AudioCodec;
 import java.util.List;
 import java.util.Optional;
 
-public interface ITrackService<TRACK, ENT_DTO, CREATE_DTO> {
+public interface ITrackService<TRACK, UPDATE_DTO, CREATE_DTO> {
   List<TRACK> findAll();
 
   Optional<TRACK> findById(Long id);
 
   void deleteById(Long id);
 
-  TRACK update(Long id, ENT_DTO dto);
+  TRACK update(UPDATE_DTO dto);
 
   TRACK createFromDto(CREATE_DTO dto);
 

@@ -6,7 +6,9 @@ import dev.nateschieber.groovesprings.price.pricedEntities.PricedTrack;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.rest.clients.PriceClient;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
 import dev.nateschieber.groovesprings.services.entities.ITrackService;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
 import java.util.Collections;
@@ -17,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PricedTrackService implements ITrackService<PricedTrack, TrackEntityDto, TrackCreateDto> {
+public class PricedTrackService implements ITrackService<PricedTrack, TrackUpdateDto, TrackCreateDto> {
 
   private PriceClient priceClient;
   private TrackService trackService;
@@ -55,7 +57,7 @@ public class PricedTrackService implements ITrackService<PricedTrack, TrackEntit
   }
 
   @Override
-  public PricedTrack update(Long id, TrackEntityDto trackEntityDto) {
+  public PricedTrack update(TrackUpdateDto trackUpdateDto) {
     return null;
   }
 

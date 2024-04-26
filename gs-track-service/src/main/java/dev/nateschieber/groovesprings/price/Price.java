@@ -7,7 +7,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 public class Price {
 
-  private long id;
+  private Long id;
   private LocalDateTime at;
   @JsonIgnore
   private EntityType entityType;
@@ -19,10 +19,10 @@ public class Price {
   public Price() {}
 
   public Price(
-      long id,
+      Long id,
       LocalDateTime at,
       EntityType entityType,
-      long entityId,
+      Long entityId,
       long usdCents
   ) {
     this.id = id;

@@ -7,6 +7,8 @@ public class PricedTrack extends PricedEntity {
 
   private Track track;
 
+  public PricedTrack( ) { }
+
   public PricedTrack(Price price, Track track) {
     super(price);
     this.track = track;

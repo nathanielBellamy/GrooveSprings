@@ -8,7 +8,9 @@ import java.time.LocalDate;
 import java.util.List;
 import org.antlr.v4.runtime.misc.NotNull;
 
-public record TrackCreateDto(
+public record TrackUpdateDto(
+    @NotNull @Min(1l)
+    Long id,
     List<Long> artistIds,
     Long albumId,
     @Size(min = 1, max = 255)
