@@ -23,4 +23,6 @@ public interface ITrackService<TRACK, UPDATE_DTO, CREATE_DTO> {
   List<TRACK> findByReleaseYear(int year);
 
   List<TRACK> findByAudioCodec(AudioCodec audioCodec);
+
+  List<TRACK> findByDurationBetween(Long min, Long max);
 }

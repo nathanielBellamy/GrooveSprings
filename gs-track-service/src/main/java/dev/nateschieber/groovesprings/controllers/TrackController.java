@@ -10,6 +10,7 @@ import dev.nateschieber.groovesprings.rest.responses.track.TrackDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackGetAllResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByAudioCodecResponse;
+import dev.nateschieber.groovesprings.rest.responses.track.TracksByDurationResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByYearResponse;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
 import jakarta.validation.Valid;
@@ -94,5 +95,11 @@ public class TrackController {
   public ResponseEntity getByAudioCodec(@RequestParam AudioCodec audioCodec) {
     List<Track> tracks = trackService.findByAudioCodec(audioCodec);
     return ResponseEntity.ok().body(new TracksByAudioCodecResponse(audioCodec, tracks));
+  }
+
+  @GetMapping("/duration")
+  public ResponseEntity getByDuration(@RequestParam Long min, @RequestParam Long max) {
+    List<Track> tracks = trackService.findByDurationBetween(min, max);
+    return ResponseEntity.ok().body(new TracksByDurationResponse(min, max, tracks));
   }
 }

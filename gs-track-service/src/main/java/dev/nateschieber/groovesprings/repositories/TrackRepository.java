@@ -10,4 +10,5 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
 
   List<Track> findByReleaseDateBetween(LocalDate start, LocalDate end);
   List<Track> findByAudioCodec(AudioCodec audioCodec);
+  List<Track> findByDurationBetween(Long min, Long max);
 }

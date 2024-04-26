@@ -5,6 +5,7 @@ import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.AllPricedTracksResponse;
 import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.PricedTrackEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.PricedTracksByAudioCodecResponse;
+import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.PricedTracksByDurationResponse;
 import dev.nateschieber.groovesprings.rest.responses.priced.pricedTrack.PricedTracksByReleaseYearResponse;
 import dev.nateschieber.groovesprings.services.pricedEntities.PricedTrackService;
 import java.util.List;
@@ -68,6 +69,16 @@ public class PricedTrackController {
     List<PricedTrack> pricedTracks = pricedTrackService.findByAudioCodec(audioCodec);
     ResponseEntity<PricedTracksByAudioCodecResponse> resEnt = new ResponseEntity<>(
         new PricedTracksByAudioCodecResponse(audioCodec, pricedTracks),
+        HttpStatus.OK
+    );
+    return resEnt;
+  }
+
+  @GetMapping("/duration")
+  public ResponseEntity getPricedTracksByDuration(@RequestParam Long min, @RequestParam Long max) {
+    List<PricedTrack> pricedTracks = pricedTrackService.findByDurationBetween(min, max);
+    ResponseEntity<PricedTracksByDurationResponse> resEnt = new ResponseEntity<>(
+        new PricedTracksByDurationResponse(min, max, pricedTracks),
         HttpStatus.OK
     );
     return resEnt;

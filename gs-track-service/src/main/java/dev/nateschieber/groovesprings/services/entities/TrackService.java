@@ -91,4 +91,16 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
   public List<Track> findByAudioCodec(AudioCodec audioCodec) {
     return trackRepository.findByAudioCodec(audioCodec);
   }
+
+  @Override
+  public List<Track> findByDurationBetween(Long min, Long max) {
+    if (min == null || min < 0l) {
+      min = 0l;
+    }
+
+    if (max == null) {
+      max = Long.MAX_VALUE;
+    }
+    return trackRepository.findByDurationBetween(min, max);
+  }
 }

@@ -90,6 +90,13 @@ public class PricedTrackService implements ITrackService<PricedTrack, TrackUpdat
     return zipTracksWithPrices(tracksInCodec, prices);
   }
 
+  @Override
+  public List<PricedTrack> findByDurationBetween(Long min, Long max) {
+    List<Track> tracksInCodec = trackService.findByDurationBetween(min, max);
+    List<Price> prices = priceClient.getTrackPrices(tracksInCodec);
+    return zipTracksWithPrices(tracksInCodec, prices);
+  }
+
   public static List<PricedTrack> zipTracksWithPrices(List<Track> tracks, List<Price> prices) {
     return tracks.stream().map(t -> {
       Optional<Price> price = prices.stream().filter(p -> p.getEntityId() == t.getId()).findFirst();
