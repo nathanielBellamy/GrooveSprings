@@ -9,9 +9,7 @@ public class Price {
 
   private Long id;
   private LocalDateTime at;
-  @JsonIgnore
   private EntityType entityType;
-  @JsonIgnore
   private Long entityId;
   @NotNull
   private long usdCents;
@@ -32,11 +30,11 @@ public class Price {
     this.usdCents = usdCents;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
