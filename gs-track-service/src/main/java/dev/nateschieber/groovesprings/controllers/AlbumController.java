@@ -11,6 +11,7 @@ import dev.nateschieber.groovesprings.rest.responses.album.AlbumEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumGetAllResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumTracksResponse;
 import dev.nateschieber.groovesprings.services.entities.AlbumService;
+import jakarta.validation.constraints.Null;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +61,7 @@ public class AlbumController {
   }
 
   @GetMapping(value = "/{id}/tracks")
-  public ResponseEntity getAlbumTracksByAlbumId(@PathVariable Long id, @RequestParam AudioCodec audioCodec) {
+  public ResponseEntity getAlbumTracksByAlbumId(@PathVariable Long id, @RequestParam(required = false) AudioCodec audioCodec) {
     Optional<Album> album = albumService.findById(id);
     if (!album.isPresent()) {
       return ResponseEntity.notFound().build();

@@ -93,6 +93,10 @@ public class Album {
     return trackList;
   }
 
+  public void addTrack(Track track) {
+    tracks.add(track);
+  }
+
   public Set<Artist> getArtists() {
     return artists;
   }

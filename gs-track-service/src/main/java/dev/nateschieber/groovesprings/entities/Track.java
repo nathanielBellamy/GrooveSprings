@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tracks")
@@ -92,7 +93,7 @@ public class Track {
     this.genres = genres;
   }
 
-  public Track(TrackUpdateDto dto) {
+  public Track(TrackUpdateDto dto, List<Artist> newArtists, Album newAlbum) {
     this.id = dto.id();
     this.title = dto.title();
     this.trackNumber = dto.trackNumber();
@@ -100,6 +101,8 @@ public class Track {
     this.audioCodec = dto.audioCodec();
     this.releaseDate = dto.releaseDate();
     this.genres = dto.genres();
+    this.artists = newArtists.stream().collect(Collectors.toSet());
+    this.album = newAlbum;
   }
 
   public Long getId() {

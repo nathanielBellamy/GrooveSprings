@@ -48,8 +48,22 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
 
   @Override
   public Track update(TrackUpdateDto dto) {
-    Track updatedTrack = new Track(dto);
-    return this.trackRepository.save(updatedTrack);
+    List<Artist> newArtists = artistService.findAllById(dto.artistIds());
+    Album newAlbum = albumService.findById(dto.albumId()).orElse(null);
+    Track updatedTrack = new Track(dto, newArtists, newAlbum);
+
+    updatedTrack.getArtists().stream().forEach(a -> {
+      a.addTrack(updatedTrack);
+      artistService.save(a);
+    });
+
+    Album album = updatedTrack.getAlbum();
+    if (album != null) {
+      album.addTrack(updatedTrack);
+      albumService.save(album);
+    }
+
+      return this.trackRepository.save(updatedTrack);
   }
 
   @Override
