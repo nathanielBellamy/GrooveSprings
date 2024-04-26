@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
+import dev.nateschieber.groovesprings.entities.Artist;
+import dev.nateschieber.groovesprings.mockData.artist.MockArtistFactory;
 import dev.nateschieber.groovesprings.mockData.price.MockPriceFactory;
 import dev.nateschieber.groovesprings.mockData.track.MockTrackFactory;
 import dev.nateschieber.groovesprings.entities.Track;
@@ -12,6 +14,7 @@ import dev.nateschieber.groovesprings.matchers.priced.PricedTrackMatcher;
 import dev.nateschieber.groovesprings.price.Price;
 import dev.nateschieber.groovesprings.price.pricedEntities.PricedTrack;
 import dev.nateschieber.groovesprings.rest.clients.PriceClient;
+import dev.nateschieber.groovesprings.services.entities.ArtistService;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
 import dev.nateschieber.groovesprings.services.pricedEntities.PricedTrackService;
 import java.util.List;
@@ -28,6 +31,9 @@ public class PricedTrackServiceTest {
 
   @Autowired
   private TrackService trackService;
+
+  @Autowired
+  private ArtistService artistService;
 
   @Autowired
   private PricedTrackService pricedTrackService;
@@ -53,7 +59,10 @@ public class PricedTrackServiceTest {
 
   @Test
   public void PricedTrackService_findById_returnsPricedTrackById() throws Exception {
+    Artist mockArtist = MockArtistFactory.defaultArtists().get(0);
+    artistService.save(mockArtist);
     Track mockTrack = MockTrackFactory.defaultTracks().get(0);
+    trackService.save(mockTrack);
     Price mockPrice = MockPriceFactory.defaultTrackPrices().get(0);
     doReturn(Optional.of(mockPrice)).when(priceClient).getTrackPrice(any(Track.class));
 
@@ -69,6 +78,8 @@ public class PricedTrackServiceTest {
 
   @Test
   public void PricedTrackService_findAll_returnsAllPricedTracks() throws Exception {
+    List<Artist> mockArtists = MockArtistFactory.defaultArtists();
+    artistService.saveAll(mockArtists);
     List<Track> mockTracks = MockTrackFactory.defaultTracks();
     List<Track> savedTracks = trackService.saveAll(mockTracks);
 

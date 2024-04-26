@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.CoreMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.nateschieber.groovesprings.enums.Genre;
 import dev.nateschieber.groovesprings.mockData.track.MockTrackFactory;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
@@ -55,8 +56,9 @@ public class TrackControllerTest {
     ResultActions res = mockMvc.perform(get("/api/v1/tracks/1"));
     res.andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.data.track.title", is("My Fight Song")))
-        .andExpect(jsonPath("$.data.track.genres", hasSize(1)));
+        .andExpect(jsonPath("$.data.track.title", is("Norway")))
+        .andExpect(jsonPath("$.data.track.genres", hasSize(1)))
+        .andExpect(jsonPath("$.data.track.genres[0]", is("INDIE")));
   }
 
   @Test

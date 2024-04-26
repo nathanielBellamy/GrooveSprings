@@ -3,10 +3,9 @@ package dev.nateschieber.groovesprings.mockData.track;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.enums.Genre;
+import dev.nateschieber.groovesprings.mockData.artist.MockArtistFactory;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 public class MockTrackFactory {
 
@@ -14,33 +13,33 @@ public class MockTrackFactory {
     return List.of(
         new Track(
             1l,
-            Collections.emptyList(),
+            List.of(MockArtistFactory.defaultArtists().get(0)),
             null,
-            "My Fight Song",
+            "Norway",
             1,
             123000l,
             AudioCodec.FLAC,
-            List.of(Genre.PUNK),
+            List.of(Genre.INDIE),
             LocalDate.of(2022, 4, 4)),
         new Track(
             2l,
-            Collections.emptyList(),
+            List.of(MockArtistFactory.defaultArtists().get(1)),
             null,
-            "Rhythm of the Night",
+            "Nothing Can Change This Love",
             1,
             123000l,
             AudioCodec.WAV,
-            List.of(Genre.EDM, Genre.ELECTRONIC),
+            List.of(Genre.SOUL),
             LocalDate.of(1995, 2, 12)),
         new Track(
             3l,
-            Collections.emptyList(),
+            List.of(MockArtistFactory.defaultArtists().get(2)),
             null,
-            "Walk The Line",
+            "Ghost Mouth",
             1,
             456000l,
             AudioCodec.MP3_320,
-            List.of(Genre.COUNTRY),
+            List.of(Genre.ROCK),
             LocalDate.of(1967, 2, 12))
     );
   }

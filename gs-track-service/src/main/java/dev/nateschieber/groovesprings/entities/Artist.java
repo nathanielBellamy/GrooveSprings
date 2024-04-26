@@ -51,6 +51,11 @@ public class Artist {
     this.name = name;
   }
 
+  public Artist(Long id, String name) {
+    this.id = id;
+    this.name = name;
+  }
+
   public Artist(Long id, ArtistEntityDto dto) {
     this.id = id;
     this.name = dto.artist().getName();
