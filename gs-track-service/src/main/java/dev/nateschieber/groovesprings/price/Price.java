@@ -1,9 +1,8 @@
 package dev.nateschieber.groovesprings.price;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.nateschieber.groovesprings.enums.EntityType;
 import java.time.LocalDateTime;
-import org.antlr.v4.runtime.misc.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class Price {
 

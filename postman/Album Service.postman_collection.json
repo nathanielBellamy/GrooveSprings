@@ -223,6 +223,30 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get Album Tracks by AudioCodec",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{albums_base_url}}/3/tracks?audioCodec=FLAC",
+					"host": [
+						"{{albums_base_url}}"
+					],
+					"path": [
+						"3",
+						"tracks"
+					],
+					"query": [
+						{
+							"key": "audioCodec",
+							"value": "FLAC"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

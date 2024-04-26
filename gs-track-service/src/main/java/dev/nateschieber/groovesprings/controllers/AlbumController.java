@@ -1,6 +1,8 @@
 package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Album;
+import dev.nateschieber.groovesprings.entities.Track;
+import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -57,15 +60,21 @@ public class AlbumController {
   }
 
   @GetMapping(value = "/{id}/tracks")
-  public ResponseEntity getAlbumTracksByAlbumId(@PathVariable Long id) {
+  public ResponseEntity getAlbumTracksByAlbumId(@PathVariable Long id, @RequestParam AudioCodec audioCodec) {
     Optional<Album> album = albumService.findById(id);
     if (!album.isPresent()) {
       return ResponseEntity.notFound().build();
     } else {
+      List<Track> tracks;
+      if (audioCodec != null) {
+        tracks = album.get().getTracks().stream().filter(t -> t.getAudioCodec() == audioCodec).toList();
+      } else {
+        tracks = album.get().getTracks();
+      }
       ResponseEntity<AlbumTracksResponse> resEnt = new ResponseEntity<>(
           new AlbumTracksResponse(
               album.get(),
-              album.get().getTracks()
+              tracks
           ),
           HttpStatus.OK);
       return resEnt;
