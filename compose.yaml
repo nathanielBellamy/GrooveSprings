@@ -3,3 +3,4 @@ include:
   - path:
       - gs-track-service/compose.yaml
       - gs-price-service/compose.yaml
+      - gs-desktop-app/compose.yaml
