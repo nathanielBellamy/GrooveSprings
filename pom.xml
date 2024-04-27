@@ -20,6 +20,7 @@
 
     <modules>
         <module>gs-common</module>
+        <module>gs-desktop-app</module>
         <module>gs-price-service</module>
         <module>gs-track-service</module>
     </modules>
