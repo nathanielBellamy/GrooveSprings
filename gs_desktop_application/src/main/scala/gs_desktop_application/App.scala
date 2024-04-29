@@ -24,9 +24,4 @@ object App {
     } recover { case ex =>
       println(s"Server could not start: ${ex.getMessage}")
     }
-
-
-    val instructions: Array[String] = Array("How", "now,", "brown", "cow?")
-    println(simonSays(instructions))
-
 }
