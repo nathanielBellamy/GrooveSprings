@@ -10,21 +10,33 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object DesktopApplication {
 
-  def simonSays(x : Array[String]): String = x.foldLeft("Simon Says: ")((a,b) => a + " " + b)
-
-  @main def main(): Unit =
-    println(JniMain.main())
-    println("Hey Java! Tell C++ that Scala needs to do some addition: 2 + 3 = " + JniMain.add(2, 3))
+  @main def main(): Unit = {
     given system: ActorSystem = ActorSystem("gs_desktop_application")
-    val route = path("foo") {
-      get {
-        complete("Hello World! Your friend, Akka. ")
-      }
-    }
-    val server = Http().newServerAt("localhost", 8081).bind(route)
+
+    lazy val server = Http().newServerAt("localhost", 8765).bind(routes())
+
     server.map { _ =>
-      println("Server online at http://localhost:8081")
+      println("Server online at http://localhost:8765")
     } recover { case ex =>
-      println("Server could not start: ${ex.getMessage}")
+      println(ex.getMessage)
     }
+  }
+
+  private def routes(): Route = {
+    val apiPrefix: String = "api/v1"
+    concat(
+      path("hello") {
+        get {
+          complete("Hello World! Your friend, Akka. ")
+        }
+      },
+      path("add") {
+        get {
+          parameters(Symbol("x").as[Int], Symbol("y").as[Int]) { (x: Int, y: Int) => {
+            complete("result: " + JniMain.add(x, y))
+          }}
+        }
+      }
+    )
+  }
 }
