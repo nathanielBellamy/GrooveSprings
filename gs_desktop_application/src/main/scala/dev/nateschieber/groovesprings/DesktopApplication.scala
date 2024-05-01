@@ -14,7 +14,7 @@ object DesktopApplication {
 
   @main def main(): Unit =
     println(JniMain.main())
-    given system: ActorSystem = ActorSystem("gs-desktop-app")
+    given system: ActorSystem = ActorSystem("gs_desktop_application")
     val route = path("foo") {
       get {
         complete("Hello World! Your friend, Akka. ")
