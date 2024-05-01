@@ -40,13 +40,16 @@
     <module>gs-common</module>
             
     <module>gs-desktop-app</module>
-            
+
+    <module>gs-jni</module>
+
     <module>gs-price-service</module>
             
     <module>gs-track-service</module>
           
     <module>gs_desktop_application</module>
-      
+
+
   </modules>
   
 </project>

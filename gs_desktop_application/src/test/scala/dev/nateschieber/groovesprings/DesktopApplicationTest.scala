@@ -1,8 +1,8 @@
-package gs_desktop_application
+package dev.nateschieber.groovesprings
 
 import org.scalatest.funsuite.AnyFunSuite
 
-class AppTest extends AnyFunSuite {
+class DesktopApplicationTest extends AnyFunSuite {
   test("tests run") {
     assert(true == true)
   }
