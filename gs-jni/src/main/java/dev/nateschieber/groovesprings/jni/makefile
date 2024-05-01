@@ -11,5 +11,5 @@
 
 ### In order to run this program within Intellij
 ### we need to tell the JVM where to find the the compiled .so library.
-### To do so, edit the Run Configuration for the `gs-desktop-app` by adding the following VM option
+### To do so, edit the Run Configuration for the `gs_desktop_application` by adding the following VM option
 ### -Djava.library.path="/absolute/path/to/repo/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni
