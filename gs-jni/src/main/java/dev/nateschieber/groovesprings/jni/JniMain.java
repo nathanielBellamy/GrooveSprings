@@ -10,5 +10,11 @@ public class JniMain {
     new JniMain().helloWorld();
   }
 
+  public static int add(int x, int y) {
+    return new JniMain().addNative(x, y);
+  }
+
   private native void helloWorld();
+
+  private native int addNative(int x, int y);
 }

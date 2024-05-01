@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_helloWorld
   (JNIEnv *, jobject);
 
+/*
+ * Class:     dev_nateschieber_groovesprings_jni_JniMain
+ * Method:    addNative
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_addNative
+  (JNIEnv *, jobject, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif

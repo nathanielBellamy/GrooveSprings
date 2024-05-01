@@ -14,6 +14,7 @@ object DesktopApplication {
 
   @main def main(): Unit =
     println(JniMain.main())
+    println("Hey Java! Tell C++ that Scala needs to do some addition: 2 + 3 = " + JniMain.add(2, 3))
     given system: ActorSystem = ActorSystem("gs_desktop_application")
     val route = path("foo") {
       get {
