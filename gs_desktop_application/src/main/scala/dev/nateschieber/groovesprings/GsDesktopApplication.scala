@@ -8,9 +8,10 @@ import dev.nateschieber.groovesprings.jni.JniMain
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object DesktopApplication {
+object GsDesktopApplication {
 
   @main def main(): Unit = {
+    println(JniMain.main())
     given system: ActorSystem = ActorSystem("gs_desktop_application")
 
     lazy val server = Http().newServerAt("localhost", 8765).bind(routes())

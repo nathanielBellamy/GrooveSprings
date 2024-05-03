@@ -3,6 +3,7 @@ package dev.nateschieber.groovesprings.jni;
 public class JniMain {
 
   static {
+    System.out.println(System.getProperties());
     System.loadLibrary("native");
   }
 
