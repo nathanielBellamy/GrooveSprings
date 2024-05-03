@@ -34,4 +34,14 @@ build/
 
 ### Compiled Native Code ###
 *.o
+
+# linux
 *.so
+
+#macos
+*.dylib
+*.o~
+*.DS_Store
+
+
+#
