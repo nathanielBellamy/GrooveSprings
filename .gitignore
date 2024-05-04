@@ -42,6 +42,3 @@ build/
 *.dylib
 *.o~
 *.DS_Store
-
-
-#
