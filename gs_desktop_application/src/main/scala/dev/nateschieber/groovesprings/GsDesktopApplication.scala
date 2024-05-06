@@ -5,7 +5,7 @@ import akka.actor.Props
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
-import dev.nateschieber.groovesprings.actors.GsSupervisor
+import dev.nateschieber.groovesprings.actors.{GsDisplay, GsSupervisor}
 import dev.nateschieber.groovesprings.jni.JniMain
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -15,7 +15,7 @@ object GsDesktopApplication {
   @main def main(): Unit = {
     println(JniMain.main())
     given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(), "gs_desktop_application")
-
+    
     lazy val server = Http().newServerAt("localhost", 8765).bind(routes())
 
     server.map { _ =>
