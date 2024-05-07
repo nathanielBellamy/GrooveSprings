@@ -31,6 +31,31 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         lastFrameId += 1
         replyTo ! RespondFrameId(lastFrameId, context.self)
         Behaviors.same
+
+      case PlayTrig(replyTo) =>
+        println("GsPlayback :: play")
+        replyTo ! RespondPlayTrig(context.self)
+        Behaviors.same
+      
+      case PauseTrig(replyTo) =>
+        println("GsPlayback :: pause")
+        replyTo ! RespondPauseTrig(context.self)
+        Behaviors.same
+
+      case StopTrig(replyTo) =>
+        println("GsPlayback :: stop")
+        replyTo ! RespondStopTrig(context.self)
+        Behaviors.same
+        
+      case FastForwardTrig(replyTo) =>
+        println("GsPlayback :: fastForward")
+        replyTo ! RespondFastForwardTrig(context.self)
+        Behaviors.same
+
+      case RewindTrig(replyTo) =>
+        println("GsPlayback :: rewind")
+        replyTo ! RespondRewindTrig(context.self)
+        Behaviors.same
     }
   }
 

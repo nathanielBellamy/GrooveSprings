@@ -1,11 +1,10 @@
 package dev.nateschieber.groovesprings
 
 import akka.actor.typed.ActorSystem
-import akka.actor.Props
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
-import dev.nateschieber.groovesprings.actors.{GsDisplay, GsSupervisor}
+import dev.nateschieber.groovesprings.actors.GsSupervisor
 import dev.nateschieber.groovesprings.jni.JniMain
 
 import scala.concurrent.ExecutionContext.Implicits.global
