@@ -23,6 +23,14 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_helloWorl
 JNIEXPORT jint JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_addNative
   (JNIEnv *, jobject, jint, jint);
 
+/*
+ * Class:     dev_nateschieber_groovesprings_jni_JniMain
+ * Method:    initPlaybackLoopNative
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
+  (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif

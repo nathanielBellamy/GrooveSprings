@@ -8,11 +8,12 @@ import dev.nateschieber.groovesprings.actors.GsSupervisor
 import dev.nateschieber.groovesprings.jni.JniMain
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.runtime.Arrays
 
 object GsDesktopApplication {
 
   @main def main(): Unit = {
-    println(JniMain.main())
+    println(JniMain.main(Array("foo")));
     given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(), "gs_desktop_application")
     
     lazy val server = Http().newServerAt("localhost", 8765).bind(routes())

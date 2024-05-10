@@ -8,6 +8,7 @@ import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
+import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.traits.*
 
 object GsPlayback {
@@ -23,13 +24,18 @@ object GsPlayback {
 
 class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCommand](context) {
 
-  private var lastFrameId: Integer = 0
+  private var currFrameId: Int = 0
+
+  def setCurrFrameId(newId: Int): Unit = {
+    currFrameId = newId
+  }
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case ReadFrameId(replyTo) =>
-        lastFrameId += 1
-        replyTo ! RespondFrameId(lastFrameId, context.self)
+        println(JniMain.add(0, currFrameId))
+        JniMain.initPlaybackLoop()
+        replyTo ! RespondFrameId(currFrameId, context.self)
         Behaviors.same
 
       case PlayTrig(replyTo) =>
