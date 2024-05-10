@@ -7,7 +7,7 @@ public class JniMain {
     System.loadLibrary("native");
   }
 
-  public static void main() {
+  public static void main(String[] args) {
     new JniMain().helloWorld();
   }
 
@@ -18,4 +18,8 @@ public class JniMain {
   private native void helloWorld();
 
   private native int addNative(int x, int y);
+
+  public static void initPlaybackLoop() { new JniMain().initPlaybackLoopNative(); }
+
+  private native void initPlaybackLoopNative();
 }
