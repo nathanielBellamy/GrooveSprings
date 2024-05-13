@@ -6,7 +6,7 @@ import akka.actor.typed.Signal
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
-import dev.nateschieber.groovesprings.traits.InitDisplay
+import dev.nateschieber.groovesprings.traits.{InitDisplay, PlayTrig}
 
 object GsSupervisor {
   def apply(): Behavior[Nothing] = Behaviors.setup {
@@ -15,6 +15,8 @@ object GsSupervisor {
       val displayRef = context.spawn(GsDisplay(), "gs_display")
       
       displayRef ! InitDisplay(playbackRef)
+      
+      playbackRef ! PlayTrig(displayRef)
       
       new GsSupervisor(context)
   }

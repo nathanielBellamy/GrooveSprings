@@ -12,6 +12,13 @@ final case class InitDisplay(playbackRef: ActorRef[ReadFrameId]) extends GsComma
 final case class ReadFrameId(replyTo: ActorRef[RespondFrameId]) extends GsCommand
 final case class RespondFrameId(value: Integer, replyTo: ActorRef[ReadFrameId]) extends GsCommand
 
+// GsPlaybackThread
+final case class InitPlaybackThread(replyTo: ActorRef[RespondInitPlaybackThread]) extends GsCommand
+final case class RespondInitPlaybackThread(replyTo: ActorRef[InitPlaybackThread]) extends GsCommand
+final case class StopPlaybackThread(replyTo: ActorRef[RespondStopPlaybackThread]) extends GsCommand
+final case class RespondStopPlaybackThread(replyTo: ActorRef[StopPlaybackThread]) extends GsCommand
+
+
 final case class RespondPlayTrig(replyTo: ActorRef[PlayTrig]) extends GsCommand
 final case class RespondPauseTrig(replyTo: ActorRef[PauseTrig]) extends GsCommand
 final case class RespondStopTrig(replyTo: ActorRef[StopTrig]) extends GsCommand
@@ -24,3 +31,4 @@ final case class PauseTrig(replyTo: ActorRef[RespondPauseTrig]) extends GsComman
 final case class StopTrig(replyTo: ActorRef[RespondStopTrig]) extends GsCommand
 final case class FastForwardTrig(replyTo: ActorRef[RespondFastForwardTrig]) extends GsCommand
 final case class RewindTrig(replyTo: ActorRef[RespondRewindTrig]) extends GsCommand
+

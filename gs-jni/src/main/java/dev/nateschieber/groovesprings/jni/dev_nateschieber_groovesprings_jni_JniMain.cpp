@@ -27,34 +27,32 @@ void playbackTask(JNIEnv* env, jobject gsPlayback, jmethodID setCurrFrameId, int
     {
         currFrameId += 1;
         std::cout << "cpp-currFrameId: " << currFrameId;
-        try {
-//            env->CallVoidMethod(gsPlayback, setCurrFrameId, currFrameId);
-        } catch (...) {
-            std::cout << "cpp- UH OH!";
-        }
+        // TODO: debugging this call
+//        env->CallVoidMethod(gsPlayback, setCurrFrameId);
     }
 }
 
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
   (JNIEnv* env, jobject _gsPlayback) {
-
-  std::cout << "\n initPlaybackLoopNative \n";
-
   try {
 
       int currFrameId;
       currFrameId = 0;
 
-      std::cout << "Hello World! " << currFrameId;
-      jclass gsPlayback = env->FindClass("dev/nateschieber/groovesprings/actors/GsPlayback");
-      jmethodID setCurrFrameId = env->GetMethodID (gsPlayback, "setCurrFrameId", "java.lang.Integer");
+      jclass gsPlayback = env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
 
-      std::thread playbackThread(playbackTask, env, gsPlayback, setCurrFrameId, currFrameId);
+      std::cout << "\n gsPlayback " << gsPlayback;
+
+      jmethodID setCurrFrameId = env->GetMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Integer;)V");
 
       std::cout << "\n Hey buddy \n";
 
+      std::thread playbackThread(playbackTask, env, gsPlayback, setCurrFrameId, currFrameId);
 
-      std::this_thread::sleep_for(std::chrono::milliseconds(100000));
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+      std::cout << "\n Hey Pal \n";
+
 
       playbackThread.join();
    }
