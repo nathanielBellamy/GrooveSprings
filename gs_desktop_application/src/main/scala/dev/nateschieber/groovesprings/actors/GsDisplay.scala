@@ -35,6 +35,10 @@ class GsDisplay(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCom
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
+      case RespondPlayTrig(replyTo) =>
+        replyTo ! ReadFrameId(context.self)
+        Behaviors.same
+
       case RespondFrameId(lastFrameId, replyTo) =>
         println("GsDisplay :: lastFrameId: " + lastFrameId)
         Thread.sleep(1000)

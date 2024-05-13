@@ -21,18 +21,14 @@ JNIEXPORT jint JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_addNative
   return x + y;
 }
 
-void playbackTask(JNIEnv* env, jobject gsPlayback, jmethodID setCurrFrameId, int currFrameId)
+void jSetCurrFrameId(JNIEnv* env, jobject gsPlayback, jmethodID setCurrFrameId, int currFrameId)
 {
-//    if (currFrameId % 10 == 0)
-//    {
-        currFrameId += 1;
-        jint jCurrFrameId = static_cast<jint>(currFrameId);
-        std::cout << "\n cpp-currFrameId: " << currFrameId;
-        std::cout << "\n cpp-env JNIEnv: " << env;
-        std::cout << "\n cpp-gsPlayback jobject: " << gsPlayback;
-        std::cout << "\n cpp-setCurFrameId jmethodId: " << setCurrFrameId;
-        env->CallVoidMethod(gsPlayback, setCurrFrameId, jCurrFrameId);
-//    }
+      // TODO: reuse jInteger and jIntegerInit
+      jclass jInteger = env->FindClass("java/lang/Integer");
+      jmethodID jIntegerInit = env->GetMethodID(jInteger, "<init>", "(I)V");
+      jobject jCurrFrameId = env->NewObject(jInteger, jIntegerInit, currFrameId);
+
+      env->CallVoidMethod(gsPlayback, setCurrFrameId, jCurrFrameId);
 }
 
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
@@ -43,27 +39,12 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlayb
       currFrameId = 0;
 
       jclass gsPlayback = env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
-
-      std::cout << "\n gsPlayback " << gsPlayback;
-
       jmethodID setCurrFrameId = env->GetStaticMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Integer;)V");
 
-      std::cout << "\n setCurrFrameId jmethodID: " << setCurrFrameId;
-      std::cout << "\n Hey buddy \n";
-
-      jclass jInteger = env->FindClass("java/lang/Integer");
-      jmethodID jIntegerInit = env->GetMethodID(jInteger, "<init>", "(I)V");
-      jobject jCurrFrameId = env->NewObject(jInteger, jIntegerInit, 5432);
-
-      env->CallVoidMethod(gsPlayback, setCurrFrameId, jCurrFrameId);
-//      std::thread playbackThread(playbackTask, env, gsPlayback, setCurrFrameId, currFrameId);
-
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-      std::cout << "\n Hey Pal \n";
-
-
-//      playbackThread.join();
+      while (true) {
+          currFrameId += 1;
+          jSetCurrFrameId(env, gsPlayback, setCurrFrameId, currFrameId);
+      }
    }
    catch(std::exception const& e)
    {

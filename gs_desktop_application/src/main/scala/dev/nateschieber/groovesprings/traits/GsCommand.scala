@@ -19,7 +19,7 @@ final case class StopPlaybackThread(replyTo: ActorRef[RespondStopPlaybackThread]
 final case class RespondStopPlaybackThread(replyTo: ActorRef[StopPlaybackThread]) extends GsCommand
 
 
-final case class RespondPlayTrig(replyTo: ActorRef[PlayTrig]) extends GsCommand
+final case class RespondPlayTrig(replyTo: ActorRef[PlayTrig | ReadFrameId]) extends GsCommand
 final case class RespondPauseTrig(replyTo: ActorRef[PauseTrig]) extends GsCommand
 final case class RespondStopTrig(replyTo: ActorRef[StopTrig]) extends GsCommand
 final case class RespondFastForwardTrig(replyTo: ActorRef[FastForwardTrig]) extends GsCommand

@@ -20,10 +20,9 @@ object GsPlaybackThread {
 
   @static def setCurrFrameId(newId: java.lang.Integer): Unit = {
     if (newId == null) {
-      println("\n GsPlaybackThread null id")
+      currFrameId = 0
     } else {
       currFrameId = newId
-      println("\n GsPlaybackThread newId: " + currFrameId)
     }
   }
 

@@ -24,15 +24,12 @@ object GsPlayback {
 
 class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCommand](context) {
 
-  private var currFrameId: Integer = 0
-
   private var playbackThreadRef: ActorRef[GsCommand] = null
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case ReadFrameId(replyTo) =>
-        println(JniMain.add(0, currFrameId))
-        replyTo ! RespondFrameId(currFrameId, context.self)
+        replyTo ! RespondFrameId(GsPlaybackThread.currFrameId, context.self)
         Behaviors.same
 
       case PlayTrig(replyTo) =>
