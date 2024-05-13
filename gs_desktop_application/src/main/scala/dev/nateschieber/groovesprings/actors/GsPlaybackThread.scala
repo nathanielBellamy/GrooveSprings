@@ -12,7 +12,20 @@ import akka.actor.typed.scaladsl.Behaviors
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.traits.*
 
+import scala.annotation.static
+
 object GsPlaybackThread {
+
+  @static var currFrameId: java.lang.Integer = 0
+
+  @static def setCurrFrameId(newId: java.lang.Integer): Unit = {
+    if (newId == null) {
+      println("\n GsPlaybackThread null id")
+    } else {
+      currFrameId = newId
+      println("\n GsPlaybackThread newId: " + currFrameId)
+    }
+  }
 
   val GsPlaybackThreadServiceKey = ServiceKey[GsCommand]("gs_playback_thread")
 
@@ -24,12 +37,6 @@ object GsPlaybackThread {
 
 class GsPlaybackThread(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCommand](context) {
 
-  private var currFrameId: java.lang.Integer = 0
-
-  def setCurrFrameId(newId: java.lang.Integer): Unit = {
-    println("fooooooo baaaaaar")
-    currFrameId = newId
-  }
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case InitPlaybackThread(replyTo) =>
@@ -38,6 +45,7 @@ class GsPlaybackThread(context: ActorContext[GsCommand]) extends AbstractBehavio
         Behaviors.same
 
       case StopPlaybackThread(replyTo) =>
+        GsPlaybackThread.setCurrFrameId(0)
         replyTo ! RespondStopPlaybackThread(context.self)
         context.stop(self)
         Behaviors.same
