@@ -49,7 +49,10 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
 
       case StopTrig(replyTo) =>
         println("GsPlayback :: stop")
-        playbackThreadRef ! StopPlaybackThread(context.self)
+        if (playbackThreadRef != null) {
+          playbackThreadRef ! StopPlaybackThread(context.self)
+          playbackThreadRef = null
+        }
         replyTo ! RespondStopTrig(context.self)
         Behaviors.same
         

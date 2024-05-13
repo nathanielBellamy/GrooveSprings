@@ -23,13 +23,16 @@ JNIEXPORT jint JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_addNative
 
 void playbackTask(JNIEnv* env, jobject gsPlayback, jmethodID setCurrFrameId, int currFrameId)
 {
-    if (currFrameId % 10 == 0)
-    {
+//    if (currFrameId % 10 == 0)
+//    {
         currFrameId += 1;
-        std::cout << "cpp-currFrameId: " << currFrameId;
-        // TODO: debugging this call
-//        env->CallVoidMethod(gsPlayback, setCurrFrameId);
-    }
+        jint jCurrFrameId = static_cast<jint>(currFrameId);
+        std::cout << "\n cpp-currFrameId: " << currFrameId;
+        std::cout << "\n cpp-env JNIEnv: " << env;
+        std::cout << "\n cpp-gsPlayback jobject: " << gsPlayback;
+        std::cout << "\n cpp-setCurFrameId jmethodId: " << setCurrFrameId;
+        env->CallVoidMethod(gsPlayback, setCurrFrameId, jCurrFrameId);
+//    }
 }
 
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
@@ -43,18 +46,24 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlayb
 
       std::cout << "\n gsPlayback " << gsPlayback;
 
-      jmethodID setCurrFrameId = env->GetMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Integer;)V");
+      jmethodID setCurrFrameId = env->GetStaticMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Integer;)V");
 
+      std::cout << "\n setCurrFrameId jmethodID: " << setCurrFrameId;
       std::cout << "\n Hey buddy \n";
 
-      std::thread playbackThread(playbackTask, env, gsPlayback, setCurrFrameId, currFrameId);
+      jclass jInteger = env->FindClass("java/lang/Integer");
+      jmethodID jIntegerInit = env->GetMethodID(jInteger, "<init>", "(I)V");
+      jobject jCurrFrameId = env->NewObject(jInteger, jIntegerInit, 5432);
+
+      env->CallVoidMethod(gsPlayback, setCurrFrameId, jCurrFrameId);
+//      std::thread playbackThread(playbackTask, env, gsPlayback, setCurrFrameId, currFrameId);
 
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
       std::cout << "\n Hey Pal \n";
 
 
-      playbackThread.join();
+//      playbackThread.join();
    }
    catch(std::exception const& e)
    {
