@@ -24,22 +24,21 @@ object GsPlayback {
 
 class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCommand](context) {
 
-  private var currFrameId: Int = 0
+  private var currFrameId: Integer = 0
 
-  def setCurrFrameId(newId: Int): Unit = {
-    currFrameId = newId
-  }
+  private var playbackThreadRef: ActorRef[GsCommand] = null
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case ReadFrameId(replyTo) =>
         println(JniMain.add(0, currFrameId))
-        JniMain.initPlaybackLoop()
         replyTo ! RespondFrameId(currFrameId, context.self)
         Behaviors.same
 
       case PlayTrig(replyTo) =>
         println("GsPlayback :: play")
+        playbackThreadRef = context.spawn(GsPlaybackThread(), "gs_playback_thread")
+        playbackThreadRef ! InitPlaybackThread(context.self)
         replyTo ! RespondPlayTrig(context.self)
         Behaviors.same
       
@@ -50,6 +49,7 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
 
       case StopTrig(replyTo) =>
         println("GsPlayback :: stop")
+        playbackThreadRef ! StopPlaybackThread(context.self)
         replyTo ! RespondStopTrig(context.self)
         Behaviors.same
         
