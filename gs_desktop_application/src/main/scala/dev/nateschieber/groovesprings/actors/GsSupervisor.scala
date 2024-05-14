@@ -6,7 +6,7 @@ import akka.actor.typed.Signal
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
-import dev.nateschieber.groovesprings.traits.{InitDisplay, PlayTrig}
+import dev.nateschieber.groovesprings.traits.{InitDisplay, PlayTrig, StopTrig}
 
 object GsSupervisor {
   def apply(): Behavior[Nothing] = Behaviors.setup {
@@ -15,7 +15,23 @@ object GsSupervisor {
       val displayRef = context.spawn(GsDisplay(), "gs_display")
       
       displayRef ! InitDisplay(playbackRef)
-      
+
+      playbackRef ! PlayTrig(displayRef)
+
+      Thread.sleep(5000)
+
+      playbackRef ! StopTrig(displayRef)
+
+      Thread.sleep(5000)
+
+      playbackRef ! PlayTrig(displayRef)
+
+      Thread.sleep(5000)
+
+      playbackRef ! StopTrig(displayRef)
+
+      Thread.sleep(5000)
+
       playbackRef ! PlayTrig(displayRef)
       
       new GsSupervisor(context)
@@ -23,7 +39,6 @@ object GsSupervisor {
 }
 
 class GsSupervisor(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
-  println("gs_desktop_application started")
 
   override def onMessage(msg: Nothing): Behavior[Nothing] = {
     Behaviors.unhandled

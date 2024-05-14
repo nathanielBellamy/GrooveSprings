@@ -11,6 +11,8 @@ import akka.actor.typed.scaladsl.Behaviors
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.traits.*
 
+import java.util.UUID
+
 object GsPlayback {
 
   val GsPlaybackServiceKey = ServiceKey[GsCommand]("gs_playback")
@@ -34,7 +36,7 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
 
       case PlayTrig(replyTo) =>
         println("GsPlayback :: play")
-        playbackThreadRef = context.spawn(GsPlaybackThread(), "gs_playback_thread")
+        playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
         playbackThreadRef ! InitPlaybackThread(context.self)
         replyTo ! RespondPlayTrig(context.self)
         Behaviors.same
