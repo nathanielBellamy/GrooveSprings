@@ -8,7 +8,6 @@ import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
-import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.traits.*
 
 import java.util.UUID
@@ -49,9 +48,10 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
       case StopTrig(replyTo) =>
         println("GsPlayback :: stop")
         if (playbackThreadRef != null) {
-          playbackThreadRef ! StopPlaybackThread(context.self)
+          context.stop(playbackThreadRef)
           playbackThreadRef = null
         }
+        GsPlaybackThread.setCurrFrameId(0)
         replyTo ! RespondStopTrig(context.self)
         Behaviors.same
         
