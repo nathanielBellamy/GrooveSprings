@@ -16,9 +16,9 @@ import scala.annotation.static
 
 object GsPlaybackThread {
 
-  @static var currFrameId: java.lang.Integer = 0
+  @static var currFrameId: java.lang.Long = 0
 
-  @static def setCurrFrameId(newId: java.lang.Integer): Unit = {
+  @static def setCurrFrameId(newId: java.lang.Long): Unit = {
     if (newId == null) {
       currFrameId = 0
     } else {
