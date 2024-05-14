@@ -10,7 +10,7 @@ final case class InitDisplay(playbackRef: ActorRef[ReadFrameId]) extends GsComma
 
 // GsPlayback
 final case class ReadFrameId(replyTo: ActorRef[RespondFrameId]) extends GsCommand
-final case class RespondFrameId(value: Integer, replyTo: ActorRef[ReadFrameId]) extends GsCommand
+final case class RespondFrameId(value: Long, replyTo: ActorRef[ReadFrameId]) extends GsCommand
 
 // GsPlaybackThread
 final case class InitPlaybackThread(replyTo: ActorRef[RespondInitPlaybackThread]) extends GsCommand
