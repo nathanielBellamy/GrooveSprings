@@ -33,16 +33,25 @@ class GsDisplay(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCom
 
   implicit val timeout: Timeout = Timeout.apply(100, TimeUnit.MILLISECONDS)
 
+  private var stopped: Boolean = true
+
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case RespondPlayTrig(replyTo) =>
         replyTo ! ReadFrameId(context.self)
+        stopped = false
+        Behaviors.same
+
+      case RespondStopTrig(replyTo) =>
+        println("GsDisplay :: RespondStopTrig Received")
+        stopped = true
         Behaviors.same
 
       case RespondFrameId(lastFrameId, replyTo) =>
         println("GsDisplay :: lastFrameId: " + lastFrameId)
-        Thread.sleep(1000)
-        replyTo ! ReadFrameId(context.self)
+        if (!stopped)
+          Thread.sleep(100)
+          replyTo ! ReadFrameId(context.self)
         Behaviors.same
 
       case InitDisplay(playbackRef) =>
