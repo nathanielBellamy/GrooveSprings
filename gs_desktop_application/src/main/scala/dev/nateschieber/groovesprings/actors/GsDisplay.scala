@@ -13,26 +13,24 @@ import akka.util.Timeout
 import java.util.concurrent.TimeUnit
 import scala.language.postfixOps
 
-
-
 object GsDisplay {
 
     val GsDisplayServiceKey = ServiceKey[GsCommand]("gs_display")
 
-    def apply(gsPlaybackRef: ActorRef[GsCommand]): Behavior[GsCommand] = Behaviors.setup {
+    def apply(playbackRef: ActorRef[GsCommand]): Behavior[GsCommand] = Behaviors.setup {
       context =>
         context.system.receptionist ! Receptionist.Register(GsDisplayServiceKey, context.self)
-        new GsDisplay(context, gsPlaybackRef)
+        new GsDisplay(context, playbackRef)
     }
 }
 
-class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRefIn: ActorRef[GsCommand]) extends AbstractBehavior[GsCommand](context) {
+class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsCommand]) extends AbstractBehavior[GsCommand](context) {
 
   implicit val timeout: Timeout = Timeout.apply(100, TimeUnit.MILLISECONDS)
 
   private var stopped: Boolean = true
   
-  private var gsPlaybackRef: ActorRef[GsCommand] = gsPlaybackRefIn
+  private val playbackRef: ActorRef[GsCommand] = gsPlaybackRef
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
@@ -55,7 +53,7 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRefIn: ActorRef[GsCo
 
       case InitDisplay() =>
         println("GsDisplay :: InitDisplay received")
-        gsPlaybackRef ! ReadFrameId(context.self)
+        playbackRef ! ReadFrameId(context.self)
         Behaviors.same
     }
   }

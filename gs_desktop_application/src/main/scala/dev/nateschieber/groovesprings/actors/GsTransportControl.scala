@@ -11,7 +11,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives.*
 import akka.stream.scaladsl.Flow
 import dev.nateschieber.groovesprings.enums.GsHttpPort
-import dev.nateschieber.groovesprings.traits.{GsCommand, RespondFastForwardTrig, RespondPauseTrig, RespondPlayTrig, RespondRewindTrig, RespondStopTrig}
+import dev.nateschieber.groovesprings.traits.{GsCommand, PlayTrig, StopTrig, RespondFastForwardTrig, RespondPauseTrig, RespondPlayTrig, RespondRewindTrig, RespondStopTrig}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -23,11 +23,30 @@ object GsTransportControl {
 
   val GsTransportControlServiceKey = ServiceKey[GsCommand]("gs_transport_control")
 
-  def websocketFlow: Flow[Message, Message, Any] =
-    Flow[Message].map {
-      case TextMessage.Strict(s) => TextMessage.Strict("Ok - ws TextMessage")
-      case BinaryMessage.Strict(b) => TextMessage.Strict("Ok - ws BinaryMessage")
-    }
+  def apply(gsPlaybackRef: ActorRef[GsCommand], gsDisplayRef: ActorRef[GsCommand]): Behavior[GsCommand] = Behaviors.setup {
+    context =>
+      context.system.receptionist ! Receptionist.Register(GsTransportControlServiceKey, context.self)
+
+      given system: ActorSystem[Nothing] = context.system
+
+      val gsTransportControl = new GsTransportControl(context, gsPlaybackRef, gsDisplayRef)
+
+      lazy val server = Http().newServerAt("localhost", GsHttpPort.GsTransportControl.port).bind(gsTransportControl.route)
+
+      server.map { _ =>
+        println("GsTransportControlServer online at localhost:" + GsHttpPort.GsTransportControl.port)
+      } recover { case ex =>
+        println(ex.getMessage)
+      }
+
+      gsTransportControl
+  }
+}
+
+class GsTransportControl(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsCommand], gsDisplayRef: ActorRef[GsCommand]) extends AbstractBehavior[GsCommand](context) {
+  
+  private val playbackRef: ActorRef[GsCommand] = gsPlaybackRef
+  private val displayRef: ActorRef[GsCommand] = gsDisplayRef
 
   val route: Route =
     path( "gs-transport-control") {
@@ -36,27 +55,19 @@ object GsTransportControl {
       }
     }
 
-  def apply(gsPlaybackRef: ActorRef[GsCommand]): Behavior[GsCommand] = Behaviors.setup {
-    context =>
-      context.system.receptionist ! Receptionist.Register(GsTransportControlServiceKey, context.self)
-
-      given system: ActorSystem[Nothing] = context.system
-
-      lazy val server = Http().newServerAt("localhost", GsHttpPort.GsTransportControl.port).bind(route)
-
-      server.map { _ =>
-        println("GsTransportControlServer online at localhost:" + GsHttpPort.GsTransportControl.port)
-      } recover { case ex =>
-        println(ex.getMessage)
-      }
-
-      new GsTransportControl(context, gsPlaybackRef)
-  }
-}
-
-class GsTransportControl(context: ActorContext[GsCommand], playbackRefIn: ActorRef[GsCommand]) extends AbstractBehavior[GsCommand](context) {
-  
-  private val playbackRef: ActorRef[GsCommand] = playbackRefIn
+  def websocketFlow: Flow[Message, Message, Any] =
+    Flow[Message].map {
+      case TextMessage.Strict(msg) =>
+        msg match {
+          case "play" =>
+            playbackRef ! PlayTrig(displayRef)
+            TextMessage.Strict("OK - PLAY")
+          case "stop" =>
+            playbackRef ! StopTrig(displayRef)
+            TextMessage.Strict("OK - STOP")
+        }
+      case BinaryMessage.Strict(b) => TextMessage.Strict("Ok - ws BinaryMessage")
+    }
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
