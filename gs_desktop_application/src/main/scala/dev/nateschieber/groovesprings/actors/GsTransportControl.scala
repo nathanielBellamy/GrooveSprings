@@ -1,6 +1,6 @@
 package dev.nateschieber.groovesprings.actors
 
-import akka.actor.typed.{ActorSystem, Behavior}
+import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
@@ -36,7 +36,7 @@ object GsTransportControl {
       }
     }
 
-  def apply(): Behavior[GsCommand] = Behaviors.setup {
+  def apply(gsPlaybackRef: ActorRef[GsCommand]): Behavior[GsCommand] = Behaviors.setup {
     context =>
       context.system.receptionist ! Receptionist.Register(GsTransportControlServiceKey, context.self)
 
@@ -50,11 +50,13 @@ object GsTransportControl {
         println(ex.getMessage)
       }
 
-      new GsTransportControl(context)
+      new GsTransportControl(context, gsPlaybackRef)
   }
 }
 
-class GsTransportControl(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCommand](context) {
+class GsTransportControl(context: ActorContext[GsCommand], playbackRefIn: ActorRef[GsCommand]) extends AbstractBehavior[GsCommand](context) {
+  
+  private val playbackRef: ActorRef[GsCommand] = playbackRefIn
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
