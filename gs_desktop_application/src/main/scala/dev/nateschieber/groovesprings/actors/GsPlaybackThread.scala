@@ -11,6 +11,16 @@ import scala.annotation.static
 
 object GsPlaybackThread {
 
+  @static var stopped: Boolean = true
+
+  @static def getStopped(): Boolean = {
+    stopped
+  }
+  
+  @static def setStopped(value: Boolean) = {
+    stopped = value
+  }
+
   @static var currFrameId: java.lang.Long = 0
 
   @static def setCurrFrameId(newId: java.lang.Long): Unit = {
@@ -33,7 +43,7 @@ class GsPlaybackThread(context: ActorContext[GsCommand]) extends AbstractBehavio
     msg match {
       case InitPlaybackThread(replyTo) =>
         JniMain.initPlaybackLoop() // blocking
-        Behaviors.same
+        Behaviors.stopped
     }
   }
 }

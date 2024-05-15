@@ -35,6 +35,7 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
 
       case PlayTrig(replyTo) =>
         println("GsPlayback :: play")
+        GsPlaybackThread.setStopped(false)
         playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
         playbackThreadRef ! InitPlaybackThread(context.self)
         replyTo ! RespondPlayTrig(context.self)
@@ -51,6 +52,7 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
           context.stop(playbackThreadRef)
           playbackThreadRef = null
         }
+        GsPlaybackThread.setStopped(true)
         GsPlaybackThread.setCurrFrameId(0)
         replyTo ! RespondStopTrig(context.self)
         Behaviors.same
