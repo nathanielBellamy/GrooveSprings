@@ -3,7 +3,6 @@ package dev.nateschieber.groovesprings.actors
 import akka.actor.typed.ActorRef
 import akka.actor.typed.Behavior
 import akka.actor.typed.receptionist.Receptionist
-import akka.actor.typed.receptionist.Receptionist.Listing
 import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
