@@ -19,20 +19,20 @@ object GsDisplay {
 
     val GsDisplayServiceKey = ServiceKey[GsCommand]("gs_display")
 
-    private var GsPlaybackRef: ActorRef[GsCommand] = null
-
-    def apply(): Behavior[GsCommand] = Behaviors.setup {
+    def apply(gsPlaybackRef: ActorRef[GsCommand]): Behavior[GsCommand] = Behaviors.setup {
       context =>
         context.system.receptionist ! Receptionist.Register(GsDisplayServiceKey, context.self)
-        new GsDisplay(context)
+        new GsDisplay(context, gsPlaybackRef)
     }
 }
 
-class GsDisplay(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCommand](context) {
+class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRefIn: ActorRef[GsCommand]) extends AbstractBehavior[GsCommand](context) {
 
   implicit val timeout: Timeout = Timeout.apply(100, TimeUnit.MILLISECONDS)
 
   private var stopped: Boolean = true
+  
+  private var gsPlaybackRef: ActorRef[GsCommand] = gsPlaybackRefIn
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
@@ -53,9 +53,9 @@ class GsDisplay(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCom
           replyTo ! ReadFrameId(context.self)
         Behaviors.same
 
-      case InitDisplay(playbackRef) =>
+      case InitDisplay() =>
         println("GsDisplay :: InitDisplay received")
-        playbackRef ! ReadFrameId(context.self)
+        gsPlaybackRef ! ReadFrameId(context.self)
         Behaviors.same
     }
   }

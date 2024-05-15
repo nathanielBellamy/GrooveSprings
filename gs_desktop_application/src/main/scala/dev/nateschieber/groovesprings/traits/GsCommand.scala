@@ -6,7 +6,7 @@ sealed trait GsCommand
 
 
 // GsDisplay
-final case class InitDisplay(playbackRef: ActorRef[ReadFrameId]) extends GsCommand
+final case class InitDisplay() extends GsCommand
 
 // GsPlayback
 final case class ReadFrameId(replyTo: ActorRef[RespondFrameId]) extends GsCommand
