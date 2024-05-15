@@ -11,9 +11,10 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives.*
 import akka.stream.scaladsl.Flow
 import dev.nateschieber.groovesprings.enums.GsHttpPort
-import dev.nateschieber.groovesprings.traits.{GsCommand, PlayTrig, StopTrig, RespondFastForwardTrig, RespondPauseTrig, RespondPlayTrig, RespondRewindTrig, RespondStopTrig}
+import dev.nateschieber.groovesprings.traits.{GsCommand, PlayTrig, RespondFastForwardTrig, RespondPauseTrig, RespondPlayTrig, RespondRewindTrig, RespondStopTrig, StopTrig}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 // GsTransportControl
 //  - establish a websocket to handle real-time controls from frontend
@@ -31,7 +32,10 @@ object GsTransportControl {
 
       val gsTransportControl = new GsTransportControl(context, gsPlaybackRef, gsDisplayRef)
 
-      lazy val server = Http().newServerAt("localhost", GsHttpPort.GsTransportControl.port).bind(gsTransportControl.route)
+      lazy val server = Http()
+        .newServerAt("localhost", GsHttpPort.GsTransportControl.port)
+        .adaptSettings(_.mapWebsocketSettings(_.withPeriodicKeepAliveMaxIdle(Duration("1 seconds"))))
+        .bind(gsTransportControl.route)
 
       server.map { _ =>
         println("GsTransportControlServer online at localhost:" + GsHttpPort.GsTransportControl.port)
