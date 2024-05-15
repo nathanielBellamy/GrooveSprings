@@ -12,23 +12,11 @@ object GsSupervisor {
   def apply(): Behavior[Nothing] = Behaviors.setup {
     context =>
       val playbackRef = context.spawn(GsPlayback(), "gs_playback")
-      val transportControlRef = context.spawn(GsTransportControl(playbackRef), "gs_transport_control")
       val displayRef = context.spawn(GsDisplay(playbackRef), "gs_display")
-      
+      val transportControlRef = context.spawn(GsTransportControl(playbackRef, displayRef), "gs_transport_control")
+
       displayRef ! InitDisplay()
-      playbackRef ! PlayTrig(displayRef)
 
-      Thread.sleep(5000)
-
-      playbackRef ! StopTrig(displayRef)
-
-//      Thread.sleep(5000)
-//      playbackRef ! PlayTrig(displayRef)
-//      Thread.sleep(5000)
-//      playbackRef ! StopTrig(displayRef)
-//      Thread.sleep(5000)
-//      playbackRef ! PlayTrig(displayRef)
-      
       new GsSupervisor(context)
   }
 }
