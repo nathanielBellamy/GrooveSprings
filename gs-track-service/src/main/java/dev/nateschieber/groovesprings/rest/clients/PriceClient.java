@@ -62,8 +62,6 @@ public class PriceClient {
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (response.statusCode() == 200){
-        // TODO:
-        // - debug why we're suddenly having trouble deserializing EntityType and EntityId
         TrackPriceClientResponseDto pcrd = objectMapper.readValue(response.body(), TrackPriceClientResponseDto.class);
         Price price = pcrd.data().price();
 
