@@ -34,7 +34,7 @@ object GsTransportControl {
 
       lazy val server = Http()
         .newServerAt("localhost", GsHttpPort.GsTransportControl.port)
-//        .adaptSettings(_.mapWebsocketSettings(_.withPeriodicKeepAliveMaxIdle(Duration("1 hour"))))
+        .adaptSettings(_.mapWebsocketSettings(_.withPeriodicKeepAliveMaxIdle(Duration("10 minutes"))))
         .bind(gsTransportControl.route)
 
       server.map { _ =>
