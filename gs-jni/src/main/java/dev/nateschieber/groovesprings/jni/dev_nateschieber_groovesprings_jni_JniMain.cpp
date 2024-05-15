@@ -45,34 +45,33 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlayb
 
       jclass jNum = env->FindClass("java/lang/Long");
       jmethodID jNumInit = env->GetMethodID(jNum, "<init>", "(J)V");
+      bool stopped;
 
       while (true) {
           currFrameId += 1;
+          stopped = env->CallStaticBooleanMethod(gsPlayback, getStopped);
+          if (stopped)
+          {
+              jSetCurrFrameId(
+                env,
+                gsPlayback,
+                setCurrFrameId,
+                jNum,
+                jNumInit,
+                0
+              );
+              break;
+          }
           if (currFrameId % 1000 == 0)
           {
-              bool stopped;
-              stopped = env->CallStaticBooleanMethod(gsPlayback, getStopped);
-              if (stopped)
-              {
-                  jSetCurrFrameId(
-                    env,
-                    gsPlayback,
-                    setCurrFrameId,
-                    jNum,
-                    jNumInit,
-                    0
-                  );
-                  break;
-              } else {
-                  jSetCurrFrameId(
-                    env,
-                    gsPlayback,
-                    setCurrFrameId,
-                    jNum,
-                    jNumInit,
-                    currFrameId
-                  );
-              }
+              jSetCurrFrameId(
+                env,
+                gsPlayback,
+                setCurrFrameId,
+                jNum,
+                jNumInit,
+                currFrameId
+              );
           }
       }
    }
