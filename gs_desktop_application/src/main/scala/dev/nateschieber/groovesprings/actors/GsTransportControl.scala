@@ -34,7 +34,7 @@ object GsTransportControl {
 
       lazy val server = Http()
         .newServerAt("localhost", GsHttpPort.GsTransportControl.port)
-        .adaptSettings(_.mapWebsocketSettings(_.withPeriodicKeepAliveMaxIdle(Duration("1 seconds"))))
+//        .adaptSettings(_.mapWebsocketSettings(_.withPeriodicKeepAliveMaxIdle(Duration("1 hour"))))
         .bind(gsTransportControl.route)
 
       server.map { _ =>
@@ -69,6 +69,7 @@ class GsTransportControl(context: ActorContext[GsCommand], gsPlaybackRef: ActorR
           case "stop" =>
             playbackRef ! StopTrig(displayRef)
             TextMessage.Strict("OK - STOP")
+          case default => TextMessage.Strict("BAD MESSAGE")
         }
       case BinaryMessage.Strict(b) => TextMessage.Strict("Ok - ws BinaryMessage")
     }
