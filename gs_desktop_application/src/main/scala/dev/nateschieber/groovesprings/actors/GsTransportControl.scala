@@ -1,21 +1,19 @@
 package dev.nateschieber.groovesprings.actors
 
-import akka.actor.typed.Behavior
+import akka.actor.typed.{ActorSystem, Behavior}
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
-import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives.*
 import akka.stream.scaladsl.Flow
 import dev.nateschieber.groovesprings.enums.GsHttpPort
 import dev.nateschieber.groovesprings.traits.{GsCommand, RespondFastForwardTrig, RespondPauseTrig, RespondPlayTrig, RespondRewindTrig, RespondStopTrig}
 
-import scala.annotation.static
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 // GsTransportControl
 //  - establish a websocket to handle real-time controls from frontend
@@ -42,9 +40,15 @@ object GsTransportControl {
     context =>
       context.system.receptionist ! Receptionist.Register(GsTransportControlServiceKey, context.self)
 
-      implicit val system = context.system
+      given system: ActorSystem[Nothing] = context.system
 
       lazy val server = Http().newServerAt("localhost", GsHttpPort.GsTransportControl.port).bind(route)
+
+      server.map { _ =>
+        println("GsTransportControlServer online at localhost:" + GsHttpPort.GsTransportControl.port)
+      } recover { case ex =>
+        println(ex.getMessage)
+      }
 
       new GsTransportControl(context)
   }
