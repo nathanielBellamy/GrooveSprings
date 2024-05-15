@@ -5,10 +5,10 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.actors.GsSupervisor
+import dev.nateschieber.groovesprings.enums.GsHttpPort
 import dev.nateschieber.groovesprings.jni.JniMain
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.runtime.Arrays
 
 object GsDesktopApplication {
 
@@ -16,7 +16,7 @@ object GsDesktopApplication {
     println(JniMain.main(Array("foo")));
     given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(), "gs_desktop_application")
     
-    lazy val server = Http().newServerAt("localhost", 8765).bind(routes())
+    lazy val server = Http().newServerAt("localhost", GsHttpPort.GsDesktopApplication.port).bind(routes())
 
     server.map { _ =>
       println("Server online at http://localhost:8765")
@@ -28,12 +28,12 @@ object GsDesktopApplication {
   private def routes(): Route = {
     val apiPrefix: String = "api/v1"
     concat(
-      path("hello") {
+      path("api" / "v1" / "hello") {
         get {
           complete("Hello World! Your friend, Akka. ")
         }
       },
-      path("add") {
+      path("api" / "v1" / "add") {
         get {
           parameters(Symbol("x").as[Int], Symbol("y").as[Int]) { (x: Int, y: Int) => {
             complete("result: " + JniMain.add(x, y))
