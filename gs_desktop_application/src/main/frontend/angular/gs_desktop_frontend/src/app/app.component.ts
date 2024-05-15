@@ -14,7 +14,7 @@ export class AppComponent {
   private socket = new WebSocket('ws://localhost:8766/gs-transport-control')
   ngOnInit() {
     this.socket.onopen = () => console.log('gs-transport-control opened')
-    this.socket.onmessage = (m) => console.log(m)
+    this.socket.onmessage = () => {}
     this.socket.onclose = () => console.log('gs-transport-control closed')
     this.socket.onerror = (e) => console.log(e)
   }
@@ -24,12 +24,10 @@ export class AppComponent {
   }
 
   playTrig() {
-    console.dir({sock: this.socket})
     this.socket.send('play')
   }
 
   stopTrig() {
-    console.dir({sock: this.socket})
     this.socket.send('stop')
   }
 }
