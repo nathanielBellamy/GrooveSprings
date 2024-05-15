@@ -36,12 +36,12 @@ void jSetCurrFrameId(
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
   (JNIEnv* env, jobject _gsPlayback) {
   try {
-
       long currFrameId;
       currFrameId = 0;
 
       jclass gsPlayback = env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
       jmethodID setCurrFrameId = env->GetStaticMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V");
+      jmethodID getStopped = env->GetStaticMethodID (gsPlayback, "getStopped", "()Z");
 
       jclass jNum = env->FindClass("java/lang/Long");
       jmethodID jNumInit = env->GetMethodID(jNum, "<init>", "(J)V");
@@ -50,14 +50,29 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlayb
           currFrameId += 1;
           if (currFrameId % 1000 == 0)
           {
-              jSetCurrFrameId(
-                env,
-                gsPlayback,
-                setCurrFrameId,
-                jNum,
-                jNumInit,
-                currFrameId
-              );
+              bool stopped;
+              stopped = env->CallStaticBooleanMethod(gsPlayback, getStopped);
+              if (stopped)
+              {
+                  jSetCurrFrameId(
+                    env,
+                    gsPlayback,
+                    setCurrFrameId,
+                    jNum,
+                    jNumInit,
+                    0
+                  );
+                  break;
+              } else {
+                  jSetCurrFrameId(
+                    env,
+                    gsPlayback,
+                    setCurrFrameId,
+                    jNum,
+                    jNumInit,
+                    currFrameId
+                  );
+              }
           }
       }
    }
