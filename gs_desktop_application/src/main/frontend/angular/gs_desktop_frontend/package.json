@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build-dist": "ng build --output-path ../../../resources/frontend-dist",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
