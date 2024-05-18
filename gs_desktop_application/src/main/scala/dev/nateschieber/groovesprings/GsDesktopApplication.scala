@@ -26,8 +26,13 @@ object GsDesktopApplication {
   }
 
   private def routes(): Route = {
-    val apiPrefix: String = "api/v1"
     concat(
+      path("") { //the same prefix must be set as base href in index.html
+        getFromResource("frontend-dist/browser/index.html")
+      } ~ pathPrefix("") {
+        getFromResourceDirectory("frontend-dist/browser/") ~
+          getFromResource("frontend-dist/browser/index.html")
+      },
       path("api" / "v1" / "hello") {
         get {
           complete("Hello World! Your friend, Akka. ")
