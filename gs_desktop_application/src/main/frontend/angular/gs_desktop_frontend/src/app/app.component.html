@@ -9,6 +9,13 @@
   <button (click)="stopTrig()">
     Stop
   </button>
+
+  <div >
+    <input
+      type="file"
+      accept="audio/*"
+      (change)="handleFileInput($event)"/>
+  </div>
 </div>
 
 <router-outlet />

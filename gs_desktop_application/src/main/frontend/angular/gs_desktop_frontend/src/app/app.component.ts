@@ -30,4 +30,16 @@ export class AppComponent {
   stopTrig() {
     this.socket.send('stop')
   }
+
+  handleFileInput(e: any) {
+    const fakepath = (e.target || {value: ""}).value;
+    const file: string = (fakepath || "").replace("C:\\fakepath\\", '');
+    // The Strokes - The Modern Age (Official HD Video).mp3
+    const fileParts: string[] = file.split('.');
+    const fileName: string = fileParts[0];
+    const fileAudioCodec: string = fileParts[1];
+
+    console.dir({fileName, fileAudioCodec})
+  }
+
 }
