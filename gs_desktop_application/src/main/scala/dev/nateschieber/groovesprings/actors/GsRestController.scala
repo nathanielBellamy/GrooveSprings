@@ -5,7 +5,7 @@ import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
-import akka.http.scaladsl.server.Directives.*
+import akka.http.scaladsl.server.Directives.{path, *}
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.enums.GsHttpPort
 import dev.nateschieber.groovesprings.jni.JniMain
@@ -37,18 +37,38 @@ object GsRestController {
   }
 }
 
-
 class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsCommand]) extends AbstractBehavior[GsCommand](context) {
 
   def routes(): Route = {
     concat(
-      path("api" / "v1" / "file-select") {
+      path("api" / "v1" / "hello") {
         get {
-          parameters(Symbol("filename").as[String], Symbol("audiocodec").as[String]) { (fileName, audioCodec) => {
-            complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "filename: ${fileName} -- audioCodec: ${audioCodec}"))
+          complete("Hello World! Your friend, Akka. ")
+        }
+      },
+      path("api" / "v1" / "add") {
+        get {
+          parameters(Symbol("x").as[Int], Symbol("y").as[Int]) { (x: Int, y: Int) => {
+            complete("result: " + JniMain.add(x, y))
           }}
         }
-      }
+      },
+      path("api" / "v1" / "file") {
+        get {
+          parameters(Symbol("filename").as[String], Symbol("audiocodec").as[String]) { (fileName: String, audioCodec: String) => {
+            val msg = s"fileName: ${fileName} -- audioCodec: ${audioCodec}"
+            println(msg)
+            complete(HttpEntity(ContentTypes.`application/json`, s"{\"msg\": \"${msg}\"}"))
+            // complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "filename: ${fileName} -- audioCodec: ${audioCodec}"))
+          }}
+        }
+      },
+      path("") { //the same prefix must be set as base href in index.html
+        getFromResource("frontend-dist/browser/index.html")
+      } ~ pathPrefix("") {
+        getFromResourceDirectory("frontend-dist/browser/") ~
+          getFromResource("frontend-dist/browser/index.html")
+      },
     )
   }
 
