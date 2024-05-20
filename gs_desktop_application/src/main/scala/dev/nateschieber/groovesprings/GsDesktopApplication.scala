@@ -15,34 +15,19 @@ object GsDesktopApplication {
   @main def main(): Unit = {
     println(JniMain.main(Array("foo")));
     given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(), "gs_desktop_application")
-    
+
     lazy val server = Http().newServerAt("localhost", GsHttpPort.GsDesktopApplication.port).bind(routes())
 
-    server.map { _ =>
-      println("Server online at http://localhost:8765")
-    } recover { case ex =>
-      println(ex.getMessage)
-    }
+    server.map(_ => {
+      //
+    })
   }
 
   private def routes(): Route = {
     concat(
-      path("") { //the same prefix must be set as base href in index.html
-        getFromResource("frontend-dist/browser/index.html")
-      } ~ pathPrefix("") {
-        getFromResourceDirectory("frontend-dist/browser/") ~
-          getFromResource("frontend-dist/browser/index.html")
-      },
       path("api" / "v1" / "hello") {
         get {
-          complete("Hello World! Your friend, Akka. ")
-        }
-      },
-      path("api" / "v1" / "add") {
-        get {
-          parameters(Symbol("x").as[Int], Symbol("y").as[Int]) { (x: Int, y: Int) => {
-            complete("result: " + JniMain.add(x, y))
-          }}
+          complete("Welcome to Groove Springs.")
         }
       }
     )

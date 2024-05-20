@@ -39,7 +39,9 @@ export class AppComponent {
     const fileAudioCodec: string = fileParts[1];
 
     console.dir({fileName, fileAudioCodec})
-    fetch(`http://localhost:8765/?filename=${fileName}&audiocodec=${fileAudioCodec}`)
+    fetch(`http://localhost:5678/api/v1/file-select?filename=${fileName}&audiocodec=${fileAudioCodec}`)
+      .then(res => res.json())
+      .then(body => console.dir(body))
   }
 
 }
