@@ -57,9 +57,7 @@ class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef
         get {
           parameters(Symbol("filename").as[String], Symbol("audiocodec").as[String]) { (fileName: String, audioCodec: String) => {
             val msg = s"fileName: ${fileName} -- audioCodec: ${audioCodec}"
-            println(msg)
-            complete(HttpEntity(ContentTypes.`application/json`, s"{\"msg\": \"${msg}\"}"))
-            // complete(HttpEntity(ContentTypes.`text/plain(UTF-8)`, "filename: ${fileName} -- audioCodec: ${audioCodec}"))
+            complete(HttpEntity(ContentTypes.`application/json`, s"{\"msg\":\"${msg}\"}"))
           }}
         }
       },
