@@ -14,7 +14,6 @@ import dev.nateschieber.groovesprings.enums.GsHttpPort
 import dev.nateschieber.groovesprings.traits.{GsCommand, PlayTrig, RespondFastForwardTrig, RespondPauseTrig, RespondPlayTrig, RespondRewindTrig, RespondStopTrig, StopTrig}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
 
 // GsTransportControl
 //  - establish a websocket to handle real-time controls from frontend
@@ -34,7 +33,7 @@ object GsTransportControl {
 
       lazy val server = Http()
         .newServerAt("localhost", GsHttpPort.GsTransportControl.port)
-        .adaptSettings(_.mapWebsocketSettings(_.withPeriodicKeepAliveMaxIdle(Duration("10 minutes"))))
+        .adaptSettings(_.mapWebsocketSettings(_.withPeriodicKeepAliveMode("ping")))
         .bind(gsTransportControl.route)
 
       server.map { _ =>
