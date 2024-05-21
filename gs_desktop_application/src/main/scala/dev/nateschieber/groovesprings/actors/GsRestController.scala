@@ -3,14 +3,16 @@ package dev.nateschieber.groovesprings.actors
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
+import akka.http.scaladsl.{ClientTransport, Http}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpRequest}
 import akka.http.scaladsl.server.Directives.{path, *}
 import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings}
 import dev.nateschieber.groovesprings.enums.GsHttpPort
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand}
 
+import java.net.InetSocketAddress
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object GsRestController {
@@ -60,6 +62,22 @@ class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef
             gsPlaybackRef ! FileSelect(fileName, audioCodec, context.self)
             complete(HttpEntity(ContentTypes.`application/json`, s"{\"msg\":\"${msg}\"}"))
           }}
+        }
+      },
+      pathPrefix("api" / "v1") {
+        // proxy all other api/v1 traffic to gs-track-service
+        extractUnmatchedPath { remaining =>
+          extractMethod { method =>
+            extractRequestEntity { requestEntity =>
+              implicit val classic = context.system.classicSystem
+              val response = Http().singleRequest(HttpRequest(
+                method = method,
+                uri = s"http://localhost:5173/api/v1$remaining", // gs-track-service
+                entity = requestEntity
+              ))
+              complete(response)
+            }
+          }
         }
       },
       path("") { //the same prefix must be set as base href in index.html
