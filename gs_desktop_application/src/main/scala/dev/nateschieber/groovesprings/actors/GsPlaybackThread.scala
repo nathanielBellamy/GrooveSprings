@@ -44,7 +44,7 @@ class GsPlaybackThread(context: ActorContext[GsCommand]) extends AbstractBehavio
       case InitPlaybackThread(fileName, audioCodec, replyTo) =>
         // TODO: pass fileName and audioCodec to cpp
         println(s"\n Playback Thread: filename: ${fileName} + audioCodec: ${audioCodec} \n")
-        JniMain.initPlaybackLoop() // blocking
+        JniMain.initPlaybackLoop(s"${fileName}.${audioCodec}") // blocking
         Behaviors.stopped
     }
   }
