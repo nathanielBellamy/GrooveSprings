@@ -16,7 +16,7 @@ final case class FileSelect(fileName: String, audioCodec: String, replyTo: Actor
 final case class RespondFileSelect(replyTo: ActorRef[FileSelect]) extends GsCommand
 
 // GsPlaybackThread
-final case class InitPlaybackThread(fileName: String, audioCodec: String, replyTo: ActorRef[RespondInitPlaybackThread]) extends GsCommand
+final case class InitPlaybackThread(replyTo: ActorRef[RespondInitPlaybackThread]) extends GsCommand
 final case class RespondInitPlaybackThread(replyTo: ActorRef[InitPlaybackThread]) extends GsCommand
 final case class StopPlaybackThread(replyTo: ActorRef[RespondStopPlaybackThread]) extends GsCommand
 final case class RespondStopPlaybackThread(replyTo: ActorRef[StopPlaybackThread]) extends GsCommand
