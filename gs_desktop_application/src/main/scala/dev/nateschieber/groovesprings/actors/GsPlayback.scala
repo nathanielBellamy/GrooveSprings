@@ -30,24 +30,25 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case ReadFrameId(replyTo) =>
-        replyTo ! RespondFrameId(GsPlaybackThread.currFrameId, context.self)
+        replyTo ! RespondFrameId(GsPlaybackThread.getCurrFrameId(), context.self)
         Behaviors.same
 
       case FileSelect(fileName, audioCodec, replyTo) =>
+        GsPlaybackThread.stop()
+        GsPlaybackThread.setFileName(fileName)
+        GsPlaybackThread.setAudioCodec(audioCodec)
         if (playbackThreadRef != null)
           context.stop(playbackThreadRef)
           playbackThreadRef = null
-        playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
-        playbackThreadRef ! InitPlaybackThread(fileName, audioCodec, context.self)
         replyTo ! RespondFileSelect(context.self)
         Behaviors.same
 
       case PlayTrig(replyTo) =>
         println("GsPlayback :: play")
-        GsPlaybackThread.setStopped(false)
-        if (playbackThreadRef == null) 
+        if (playbackThreadRef == null)
           playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
-        playbackThreadRef ! InitPlaybackThread(null, null, context.self)
+        playbackThreadRef ! InitPlaybackThread(context.self)
+        GsPlaybackThread.setStopped(false)
         replyTo ! RespondPlayTrig(context.self)
         Behaviors.same
       
@@ -58,12 +59,10 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
 
       case StopTrig(replyTo) =>
         println("GsPlayback :: stop")
-        if (playbackThreadRef != null) {
+        GsPlaybackThread.stop()
+        if (playbackThreadRef != null)
           context.stop(playbackThreadRef)
           playbackThreadRef = null
-        }
-        GsPlaybackThread.setStopped(true)
-        GsPlaybackThread.setCurrFrameId(0)
         replyTo ! RespondStopTrig(context.self)
         Behaviors.same
         

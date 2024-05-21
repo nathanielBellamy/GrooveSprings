@@ -10,8 +10,21 @@ import dev.nateschieber.groovesprings.traits.*
 import scala.annotation.static
 
 object GsPlaybackThread {
-
-  @static var stopped: Boolean = true
+  // NOTE
+  //  - these variables are static so as to be accessable from native code
+  //  - the same is true for their static getter+setter methods
+  //  - these methods should appear only in GsPlayback
+  //  - GsPlayback cannot send messages to mutate these values
+  //    because this thread will be blocked by native playback loop
+  @static private var stopped: Boolean = true
+  @static private var currFrameId: java.lang.Long = 0
+  @static private var fileName: java.lang.String = null
+  @static private var audioCodec: java.lang.String = null
+  
+  @static def stop(): Unit = {
+    stopped = true
+    currFrameId = 0
+  }
 
   @static def getStopped(): Boolean = {
     stopped
@@ -21,14 +34,32 @@ object GsPlaybackThread {
     stopped = value
   }
 
-  @static var currFrameId: java.lang.Long = 0
-
+  @static def getCurrFrameId(): java.lang.Long = {
+    currFrameId
+  }
+  
   @static def setCurrFrameId(newId: java.lang.Long): Unit = {
     if (newId == null) {
       currFrameId = 0
     } else {
       currFrameId = newId
     }
+  }
+  
+  @static def getFileName(): java.lang.String = {
+    fileName
+  }
+  
+  @static def setFileName(value: java.lang.String) = {
+    fileName = value
+  }
+  
+  @static def getAudioCodec(): java.lang.String = {
+    audioCodec
+  }
+  
+  @static def setAudioCodec(value: java.lang.String) = {
+    audioCodec = value
   }
 
   def apply(): Behavior[GsCommand] = Behaviors.setup {
@@ -41,10 +72,8 @@ class GsPlaybackThread(context: ActorContext[GsCommand]) extends AbstractBehavio
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
-      case InitPlaybackThread(fileName, audioCodec, replyTo) =>
-        // TODO: pass fileName and audioCodec to cpp
-        println(s"\n Playback Thread: filename: ${fileName} + audioCodec: ${audioCodec} \n")
-        JniMain.initPlaybackLoop(s"${fileName}.${audioCodec}") // blocking
+      case InitPlaybackThread(replyTo) =>
+        JniMain.initPlaybackLoop(s"${GsPlaybackThread.getFileName()}.${GsPlaybackThread.getAudioCodec()}") // blocking
         Behaviors.stopped
     }
   }
