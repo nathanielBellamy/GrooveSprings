@@ -43,7 +43,7 @@ export class AppComponent {
     const fileName: string = fileParts[0];
     const fileAudioCodec: string = fileParts[1];
 
-    const res = this.http.get(`api/v1/file?filename=${fileName}&audiocodec=${fileAudioCodec}`)
+    const res = this.http.get(`api/v1/file-select?filename=${fileName}&audiocodec=${fileAudioCodec}`)
       .subscribe(body => console.dir({body}))
     console.dir(res)
   }
