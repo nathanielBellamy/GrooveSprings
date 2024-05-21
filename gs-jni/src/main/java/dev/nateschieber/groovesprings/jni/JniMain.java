@@ -19,7 +19,7 @@ public class JniMain {
 
   private native int addNative(int x, int y);
 
-  public static void initPlaybackLoop() { new JniMain().initPlaybackLoopNative(); }
+  public static void initPlaybackLoop(String file) { new JniMain().initPlaybackLoopNative(file); }
 
-  private native void initPlaybackLoopNative();
+  private native void initPlaybackLoopNative(String file);
 }

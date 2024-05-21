@@ -34,10 +34,12 @@ void jSetCurrFrameId(
 }
 
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
-  (JNIEnv* env, jobject _gsPlayback) {
+  (JNIEnv* env, jobject _gsPlayback, jstring file) {
   try {
       long currFrameId;
       currFrameId = 0;
+
+      std::cout << "Cpp has file: " << env->GetStringUTFChars(file, 0) << std::endl;
 
       jclass gsPlayback = env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
       jmethodID setCurrFrameId = env->GetStaticMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V");
