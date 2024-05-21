@@ -33,11 +33,21 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         replyTo ! RespondFrameId(GsPlaybackThread.currFrameId, context.self)
         Behaviors.same
 
+      case FileSelect(fileName, audioCodec, replyTo) =>
+        if (playbackThreadRef != null)
+          context.stop(playbackThreadRef)
+          playbackThreadRef = null
+        playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
+        playbackThreadRef ! InitPlaybackThread(fileName, audioCodec, context.self)
+        replyTo ! RespondFileSelect(context.self)
+        Behaviors.same
+
       case PlayTrig(replyTo) =>
         println("GsPlayback :: play")
         GsPlaybackThread.setStopped(false)
-        playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
-        playbackThreadRef ! InitPlaybackThread(context.self)
+        if (playbackThreadRef == null) 
+          playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
+        playbackThreadRef ! InitPlaybackThread(null, null, context.self)
         replyTo ! RespondPlayTrig(context.self)
         Behaviors.same
       

@@ -9,7 +9,7 @@ import akka.http.scaladsl.server.Directives.{path, *}
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.enums.GsHttpPort
 import dev.nateschieber.groovesprings.jni.JniMain
-import dev.nateschieber.groovesprings.traits.GsCommand
+import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -57,6 +57,7 @@ class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef
         get {
           parameters(Symbol("filename").as[String], Symbol("audiocodec").as[String]) { (fileName: String, audioCodec: String) => {
             val msg = s"fileName: ${fileName} -- audioCodec: ${audioCodec}"
+            gsPlaybackRef ! FileSelect(fileName, audioCodec, context.self)
             complete(HttpEntity(ContentTypes.`application/json`, s"{\"msg\":\"${msg}\"}"))
           }}
         }

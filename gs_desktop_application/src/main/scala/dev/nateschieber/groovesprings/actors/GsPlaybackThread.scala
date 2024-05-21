@@ -41,7 +41,9 @@ class GsPlaybackThread(context: ActorContext[GsCommand]) extends AbstractBehavio
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
-      case InitPlaybackThread(replyTo) =>
+      case InitPlaybackThread(fileName, audioCodec, replyTo) =>
+        // TODO: pass fileName and audioCodec to cpp
+        println(s"\n Playback Thread: filename: ${fileName} + audioCodec: ${audioCodec} \n")
         JniMain.initPlaybackLoop() // blocking
         Behaviors.stopped
     }
