@@ -4,6 +4,9 @@
 #include <string>
 #include <thread>
 #include "dev_nateschieber_groovesprings_jni_JniMain.h"
+#include "./audio/audio.h"
+#include "./audio/audio_data.h"
+
 
 // NOTE:
 //   - on macOs, .dylib compilation requires main method
@@ -34,12 +37,14 @@ void jSetCurrFrameId(
 }
 
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
-  (JNIEnv* env, jobject _gsPlayback, jstring file) {
+  (JNIEnv* env, jobject _gsPlayback, jstring jfile) {
   try {
       long currFrameId;
       currFrameId = 0;
 
-      std::cout << "Cpp has file: " << env->GetStringUTFChars(file, 0) << std::endl;
+      char* file = env->GetStringUTFChars(jfile, 0);
+      std::cout << "Cpp has file: " << file << std::endl;
+      Audio audioObj(file);
 
       jclass gsPlayback = env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
       jmethodID setCurrFrameId = env->GetStaticMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V");
