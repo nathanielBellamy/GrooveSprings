@@ -1,15 +1,23 @@
 package dev.nateschieber.groovesprings.actors
 
-import akka.actor.typed.ActorRef
-import akka.actor.typed.Behavior
+import akka.NotUsed
+import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.receptionist.Receptionist
 import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
+import akka.http.scaladsl.server.Directives.{get, handleWebSocketMessages, path}
+import akka.http.scaladsl.server.Route
+import akka.stream.OverflowStrategy
+import akka.stream.scaladsl.{Flow, Sink, Source, SourceQueueWithComplete}
 import dev.nateschieber.groovesprings.traits.*
 import akka.util.Timeout
+import dev.nateschieber.groovesprings.enums.GsHttpPort
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.concurrent.TimeUnit
 import scala.language.postfixOps
 
@@ -20,17 +28,55 @@ object GsDisplay {
     def apply(playbackRef: ActorRef[GsCommand]): Behavior[GsCommand] = Behaviors.setup {
       context =>
         context.system.receptionist ! Receptionist.Register(GsDisplayServiceKey, context.self)
-        new GsDisplay(context, playbackRef)
+
+        given system: ActorSystem[Nothing] = context.system
+
+        val gsDisplay = new GsDisplay(context, playbackRef)
+
+        lazy val server = Http()
+          .newServerAt("localhost", GsHttpPort.GsDisplay.port)
+          .adaptSettings(_.mapWebsocketSettings(_.withPeriodicKeepAliveMode("ping")))
+          .bind(gsDisplay.route)
+
+        server.map { _ =>
+          println("GsDisplayServer online at localhost:" + GsHttpPort.GsDisplay.port)
+        } recover { case ex =>
+          println(ex.getMessage)
+        }
+
+        gsDisplay
     }
 }
 
 class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsCommand]) extends AbstractBehavior[GsCommand](context) {
 
   implicit val timeout: Timeout = Timeout.apply(100, TimeUnit.MILLISECONDS)
-
   private var stopped: Boolean = true
-  
   private val playbackRef: ActorRef[GsCommand] = gsPlaybackRef
+
+  private var browserConnections: List[TextMessage => Unit] = List()
+
+  val route: Route =
+    path("gs-display") {
+      get {
+        handleWebSocketMessages(websocketFlow)
+      }
+    }
+
+  def websocketFlow: Flow[Message, Message, Any] = {
+    // based on https://github.com/JannikArndt/simple-akka-websocket-server-push/blob/master/src/main/scala/WebSocket.scala
+    val inbound: Sink[Message, Any] = Sink.foreach(_ => ())
+    val outbound: Source[Message, SourceQueueWithComplete[Message]] = Source.queue[Message](16, OverflowStrategy.fail)
+
+    Flow.fromSinkAndSourceMat(inbound, outbound)((_, outboundMat) => {
+      browserConnections ::= outboundMat.offer
+      NotUsed
+    })
+  }
+
+  def sendWebsocketMsg(text: String): Unit = {
+    for (connection <- browserConnections) connection(TextMessage.Strict(text))
+  }
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
@@ -45,8 +91,9 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
         Behaviors.same
 
       case RespondFrameId(lastFrameId, replyTo) =>
-        println("GsDisplay :: lastFrameId: " + lastFrameId)
         if (!stopped)
+          sendWebsocketMsg(lastFrameId.toString)
+          println("GsDisplay :: lastFrameId: " + lastFrameId)
           Thread.sleep(100)
           replyTo ! ReadFrameId(context.self)
         Behaviors.same
