@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+interface GsHttpResponse {
+  data: any
+}
+
 @Component({
   selector: 'gsLibrary',
   standalone: true,
@@ -11,8 +15,14 @@ import { HttpClient } from '@angular/common/http';
 })
 @Injectable()
 export class LibraryComponent {
+  protected artists: any = null
 
   constructor(private http: HttpClient) { }
+
+  ngOnInit() {
+    this.http.get(`api/v1/artists`)
+      .subscribe(res => this.artists = res )
+  }
 
   async handleFileInput(e: any) {
     const fakepath = (e.target || {value: ""}).value;
@@ -25,4 +35,6 @@ export class LibraryComponent {
       .subscribe(body => console.dir({body}))
     console.dir(res)
   }
+
+  protected readonly JSON = JSON;
 }
