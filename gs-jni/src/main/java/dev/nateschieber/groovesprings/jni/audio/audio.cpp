@@ -1,14 +1,10 @@
 #include <string>
-#include <sndfile.h>
+#include <iostream>
+//#include <sndfile.h>
+#include "./audio.h"
+#include "./audio_data.h"
 
-class Audio
+Audio::Audio(char const* file)
 {
-        AUDIO_DATA data;
-
-    public:
-
-        Audio(string file)
-        {
-            std::cout << "\n audio.cpp has file: " << file;
-        }
+    std::cout << "\n audio.cpp has file: " << file;
 }

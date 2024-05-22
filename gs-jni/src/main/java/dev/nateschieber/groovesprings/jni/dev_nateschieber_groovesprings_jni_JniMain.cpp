@@ -5,7 +5,7 @@
 #include <thread>
 #include "dev_nateschieber_groovesprings_jni_JniMain.h"
 #include "./audio/audio.h"
-#include "./audio/audio_data.h"
+//#include "./audio_data.h"
 
 
 // NOTE:
@@ -42,7 +42,7 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlayb
       long currFrameId;
       currFrameId = 0;
 
-      char* file = env->GetStringUTFChars(jfile, 0);
+      char const* file = env->GetStringUTFChars(jfile, 0);
       std::cout << "Cpp has file: " << file << std::endl;
       Audio audioObj(file);
 
