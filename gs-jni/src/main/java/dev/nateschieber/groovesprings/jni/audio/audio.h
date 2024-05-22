@@ -8,7 +8,7 @@ class Audio
         AUDIO_DATA data;
 
     public:
-        Audio(string file);
-}
+        Audio(char const* file);
+};
 
 #endif
