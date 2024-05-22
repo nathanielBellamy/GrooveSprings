@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router'
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {TransportControlComponent} from "./transportControl/transportControl.component";
+import {PlaybackDisplayComponent} from "./playbackDisplay/playbackDisplay.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TransportControlComponent],
+  imports: [RouterOutlet, TransportControlComponent, PlaybackDisplayComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.sass'
 })
