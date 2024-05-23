@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router'
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {PlaybackComponent} from "./playback/playback.component";
-import {LibraryComponent} from "./library/library.component";
+import {LibraryComponent} from "./library/components/library/library.component";
 
 @Component({
   selector: 'app-root',

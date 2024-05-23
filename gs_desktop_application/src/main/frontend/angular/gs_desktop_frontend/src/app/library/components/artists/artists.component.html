@@ -3,7 +3,7 @@
     Artists
   </h2>
   <div class="artist_list">
-    <div *ngFor="let artist of artists">
+    <div *ngFor="let artist of artists$ | async">
       {{artist.name}}
     </div>
   </div>
