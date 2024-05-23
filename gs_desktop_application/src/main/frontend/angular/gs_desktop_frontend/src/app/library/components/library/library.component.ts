@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Artist, ArtistsGetAll} from "../models/artists/artists_get_all.model";
-import {ArtistsComponent} from "./artists/artists.component";
+import {Artist, ArtistsGetAll} from "../../../models/artists/artists_get_all.model";
+import {ArtistsComponent} from "../artists/artists.component";
 
 interface GsHttpResponse {
   data: any
