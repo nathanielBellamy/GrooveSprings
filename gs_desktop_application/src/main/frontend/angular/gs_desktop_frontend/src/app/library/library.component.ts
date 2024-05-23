@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {Artist, ArtistsGetAll} from "../models/artists/artists_get_all.model";
+import {ArtistsComponent} from "./artists/artists.component";
 
 interface GsHttpResponse {
   data: any
@@ -9,20 +11,16 @@ interface GsHttpResponse {
 @Component({
   selector: 'gsLibrary',
   standalone: true,
-  imports: [],
+  imports: [
+    ArtistsComponent
+  ],
   templateUrl: './library.component.html',
   styleUrl: './library.component.sass'
 })
 @Injectable()
 export class LibraryComponent {
-  protected artists: any = null
 
-  constructor(private http: HttpClient) { }
-
-  ngOnInit() {
-    this.http.get(`api/v1/artists`)
-      .subscribe(res => this.artists = res )
-  }
+  constructor(private http: HttpClient) {}
 
   async handleFileInput(e: any) {
     const fakepath = (e.target || {value: ""}).value;
@@ -35,6 +33,4 @@ export class LibraryComponent {
       .subscribe(body => console.dir({body}))
     console.dir(res)
   }
-
-  protected readonly JSON = JSON;
 }
