@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import {LibraryStore} from "../../store/library.reducer";
 import {Observable} from "rxjs";
 import {Artist} from "../../../models/artists/artists_get_all.model";
-import {fetchArtists} from "../../store/library.actions";
+import { FetchArtists } from "../../store/library.actions";
 
 @Component({
   selector: 'gsArtists',
@@ -29,6 +29,6 @@ export class ArtistsComponent {
   }
 
   ngOnInit() {
-    this.store.dispatch(fetchArtists())
+    this.store.dispatch( new FetchArtists())
   }
 }

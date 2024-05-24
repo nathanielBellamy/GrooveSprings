@@ -1,4 +1,18 @@
-import { createAction } from '@ngrx/store'
+import { Action } from '@ngrx/store'
+import {LibraryActionTypes} from "./library.actiontypes";
 
-export const fetchArtists = createAction('[Artists] Fetch Artists')
-export const fetchArtistsSuccess = createAction('[Artists] Fetch Artists Success')
+export class FetchArtists implements Action {
+  readonly type = LibraryActionTypes.FetchArtists
+}
+
+export class FetchArtistsSuccess implements Action {
+  readonly type = LibraryActionTypes.FetchArtistsSuccess
+
+  constructor(public payload: any) { }
+}
+
+export class FetchArtistsFailure implements Action {
+  readonly type = LibraryActionTypes.FetchArtistsFailure
+
+  constructor(public payload: any) { }
+}

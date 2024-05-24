@@ -1,6 +1,7 @@
-import { createReducer, on } from '@ngrx/store'
-import {fetchArtistsSuccess} from './library.actions'
-import {Artist} from "../../models/artists/artists_get_all.model";
+import { Action } from '@ngrx/store'
+import { Artist } from "../../models/artists/artists_get_all.model";
+import { LibraryActionTypes } from "./library.actiontypes";
+import {FetchArtistsSuccess} from "./library.actions";
 
 export interface LibraryStore {
   artistCount: number;
@@ -12,16 +13,23 @@ export const initialLibraryStore: LibraryStore = {
   artists: []
 }
 
-export const libraryReducer = createReducer(
-  initialLibraryStore,
-  on(fetchArtistsSuccess, (store: LibraryStore, action: any) => {
-    const { artistCount, artists }: { artistCount: number, artists: Artist[] } = action.payload
+export function libraryReducer(state = initialLibraryStore, action: Action) {
+  alert('reducer');
+  switch (action.type) {
+    case LibraryActionTypes.FetchArtists:
+      alert("library.reducer FetchArtists")
+      return {...state}
 
-    console.dir({artistCount, artists})
-    return {
-      ...store,
-      artistCount,
-      artists
-    }
-  })
-)
+    case LibraryActionTypes.FetchArtistsSuccess:
+      const fas = action as FetchArtistsSuccess
+      const { count, artists }: { count: number, artists: Artist[] } = fas.payload
+      return {
+        ...state,
+        artistsCount: count,
+        artists
+      }
+
+    default:
+      return {...state}
+  }
+}
