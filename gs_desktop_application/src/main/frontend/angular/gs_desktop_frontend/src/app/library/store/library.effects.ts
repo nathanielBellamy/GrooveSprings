@@ -1,13 +1,16 @@
 import {Injectable} from "@angular/core";
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {ArtistService} from "../services/artists.service";
-import {map, exhaustMap} from "rxjs";
+import {map, exhaustMap, catchError, of} from "rxjs";
+import { FetchArtistsSuccess, FetchArtistsFailure } from "./library.actions";
+import {Store} from "@ngrx/store";
 
 @Injectable()
 export class LibraryEffects {
   constructor(
     private actions$: Actions,
-    private artistService: ArtistService
+    private artistService: ArtistService,
+    private store$: Store
   ) {}
 
   fetchArtists$ = createEffect(() =>
@@ -15,8 +18,13 @@ export class LibraryEffects {
       ofType('[Artists] Fetch Artists'),
       exhaustMap(() => this.artistService.fetchAll()
         .pipe(
-          map((payload) => ({type: '[Artists] Fetch Artists Success', payload}))
+          map((payload) => new FetchArtistsSuccess(payload)),
+          catchError(((e, _) => {
+            console.error(e)
+            return  of(new FetchArtistsFailure(e))
+          })
         ))
+     )
     )
   )
 }
