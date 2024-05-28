@@ -4,7 +4,8 @@ import { Store } from '@ngrx/store';
 import {Observable} from "rxjs";
 import {LibraryState} from "../../store/library.state";
 import {Album} from "../../../models/albums/album.model";
-import {FetchAlbums} from "../../store/library.actions";
+
+import {FetchAlbums} from "../../store/actions/albums.actions";
 
 @Component({
   selector: 'gsAlbums',

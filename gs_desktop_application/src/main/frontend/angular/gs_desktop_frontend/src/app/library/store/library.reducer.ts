@@ -1,14 +1,13 @@
 import {Action} from '@ngrx/store'
 import {LibraryActionTypes} from "./library.actiontypes";
 import {
-  FetchAlbumsFailure,
-  FetchAlbumsSuccess,
   FetchArtistsFailure,
   FetchArtistsSuccess, FetchTracksFailure, FetchTracksSuccess,
   GsLibraryActionFailure,
   GsLibraryActionSuccess
 } from "./library.actions";
 import {initialLibraryState, LibraryState} from "./library.state";
+import {FetchAlbumsFailure, FetchAlbumsSuccess} from "./actions/albums.actions";
 
 export function libraryReducer(state = initialLibraryState, action: Action): LibraryState {
   var success: GsLibraryActionSuccess | null = null
