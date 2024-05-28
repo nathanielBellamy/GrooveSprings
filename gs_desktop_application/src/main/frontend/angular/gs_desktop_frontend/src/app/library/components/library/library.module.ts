@@ -18,7 +18,7 @@ import {TracksModule} from "../tracks/tracks.module";
     AlbumsModule,
     ArtistsModule,
     TracksModule,
-    StoreModule.forFeature('libraryStore', libraryReducer),
+    StoreModule.forFeature('library', libraryReducer),
     EffectsModule.forFeature(libraryEffects),
     AsyncPipe,
     NgForOf,
