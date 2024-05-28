@@ -3,15 +3,6 @@
     Library
   </h2>
 
-  <div class="artist_list">
-    Foooo!
-    <div >
-      Artist Count: {{artistCount$ | async}}
-    </div>
-    <div *ngFor="let artist of artists$ | async">
-      {{artist.name}}
-    </div>
-  </div>
   <gsArtists />
   <div >
     <input
