@@ -3,10 +3,9 @@ import {LibraryComponent} from "./library.component";
 import {StoreModule} from "@ngrx/store";
 import {libraryReducer} from "../../store/library.reducer";
 import {EffectsModule} from "@ngrx/effects";
-import {LibraryEffects} from "../../store/library.effects";
+import {libraryEffects} from "../../store/library.effects";
 import {ArtistsModule} from "../artists/artists.module";
 import {ArtistsService} from "../../services/artists.service";
-import {ArtistsComponent} from "../artists/artists.component";
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {AlbumsModule} from "../albums/albums.module";
 import {TracksModule} from "../tracks/tracks.module";
@@ -20,7 +19,7 @@ import {TracksModule} from "../tracks/tracks.module";
     ArtistsModule,
     TracksModule,
     StoreModule.forFeature('libraryStore', libraryReducer),
-    EffectsModule.forFeature(LibraryEffects),
+    EffectsModule.forFeature(libraryEffects),
     AsyncPipe,
     NgForOf,
   ],

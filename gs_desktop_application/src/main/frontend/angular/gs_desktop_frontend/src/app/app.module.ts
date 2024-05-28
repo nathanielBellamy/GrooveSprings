@@ -7,18 +7,17 @@ import {StoreModule, StoreRootModule} from "@ngrx/store";
 import {AppComponent} from "./app.component";
 import {LibraryModule} from "./library/components/library/library.module";
 import {PlaybackModule} from "./playback/playback.module";
-import {routes} from "./app.routes";
 import {BrowserModule} from "@angular/platform-browser";
 import {HttpClientModule} from "@angular/common/http";
 import {libraryReducer} from "./library/store/library.reducer";
-import {LibraryEffects} from "./library/store/library.effects";
+import {libraryEffects} from "./library/store/library.effects";
 
 const gsReducers = {
   library: libraryReducer
 }
 
 const gsEffects = [
-  LibraryEffects
+  ...libraryEffects
 ]
 
 @NgModule({
