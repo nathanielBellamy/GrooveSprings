@@ -9,21 +9,13 @@ import {LibraryModule} from "./library/components/library/library.module";
 import {PlaybackModule} from "./playback/playback.module";
 import {BrowserModule} from "@angular/platform-browser";
 import {HttpClientModule} from "@angular/common/http";
-import {libraryReducer} from "./library/store/library.reducer";
-import {libraryEffects} from "./library/store/library.effects";
-
-const gsReducers = {
-  library: libraryReducer
-}
-
-const gsEffects = [
-  ...libraryEffects
-]
+import {gsState} from "./store/app.state";
+import {gsEffects} from "./store/app.effects";
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    StoreModule.forRoot(gsReducers),
+    StoreModule.forRoot(gsState),
     EffectsModule.forRoot(gsEffects),
     // RouterModule.forRoot(routes),
     BrowserModule,
