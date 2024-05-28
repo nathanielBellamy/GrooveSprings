@@ -1,0 +1,10 @@
+<div class="gs_artists">
+  <h2>
+    Tracks ({{trackCount$ | async}})
+  </h2>
+  <div class="artist_list">
+    <div *ngFor="let track of tracks$ | async">
+      {{track.title}} - {{track.audioCodec}} - {{track.duration}} - {{track.releaseDate}} - {{track.album.name || track.album}}
+    </div>
+  </div>
+</div>
