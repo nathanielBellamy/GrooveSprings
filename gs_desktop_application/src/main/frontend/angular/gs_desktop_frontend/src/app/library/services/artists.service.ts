@@ -1,7 +1,6 @@
 import {Injectable} from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import {Artist, ArtistsGetAll} from "../../models/artists/artists_get_all.model";
-import {LibraryStore} from "../store/library.reducer";
 import { map, mapTo } from 'rxjs';
 
 @Injectable()

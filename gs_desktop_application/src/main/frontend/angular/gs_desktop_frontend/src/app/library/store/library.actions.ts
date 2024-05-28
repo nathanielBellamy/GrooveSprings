@@ -1,18 +1,18 @@
 import { Action } from '@ngrx/store'
-import {LibraryActionTypes} from "./library.actiontypes";
+import {LibraryActiontypes} from "./library.actiontypes";
 
 export class FetchArtists implements Action {
-  readonly type = LibraryActionTypes.FetchArtists
+  readonly type = LibraryActiontypes.FetchArtists
 }
 
 export class FetchArtistsSuccess implements Action {
-  readonly type = LibraryActionTypes.FetchArtistsSuccess
+  readonly type = LibraryActiontypes.FetchArtistsSuccess
 
   constructor(public payload: any) { }
 }
 
 export class FetchArtistsFailure implements Action {
-  readonly type = LibraryActionTypes.FetchArtistsFailure
+  readonly type = LibraryActiontypes.FetchArtistsFailure
 
   constructor(public payload: any) { }
 }

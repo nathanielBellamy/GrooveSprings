@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {AsyncPipe, NgForOf} from "@angular/common";
 import { Store } from '@ngrx/store';
 import {LibraryStore} from "../../store/library.reducer";
 import {Observable} from "rxjs";
@@ -10,11 +9,6 @@ import { FetchArtists } from "../../store/library.actions";
 
 @Component({
   selector: 'gsArtists',
-  standalone: true,
-  imports: [
-    NgForOf,
-    AsyncPipe
-  ],
   templateUrl: './artists.component.html',
   styleUrl: './artists.component.sass'
 })

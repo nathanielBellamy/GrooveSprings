@@ -18,8 +18,11 @@ export class LibraryEffects {
       ofType('[Artists] Fetch Artists'),
       exhaustMap(() => this.artistService.fetchAll()
         .pipe(
-          map((payload) => new FetchArtistsSuccess(payload)),
+          map((payload) => {
+            return new FetchArtistsSuccess(payload)
+          }),
           catchError(((e, _) => {
+            console.log("fetchArtists error")
             console.error(e)
             return  of(new FetchArtistsFailure(e))
           })
