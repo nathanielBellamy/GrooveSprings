@@ -5,15 +5,17 @@ import {libraryReducer} from "../../store/library.reducer";
 import {EffectsModule} from "@ngrx/effects";
 import {LibraryEffects} from "../../store/library.effects";
 import {ArtistsModule} from "../artists/artists.module";
-import {ArtistService} from "../../services/artists.service";
+import {ArtistsService} from "../../services/artists.service";
 import {ArtistsComponent} from "../artists/artists.component";
 import {AsyncPipe, NgForOf} from "@angular/common";
+import {AlbumsModule} from "../albums/albums.module";
 
 
 @NgModule({
   declarations: [LibraryComponent],
   exports: [LibraryComponent],
   imports: [
+    AlbumsModule,
     ArtistsModule,
     StoreModule.forFeature('libraryStore', libraryReducer),
     EffectsModule.forFeature(LibraryEffects),
@@ -21,7 +23,7 @@ import {AsyncPipe, NgForOf} from "@angular/common";
     NgForOf,
   ],
   providers: [
-    ArtistService
+    ArtistsService
   ]
 })
 export class LibraryModule {}

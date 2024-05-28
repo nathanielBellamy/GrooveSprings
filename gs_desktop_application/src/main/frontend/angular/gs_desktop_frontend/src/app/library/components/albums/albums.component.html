@@ -1,0 +1,10 @@
+<div class="gs_albums">
+  <h2>
+    Albums ({{albumCount$ | async}})
+  </h2>
+  <div class="artist_list">
+    <div *ngFor="let album of albums$ | async">
+      {{album.name}} - {{album.releaseDate}}
+    </div>
+  </div>
+</div>

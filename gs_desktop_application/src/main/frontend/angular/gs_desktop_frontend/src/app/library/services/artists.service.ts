@@ -1,10 +1,11 @@
 import {Injectable} from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import {Artist, ArtistsGetAll} from "../../models/artists/artists_get_all.model";
+import {ArtistsGetAll} from "../../models/artists/artists_get_all.model";
 import { map, mapTo } from 'rxjs';
+import {Artist} from "../../models/artists/artist.model";
 
 @Injectable()
-export class ArtistService {
+export class ArtistsService {
   constructor(private http: HttpClient) { }
 
   fetchAll() {
