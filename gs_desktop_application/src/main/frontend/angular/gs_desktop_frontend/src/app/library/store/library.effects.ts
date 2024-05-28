@@ -2,12 +2,18 @@ import {Injectable} from "@angular/core";
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {ArtistsService} from "../services/artists.service";
 import {map, exhaustMap, catchError, of} from "rxjs";
-import {FetchArtistsSuccess, FetchArtistsFailure, FetchAlbumsSuccess} from "./library.actions";
-import {Store} from "@ngrx/store"
+import {
+  FetchArtistsSuccess,
+  FetchArtistsFailure,
+  FetchAlbumsSuccess,
+  FetchTracksSuccess,
+  FetchTracksFailure
+} from "./library.actions";
 import {LibraryActionTypes} from './library.actiontypes'
 import {AlbumsService} from "../services/albums.service";
-import {AlbumsGetAll} from "../../models/albums/albums_get_all.model";
 import {AlbumsData} from "../../models/albums/albums_data.model";
+import {TracksData} from "../../models/tracks/tracks_data.model";
+import {TracksService} from "../services/tracks.service";
 
 @Injectable()
 export class LibraryEffects {
@@ -15,7 +21,7 @@ export class LibraryEffects {
     private actions$: Actions,
     private albumsService: AlbumsService,
     private artistService: ArtistsService,
-    private store$: Store
+    private tracksService: TracksService,
   ) {}
 
   fetchArtists$ = createEffect(() =>
@@ -26,12 +32,8 @@ export class LibraryEffects {
           map((payload) => {
             return new FetchArtistsSuccess(payload)
           }),
-          catchError(((e, _) => {
-            console.log("fetchArtists error")
-            console.error(e)
-            return  of(new FetchArtistsFailure(e))
-          })
-        ))
+          catchError((e, _) => of(new FetchArtistsFailure(e)))
+        )
       )
     )
   )
@@ -44,15 +46,24 @@ export class LibraryEffects {
           map((payload) => {
             return new FetchAlbumsSuccess(payload as AlbumsData)
           }),
-          catchError(((e, _) => {
-            console.log("fetchAlbums error")
-            console.error(e)
-            return of(new FetchArtistsFailure(e))
-          })
-        ))
+          catchError((e, _) => of(new FetchArtistsFailure(e)))
+        )
       )
     )
   )
 
+  fetchTracks$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(LibraryActionTypes.FetchTracks),
+      exhaustMap(() => this.tracksService.fetchAll()
+        .pipe(
+          map((payload) => {
+            return new FetchTracksSuccess(payload as TracksData)
+          }),
+          catchError((e, _) => of(new FetchTracksFailure(e)))
+        )
+      )
+    )
+  )
 
 }

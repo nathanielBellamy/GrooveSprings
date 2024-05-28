@@ -4,7 +4,7 @@ import {
   FetchAlbumsFailure,
   FetchAlbumsSuccess,
   FetchArtistsFailure,
-  FetchArtistsSuccess,
+  FetchArtistsSuccess, FetchTracksFailure, FetchTracksSuccess,
   GsLibraryActionFailure,
   GsLibraryActionSuccess
 } from "./library.actions";
@@ -31,7 +31,15 @@ export function libraryReducer(state = initialLibraryState, action: Action): Lib
       failure = action as FetchAlbumsFailure
       return failure.handle(state)
 
+    case LibraryActionTypes.FetchTracksSuccess:
+      success = action as FetchTracksSuccess
+      return success.handle(state)
+
+    case LibraryActionTypes.FetchTracksFailure:
+      failure = action as FetchTracksFailure
+      return failure.handle(state)
+
     default:
-      return {...state}
+      return state
   }
 }

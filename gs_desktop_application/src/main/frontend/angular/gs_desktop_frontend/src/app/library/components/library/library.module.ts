@@ -9,6 +9,7 @@ import {ArtistsService} from "../../services/artists.service";
 import {ArtistsComponent} from "../artists/artists.component";
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {AlbumsModule} from "../albums/albums.module";
+import {TracksModule} from "../tracks/tracks.module";
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import {AlbumsModule} from "../albums/albums.module";
   imports: [
     AlbumsModule,
     ArtistsModule,
+    TracksModule,
     StoreModule.forFeature('libraryStore', libraryReducer),
     EffectsModule.forFeature(LibraryEffects),
     AsyncPipe,
