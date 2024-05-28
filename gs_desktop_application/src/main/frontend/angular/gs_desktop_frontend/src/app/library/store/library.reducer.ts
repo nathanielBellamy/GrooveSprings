@@ -1,31 +1,35 @@
-import { Action } from '@ngrx/store'
-import { Artist } from "../../models/artists/artists_get_all.model";
-import { LibraryActiontypes } from "./library.actiontypes";
-import {FetchArtistsSuccess} from "./library.actions";
+import {Action} from '@ngrx/store'
+import {LibraryActionTypes} from "./library.actiontypes";
+import {
+  FetchAlbumsFailure,
+  FetchAlbumsSuccess,
+  FetchArtistsFailure,
+  FetchArtistsSuccess,
+  GsLibraryActionFailure,
+  GsLibraryActionSuccess
+} from "./library.actions";
+import {initialLibraryState, LibraryState} from "./library.state";
 
-export interface LibraryState {
-  artistCount: number;
-  artists: Artist[];
-}
+export function libraryReducer(state = initialLibraryState, action: Action): LibraryState {
+  var success: GsLibraryActionSuccess | null = null
+  var failure: GsLibraryActionFailure | null = null
 
-export const initialLibraryStore: LibraryState = {
-  artistCount: 0,
-  artists: []
-}
-
-export function libraryReducer(state = initialLibraryStore, action: Action): LibraryState {
   switch (action.type) {
-    case LibraryActiontypes.FetchArtists:
-      return {...state}
+    case LibraryActionTypes.FetchArtistsSuccess:
+      success = action as FetchArtistsSuccess
+      return success.handle(state)
 
-    case LibraryActiontypes.FetchArtistsSuccess:
-      const fas = action as FetchArtistsSuccess
-      const { count, artists }: { count: number, artists: Artist[] } = fas.payload
-      return {
-        ...state,
-        artistCount: count,
-        artists
-      }
+    case LibraryActionTypes.FetchArtistsFailure:
+      failure = action as FetchArtistsFailure
+      return failure.handle(state)
+
+    case LibraryActionTypes.FetchAlbumsSuccess:
+      success = action as FetchAlbumsSuccess
+      return success.handle(state)
+
+    case LibraryActionTypes.FetchAlbumsFailure:
+      failure = action as FetchAlbumsFailure
+      return failure.handle(state)
 
     default:
       return {...state}
