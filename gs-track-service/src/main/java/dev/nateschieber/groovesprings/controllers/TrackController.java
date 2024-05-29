@@ -49,7 +49,7 @@ public class TrackController {
   }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity getTrackById(@PathVariable Long id) {
+  public ResponseEntity getTrackById(@PathVariable("id") Long id) {
     Optional<Track> track = trackService.findById(id);
     if (track.isPresent()) {
       ResponseEntity<TrackEntityResponse> resEnt = new ResponseEntity<>(
@@ -80,7 +80,7 @@ public class TrackController {
   }
 
   @DeleteMapping(value = "/{id}")
-  public ResponseEntity deleteTrack(@PathVariable Long id) {
+  public ResponseEntity deleteTrack(@PathVariable("id") Long id) {
     trackService.deleteById(id);
     return ResponseEntity.ok().body(new TrackDeleteResponse(id));
   }

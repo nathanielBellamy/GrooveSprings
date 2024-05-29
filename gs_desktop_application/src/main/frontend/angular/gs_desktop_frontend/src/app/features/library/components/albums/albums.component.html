@@ -1,10 +1,12 @@
 <div class="gs_albums">
-  <h2>
+  <h4>
     Albums ({{albumCount$ | async}})
-  </h2>
-  <div class="artist_list">
-    <div *ngFor="let album of albums$ | async">
-      {{album.name}} - {{album.releaseDate}}
+  </h4>
+  <div class="gs_album_list_container">
+    <div class="gs_album_list">
+      <div *ngFor="let album of albums$ | async">
+        {{album.name}} - {{album.releaseDate}}
+      </div>
     </div>
   </div>
 </div>

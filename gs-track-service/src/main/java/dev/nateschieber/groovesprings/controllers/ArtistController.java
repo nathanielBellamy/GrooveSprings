@@ -46,7 +46,7 @@ public class ArtistController {
   }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity getArtistById(@PathVariable Long id) {
+  public ResponseEntity getArtistById(@PathVariable("id") Long id) {
     Optional<Artist> artist = artistService.findById(id);
     if (artist.isPresent()) {
       ResponseEntity<ArtistEntityResponse> resEnt = new ResponseEntity<>(
@@ -59,7 +59,7 @@ public class ArtistController {
   }
 
   @GetMapping(value="/{id}/albums")
-  public ResponseEntity getArtistAlbums(@PathVariable Long id) {
+  public ResponseEntity getArtistAlbums(@PathVariable("id") Long id) {
     Optional<Artist> artist = artistService.findById(id);
     if (!artist.isPresent()) {
       return ResponseEntity.notFound().build();
@@ -88,7 +88,7 @@ public class ArtistController {
   }
 
   @PutMapping(value = "/{id}")
-  public ResponseEntity updateArtist(@PathVariable Long id, @RequestBody ArtistEntityDto dto) {
+  public ResponseEntity updateArtist(@PathVariable("id") Long id, @RequestBody ArtistEntityDto dto) {
     Optional<Artist> loadedArtist = artistService.findById(id);
     if (!loadedArtist.isPresent()){
       return ResponseEntity.notFound().build();
@@ -99,13 +99,13 @@ public class ArtistController {
   }
 
   @DeleteMapping(value = "/{id}")
-  public ResponseEntity deleteArtist(@PathVariable Long id) {
+  public ResponseEntity deleteArtist(@PathVariable("id") Long id) {
     artistService.deleteById(id);
     return ResponseEntity.ok().body(new ArtistDeleteResponse(id));
   }
 
   @GetMapping(value = "/{id}/tracks")
-  public ResponseEntity getArtistTracks(@PathVariable Long id) {
+  public ResponseEntity getArtistTracks(@PathVariable("id") Long id) {
     Optional<Artist> artist = artistService.findById(id);
     if (!artist.isPresent()) {
       return ResponseEntity.notFound().build();
