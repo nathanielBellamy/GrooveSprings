@@ -5,10 +5,10 @@ export interface Track {
   id: number;
   title: string;
   duration: number;
-  trackNumber: number,
-  genres: string[],
-  audioCodec: string,
-  releaseDate: string,
-  album: Album
-  artists: Artist[]
+  trackNumber: number;
+  genres: string[];
+  audioCodec: string;
+  releaseDate: string;
+  album: Album;
+  artists: Artist[];
 }

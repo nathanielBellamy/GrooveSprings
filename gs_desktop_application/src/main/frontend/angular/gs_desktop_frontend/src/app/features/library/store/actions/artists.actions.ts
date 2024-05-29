@@ -3,6 +3,7 @@ import {LibraryActionTypes} from "../library.actiontypes";
 import {LibraryState} from "../library.state";
 import {GsLibraryActionFailure, GsLibraryActionSuccess} from "../library.actions";
 import {ArtistsData} from "../../../../models/artists/artists_data.model";
+import {Artist} from "../../../../models/artists/artist.model";
 
 export class FetchArtists implements Action {
   readonly type = LibraryActionTypes.FetchArtists
@@ -27,9 +28,15 @@ export class FetchArtistsFailure implements Action, GsLibraryActionFailure {
 
   constructor(public payload: any) { }
 
-  handle(state: LibraryState) {
+  handle(state: LibraryState): LibraryState {
     console.error('GsLibraryActionFailure ## FetchArtistsFailure')
     console.error(this.payload)
     return state
   }
+}
+
+export class SetArtistFilter implements Action {
+  readonly type = LibraryActionTypes.SetArtistsFilter
+
+  constructor(private payload: Artist[]) { }
 }

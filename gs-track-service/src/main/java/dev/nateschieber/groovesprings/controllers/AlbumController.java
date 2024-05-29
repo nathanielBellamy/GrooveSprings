@@ -48,7 +48,7 @@ public class AlbumController {
   }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity getAlbumById(@PathVariable Long id) {
+  public ResponseEntity getAlbumById(@PathVariable("id") Long id) {
     Optional<Album> album = albumService.findById(id);
     if (!album.isPresent()) {
       return ResponseEntity.notFound().build();
@@ -61,7 +61,7 @@ public class AlbumController {
   }
 
   @GetMapping(value = "/{id}/tracks")
-  public ResponseEntity getAlbumTracksByAlbumId(@PathVariable Long id, @RequestParam(required = false) AudioCodec audioCodec) {
+  public ResponseEntity getAlbumTracksByAlbumId(@PathVariable("id") Long id, @RequestParam(required = false) AudioCodec audioCodec) {
     Optional<Album> album = albumService.findById(id);
     if (!album.isPresent()) {
       return ResponseEntity.notFound().build();
@@ -91,7 +91,7 @@ public class AlbumController {
   }
 
   @PutMapping(value = "/{id}")
-  public ResponseEntity updateAlbum(@PathVariable Long id, @RequestBody AlbumEntityDto dto) {
+  public ResponseEntity updateAlbum(@PathVariable("id") Long id, @RequestBody AlbumEntityDto dto) {
     Optional<Album> loadedAlbum = albumService.findById(id);
     if (!loadedAlbum.isPresent()){
       return ResponseEntity.notFound().build();
@@ -102,7 +102,7 @@ public class AlbumController {
   }
 
   @DeleteMapping(value = "/{id}")
-  public ResponseEntity deleteAlbum(@PathVariable Long id) {
+  public ResponseEntity deleteAlbum(@PathVariable("id") Long id) {
     albumService.deleteById(id);
     return ResponseEntity.ok().body(new AlbumDeleteResponse(id));
   }

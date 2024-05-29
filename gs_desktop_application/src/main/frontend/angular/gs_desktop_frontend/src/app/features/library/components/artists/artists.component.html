@@ -1,10 +1,15 @@
 <div class="gs_artists">
-  <h2>
+  <h4>
     Artists ({{artistCount$ | async}})
-  </h2>
-  <div class="artist_list">
-    <div *ngFor="let artist of artists$ | async">
-      {{artist.name}}
+  </h4>
+  <div class="gs_artist_list_container">
+    <div class="gs_artist_list">
+      @for(artist of artists$ | async; track artist; let i = $index) {
+        <div class="artist"
+             (click)="handleArtistClick(artist)">
+          {{artist.name}}
+        </div>
+      }
     </div>
   </div>
 </div>
