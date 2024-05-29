@@ -5,12 +5,12 @@ import {importProvidersFrom, NgModule} from "@angular/core";
 import {StoreModule, StoreRootModule} from "@ngrx/store";
 // import {provideRouter, RouterModule, RouterOutlet} from "@angular/router";
 import {AppComponent} from "./app.component";
-import {LibraryModule} from "./library/components/library/library.module";
-import {PlaybackModule} from "./playback/playback.module";
+import {PlaybackModule} from "./features/playback/playback.module";
 import {BrowserModule} from "@angular/platform-browser";
 import {HttpClientModule} from "@angular/common/http";
 import {gsState} from "./store/app.state";
 import {gsEffects} from "./store/app.effects";
+import {LibraryModule} from "./features/library/components/library/library.module";
 
 @NgModule({
   declarations: [AppComponent],

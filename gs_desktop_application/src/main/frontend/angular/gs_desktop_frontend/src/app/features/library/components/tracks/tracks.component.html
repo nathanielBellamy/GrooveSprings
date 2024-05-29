@@ -1,0 +1,27 @@
+<div class="gs_tracks">
+  <h2>
+    Tracks ({{trackCount$ | async}})
+  </h2>
+  <div class="track_list">
+    <div *ngFor="let track of tracks$ | async">
+      <div class="gs_track"
+           (dblclick)="handleDblClick(track)">
+        <div>
+          {{track.title}}
+        </div>
+        <div>
+          {{track.audioCodec}}
+        </div>
+        <div>
+          {{track.duration}}
+        </div>
+        <div>
+          {{track.releaseDate}}
+        </div>
+        <div>
+          {{track.album.name || track.album}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
