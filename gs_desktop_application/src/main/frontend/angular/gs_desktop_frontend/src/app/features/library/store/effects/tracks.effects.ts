@@ -5,6 +5,7 @@ import {LibraryActionTypes} from '../library.actiontypes'
 import {FetchTracksFailure, FetchTracksSuccess} from "../actions/tracks.actions";
 import {TracksService} from "../../services/tracks.service";
 import {TracksData} from "../../../../models/tracks/tracks_data.model";
+import {SetArtistsFilter} from "../actions/artists.actions";
 
 @Injectable()
 export class TracksEffects {
@@ -27,4 +28,16 @@ export class TracksEffects {
     )
   )
 
+  fetchAlbumsByArtist$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SetArtistsFilter>(LibraryActionTypes.SetArtistsFilter),
+      map(action => action.payload),
+      exhaustMap(artists => this.tracksService.fetchByArtistIds(artists.map(a => a.id))
+        .pipe(
+          map((payload) => new FetchTracksSuccess(payload)),
+          catchError((e, _) => of(new FetchTracksFailure(e)))
+        )
+      )
+    )
+  )
 }
