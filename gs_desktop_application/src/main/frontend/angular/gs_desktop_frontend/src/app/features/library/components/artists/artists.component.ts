@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {Observable} from "rxjs";
-import {FetchArtists, SetArtistFilter} from "../../store/library.actions";
+import {FetchArtists, SetArtistsFilter} from "../../store/library.actions";
 import {LibraryState} from "../../store/library.state";
 import {Artist} from "../../../../models/artists/artist.model";
 
@@ -26,6 +26,6 @@ export class ArtistsComponent {
   }
 
   handleArtistClick(artist: Artist) {
-    this.store$.dispatch( new SetArtistFilter([artist]))
+    this.store$.dispatch( new SetArtistsFilter([artist]))
   }
 }

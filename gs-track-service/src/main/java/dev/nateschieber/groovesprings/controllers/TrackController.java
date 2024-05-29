@@ -4,11 +4,12 @@ import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
-import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackGetByArtistIdsDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackGetAllResponse;
+import dev.nateschieber.groovesprings.rest.responses.track.TracksByArtistIdsResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByAudioCodecResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByDurationResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByYearResponse;
@@ -46,6 +47,12 @@ public class TrackController {
   public ResponseEntity getAllTracks() {
     List<Track> tracks = trackService.findAll();
     return ResponseEntity.ok().body(new TrackGetAllResponse(tracks));
+  }
+
+  @PostMapping(value = "/byArtistIds")
+  public ResponseEntity addTracksByArtistIds(@Valid @RequestBody TrackGetByArtistIdsDto dto) {
+    List<Track> tracks = trackService.findByArtistIds(dto.artistIds());
+    return ResponseEntity.ok().body(new TracksByArtistIdsResponse(dto.artistIds(), tracks));
   }
 
   @GetMapping(value = "/{id}")

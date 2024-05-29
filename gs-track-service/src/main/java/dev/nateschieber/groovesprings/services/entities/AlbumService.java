@@ -32,6 +32,10 @@ public class AlbumService {
     return this.albumRepository.findById(id);
   }
 
+  public List<Album> findByArtistIds(List<Long> artistIds) {
+    return this.albumRepository.findByArtistIds(artistIds);
+  }
+
   public void deleteById(Long id) {
     this.albumRepository.deleteById(id);
   }

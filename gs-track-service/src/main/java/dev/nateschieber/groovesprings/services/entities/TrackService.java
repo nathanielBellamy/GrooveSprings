@@ -36,6 +36,10 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
     return this.trackRepository.findAll();
   }
 
+  public List<Track> findByArtistIds(List<Long> artistIds) {
+    return this.trackRepository.findByArtistIds(artistIds);
+  }
+
   @Override
   public Optional<Track> findById(Long id) {
     return this.trackRepository.findById(id);

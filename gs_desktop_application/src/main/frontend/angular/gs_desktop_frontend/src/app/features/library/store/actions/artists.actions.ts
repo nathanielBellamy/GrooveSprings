@@ -35,8 +35,8 @@ export class FetchArtistsFailure implements Action, GsLibraryActionFailure {
   }
 }
 
-export class SetArtistFilter implements Action {
+export class SetArtistsFilter implements Action {
   readonly type = LibraryActionTypes.SetArtistsFilter
 
-  constructor(private payload: Artist[]) { }
+  constructor(public payload: Artist[]) { }
 }

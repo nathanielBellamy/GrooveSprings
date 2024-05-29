@@ -6,12 +6,13 @@ import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.album.AlbumGetByArtistIdsDto;
+import dev.nateschieber.groovesprings.rest.responses.album.AlbumByArtistIdsResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumGetAllResponse;
 import dev.nateschieber.groovesprings.rest.responses.album.AlbumTracksResponse;
 import dev.nateschieber.groovesprings.services.entities.AlbumService;
-import jakarta.validation.constraints.Null;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,12 @@ public class AlbumController {
   public ResponseEntity getAllAlbums() {
     List<Album> albums = albumService.findAll();
     return ResponseEntity.ok().body(new AlbumGetAllResponse(albums));
+  }
+
+  @PostMapping("/byArtistIds")
+  public ResponseEntity getAlbumsByArtistIds(@RequestBody AlbumGetByArtistIdsDto dto) {
+    List<Album> albums = albumService.findByArtistIds(dto.artistIds());
+    return ResponseEntity.ok().body(new AlbumByArtistIdsResponse(dto.artistIds(), albums));
   }
 
   @GetMapping(value = "/{id}")
