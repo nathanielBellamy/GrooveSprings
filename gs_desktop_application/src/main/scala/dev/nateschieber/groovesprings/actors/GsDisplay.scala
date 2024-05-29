@@ -86,20 +86,17 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
         Behaviors.same
 
       case RespondStopTrig(replyTo) =>
-        println("GsDisplay :: RespondStopTrig Received")
         stopped = true
         Behaviors.same
 
       case RespondFrameId(lastFrameId, replyTo) =>
         if (!stopped)
           sendWebsocketMsg(lastFrameId.toString)
-          println("GsDisplay :: lastFrameId: " + lastFrameId)
           Thread.sleep(100)
           replyTo ! ReadFrameId(context.self)
         Behaviors.same
 
       case InitDisplay() =>
-        println("GsDisplay :: InitDisplay received")
         playbackRef ! ReadFrameId(context.self)
         Behaviors.same
     }

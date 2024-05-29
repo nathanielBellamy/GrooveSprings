@@ -1,0 +1,30 @@
+<div class="gs_playlist">
+  <h2>
+    Playlist: ({{playlistName$ | async}})
+  </h2>
+  <div class="playlist_currIdx">
+    Currently Playing: {{currIdx$ | async }}
+  </div>
+  <div class="playlist_tracks">
+    <h4 >
+      Tracks:
+    </h4>
+    @for (track of playlistTracks$ | async; track track; let i = $index) {
+      <div class="gs_playlist_track"
+           (dblclick)="handleDblClick(i)">
+        <div>
+          {{i}}:
+        </div>
+        <div>
+          {{track.title}}
+        </div>
+        <div>
+          {{track.album.name || track.album}}
+        </div>
+        <div>
+          {{track.audioCodec}}
+        </div>
+      </div>
+    }
+  </div>
+</div>
