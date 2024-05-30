@@ -3,6 +3,31 @@
   background-color: rgba(6, 13, 118, 0.8)
   color: white
   display: grid
-  grid-template-rows: 5% 15% 15% 65%
+  grid-template-rows: 10% 15% 15% 60%
   grid-template-columns: 100%
   padding: 5px
+
+  &_header
+    width: 100%
+    display: grid
+    grid-template-rows: 1fr
+    grid-template-columns: 10% 90%
+
+  &_filters
+    width: 100%
+    display: flex
+    justify-content: space-around
+    align-items: center
+
+  &_filter
+    display: grid
+    grid-template-rows: 10% 90%
+    grid-template-columns: 1fr
+
+    &_list
+      display: flex
+      flex-direction: column
+
+    &_value
+      display: flex
+

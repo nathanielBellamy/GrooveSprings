@@ -2,9 +2,15 @@ import {Action} from '@ngrx/store'
 import {LibraryActionTypes} from "./library.actiontypes";
 import {
   FetchArtistsFailure,
-  FetchArtistsSuccess, FetchTracksFailure, FetchTracksSuccess,
+  FetchArtistsSuccess,
+  FetchTracksFailure,
+  FetchTracksSuccess,
   GsLibraryActionFailure,
-  GsLibraryActionSuccess
+  GsLibraryActionSuccess,
+  SetArtistsFilterAlbumsFailure,
+  SetArtistsFilterAlbumsSuccess,
+  SetArtistsFilterTracksFailure,
+  SetArtistsFilterTracksSuccess
 } from "./library.actions";
 import {initialLibraryState, LibraryState} from "./library.state";
 import {FetchAlbumsFailure, FetchAlbumsSuccess} from "./actions/albums.actions";
@@ -36,6 +42,22 @@ export function libraryReducer(state = initialLibraryState, action: Action): Lib
 
     case LibraryActionTypes.FetchTracksFailure:
       failure = action as FetchTracksFailure
+      return failure.handle(state)
+
+    case LibraryActionTypes.SetArtistsFilterAlbumsSuccess:
+      success = action as SetArtistsFilterAlbumsSuccess
+      return success.handle(state)
+
+    case LibraryActionTypes.SetArtistsFilterAlbumsFailure:
+      failure = action as SetArtistsFilterAlbumsFailure
+      return failure.handle(state)
+
+    case LibraryActionTypes.SetArtistsFilterTracksSuccess:
+      success = action as SetArtistsFilterTracksSuccess
+      return success.handle(state)
+
+    case LibraryActionTypes.SetArtistsFilterTracksFailure:
+      failure = action as SetArtistsFilterTracksFailure
       return failure.handle(state)
 
     default:
