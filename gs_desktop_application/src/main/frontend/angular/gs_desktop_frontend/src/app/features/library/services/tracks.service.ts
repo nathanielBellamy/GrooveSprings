@@ -5,6 +5,10 @@ import {TracksGetAll} from "../../../models/tracks/tracks_get_all.model";
 import {TracksData} from "../../../models/tracks/tracks_data.model";
 import {TracksGetByArtistIds} from "../../../models/tracks/tracks_get_by_artist_ids.model";
 import {TracksByArtistIds} from "../../../models/tracks/tracks_by_artist_ids.model";
+import {ArtistsGetByAlbumIds} from "../../../models/artists/artists_get_by_album_ids.model";
+import {ArtistsByAlbumIds} from "../../../models/artists/artists_by_album_ids.model";
+import {TracksGetByAlbumIds} from "../../../models/tracks/tracks_get_by_album_ids.model";
+import {TracksByAlbumIds} from "../../../models/tracks/tracks_by_album_ids.model";
 
 @Injectable()
 export class TracksService {
@@ -31,4 +35,15 @@ export class TracksService {
       )
   }
 
+  fetchByAlbumIds(albumIds: number[]) {
+    return this.http.post('api/v1/tracks/byAlbumIds', {albumIds})
+      .pipe(
+        map(res => {
+          const artistsRes = res as TracksGetByAlbumIds
+          const { count, tracks, albumIds }: TracksByAlbumIds = artistsRes.data
+          tracks.sort((a,b) => a.trackNumber - b.trackNumber)
+          return {count, tracks, albumIds}
+        })
+      )
+  }
 }

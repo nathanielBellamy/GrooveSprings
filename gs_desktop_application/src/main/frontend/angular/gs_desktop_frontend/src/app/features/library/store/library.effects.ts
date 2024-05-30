@@ -15,8 +15,8 @@ export class LibraryEffects {
     private actions$: Actions
   ){ }
 
-  clearArtistsFilter$ = createEffect(() => this.actions$.pipe(
-    ofType(LibraryActionTypes.ClearArtistsFilter),
+  fetchAll$ = createEffect(() => this.actions$.pipe(
+    ofType(LibraryActionTypes.ClearArtistsFilter, LibraryActionTypes.ClearAlbumsFilter),
     map(() => new FetchAll())
   ))
 

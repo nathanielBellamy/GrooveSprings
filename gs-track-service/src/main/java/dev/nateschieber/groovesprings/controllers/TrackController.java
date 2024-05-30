@@ -1,14 +1,16 @@
-package dev.nateschieber.groovesprings.controllers;
+ package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackGetByAlbumIdsDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackGetByArtistIdsDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackGetAllResponse;
+import dev.nateschieber.groovesprings.rest.responses.track.TracksByAlbumIdsResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByArtistIdsResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByAudioCodecResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByDurationResponse;
@@ -50,9 +52,15 @@ public class TrackController {
   }
 
   @PostMapping(value = "/byArtistIds")
-  public ResponseEntity addTracksByArtistIds(@Valid @RequestBody TrackGetByArtistIdsDto dto) {
+  public ResponseEntity getTracksByArtistIds(@Valid @RequestBody TrackGetByArtistIdsDto dto) {
     List<Track> tracks = trackService.findByArtistIds(dto.artistIds());
-    return ResponseEntity.ok().body(new TracksByArtistIdsResponse(dto.artistIds(), tracks));
+    return ResponseEntity.ok().body(new TracksByArtistIdsResponse(tracks, dto.artistIds()));
+  }
+
+  @PostMapping(value = "byAlbumIds")
+  public ResponseEntity getTracksByAlbumIds(@Valid @RequestBody TrackGetByAlbumIdsDto dto) {
+    List<Track> tracks = trackService.findByAlbumIds(dto.albumIds());
+    return ResponseEntity.ok().body(new TracksByAlbumIdsResponse(tracks, dto.albumIds()));
   }
 
   @GetMapping(value = "/{id}")

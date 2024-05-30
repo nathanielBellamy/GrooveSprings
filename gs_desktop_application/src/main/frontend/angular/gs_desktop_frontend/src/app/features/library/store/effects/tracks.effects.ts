@@ -4,13 +4,13 @@ import {map, exhaustMap, catchError, of} from "rxjs";
 import {LibraryActionTypes} from '../library.actiontypes'
 import {
   FetchTracksFailure,
-  FetchTracksSuccess,
+  FetchTracksSuccess, SetAlbumsFilterTracksFailure, SetAlbumsFilterTracksSuccess,
   SetArtistsFilterTracksFailure,
   SetArtistsFilterTracksSuccess
 } from "../actions/tracks.actions";
 import {TracksService} from "../../services/tracks.service";
 import {TracksData} from "../../../../models/tracks/tracks_data.model";
-import {SetArtistsFilter} from "../actions/artists.actions";
+import {SetAlbumsFilter, SetArtistsFilter} from "../library.actions";
 
 @Injectable()
 export class TracksEffects {
@@ -31,7 +31,7 @@ export class TracksEffects {
     )
   )
 
-  fetchTracksByArtist$ = createEffect(() =>
+  fetchTracksByArtistIds$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SetArtistsFilter>(LibraryActionTypes.SetArtistsFilter),
       map(action => action.payload),
@@ -39,6 +39,19 @@ export class TracksEffects {
         .pipe(
           map((payload) => new SetArtistsFilterTracksSuccess(payload)),
           catchError((e, _) => of(new SetArtistsFilterTracksFailure(e)))
+        )
+      )
+    )
+  )
+
+  fetchTracksByAlbumIds$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SetAlbumsFilter>(LibraryActionTypes.SetAlbumsFilter),
+      map(action => action.payload),
+      exhaustMap(albums => this.tracksService.fetchByAlbumIds(albums.map(a => a.id))
+        .pipe(
+          map((payload) => new SetAlbumsFilterTracksSuccess(payload)),
+          catchError((e, _) => of(new SetAlbumsFilterTracksFailure(e)))
         )
       )
     )

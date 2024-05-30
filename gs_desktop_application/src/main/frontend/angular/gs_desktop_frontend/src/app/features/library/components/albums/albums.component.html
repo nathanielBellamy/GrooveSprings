@@ -5,7 +5,8 @@
   <div class="gs_album_list_container">
     <div class="gs_album_list">
       @for(album of albums$ | async; track album) {
-        <div class="gs_album">
+        <div class="gs_album"
+             (click)="handleAlbumClick(album)">
           <div>
             {{album.name}}
           </div>

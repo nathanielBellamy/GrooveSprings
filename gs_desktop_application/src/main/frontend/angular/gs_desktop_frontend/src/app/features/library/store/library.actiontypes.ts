@@ -1,5 +1,8 @@
 
 export enum LibraryActionTypes {
+  // identity
+  Identity = '[Library] Identity',
+
   // fetch actions
   FetchAll = '[Library] Fetch All',
 
@@ -21,9 +24,13 @@ export enum LibraryActionTypes {
   SetArtistsFilterAlbumsFailure = '[Filters] Set Artists Filter Albums Failure',
   SetArtistsFilterTracksSuccess = '[Filters] Set Artists Filter Tracks Success',
   SetArtistsFilterTracksFailure = '[Filters] Set Artists Filter Tracks Failure',
-
   ClearArtistsFilter = '[Filters] Clear Artists Filter',
 
+  SetAlbumsFilter = '[Filters] Set Albums Filter',
+  SetAlbumsFilterArtistsSuccess = '[Filters] Set Albums Filter Artists Success',
+  SetAlbumsFilterArtistsFailure = '[Filters] Set Albums Filter Artists Failure',
+  SetAlbumsFilterTracksSuccess = '[Filters] Set Albums Filter Tracks Success',
+  SetAlbumsFilterTracksFailure = '[Filters] Set Albums Filter Tracks Failure',
 
-
+  ClearAlbumsFilter = '[Filters] Clear Albums Filter',
 }

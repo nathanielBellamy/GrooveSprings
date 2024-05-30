@@ -2,8 +2,8 @@ import {Action} from "@ngrx/store";
 import {LibraryActionTypes} from "../library.actiontypes";
 import {LibraryState} from "../library.state";
 import {GsLibraryActionResult} from "../library.actions";
-import {ArtistsData} from "../../../../models/artists/artists_data.model";
-import {Artist} from "../../../../models/artists/artist.model";
+import {ArtistsAll} from "../../../../models/artists/artists_all.model";
+import {ArtistsByAlbumIds} from "../../../../models/artists/artists_by_album_ids.model";
 
 export class FetchArtists implements Action {
   readonly type = LibraryActionTypes.FetchArtists
@@ -12,7 +12,7 @@ export class FetchArtists implements Action {
 export class FetchArtistsSuccess implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.FetchArtistsSuccess
 
-  constructor(public payload: ArtistsData) { }
+  constructor(public payload: ArtistsAll) { }
 
   handle(state: LibraryState) {
     return {
@@ -35,8 +35,31 @@ export class FetchArtistsFailure implements Action, GsLibraryActionResult {
   }
 }
 
-export class SetArtistsFilter implements Action {
-  readonly type = LibraryActionTypes.SetArtistsFilter
+export class SetAlbumsFilterArtistsSuccess implements Action, GsLibraryActionResult {
+  readonly type = LibraryActionTypes.SetAlbumsFilterArtistsSuccess
 
-  constructor(public payload: Artist[]) { }
+  constructor(public payload: ArtistsByAlbumIds) {}
+
+  handle(state: LibraryState): LibraryState {
+    return {
+      ...state,
+      artists: this.payload.artists,
+      filters: {
+        ...state.filters,
+        albums: state.albums.filter(a => this.payload.albumIds.includes(a.id))
+      }
+    }
+  }
+}
+
+export class SetAlbumsFilterArtistsFailure implements Action, GsLibraryActionResult {
+  readonly type = LibraryActionTypes.SetAlbumsFilterArtistsFailure
+
+  constructor(public payload: any) { }
+
+  handle(state: LibraryState): LibraryState {
+    console.error('GsLibraryActionFailure ## SetAlbumsFilterArtistsFailure')
+    console.error(this.payload)
+    return state
+  }
 }
