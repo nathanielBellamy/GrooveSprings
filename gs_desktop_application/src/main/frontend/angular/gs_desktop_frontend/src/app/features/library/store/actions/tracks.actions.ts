@@ -1,16 +1,15 @@
 import {Action} from "@ngrx/store";
 import {LibraryActionTypes} from "../library.actiontypes";
 import {LibraryState} from "../library.state";
-import {GsLibraryActionFailure, GsLibraryActionSuccess} from "../library.actions";
+import {GsLibraryActionResult} from "../library.actions";
 import {TracksData} from "../../../../models/tracks/tracks_data.model";
-import {TracksGetByArtistIds} from "../../../../models/tracks/tracks_get_by_artist_ids.model";
 import {TracksByArtistIds} from "../../../../models/tracks/tracks_by_artist_ids.model";
 
 export class FetchTracks implements Action {
   readonly type = LibraryActionTypes.FetchTracks
 }
 
-export class FetchTracksSuccess implements Action, GsLibraryActionSuccess {
+export class FetchTracksSuccess implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.FetchTracksSuccess
 
   constructor(public payload: TracksData) { }
@@ -24,7 +23,7 @@ export class FetchTracksSuccess implements Action, GsLibraryActionSuccess {
   }
 }
 
-export class FetchTracksFailure implements Action, GsLibraryActionFailure {
+export class FetchTracksFailure implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.FetchTracksFailure
 
   constructor(public payload: any) {}
@@ -36,7 +35,7 @@ export class FetchTracksFailure implements Action, GsLibraryActionFailure {
   }
 }
 
-export class SetArtistsFilterTracksSuccess implements Action, GsLibraryActionSuccess {
+export class SetArtistsFilterTracksSuccess implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.SetArtistsFilterTracksSuccess
 
   constructor(public payload: TracksByArtistIds) {}
@@ -54,7 +53,7 @@ export class SetArtistsFilterTracksSuccess implements Action, GsLibraryActionSuc
   }
 }
 
-export class SetArtistsFilterTracksFailure implements Action, GsLibraryActionFailure {
+export class SetArtistsFilterTracksFailure implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.SetArtistsFilterTracksFailure
 
   constructor(public payload: any) {}
