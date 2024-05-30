@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {map, exhaustMap, catchError, of} from "rxjs";
 import {AlbumsService} from "../../services/albums.service";
 import {LibraryActionTypes} from "../library.actiontypes";
-import {FetchAlbumsFailure, FetchAlbumsSuccess} from "../actions/albums.actions";
+import {FetchAlbumsFailure, FetchAlbumsSuccess, SetArtistsFilterAlbumsSuccess} from "../actions/albums.actions";
 import {AlbumsData} from "../../../../models/albums/albums_data.model";
 import {SetArtistsFilter} from "../actions/artists.actions";
 import {AlbumsGetByArtistIds} from "../../../../models/albums/albums_get_by_artist_ids.model";
@@ -36,7 +36,7 @@ export class AlbumsEffects {
       exhaustMap(artists => this.albumsService.fetchByArtistIds(artists.map(a => a.id))
         .pipe(
           map((payload) => {
-            return new FetchAlbumsSuccess(payload as AlbumsGetByArtistIds)
+            return new SetArtistsFilterAlbumsSuccess(payload)
           }),
           catchError((e, _) => of(new FetchAlbumsFailure(e)))
         )

@@ -1,7 +1,41 @@
 <div class="gs_library">
-  <h2>
+  <div class="gs_library_header">
     Library!
-  </h2>
+
+    <div class="gs_library_filters">
+      Filters
+      <div class="gs_library_filter">
+        <div>
+          Artists
+          <span (click)="clearArtistsFilter()">
+            X
+          </span>
+        </div>
+        <div class="gs_library_filter_list">
+          @for(artist of artistsFilter$ | async; track artist;) {
+            <div class="gs_library_filter_val">
+              {{artist.name}}
+            </div>
+          }
+        </div>
+      </div>
+      <div class="gs_library_filter">
+        <div>
+          Albums
+          <span (click)="clearAlbumsFilter()">
+            X
+          </span>
+        </div>
+        <div class="gs_library_filter_list">
+          @for(album of albumsFilter$ | async; track album;) {
+            <div class="gs_library_filter_val">
+              {{album.name}}
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
 
   <gsArtists />
   <gsAlbums />

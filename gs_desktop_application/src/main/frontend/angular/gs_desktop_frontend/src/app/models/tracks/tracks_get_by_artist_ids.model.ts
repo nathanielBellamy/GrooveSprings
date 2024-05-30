@@ -1,9 +1,5 @@
-import {Track} from "./track.model";
+import {TracksByArtistIds} from "./tracks_by_artist_ids.model";
 
 export interface TracksGetByArtistIds {
-  data: {
-    artistIds: number[];
-    count: number;
-    tracks: Track[];
-  }
+  data: TracksByArtistIds
 }

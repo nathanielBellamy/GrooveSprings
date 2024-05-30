@@ -9,8 +9,10 @@ export enum LibraryActionTypes {
   FetchArtistsFailure = '[Artists] Fetch Artists Failure',
 
   SetArtistsFilter = '[Artists] Set Artists Filter',
-  SetArtistsFilterSuccess = '[Artists] Set Artists Filter Success',
-  SetArtistsFilterFailure = '[Artists] SEt Artists Filter Failure',
+  SetArtistsFilterAlbumsSuccess = '[Artists] Set Artists Filter Albums Success',
+  SetArtistsFilterAlbumsFailure = '[Artists] Set Artists Filter Albums Failure',
+  SetArtistsFilterTracksSuccess = '[Artists] Set Artists Filter Tracks Success',
+  SetArtistsFilterTracksFailure = '[Artists] Set Artists Filter Tracks Failure',
 
   FetchTracks = '[Tracks] Fetch Tracks',
   FetchTracksSuccess = '[Tracks] Fetch Tracks Success',

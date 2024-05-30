@@ -1,7 +1,5 @@
-import {Album} from "./album.model";
+import {AlbumsByArtistIds} from "./albums_by_artist_ids.model";
 
 export interface AlbumsGetByArtistIds {
-  artistIds: number[];
-  count: number;
-  albums: Album[];
+  data: AlbumsByArtistIds
 }
