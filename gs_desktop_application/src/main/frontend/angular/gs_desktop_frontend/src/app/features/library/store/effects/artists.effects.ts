@@ -14,12 +14,10 @@ export class ArtistsEffects {
 
   fetchArtists$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(LibraryActionTypes.FetchArtists),
+      ofType(LibraryActionTypes.FetchArtists, LibraryActionTypes.FetchAll),
       exhaustMap(() => this.artistService.fetchAll()
         .pipe(
-          map((payload) => {
-            return new FetchArtistsSuccess(payload)
-          }),
+          map((payload) => new FetchArtistsSuccess(payload)),
           catchError((e, _) => of(new FetchArtistsFailure(e)))
         )
       )

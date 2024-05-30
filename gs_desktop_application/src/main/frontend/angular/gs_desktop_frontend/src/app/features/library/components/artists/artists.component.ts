@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {Observable} from "rxjs";
-import {FetchArtists, SetArtistsFilter} from "../../store/library.actions";
+import {SetArtistsFilter} from "../../store/library.actions";
 import {LibraryState} from "../../store/library.state";
 import {Artist} from "../../../../models/artists/artist.model";
 

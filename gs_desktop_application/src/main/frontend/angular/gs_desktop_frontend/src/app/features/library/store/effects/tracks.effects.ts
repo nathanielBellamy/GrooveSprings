@@ -21,12 +21,10 @@ export class TracksEffects {
 
   fetchTracks$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(LibraryActionTypes.FetchTracks),
+      ofType(LibraryActionTypes.FetchTracks, LibraryActionTypes.FetchAll),
       exhaustMap(() => this.tracksService.fetchAll()
         .pipe(
-          map((payload) => {
-            return new FetchTracksSuccess(payload as TracksData)
-          }),
+          map((payload) =>new FetchTracksSuccess(payload as TracksData)),
           catchError((e, _) => of(new FetchTracksFailure(e)))
         )
       )

@@ -1,6 +1,7 @@
 import {Action} from '@ngrx/store'
 import {LibraryActionTypes} from "./library.actiontypes";
 import {
+  ClearArtistsFilter,
   FetchArtistsFailure,
   FetchArtistsSuccess,
   FetchTracksFailure,
@@ -56,6 +57,10 @@ export function libraryReducer(state = initialLibraryState, action: Action): Lib
 
     case LibraryActionTypes.SetArtistsFilterTracksFailure:
       res = action as SetArtistsFilterTracksFailure
+      return res.handle(state)
+
+    case LibraryActionTypes.ClearArtistsFilter:
+      res = action as ClearArtistsFilter
       return res.handle(state)
 
     default:

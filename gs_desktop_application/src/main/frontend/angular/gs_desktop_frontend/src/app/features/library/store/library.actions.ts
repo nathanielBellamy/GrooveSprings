@@ -10,8 +10,24 @@ export abstract class GsLibraryActionResult {
   }
 }
 
-export class ClearArtistsFilter implements Action {
+export class FetchAll implements Action {
+  readonly type = LibraryActionTypes.FetchAll
+}
+
+export class ClearArtistsFilter implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.ClearArtistsFilter
+
+  public payload: null = null
+
+  handle(state: LibraryState): LibraryState {
+    return {
+      ...state,
+      filters: {
+        ...state.filters,
+        artists: []
+      }
+    }
+  }
 }
 
 export * from './actions/albums.actions'

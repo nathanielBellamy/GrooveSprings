@@ -6,7 +6,6 @@ import {LibraryActionTypes} from "../library.actiontypes";
 import {FetchAlbumsFailure, FetchAlbumsSuccess, SetArtistsFilterAlbumsSuccess} from "../actions/albums.actions";
 import {AlbumsData} from "../../../../models/albums/albums_data.model";
 import {SetArtistsFilter} from "../actions/artists.actions";
-import {AlbumsGetByArtistIds} from "../../../../models/albums/albums_get_by_artist_ids.model";
 
 @Injectable()
 export class AlbumsEffects {
@@ -17,7 +16,7 @@ export class AlbumsEffects {
 
   fetchAlbums$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(LibraryActionTypes.FetchAlbums),
+      ofType(LibraryActionTypes.FetchAlbums, LibraryActionTypes.FetchAll),
       exhaustMap(() => this.albumsService.fetchAll()
         .pipe(
           map((payload) => new FetchAlbumsSuccess(payload as AlbumsData)),
