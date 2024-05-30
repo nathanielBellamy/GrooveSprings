@@ -1,6 +1,8 @@
 
 export enum LibraryActionTypes {
   // fetch actions
+  FetchAll = '[Library] Fetch All',
+
   FetchAlbums = '[Albums] Fetch Albums',
   FetchAlbumsSuccess = '[Albums] Fetch Albums Success',
   FetchAlbumsFailure = '[Albums] Fetch Albums Failure',

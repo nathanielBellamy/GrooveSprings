@@ -13,7 +13,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object GsDesktopApplication {
 
   @main def main(): Unit = {
-    println(JniMain.main(Array("foo")));
+//    println(JniMain.main(Array("foo")));
     given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(), "gs_desktop_application")
 
     lazy val server = Http().newServerAt("localhost", GsHttpPort.GsDesktopApplication.port).bind(routes())

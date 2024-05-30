@@ -4,9 +4,16 @@
   </h4>
   <div class="gs_album_list_container">
     <div class="gs_album_list">
-      <div *ngFor="let album of albums$ | async">
-        {{album.name}} - {{album.releaseDate}}
-      </div>
+      @for(album of albums$ | async; track album) {
+        <div class="gs_album">
+          <div>
+            {{album.name}}
+          </div>
+          <div>
+            {{album.releaseDate}}
+          </div>
+        </div>
+      }
     </div>
   </div>
 </div>
