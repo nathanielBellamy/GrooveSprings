@@ -5,7 +5,8 @@ import {AlbumsService} from "../../services/albums.service";
 import {LibraryActionTypes} from "../library.actiontypes";
 import {FetchAlbumsFailure, FetchAlbumsSuccess, SetArtistsFilterAlbumsSuccess} from "../actions/albums.actions";
 import {AlbumsData} from "../../../../models/albums/albums_data.model";
-import {SetArtistsFilter} from "../actions/artists.actions";
+
+import {SetArtistsFilter} from "../library.actions";
 
 @Injectable()
 export class AlbumsEffects {

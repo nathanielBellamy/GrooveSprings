@@ -1,12 +1,17 @@
 import {Action} from '@ngrx/store'
 import {LibraryActionTypes} from "./library.actiontypes";
 import {
+  ClearAlbumsFilter,
   ClearArtistsFilter,
   FetchArtistsFailure,
   FetchArtistsSuccess,
   FetchTracksFailure,
   FetchTracksSuccess,
   GsLibraryActionResult,
+  Identity,
+  SetAlbumsFilterArtistsSuccess,
+  SetAlbumsFilterTracksFailure,
+  SetAlbumsFilterTracksSuccess,
   SetArtistsFilterAlbumsFailure,
   SetArtistsFilterAlbumsSuccess,
   SetArtistsFilterTracksFailure,
@@ -16,54 +21,74 @@ import {initialLibraryState, LibraryState} from "./library.state";
 import {FetchAlbumsFailure, FetchAlbumsSuccess} from "./actions/albums.actions";
 
 export function libraryReducer(state = initialLibraryState, action: Action): LibraryState {
-  var res: GsLibraryActionResult | null = null
+  let res: GsLibraryActionResult
 
   switch (action.type) {
+    // fetch actions
     case LibraryActionTypes.FetchArtistsSuccess:
       res = action as FetchArtistsSuccess
-      return res.handle(state)
+      break
 
     case LibraryActionTypes.FetchArtistsFailure:
       res = action as FetchArtistsFailure
-      return res.handle(state)
+      break
 
     case LibraryActionTypes.FetchAlbumsSuccess:
       res = action as FetchAlbumsSuccess
-      return res.handle(state)
+      break
 
     case LibraryActionTypes.FetchAlbumsFailure:
       res = action as FetchAlbumsFailure
-      return res.handle(state)
+      break
 
     case LibraryActionTypes.FetchTracksSuccess:
       res = action as FetchTracksSuccess
-      return res.handle(state)
+      break
 
     case LibraryActionTypes.FetchTracksFailure:
       res = action as FetchTracksFailure
-      return res.handle(state)
+      break
 
+    // filter actions
     case LibraryActionTypes.SetArtistsFilterAlbumsSuccess:
       res = action as SetArtistsFilterAlbumsSuccess
-      return res.handle(state)
+      break
 
     case LibraryActionTypes.SetArtistsFilterAlbumsFailure:
       res = action as SetArtistsFilterAlbumsFailure
-      return res.handle(state)
+      break
 
     case LibraryActionTypes.SetArtistsFilterTracksSuccess:
       res = action as SetArtistsFilterTracksSuccess
-      return res.handle(state)
+      break
 
     case LibraryActionTypes.SetArtistsFilterTracksFailure:
       res = action as SetArtistsFilterTracksFailure
-      return res.handle(state)
+      break
 
     case LibraryActionTypes.ClearArtistsFilter:
       res = action as ClearArtistsFilter
-      return res.handle(state)
+      break
+
+    case LibraryActionTypes.SetAlbumsFilterArtistsSuccess:
+      res = action as SetAlbumsFilterArtistsSuccess
+      break
+
+    case LibraryActionTypes.SetAlbumsFilterTracksSuccess:
+      res = action as SetAlbumsFilterTracksSuccess
+      break
+
+    case LibraryActionTypes.SetAlbumsFilterTracksFailure:
+      res = action as SetAlbumsFilterTracksFailure
+      break
+
+    case LibraryActionTypes.ClearAlbumsFilter:
+      res = action as ClearAlbumsFilter
+      break
 
     default:
-      return state
+      res = new Identity()
   }
+
+  return res.handle(state)
 }

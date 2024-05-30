@@ -1,6 +1,6 @@
 import {RestBase} from "../rest_base.model";
-import {ArtistsData} from "./artists_data.model";
+import {ArtistsAll} from "./artists_all.model";
 
 export interface ArtistsGetAll extends Omit<RestBase, 'data'> {
-  data: ArtistsData;
+  data: ArtistsAll;
 }

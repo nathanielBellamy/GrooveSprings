@@ -4,6 +4,7 @@ import {LibraryState} from "../library.state";
 import {GsLibraryActionResult} from "../library.actions";
 import {AlbumsData} from "../../../../models/albums/albums_data.model";
 import {AlbumsByArtistIds} from "../../../../models/albums/albums_by_artist_ids.model";
+import {Album} from "../../../../models/albums/album.model";
 
 export class FetchAlbums implements Action {
   readonly type = LibraryActionTypes.FetchAlbums

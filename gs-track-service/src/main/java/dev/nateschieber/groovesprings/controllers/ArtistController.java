@@ -5,11 +5,13 @@ import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistBulkCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
+import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistGetByAlbumIdsDto;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistAlbumsResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistBulkCreateResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistGetAllResponse;
+import dev.nateschieber.groovesprings.rest.responses.artist.ArtistGetByAlbumIdsResponse;
 import dev.nateschieber.groovesprings.rest.responses.artist.ArtistTracksResponse;
 import dev.nateschieber.groovesprings.services.entities.ArtistService;
 import java.net.URI;
@@ -43,6 +45,12 @@ public class ArtistController {
   public ResponseEntity getAllArtists() {
     List<Artist> artists = artistService.findAll();
     return ResponseEntity.ok().body(new ArtistGetAllResponse(artists));
+  }
+
+  @PostMapping(value="byAlbumIds")
+  public ResponseEntity getArtistsByAlbumIds(@RequestBody ArtistGetByAlbumIdsDto dto) {
+    List<Artist> artists = artistService.findByAlbumIds(dto.albumIds());
+    return ResponseEntity.ok().body(new ArtistGetByAlbumIdsResponse(artists, dto.albumIds()));
   }
 
   @GetMapping(value = "/{id}")

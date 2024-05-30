@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import {Observable} from "rxjs";
 import {LibraryState} from "../../store/library.state";
 import {Album} from "../../../../models/albums/album.model";
+import {SetAlbumsFilter} from "../../store/library.actions";
 
 @Component({
   selector: 'gsAlbums',
@@ -21,5 +22,10 @@ export class AlbumsComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  handleAlbumClick(album: Album) {
+    console.dir(album)
+    this.store$.dispatch(new SetAlbumsFilter([album]))
   }
 }

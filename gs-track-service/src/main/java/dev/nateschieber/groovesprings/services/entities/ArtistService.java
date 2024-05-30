@@ -23,6 +23,10 @@ public class ArtistService {
     return this.artistRepository.findAll();
   }
 
+  public List<Artist> findByAlbumIds(List<Long> albumIds) {
+    return this.artistRepository.findByAlbumIds(albumIds);
+  }
+
   public Optional<Artist> findById(Long id) {
     return this.artistRepository.findById(id);
   }

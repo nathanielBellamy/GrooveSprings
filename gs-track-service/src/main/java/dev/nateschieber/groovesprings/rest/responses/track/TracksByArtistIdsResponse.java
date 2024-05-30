@@ -5,7 +5,7 @@ import dev.nateschieber.groovesprings.rest.dtos.track.TracksByArtistIdsDto;
 import java.util.List;
 
 public class TracksByArtistIdsResponse extends TrackResponse {
-  public TracksByArtistIdsResponse(List<Long> artistIds, List<Track> tracks) {
+  public TracksByArtistIdsResponse(List<Track> tracks, List<Long> artistIds) {
     this.setData(new TracksByArtistIdsDto(artistIds, tracks.size(), tracks));
   }
 }
