@@ -1,7 +1,7 @@
 import {Action} from "@ngrx/store";
 import {LibraryActionTypes} from "../library.actiontypes";
 import {LibraryState} from "../library.state";
-import {GsLibraryActionFailure, GsLibraryActionSuccess} from "../library.actions";
+import {GsLibraryActionResult} from "../library.actions";
 import {ArtistsData} from "../../../../models/artists/artists_data.model";
 import {Artist} from "../../../../models/artists/artist.model";
 
@@ -9,7 +9,7 @@ export class FetchArtists implements Action {
   readonly type = LibraryActionTypes.FetchArtists
 }
 
-export class FetchArtistsSuccess implements Action, GsLibraryActionSuccess {
+export class FetchArtistsSuccess implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.FetchArtistsSuccess
 
   constructor(public payload: ArtistsData) { }
@@ -23,7 +23,7 @@ export class FetchArtistsSuccess implements Action, GsLibraryActionSuccess {
   }
 }
 
-export class FetchArtistsFailure implements Action, GsLibraryActionFailure {
+export class FetchArtistsFailure implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.FetchArtistsFailure
 
   constructor(public payload: any) { }

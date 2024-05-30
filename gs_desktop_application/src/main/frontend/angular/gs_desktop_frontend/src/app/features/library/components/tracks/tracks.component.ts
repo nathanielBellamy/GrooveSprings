@@ -21,7 +21,6 @@ export class TracksComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store$.dispatch(new FetchTracks())
   }
 
   handleDblClick(track: Track) {

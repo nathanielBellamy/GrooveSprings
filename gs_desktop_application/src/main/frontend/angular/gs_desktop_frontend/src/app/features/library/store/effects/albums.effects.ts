@@ -20,9 +20,7 @@ export class AlbumsEffects {
       ofType(LibraryActionTypes.FetchAlbums),
       exhaustMap(() => this.albumsService.fetchAll()
         .pipe(
-          map((payload) => {
-            return new FetchAlbumsSuccess(payload as AlbumsData)
-          }),
+          map((payload) => new FetchAlbumsSuccess(payload as AlbumsData)),
           catchError((e, _) => of(new FetchAlbumsFailure(e)))
         )
       )
@@ -35,9 +33,7 @@ export class AlbumsEffects {
       map(action => action.payload),
       exhaustMap(artists => this.albumsService.fetchByArtistIds(artists.map(a => a.id))
         .pipe(
-          map((payload) => {
-            return new SetArtistsFilterAlbumsSuccess(payload)
-          }),
+          map((payload) => new SetArtistsFilterAlbumsSuccess(payload)),
           catchError((e, _) => of(new FetchAlbumsFailure(e)))
         )
       )

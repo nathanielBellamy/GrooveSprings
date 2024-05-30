@@ -22,6 +22,5 @@ export class AlbumsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store$.dispatch( new FetchAlbums())
   }
 }

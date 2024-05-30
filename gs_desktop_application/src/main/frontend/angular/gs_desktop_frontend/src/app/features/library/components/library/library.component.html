@@ -7,9 +7,9 @@
       <div class="gs_library_filter">
         <div>
           Artists
-          <span (click)="clearArtistsFilter()">
+          <button (click)="clearArtistsFilter()">
             X
-          </span>
+          </button>
         </div>
         <div class="gs_library_filter_list">
           @for(artist of artistsFilter$ | async; track artist;) {
@@ -22,9 +22,9 @@
       <div class="gs_library_filter">
         <div>
           Albums
-          <span (click)="clearAlbumsFilter()">
+          <button (click)="clearAlbumsFilter()">
             X
-          </span>
+          </button>
         </div>
         <div class="gs_library_filter_list">
           @for(album of albumsFilter$ | async; track album;) {

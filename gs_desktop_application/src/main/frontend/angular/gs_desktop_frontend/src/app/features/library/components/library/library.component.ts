@@ -5,6 +5,9 @@ import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Album} from "../../../../models/albums/album.model";
 import {Artist} from "../../../../models/artists/artist.model";
+import {FetchTracks} from "../../store/actions/tracks.actions";
+import {FetchArtists} from "../../store/actions/artists.actions";
+import {FetchAlbums} from "../../store/actions/albums.actions";
 
 @Component({
   selector: 'gsLibrary',
@@ -12,7 +15,7 @@ import {Artist} from "../../../../models/artists/artist.model";
   styleUrl: './library.component.sass'
 })
 @Injectable()
-export class LibraryComponent {
+export class LibraryComponent implements OnInit {
 
   protected artistsFilter$: Observable<Artist[]>
   protected albumsFilter$: Observable<Album[]>
@@ -20,6 +23,12 @@ export class LibraryComponent {
   constructor(private store$: Store<{library: LibraryState}>) {
     this.artistsFilter$ = store$.select(state => state.library.filters.artists)
     this.albumsFilter$ = store$.select(state =>  state.library.filters.albums)
+  }
+
+  ngOnInit() {
+    this.store$.dispatch(new FetchAlbums())
+    this.store$.dispatch(new FetchArtists())
+    this.store$.dispatch(new FetchTracks())
   }
 
   clearArtistsFilter() {

@@ -1,19 +1,17 @@
 import {LibraryState} from "./library.state";
+import {Action} from "@ngrx/store";
+import {LibraryActionTypes} from "./library.actiontypes";
 
-export abstract class GsLibraryActionSuccess {
+export abstract class GsLibraryActionResult {
   public payload: any
 
   handle(state: LibraryState): LibraryState {
-    throw new Error("Method 'handle()' must be implemented by GsLibraryActionSuccess")
+    throw new Error("Method 'handle()' must be implemented by GsLibraryActionResult")
   }
 }
 
-export abstract class GsLibraryActionFailure {
-  public payload: any
-
-  handle(error: any): LibraryState {
-    throw new Error("Method 'handle()' must be implemented by GsLibraryActionFailure")
-  }
+export class ClearArtistsFilter implements Action {
+  readonly type = LibraryActionTypes.ClearArtistsFilter
 }
 
 export * from './actions/albums.actions'

@@ -1,16 +1,15 @@
 import {Action} from "@ngrx/store";
 import {LibraryActionTypes} from "../library.actiontypes";
 import {LibraryState} from "../library.state";
-import {GsLibraryActionFailure, GsLibraryActionSuccess} from "../library.actions";
+import {GsLibraryActionResult} from "../library.actions";
 import {AlbumsData} from "../../../../models/albums/albums_data.model";
-import {AlbumsGetByArtistIds} from "../../../../models/albums/albums_get_by_artist_ids.model";
 import {AlbumsByArtistIds} from "../../../../models/albums/albums_by_artist_ids.model";
 
 export class FetchAlbums implements Action {
   readonly type = LibraryActionTypes.FetchAlbums
 }
 
-export class FetchAlbumsSuccess implements Action, GsLibraryActionSuccess {
+export class FetchAlbumsSuccess implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.FetchAlbumsSuccess
 
   constructor(public payload: AlbumsData) { }
@@ -24,7 +23,7 @@ export class FetchAlbumsSuccess implements Action, GsLibraryActionSuccess {
   }
 }
 
-export class FetchAlbumsFailure implements Action, GsLibraryActionFailure {
+export class FetchAlbumsFailure implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.FetchAlbumsFailure
 
   constructor(public payload: any) {
@@ -37,7 +36,7 @@ export class FetchAlbumsFailure implements Action, GsLibraryActionFailure {
   }
 }
 
-export class SetArtistsFilterAlbumsSuccess implements Action, GsLibraryActionSuccess {
+export class SetArtistsFilterAlbumsSuccess implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.SetArtistsFilterAlbumsSuccess
 
   constructor(public payload: AlbumsByArtistIds) {}
@@ -55,7 +54,7 @@ export class SetArtistsFilterAlbumsSuccess implements Action, GsLibraryActionSuc
   }
 }
 
-export class SetArtistsFilterAlbumsFailure implements Action, GsLibraryActionFailure {
+export class SetArtistsFilterAlbumsFailure implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.SetArtistsFilterAlbumsFailure
 
   constructor(public payload: any) {}

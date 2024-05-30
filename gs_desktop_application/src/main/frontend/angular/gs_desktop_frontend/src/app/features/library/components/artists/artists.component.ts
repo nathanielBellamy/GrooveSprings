@@ -22,7 +22,6 @@ export class ArtistsComponent {
   }
 
   ngOnInit() {
-    this.store$.dispatch( new FetchArtists())
   }
 
   handleArtistClick(artist: Artist) {
