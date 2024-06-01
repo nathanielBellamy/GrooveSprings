@@ -7,12 +7,14 @@
 ### from within dev.nateschieber.groovesprings.jni
 
 # LINUX
+#   g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux audio/audio.cpp -o audio/audio.o
 #   g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux dev_nateschieber_groovesprings_jni_JniMain.cpp -o dev_nateschieber_groovesprings_jni_JniMain.o
-#   g++ -shared -fPIC -o libnative.so dev_nateschieber_groovesprings_jni_JniMain.o -lc
+#   g++ -shared -fPIC -o libnative.so audio/audio.o dev_nateschieber_groovesprings_jni_JniMain.o -lc -lsndfile -lportaudio
 
 # MacOS
+#  g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/darwin audio/audio.cpp -o audio/audio.o
 #  g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/darwin dev_nateschieber_groovesprings_jni_JniMain.cpp -o dev_nateschieber_groovesprings_jni_JniMain.o
-#  g++ -dynamicLib -o libnative.dylib dev_nateschieber_groovesprings_jni_JniMain.o -lc
+#  g++ -dynamicLib -o libnative.dylib audio/audio.o dev_nateschieber_groovesprings_jni_JniMain.o -lc -lsndfile -lportaudio
 
 ### In order to run this program within Intellij
 ### we need to tell the JVM where to find the the compiled .so library.
