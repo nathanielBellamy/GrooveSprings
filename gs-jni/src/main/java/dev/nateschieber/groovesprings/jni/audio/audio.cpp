@@ -20,7 +20,7 @@ Audio::Audio(JNIEnv* env, jstring jFileName)
 
     char cwd[PATH_MAX];
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
-        printf("Current working dir: %s\n", cwd);
+        printf("\n Current working dir: %s\n", cwd);
     } else {
         perror("getcwd() error");
     }
@@ -44,7 +44,7 @@ int Audio::init_pa(AUDIO_DATA *audioData)
   // > When opening a file for read, the format field should be set to zero before calling sf_open().
   audioData->sfinfo.format = 0;
 
-  if (! (audioData->file = sf_open("Unkown Artist/Unkown Album/test.mp3", SFM_READ, &audioData->sfinfo)))
+  if (! (audioData->file = sf_open("gs_music_library/Unknown Artist/Unknown Album/test.mp3", SFM_READ, &audioData->sfinfo)))
   {
 		printf ("Not able to open input file.\n") ;
 		/* Print the error message from libsndfile. */
@@ -72,15 +72,22 @@ int Audio::init_pa(AUDIO_DATA *audioData)
 int Audio::init_jni(AUDIO_DATA *audioData) {
   // get necessary objects from JNI
   JNI_DATA jniData;
+
+  std::cout <<"Audio::init_jni::1";
   jniData.gsPlayback = this->env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
   jniData.setCurrFrameId = this->env->GetStaticMethodID (jniData.gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V");
   jniData.getStopped = this->env->GetStaticMethodID (jniData.gsPlayback, "getStopped", "()Z");
 
-  jniData.jNum = this->env->FindClass("java/lang/Long");
-  jniData.jNumInit = this->env->GetMethodID(jniData.jNum, "<init>", "(J)V");
+  std::cout <<"Audio::init_jni::2";
+//  jniData.jNum = this->env->FindClass("java/lang/Long");
+  std::cout <<"Audio::init_jni::2.1";
+//  jniData.jNumInit = this->env->GetMethodID(jniData.jNum, "<init>", "(J)V");
+
+  std::cout <<"Audio::init_jni::2.2";
 
   audioData->jniData = &jniData;
 
+  std::cout <<"Audio::init_jni::3";
   return 0;
 }
 
@@ -101,11 +108,11 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   AUDIO_DATA *audioData = (AUDIO_DATA *) userData;
 
   // TODO: replace stopped with playState, add pause functionality
-  bool stopped;
-  stopped = audioData->jniData->env->CallStaticBooleanMethod(
-        audioData->jniData->gsPlayback,
-        audioData->jniData->getStopped
-  );
+//  bool stopped;
+//  stopped = audioData->jniData->env->CallStaticBooleanMethod(
+//        audioData->jniData->gsPlayback,
+//        audioData->jniData->getStopped
+//  );
 
   if( audioData->buffer == NULL )
   {
@@ -121,22 +128,23 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
     // return paComplete;
     return 1;
   }
-  else if (stopped) {
-    return 1;
-  }
+//  else if (stopped) {
+//    return 1;
+//  }
   else
   {
     // audioData->buffer --> paOut
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
       *out++ = audioData->buffer[audioData->index + i];
-      audioData->index++;
     }
+
+    audioData->index += framesPerBuffer * audioData->sfinfo.channels;
   }
 
-  if (audioData->index % 1000 == 0)
-  {
-    Audio::jSetCurrFrameId(audioData->jniData, audioData->index);
-  };
+//  if (audioData->index % 1000 == 0)
+//  {
+//    Audio::jSetCurrFrameId(audioData->jniData, audioData->index);
+//  };
 
   return paContinue;
 };
@@ -145,17 +153,21 @@ int Audio::run()
 {
   AUDIO_DATA audioData;
 
-  if ( init_jni(&audioData) != 0)
+  std::cout << "\n Audio::run::1";
+
+  if ( Audio::init_jni(&audioData) != 0)
   {
     return 1;
   };
 
-  if ( init_pa(&audioData) != 0)
+  std::cout << "\n Audio::run::2";
+  if ( Audio::init_pa(&audioData) != 0)
   {
-    freeAudioData(&audioData);
+    Audio::freeAudioData(&audioData);
     return 1;
   };
 
+  std::cout << "\n Audio::run::3";
   PaStreamParameters inputParameters, outputParameters;
   PaStream *stream;
   PaError err;
@@ -163,6 +175,7 @@ int Audio::run()
   err = Pa_Initialize();
   if( err != paNoError ) goto error;
 
+  std::cout << "\n Audio::run::4";
   inputParameters.device = Pa_GetDefaultInputDevice(); /* default input device */
   if (inputParameters.device == paNoDevice) {
       fprintf(stderr,"\nError: No default input device.");
@@ -171,6 +184,8 @@ int Audio::run()
   inputParameters.channelCount = 2;       /* stereo in from file */
   inputParameters.sampleFormat = PA_SAMPLE_TYPE;
   inputParameters.hostApiSpecificStreamInfo = NULL;
+
+  std::cout << "\n Audio::run::5";
 
   outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
   if (outputParameters.device == paNoDevice) {
@@ -182,6 +197,7 @@ int Audio::run()
   outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
   outputParameters.hostApiSpecificStreamInfo = NULL;
 
+  std::cout << "\n Audio::run::6";
   err = Pa_OpenStream(
             &stream,
             &inputParameters,
@@ -196,12 +212,15 @@ int Audio::run()
   err = Pa_StartStream( stream );
   if( err != paNoError ) goto error;
 
+  std::cout << "\n Audio::run::7";
   char c;
   while(
-    env->CallStaticBooleanMethod(
-        audioData.jniData->gsPlayback,
-        audioData.jniData->getStopped
-    ) == false
+    // hold thread open until stopped
+//    env->CallStaticBooleanMethod(
+//        audioData.jniData->gsPlayback,
+//        audioData.jniData->getStopped
+//    ) == false
+    true
   ) {}
 
   err = Pa_StopStream( stream );
@@ -210,7 +229,9 @@ int Audio::run()
   err = Pa_CloseStream( stream );
   if( err != paNoError ) goto error;
   Pa_Terminate();
+  std::cout << "\n Audio::run::8";
   return 0;
+
 
   error:
     Pa_Terminate();
