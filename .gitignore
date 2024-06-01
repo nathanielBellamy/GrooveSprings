@@ -46,3 +46,5 @@ build/
 *.log
 
 **/frontend-dist/**
+
+gs_music_library/**
