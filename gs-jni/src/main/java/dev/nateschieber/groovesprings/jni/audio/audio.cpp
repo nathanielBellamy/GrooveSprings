@@ -74,14 +74,15 @@ int Audio::init_jni(AUDIO_DATA *audioData) {
   JNI_DATA jniData;
 
   std::cout <<"Audio::init_jni::1";
+  jniData.env = this->env;
   jniData.gsPlayback = this->env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
   jniData.setCurrFrameId = this->env->GetStaticMethodID (jniData.gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V");
   jniData.getStopped = this->env->GetStaticMethodID (jniData.gsPlayback, "getStopped", "()Z");
 
   std::cout <<"Audio::init_jni::2";
-//  jniData.jNum = this->env->FindClass("java/lang/Long");
+  jniData.jNum = this->env->FindClass("java/lang/Long");
   std::cout <<"Audio::init_jni::2.1";
-//  jniData.jNumInit = this->env->GetMethodID(jniData.jNum, "<init>", "(J)V");
+  jniData.jNumInit = this->env->GetStaticMethodID(jniData.jNum, "<init>", "(J)V");
 
   std::cout <<"Audio::init_jni::2.2";
 
@@ -107,7 +108,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   (void) statusFlags;
   AUDIO_DATA *audioData = (AUDIO_DATA *) userData;
 
-  // TODO: replace stopped with playState, add pause functionality
+//  // TODO: replace stopped with playState, add pause functionality
 //  bool stopped;
 //  stopped = audioData->jniData->env->CallStaticBooleanMethod(
 //        audioData->jniData->gsPlayback,
@@ -157,14 +158,13 @@ int Audio::run()
 
   if ( Audio::init_jni(&audioData) != 0)
   {
-    return 1;
+    goto error;
   };
 
   std::cout << "\n Audio::run::2";
   if ( Audio::init_pa(&audioData) != 0)
   {
-    Audio::freeAudioData(&audioData);
-    return 1;
+    goto error;
   };
 
   std::cout << "\n Audio::run::3";
@@ -213,15 +213,19 @@ int Audio::run()
   if( err != paNoError ) goto error;
 
   std::cout << "\n Audio::run::7";
-  char c;
-  while(
-    // hold thread open until stopped
-//    env->CallStaticBooleanMethod(
+  bool stopped;
+  stopped = false;
+  while (true) {};
+// TODO:
+//  while( !stopped )
+//  {
+//    std::cout << "\n Audio::Run::7.1:: " << stopped << "   <--";
+//    // hold thread open until stopped
+//    stopped = env->CallStaticBooleanMethod(
 //        audioData.jniData->gsPlayback,
 //        audioData.jniData->getStopped
-//    ) == false
-    true
-  ) {}
+//    );
+//  }
 
   err = Pa_StopStream( stream );
   if( err != paNoError ) goto error;
@@ -229,12 +233,14 @@ int Audio::run()
   err = Pa_CloseStream( stream );
   if( err != paNoError ) goto error;
   Pa_Terminate();
+  Audio::freeAudioData(&audioData);
   std::cout << "\n Audio::run::8";
   return 0;
 
 
   error:
     Pa_Terminate();
+    Audio::freeAudioData(&audioData);
     fprintf( stderr, "\nAn error occurred while using the portaudio stream" );
     fprintf( stderr, "\nError number: %d", err );
     fprintf( stderr, "\nError message: %s", Pa_GetErrorText( err ) );
