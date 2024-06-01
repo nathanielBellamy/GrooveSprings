@@ -3,23 +3,28 @@
 #include <iostream>
 #include <sndfile.hh>
 #include <portaudio.h>
+#include "jni.h"
 #include "./audio.h"
 #include "./audio_data.h"
 #include "./constants.h"
+#include "./jni_data.h"
 
 #define PA_SAMPLE_TYPE      paFloat32
 
-void Audio::Audio(char const* file)
+typedef float SAMPLE;
+
+Audio::Audio(JNIEnv* env, jstring jFileName)
 {
-    this->file = file;
-    std::cout << "Enter Audio::Audio";
+    char const* fileName;
+    fileName = env->GetStringUTFChars(jFileName, 0);
+
     char cwd[PATH_MAX];
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
         printf("Current working dir: %s\n", cwd);
     } else {
         perror("getcwd() error");
     }
-    std::cout << "\n audio.cpp has file: " << file;
+    std::cout << "\n audio.cpp has file: " << fileName;
 };
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
@@ -39,7 +44,7 @@ int Audio::init_pa(AUDIO_DATA *audioData)
   // > When opening a file for read, the format field should be set to zero before calling sf_open().
   audioData->sfinfo.format = 0;
 
-  if (! (audioData->file = sf_open(file, SFM_READ, &audioData->sfinfo)))
+  if (! (audioData->file = sf_open("Unkown Artist/Unkown Album/test.mp3", SFM_READ, &audioData->sfinfo)))
   {
 		printf ("Not able to open input file.\n") ;
 		/* Print the error message from libsndfile. */
@@ -64,10 +69,25 @@ int Audio::init_pa(AUDIO_DATA *audioData)
   return 0;
 };
 
+int Audio::init_jni(AUDIO_DATA *audioData) {
+  // get necessary objects from JNI
+  JNI_DATA jniData;
+  jniData.gsPlayback = this->env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
+  jniData.setCurrFrameId = this->env->GetStaticMethodID (jniData.gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V");
+  jniData.getStopped = this->env->GetStaticMethodID (jniData.gsPlayback, "getStopped", "()Z");
+
+  jniData.jNum = this->env->FindClass("java/lang/Long");
+  jniData.jNumInit = this->env->GetMethodID(jniData.jNum, "<init>", "(J)V");
+
+  audioData->jniData = &jniData;
+
+  return 0;
+}
+
 // portaudio callback
 // do not allocate/free memory within this method
 // as it may be called at system-interrupt level
-static int Audio::callback(const void *inputBuffer, void *outputBuffer,
+int Audio::callback(const void *inputBuffer, void *outputBuffer,
                     unsigned long framesPerBuffer,
                     const PaStreamCallbackTimeInfo* timeInfo,
                     PaStreamCallbackFlags statusFlags,
@@ -79,6 +99,13 @@ static int Audio::callback(const void *inputBuffer, void *outputBuffer,
   (void) timeInfo; /* Prevent unused variable warnings. */
   (void) statusFlags;
   AUDIO_DATA *audioData = (AUDIO_DATA *) userData;
+
+  // TODO: replace stopped with playState, add pause functionality
+  bool stopped;
+  stopped = audioData->jniData->env->CallStaticBooleanMethod(
+        audioData->jniData->gsPlayback,
+        audioData->jniData->getStopped
+  );
 
   if( audioData->buffer == NULL )
   {
@@ -94,27 +121,41 @@ static int Audio::callback(const void *inputBuffer, void *outputBuffer,
     // return paComplete;
     return 1;
   }
+  else if (stopped) {
+    return 1;
+  }
   else
   {
     // audioData->buffer --> paOut
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
       *out++ = audioData->buffer[audioData->index + i];
+      audioData->index++;
     }
   }
+
+  if (audioData->index % 1000 == 0)
+  {
+    Audio::jSetCurrFrameId(audioData->jniData, audioData->index);
+  };
 
   return paContinue;
 };
 
-int Audio::run(/* TODO: Pass in args */)
+int Audio::run()
 {
   AUDIO_DATA audioData;
+
+  if ( init_jni(&audioData) != 0)
+  {
+    return 1;
+  };
+
   if ( init_pa(&audioData) != 0)
   {
     freeAudioData(&audioData);
     return 1;
   };
 
-//  AUDIO_DATA *audioData = (AUDIO_DATA*)audioData_;
   PaStreamParameters inputParameters, outputParameters;
   PaStream *stream;
   PaError err;
@@ -156,7 +197,13 @@ int Audio::run(/* TODO: Pass in args */)
   if( err != paNoError ) goto error;
 
   char c;
-  while( false /* TODO: !stopped */) {}
+  while(
+    env->CallStaticBooleanMethod(
+        audioData.jniData->gsPlayback,
+        audioData.jniData->getStopped
+    ) == false
+  ) {}
+
   err = Pa_StopStream( stream );
   if( err != paNoError ) goto error;
 
@@ -172,3 +219,19 @@ int Audio::run(/* TODO: Pass in args */)
     fprintf( stderr, "\nError message: %s", Pa_GetErrorText( err ) );
     return 1;
 };
+
+void Audio::jSetCurrFrameId(
+    JNI_DATA* jniData,
+    int currFrameId
+){
+   jobject jCurrFrameId = jniData->env->NewObject(
+        jniData->jNum,
+        jniData->jNumInit,
+        currFrameId
+   );
+   jniData->env->CallVoidMethod(
+        jniData->gsPlayback,
+        jniData->setCurrFrameId,
+        jCurrFrameId
+   );
+}

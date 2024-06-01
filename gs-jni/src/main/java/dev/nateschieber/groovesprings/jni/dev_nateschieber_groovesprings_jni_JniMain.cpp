@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <sndfile.hh>
+#include <portaudio.h>
 #include "dev_nateschieber_groovesprings_jni_JniMain.h"
 #include "./audio/audio.h"
 //#include "./audio_data.h"
@@ -39,48 +41,50 @@ void jSetCurrFrameId(
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
   (JNIEnv* env, jobject _gsPlayback, jstring jfile) {
   try {
-      long currFrameId;
-      currFrameId = 0;
+     Audio audio(env, jfile);
+     audio.run();
+//      long currFrameId;
+//      currFrameId = 0;
+//
+//      char const* file = env->GetStringUTFChars(jfile, 0);
+//      std::cout << "Cpp has file: " << file << std::endl;
+//      Audio audioObj(env, file);
+//
+//      jclass gsPlayback = env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
+//      jmethodID setCurrFrameId = env->GetStaticMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V");
+//      jmethodID getStopped = env->GetStaticMethodID (gsPlayback, "getStopped", "()Z");
+//
+//      jclass jNum = env->FindClass("java/lang/Long");
+//      jmethodID jNumInit = env->GetMethodID(jNum, "<init>", "(J)V");
+//      bool stopped;
 
-      char const* file = env->GetStringUTFChars(jfile, 0);
-      std::cout << "Cpp has file: " << file << std::endl;
-      Audio audioObj(file);
-
-      jclass gsPlayback = env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
-      jmethodID setCurrFrameId = env->GetStaticMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V");
-      jmethodID getStopped = env->GetStaticMethodID (gsPlayback, "getStopped", "()Z");
-
-      jclass jNum = env->FindClass("java/lang/Long");
-      jmethodID jNumInit = env->GetMethodID(jNum, "<init>", "(J)V");
-      bool stopped;
-
-      while (true) {
-          currFrameId += 1;
-          stopped = env->CallStaticBooleanMethod(gsPlayback, getStopped);
-          if (stopped)
-          {
-              jSetCurrFrameId(
-                env,
-                gsPlayback,
-                setCurrFrameId,
-                jNum,
-                jNumInit,
-                0
-              );
-              break;
-          }
-          if (currFrameId % 1000 == 0)
-          {
-              jSetCurrFrameId(
-                env,
-                gsPlayback,
-                setCurrFrameId,
-                jNum,
-                jNumInit,
-                currFrameId
-              );
-          }
-      }
+//      while (true) {
+//          currFrameId += 1;
+//          stopped = env->CallStaticBooleanMethod(gsPlayback, getStopped);
+//          if (stopped)
+//          {
+//              jSetCurrFrameId(
+//                env,
+//                gsPlayback,
+//                setCurrFrameId,
+//                jNum,
+//                jNumInit,
+//                0
+//              );
+//              break;
+//          }
+//          if (currFrameId % 1000 == 0)
+//          {
+//              jSetCurrFrameId(
+//                env,
+//                gsPlayback,
+//                setCurrFrameId,
+//                jNum,
+//                jNumInit,
+//                currFrameId
+//              );
+//          }
+//      }
    }
    catch(std::exception const& e)
    {
