@@ -3,8 +3,10 @@
 //#include <sndfile.hh>
 
 typedef struct {
-//    SNDFILE *file;
-//    SF_INFO sfinfo;
+    float       *buffer;
+    SNDFILE     *file;
+    SF_INFO     sfinfo;
+    sf_count_t  index;
 } AUDIO_DATA;
 
 #endif

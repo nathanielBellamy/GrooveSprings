@@ -67,18 +67,15 @@ class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef
       pathPrefix("api" / "v1") {
         // proxy all other api/v1 traffic to gs-track-service
         extractUnmatchedPath { remaining =>
-          extractUri { fullUri =>
-            extractMethod { method =>
-              extractRequestEntity { requestEntity =>
-                println(s"fullUri: $fullUri")
-                implicit val classic = context.system.classicSystem
-                val response = Http().singleRequest(HttpRequest(
-                  method = method,
-                  uri = s"http://localhost:5173/api/v1$remaining", // gs-track-service
-                  entity = requestEntity
-                ))
-                complete(response)
-              }
+          extractMethod { method =>
+            extractRequestEntity { requestEntity =>
+              implicit val classic = context.system.classicSystem
+              val response = Http().singleRequest(HttpRequest(
+                method = method,
+                uri = s"http://localhost:5173/api/v1$remaining", // gs-track-service
+                entity = requestEntity
+              ))
+              complete(response)
             }
           }
         }
