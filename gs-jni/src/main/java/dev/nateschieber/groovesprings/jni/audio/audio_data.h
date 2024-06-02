@@ -8,7 +8,6 @@ typedef struct {
     SNDFILE     *file;
     SF_INFO     sfinfo;
     sf_count_t  index;
-    JNI_DATA*   jniData;
 } AUDIO_DATA;
 
 #endif

@@ -13,27 +13,18 @@
 
 typedef float SAMPLE;
 
-Audio::Audio(JNIEnv* env, jstring jFileName)
-{
-    char const* fileName;
-    fileName = env->GetStringUTFChars(jFileName, 0);
-
-    char cwd[PATH_MAX];
-    if (getcwd(cwd, sizeof(cwd)) != NULL) {
-        printf("\n Current working dir: %s\n", cwd);
-    } else {
-        perror("getcwd() error");
-    }
-    std::cout << "\n audio.cpp has file: " << fileName;
-};
+Audio::Audio(JNIEnv* env, jstring jFileName) :
+  env(env)
+  , gsPlayback(env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread"))
+  , setCurrFrameId(env->GetStaticMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V"))
+  , getStopped(env->GetStaticMethodID (gsPlayback, "getStopped", "()Z"))
+  , jNum(env->FindClass("java/lang/Long"))
+  , jNumInit(env->GetMethodID(jNum, "<init>", "(J)V"))
+  , fileName(env->GetStringUTFChars(jFileName, 0)) {}
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
-  // printf("\nCleaning up resources...");
-
   free(audioData->buffer);
   sf_close(audioData->file);
-
-  // printf("\nDone.");
 };
 
 int Audio::init_pa(AUDIO_DATA *audioData)
@@ -68,29 +59,6 @@ int Audio::init_pa(AUDIO_DATA *audioData)
 
   return 0;
 };
-
-int Audio::init_jni(AUDIO_DATA *audioData) {
-  // get necessary objects from JNI
-  JNI_DATA jniData;
-
-  std::cout <<"Audio::init_jni::1";
-  jniData.env = this->env;
-  jniData.gsPlayback = this->env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
-  jniData.setCurrFrameId = this->env->GetStaticMethodID (jniData.gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V");
-  jniData.getStopped = this->env->GetStaticMethodID (jniData.gsPlayback, "getStopped", "()Z");
-
-  std::cout <<"Audio::init_jni::2";
-  jniData.jNum = this->env->FindClass("java/lang/Long");
-  std::cout <<"Audio::init_jni::2.1";
-  jniData.jNumInit = this->env->GetStaticMethodID(jniData.jNum, "<init>", "(J)V");
-
-  std::cout <<"Audio::init_jni::2.2";
-
-  audioData->jniData = &jniData;
-
-  std::cout <<"Audio::init_jni::3";
-  return 0;
-}
 
 // portaudio callback
 // do not allocate/free memory within this method
@@ -153,18 +121,23 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
 int Audio::run()
 {
   AUDIO_DATA audioData;
-
   std::cout << "\n Audio::run::1";
 
-  if ( Audio::init_jni(&audioData) != 0)
-  {
-    goto error;
-  };
+//   jobject jCurrFrameId = Audio::env->NewObject(
+//     Audio::jNum,
+//     Audio::jNumInit,
+//     8888888
+//   );
+//   Audio::env->CallVoidMethod(
+//     Audio::gsPlayback,
+//     Audio::setCurrFrameId,
+//     jCurrFrameId
+//   );
 
   std::cout << "\n Audio::run::2";
   if ( Audio::init_pa(&audioData) != 0)
   {
-    goto error;
+//    goto error;
   };
 
   std::cout << "\n Audio::run::3";
@@ -215,17 +188,17 @@ int Audio::run()
   std::cout << "\n Audio::run::7";
   bool stopped;
   stopped = false;
-  while (true) {};
+//  while (true) {};
 // TODO:
-//  while( !stopped )
-//  {
-//    std::cout << "\n Audio::Run::7.1:: " << stopped << "   <--";
-//    // hold thread open until stopped
-//    stopped = env->CallStaticBooleanMethod(
-//        audioData.jniData->gsPlayback,
-//        audioData.jniData->getStopped
-//    );
-//  }
+  while( !stopped == true )
+  {
+    std::cout << "\n Audio::Run::7.1:: " << stopped << "   <--";
+    // hold thread open until stopped
+    stopped = Audio::env->CallStaticBooleanMethod(
+        Audio::gsPlayback,
+        Audio::getStopped
+    );
+  }
 
   err = Pa_StopStream( stream );
   if( err != paNoError ) goto error;

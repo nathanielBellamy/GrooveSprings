@@ -10,7 +10,12 @@
 class Audio
 {
         JNIEnv* env;
-        AUDIO_DATA data;
+        jclass gsPlayback;
+        jmethodID setCurrFrameId;
+        jmethodID getStopped;
+
+        jclass jNum;
+        jmethodID jNumInit;
         char const* fileName;
 
     public:
