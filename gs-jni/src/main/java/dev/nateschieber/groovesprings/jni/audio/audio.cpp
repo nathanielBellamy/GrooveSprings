@@ -105,21 +105,6 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
     audioData->index += framesPerBuffer * audioData->sfinfo.channels;
   }
 
-  if (audioData->index % 1000 == 0)
-  {
-// TODO: debug
-//       audioData->jCurrFrameId = audioData->jniData.env->NewObject(
-//            audioData->jniData.jNum,
-//            audioData->jniData.jNumInit,
-//            (int) audioData->index
-//       );
-//       audioData->jniData.env->CallVoidMethod(
-//            audioData->jniData.gsPlayback,
-//            audioData->jniData.setCurrFrameId,
-//            audioData->jCurrFrameId
-//       );
-  };
-
   return paContinue;
 };
 
@@ -158,17 +143,6 @@ int Audio::run()
   }
 
   AUDIO_DATA audioData(buffer, file, sfinfo, index, readcount, Audio::jniData);
-
-//   jobject jCurrFrameId = audioData.jniData.env->NewObject(
-//     audioData.jniData.jNum,
-//     audioData.jniData.jNumInit,
-//     555512341234
-//   );
-//   audioData.jniData.env->CallVoidMethod(
-//     audioData.jniData.gsPlayback,
-//     audioData.jniData.setCurrFrameId,
-//     jCurrFrameId
-//   );
 
   PaStreamParameters inputParameters, outputParameters;
   PaStream *stream;
@@ -220,6 +194,17 @@ int Audio::run()
         Audio::jniData.gsPlayback,
         Audio::jniData.getStopped
     );
+
+   jobject jCurrFrameId = audioData.jniData.env->NewObject(
+        audioData.jniData.jNum,
+        audioData.jniData.jNumInit,
+        (int) audioData.index
+   );
+   audioData.jniData.env->CallVoidMethod(
+        audioData.jniData.gsPlayback,
+        audioData.jniData.setCurrFrameId,
+        jCurrFrameId
+   );
   }
 
   err = Pa_StopStream( stream );
