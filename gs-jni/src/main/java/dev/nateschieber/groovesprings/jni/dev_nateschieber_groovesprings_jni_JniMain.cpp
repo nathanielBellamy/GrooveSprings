@@ -7,8 +7,6 @@
 #include <portaudio.h>
 #include "dev_nateschieber_groovesprings_jni_JniMain.h"
 #include "./audio/audio.h"
-//#include "./audio_data.h"
-
 
 // NOTE:
 //   - on macOs, .dylib compilation requires main method
@@ -26,73 +24,11 @@ JNIEXPORT jint JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_addNative
   return x + y;
 }
 
-void jSetCurrFrameId(
-    JNIEnv* env,
-    jobject gsPlayback,
-    jmethodID setCurrFrameId,
-    jclass jNum,
-    jmethodID jNumInit,
-    int currFrameId
-){
-   jobject jCurrFrameId = env->NewObject(jNum, jNumInit, currFrameId);
-   env->CallVoidMethod(gsPlayback, setCurrFrameId, jCurrFrameId);
-}
-
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
   (JNIEnv* env, jobject _gsPlayback, jstring jfile) {
   try {
-
-
-//     Audio audio(env, jfile);
-//     audio.run();
-//      long currFrameId;
-//      currFrameId = 0;
-//
-//      char const* file = env->GetStringUTFChars(jfile, 0);
-//      std::cout << "Cpp has file: " << file << std::endl;
-//      Audio audioObj(env, file);
-//
       Audio audio(env, jfile);
       audio.run();
-//      jclass gsPlayback = env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread");
-//      jmethodID setCurrFrameId = env->GetStaticMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V");
-//      jmethodID getStopped = env->GetStaticMethodID (gsPlayback, "getStopped", "()Z");
-//
-//      jclass jNum = env->FindClass("java/lang/Long");
-//      jmethodID jNumInit = env->GetMethodID(jNum, "<init>", "(J)V");
-//
-//       jobject jCurrFrameId = env->NewObject(jNum, jNumInit, 123454321);
-//       env->CallVoidMethod(gsPlayback, setCurrFrameId, jCurrFrameId);
-
-//      bool stopped;
-
-//      while (true) {
-//          currFrameId += 1;
-//          stopped = env->CallStaticBooleanMethod(gsPlayback, getStopped);
-//          if (stopped)
-//          {
-//              jSetCurrFrameId(
-//                env,
-//                gsPlayback,
-//                setCurrFrameId,
-//                jNum,
-//                jNumInit,
-//                0
-//              );
-//              break;
-//          }
-//          if (currFrameId % 1000 == 0)
-//          {
-//              jSetCurrFrameId(
-//                env,
-//                gsPlayback,
-//                setCurrFrameId,
-//                jNum,
-//                jNumInit,
-//                currFrameId
-//              );
-//          }
-//      }
    }
    catch(std::exception const& e)
    {

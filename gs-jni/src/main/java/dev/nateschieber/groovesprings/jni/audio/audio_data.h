@@ -14,7 +14,8 @@ struct AUDIO_DATA {
           buffer(buffer)
         , file(file)
         , sfinfo(sfinfo)
-        , index(index) {}
+        , index(index)
+        , readcount(readcount) {}
 };
 
 #endif

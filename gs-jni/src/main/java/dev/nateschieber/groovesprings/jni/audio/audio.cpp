@@ -81,9 +81,9 @@ int Audio::run()
 
   if (! (file = sf_open("gs_music_library/Unknown Artist/Unknown Album/test.mp3", SFM_READ, &sfinfo)))
   {
-		printf ("Not able to open input file.\n") ;
-		/* Print the error message from libsndfile. */
-		puts (sf_strerror (NULL)) ;
+    printf ("Not able to open input file.\n") ;
+    /* Print the error message from libsndfile. */
+    puts (sf_strerror (NULL)) ;
     return 1 ;
   };
 
