@@ -9,24 +9,13 @@
 
 class Audio
 {
-//        JNIEnv* env;
-//        jclass gsPlayback;
-//        jmethodID setCurrFrameId;
-//        jmethodID getStopped;
-//
-//        jclass jNum;
-//        jmethodID jNumInit;
-        JNI_DATA jniData;
+        JNIEnv* jniEnv;
         char const* fileName;
 
     public:
         Audio(JNIEnv* env, jstring jFileName);
 
         int run();
-
-        int init_pa(AUDIO_DATA *audioData);
-
-        int init_jni(AUDIO_DATA *audioData);
 
         void freeAudioData(AUDIO_DATA *audioData);
 

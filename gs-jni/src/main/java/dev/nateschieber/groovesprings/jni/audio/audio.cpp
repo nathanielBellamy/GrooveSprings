@@ -14,45 +14,12 @@
 typedef float SAMPLE;
 
 Audio::Audio(JNIEnv* env, jstring jFileName) :
-  jniData(env)
+  jniEnv(env)
   , fileName(env->GetStringUTFChars(jFileName, 0)) {}
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
   free(audioData->buffer);
   sf_close(audioData->file);
-};
-
-int Audio::init_pa(AUDIO_DATA *audioData)
-{
-  audioData->index = 0;
-
-  // https://svn.ict.usc.edu/svn_vh_public/trunk/lib/vhcl/libsndfile/doc/api.html
-  // > When opening a file for read, the format field should be set to zero before calling sf_open().
-  audioData->sfinfo.format = 0;
-
-  if (! (audioData->file = sf_open("gs_music_library/Unknown Artist/Unknown Album/test.mp3", SFM_READ, &audioData->sfinfo)))
-  {
-		printf ("Not able to open input file.\n") ;
-		/* Print the error message from libsndfile. */
-		puts (sf_strerror (NULL)) ;
-    return 1 ;
-  };
-
-  // Allocate memory for data
-  audioData->buffer = (float *) malloc(audioData->sfinfo.frames * audioData->sfinfo.channels * sizeof(float));
-  if (!audioData->buffer) {
-      printf("\nCannot allocate memory");
-      return 1;
-  }
-
-  // Read the audio data into buffer
-  long readcount = sf_read_float(audioData->file, audioData->buffer, audioData->sfinfo.frames * audioData->sfinfo.channels);
-  if (readcount == 0) {
-      printf("\nCannot read file");
-      return 1;
-  }
-
-  return 0;
 };
 
 // portaudio callback
@@ -70,13 +37,6 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   (void) timeInfo; /* Prevent unused variable warnings. */
   (void) statusFlags;
   AUDIO_DATA *audioData = (AUDIO_DATA *) userData;
-
-//  // TODO: replace stopped with playState, add pause functionality
-//  bool stopped;
-//  stopped = audioData->jniData->env->CallStaticBooleanMethod(
-//        audioData->jniData->gsPlayback,
-//        audioData->jniData->getStopped
-//  );
 
   if( audioData->buffer == NULL )
   {
@@ -142,8 +102,12 @@ int Audio::run()
       return 1;
   }
 
-  AUDIO_DATA audioData(buffer, file, sfinfo, index, readcount, Audio::jniData);
+  AUDIO_DATA audioData(buffer, file, sfinfo, index, readcount);
 
+  // init jniData
+  JNI_DATA jniData(Audio::jniEnv);
+
+  // Init PA
   PaStreamParameters inputParameters, outputParameters;
   PaStream *stream;
   PaError err;
@@ -190,21 +154,20 @@ int Audio::run()
   while( !stopped == true )
   {
     // hold thread open until stopped
-    stopped = Audio::jniData.env->CallStaticBooleanMethod(
-        Audio::jniData.gsPlayback,
-        Audio::jniData.getStopped
+
+    // TODO:
+    //  - play state enum:
+    //    - PLAY_STATE = {PLAY(1), STOP(0), PAUSE(0), REWIND(int Speed), FASTFORWARD(int Speed)}
+    //  - audioData.playState
+    //  - read from jni and mutate audioData.playstate in here to be read in pa callback
+
+    stopped = jniData.env->CallStaticBooleanMethod(
+        jniData.gsPlayback,
+        jniData.getStopped
     );
 
-   jobject jCurrFrameId = audioData.jniData.env->NewObject(
-        audioData.jniData.jNum,
-        audioData.jniData.jNumInit,
-        (int) audioData.index
-   );
-   audioData.jniData.env->CallVoidMethod(
-        audioData.jniData.gsPlayback,
-        audioData.jniData.setCurrFrameId,
-        jCurrFrameId
-   );
+   Audio::jSetCurrFrameId(&jniData, (int) audioData.index);
+
   }
 
   err = Pa_StopStream( stream );
