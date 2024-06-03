@@ -3,11 +3,21 @@
 #include <sndfile.hh>
 #include "./jni_data.h"
 
-typedef struct {
+struct AUDIO_DATA {
+    sf_count_t  index;
     float       *buffer;
     SNDFILE     *file;
     SF_INFO     sfinfo;
-    sf_count_t  index;
-} AUDIO_DATA;
+    long        readcount;
+    JNI_DATA    jniData;
+    jobject     jCurrFrameId;
+
+    AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, JNI_DATA jniData) :
+          buffer(buffer)
+        , file(file)
+        , sfinfo(sfinfo)
+        , index(index)
+        , jniData(jniData) {}
+};
 
 #endif
