@@ -29,6 +29,10 @@ export class TransportControlComponent {
     this.socket.send('play')
   }
 
+  pauseTrig() {
+    this.socket.send('pause')
+  }
+
   stopTrig() {
     this.socket.send('stop')
   }

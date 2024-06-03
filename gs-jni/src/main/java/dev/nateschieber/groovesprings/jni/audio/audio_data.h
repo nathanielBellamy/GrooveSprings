@@ -9,13 +9,15 @@ struct AUDIO_DATA {
     SNDFILE     *file;
     SF_INFO     sfinfo;
     long        readcount;
+    int         playState;
 
-    AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount) :
+    AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, int playState) :
           buffer(buffer)
         , file(file)
         , sfinfo(sfinfo)
         , index(index)
-        , readcount(readcount) {}
+        , readcount(readcount)
+        , playState(playState) {}
 };
 
 #endif
