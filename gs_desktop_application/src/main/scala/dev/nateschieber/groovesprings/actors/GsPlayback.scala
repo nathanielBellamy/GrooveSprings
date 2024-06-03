@@ -8,6 +8,7 @@ import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
+import dev.nateschieber.groovesprings.enums.GsPlayState
 import dev.nateschieber.groovesprings.traits.*
 
 import java.util.UUID
@@ -48,12 +49,13 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         if (playbackThreadRef == null)
           playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
         playbackThreadRef ! InitPlaybackThread(context.self)
-        GsPlaybackThread.setStopped(false)
+        GsPlaybackThread.setPlayState(GsPlayState.PLAY)
         replyTo ! RespondPlayTrig(context.self)
         Behaviors.same
       
       case PauseTrig(replyTo) =>
         println("GsPlayback :: pause")
+        GsPlaybackThread.setPlayState(GsPlayState.PAUSE)
         replyTo ! RespondPauseTrig(context.self)
         Behaviors.same
 
@@ -68,11 +70,13 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         
       case FastForwardTrig(replyTo) =>
         println("GsPlayback :: fastForward")
+        GsPlaybackThread.setPlayState(GsPlayState.FF)
         replyTo ! RespondFastForwardTrig(context.self)
         Behaviors.same
 
       case RewindTrig(replyTo) =>
         println("GsPlayback :: rewind")
+        GsPlaybackThread.setPlayState(GsPlayState.RW)
         replyTo ! RespondRewindTrig(context.self)
         Behaviors.same
     }
