@@ -9,14 +9,12 @@ struct AUDIO_DATA {
     SNDFILE     *file;
     SF_INFO     sfinfo;
     long        readcount;
-    JNI_DATA    jniData;
 
-    AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, JNI_DATA jniData) :
+    AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount) :
           buffer(buffer)
         , file(file)
         , sfinfo(sfinfo)
-        , index(index)
-        , jniData(jniData) {}
+        , index(index) {}
 };
 
 #endif
