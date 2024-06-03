@@ -10,7 +10,6 @@ struct AUDIO_DATA {
     SF_INFO     sfinfo;
     long        readcount;
     JNI_DATA    jniData;
-    jobject     jCurrFrameId;
 
     AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, JNI_DATA jniData) :
           buffer(buffer)
