@@ -4,6 +4,7 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
+import dev.nateschieber.groovesprings.enums.GsPlayState
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.traits.*
 
@@ -16,22 +17,22 @@ object GsPlaybackThread {
   //  - these methods should appear only in GsPlayback
   //  - GsPlayback cannot send messages to mutate these values
   //    because this thread will be blocked by native playback loop
-  @static private var stopped: Boolean = true
+  @static private var playState: GsPlayState = GsPlayState.STOP
   @static private var currFrameId: java.lang.Long = 0
   @static private var fileName: java.lang.String = null
   @static private var audioCodec: java.lang.String = null
   
   @static def stop(): Unit = {
-    stopped = true
+    playState = GsPlayState.STOP
     currFrameId = 0
   }
 
-  @static def getStopped(): Boolean = {
-    stopped
+  @static def getPlayState(): Int = {
+    playState.id
   }
-  
-  @static def setStopped(value: Boolean) = {
-    stopped = value
+
+  @static def setPlayState(newState: GsPlayState) = {
+    playState = newState
   }
 
   @static def getCurrFrameId(): java.lang.Long = {

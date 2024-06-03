@@ -149,21 +149,15 @@ int Audio::run()
   err = Pa_StartStream( stream );
   if( err != paNoError ) goto error;
 
-  bool stopped;
-  stopped = false;
-  while( !stopped == true )
+  int playState;
+  playState = 1;
+  while( playState != 0 ) // 0: STOP, 1: PLAY, 2: PAUSE, 3: RW, 4: FF
   {
     // hold thread open until stopped
 
-    // TODO:
-    //  - play state enum:
-    //    - PLAY_STATE = {PLAY(1), STOP(0), PAUSE(0), REWIND(int Speed), FASTFORWARD(int Speed)}
-    //  - audioData.playState
-    //  - read from jni and mutate audioData.playstate in here to be read in pa callback
-
-    stopped = jniData.env->CallStaticBooleanMethod(
+    playState = jniData.env->CallStaticIntMethod(
         jniData.gsPlayback,
-        jniData.getStopped
+        jniData.getPlayState
     );
 
    Audio::jSetCurrFrameId(&jniData, (int) audioData.index);
