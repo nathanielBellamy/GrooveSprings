@@ -11,7 +11,7 @@ import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives.*
 import akka.stream.scaladsl.Flow
 import dev.nateschieber.groovesprings.enums.GsHttpPort
-import dev.nateschieber.groovesprings.traits.{GsCommand, PlayTrig, RespondFastForwardTrig, RespondPauseTrig, RespondPlayTrig, RespondRewindTrig, RespondStopTrig, StopTrig}
+import dev.nateschieber.groovesprings.traits.{GsCommand, PauseTrig, PlayTrig, RespondFastForwardTrig, RespondPauseTrig, RespondPlayTrig, RespondRewindTrig, RespondStopTrig, StopTrig}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -65,6 +65,9 @@ class GsTransportControl(context: ActorContext[GsCommand], gsPlaybackRef: ActorR
           case "play" =>
             playbackRef ! PlayTrig(displayRef)
             TextMessage.Strict("OK - PLAY")
+          case "pause" =>
+            playbackRef ! PauseTrig(displayRef)
+            TextMessage.Strict("OK - PAUSE")
           case "stop" =>
             playbackRef ! StopTrig(displayRef)
             TextMessage.Strict("OK - STOP")

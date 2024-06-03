@@ -48,14 +48,14 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   }
   else if (audioData->index > audioData->sfinfo.frames * audioData->sfinfo.channels + 1)
   {
-    // audioData->index = 0;
-    // return paComplete;
-    return 1;
+     audioData->index = 0;
+     return paComplete;
   }
-//  else if (stopped) {
-//    return 1;
-//  }
-  else
+  else if (audioData->playState == 2) // pause
+  {
+    return paContinue;
+  }
+  else // play
   {
     // audioData->buffer --> paOut
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
@@ -102,7 +102,7 @@ int Audio::run()
       return 1;
   }
 
-  AUDIO_DATA audioData(buffer, file, sfinfo, index, readcount);
+  AUDIO_DATA audioData(buffer, file, sfinfo, index, readcount, 1);
 
   // init jniData
   JNI_DATA jniData(Audio::jniEnv);
@@ -115,7 +115,6 @@ int Audio::run()
   err = Pa_Initialize();
   if( err != paNoError ) goto error;
 
-  std::cout << "\n Audio::run::4";
   inputParameters.device = Pa_GetDefaultInputDevice(); /* default input device */
   if (inputParameters.device == paNoDevice) {
       fprintf(stderr,"\nError: No default input device.");
@@ -149,13 +148,11 @@ int Audio::run()
   err = Pa_StartStream( stream );
   if( err != paNoError ) goto error;
 
-  int playState;
-  playState = 1;
-  while( playState != 0 ) // 0: STOP, 1: PLAY, 2: PAUSE, 3: RW, 4: FF
+  while( audioData.playState != 0 ) // 0: STOP, 1: PLAY, 2: PAUSE, 3: RW, 4: FF
   {
     // hold thread open until stopped
 
-    playState = jniData.env->CallStaticIntMethod(
+    audioData.playState = jniData.env->CallStaticIntMethod(
         jniData.gsPlayback,
         jniData.getPlayState
     );
