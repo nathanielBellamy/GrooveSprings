@@ -53,6 +53,15 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   }
   else if (audioData->playState == 2) // pause
   {
+    // TODO:
+    // - compare resource usage
+    //  - holding the Pa_Stream open for pause
+    //  - difference between pause and stop is whether or not you reset currFrameId back to 0
+    //      - (aka) kill and spin up thread each time
+    for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
+      *out++ = 0;
+    }
+
     return paContinue;
   }
   else // play
@@ -156,6 +165,8 @@ int Audio::run()
         jniData.gsPlayback,
         jniData.getPlayState
     );
+
+    std::cout << "\n audioData.playState: " << audioData.playState << "\n";
 
    Audio::jSetCurrFrameId(&jniData, (int) audioData.index);
 
