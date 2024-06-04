@@ -51,19 +51,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
      audioData->index = 0;
      return paComplete;
   }
-  else if (audioData->playState == 2) // pause
-  {
-    // TODO:
-    // - compare resource usage
-    //  - holding the Pa_Stream open for pause
-    //  - difference between pause and stop is whether or not you reset currFrameId back to 0
-    //      - (aka) kill and spin up thread each time
-    for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
-      *out++ = 0;
-    }
-
-    return paContinue;
-  }
+  // TODO: playback speed
   else // play
   {
     // audioData->buffer --> paOut
@@ -80,7 +68,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
 int Audio::run()
 {
   // intialize data needed for audio playback
-  sf_count_t index = 0;
+
 
   SF_INFO sfinfo;
   // https://svn.ict.usc.edu/svn_vh_public/trunk/lib/vhcl/libsndfile/doc/api.html
@@ -111,10 +99,19 @@ int Audio::run()
       return 1;
   }
 
-  AUDIO_DATA audioData(buffer, file, sfinfo, index, readcount, 1);
-
   // init jniData
   JNI_DATA jniData(Audio::jniEnv);
+
+  jlong currFrameId = jniData.env->CallStaticLongMethod(
+    jniData.gsPlayback,
+    jniData.getCurrFrameId
+  );
+
+  std::cout << " currFrameId: " << currFrameId << "\n";
+
+  sf_count_t index = 0;
+
+  AUDIO_DATA audioData(buffer, file, sfinfo, index, readcount, 1);
 
   // Init PA
   PaStreamParameters inputParameters, outputParameters;
@@ -157,9 +154,9 @@ int Audio::run()
   err = Pa_StartStream( stream );
   if( err != paNoError ) goto error;
 
-  while( audioData.playState != 0 ) // 0: STOP, 1: PLAY, 2: PAUSE, 3: RW, 4: FF
+  while( audioData.playState != 0 && audioData.playState != 2 ) // 0: STOP, 1: PLAY, 2: PAUSE, 3: RW, 4: FF
   {
-    // hold thread open until stopped
+    // hold thread open until stopped or paused
 
     audioData.playState = jniData.env->CallStaticIntMethod(
         jniData.gsPlayback,
