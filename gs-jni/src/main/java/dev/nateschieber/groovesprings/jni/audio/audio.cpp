@@ -13,9 +13,10 @@
 
 typedef float SAMPLE;
 
-Audio::Audio(JNIEnv* env, jstring jFileName) :
+Audio::Audio(JNIEnv* env, jstring jFileName, jlong initialFrameId) :
   jniEnv(env)
-  , fileName(env->GetStringUTFChars(jFileName, 0)) {}
+  , fileName(env->GetStringUTFChars(jFileName, 0))
+  , initialFrameId(initialFrameId) {}
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
   free(audioData->buffer);
@@ -48,21 +49,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   }
   else if (audioData->index > audioData->sfinfo.frames * audioData->sfinfo.channels + 1)
   {
-     audioData->index = 0;
      return paComplete;
-  }
-  else if (audioData->playState == 2) // pause
-  {
-    // TODO:
-    // - compare resource usage
-    //  - holding the Pa_Stream open for pause
-    //  - difference between pause and stop is whether or not you reset currFrameId back to 0
-    //      - (aka) kill and spin up thread each time
-    for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
-      *out++ = 0;
-    }
-
-    return paContinue;
   }
   else // play
   {
@@ -111,7 +98,8 @@ int Audio::run()
       return 1;
   }
 
-  AUDIO_DATA audioData(buffer, file, sfinfo, index, readcount, 1);
+  sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
+  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1);
 
   // init jniData
   JNI_DATA jniData(Audio::jniEnv);
@@ -157,7 +145,7 @@ int Audio::run()
   err = Pa_StartStream( stream );
   if( err != paNoError ) goto error;
 
-  while( audioData.playState != 0 ) // 0: STOP, 1: PLAY, 2: PAUSE, 3: RW, 4: FF
+  while( audioData.playState != 0 && audioData.playState != 2) // 0: STOP, 1: PLAY, 2: PAUSE, 3: RW, 4: FF
   {
     // hold thread open until stopped
 
@@ -166,7 +154,10 @@ int Audio::run()
         jniData.getPlayState
     );
 
-    std::cout << "\n audioData.playState: " << audioData.playState << "\n";
+//    std::cout << "\n =========== \n";
+//    std::cout << "\n audioData.playState: " << audioData.playState << "\n";
+//    std::cout << "\n audioData.index " << audioData.index << "\n";
+//    std::cout << "\n =========== \n";
 
    Audio::jSetCurrFrameId(&jniData, (int) audioData.index);
 
