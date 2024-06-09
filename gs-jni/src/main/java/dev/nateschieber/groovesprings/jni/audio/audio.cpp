@@ -13,9 +13,10 @@
 
 typedef float SAMPLE;
 
-Audio::Audio(JNIEnv* env, jstring jFileName) :
+Audio::Audio(JNIEnv* env, jstring jFileName, jlong initialFrameId) :
   jniEnv(env)
-  , fileName(env->GetStringUTFChars(jFileName, 0)) {}
+  , fileName(env->GetStringUTFChars(jFileName, 0))
+  , initialFrameId(initialFrameId) {}
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
   free(audioData->buffer);
@@ -48,7 +49,6 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   }
   else if (audioData->index > audioData->sfinfo.frames * audioData->sfinfo.channels + 1)
   {
-     audioData->index = 0;
      return paComplete;
   }
   // TODO: playback speed
@@ -98,6 +98,9 @@ int Audio::run()
       printf("\nCannot read file");
       return 1;
   }
+
+  sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
+  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1);
 
   // init jniData
   JNI_DATA jniData(Audio::jniEnv);
@@ -163,7 +166,10 @@ int Audio::run()
         jniData.getPlayState
     );
 
-    std::cout << "\n audioData.playState: " << audioData.playState << "\n";
+//    std::cout << "\n =========== \n";
+//    std::cout << "\n audioData.playState: " << audioData.playState << "\n";
+//    std::cout << "\n audioData.index " << audioData.index << "\n";
+//    std::cout << "\n =========== \n";
 
    Audio::jSetCurrFrameId(&jniData, (int) audioData.index);
 

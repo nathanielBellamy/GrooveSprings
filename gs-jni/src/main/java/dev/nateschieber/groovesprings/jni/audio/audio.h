@@ -11,9 +11,10 @@ class Audio
 {
         JNIEnv* jniEnv;
         char const* fileName;
+        jlong initialFrameId;
 
     public:
-        Audio(JNIEnv* env, jstring jFileName);
+        Audio(JNIEnv* env, jstring jFileName, jlong initialFrameId);
 
         int run();
 

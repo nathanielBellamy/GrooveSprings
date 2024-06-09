@@ -51,6 +51,7 @@ object GsDisplay {
 class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsCommand]) extends AbstractBehavior[GsCommand](context) {
 
   implicit val timeout: Timeout = Timeout.apply(100, TimeUnit.MILLISECONDS)
+  // TODO: remove stopped
   private var stopped: Boolean = true
   private val playbackRef: ActorRef[GsCommand] = gsPlaybackRef
 
@@ -89,6 +90,7 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
         stopped = true
         Behaviors.same
 
+        // TODO: have GsPlayback send playState along with lastFrameId
       case RespondFrameId(lastFrameId, replyTo) =>
         if (!stopped)
           sendWebsocketMsg(lastFrameId.toString)
