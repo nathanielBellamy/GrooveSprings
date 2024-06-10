@@ -99,6 +99,7 @@ int Audio::run()
   }
 
   sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
+  std::cout << "initialFrameId: " << initialFrameId << "\n";
   AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1);
 
   // init jniData
@@ -151,7 +152,7 @@ int Audio::run()
 
     audioData.playState = jniData.env->CallStaticIntMethod(
         jniData.gsPlayback,
-        jniData.getPlayState
+        jniData.getPlayStateInt
     );
 
 //    std::cout << "\n =========== \n";

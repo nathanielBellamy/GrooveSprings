@@ -1,6 +1,7 @@
 package dev.nateschieber.groovesprings.traits
 
 import akka.actor.typed.ActorRef
+import dev.nateschieber.groovesprings.enums.GsPlayState
 
 sealed trait GsCommand
 
@@ -10,7 +11,7 @@ final case class InitDisplay() extends GsCommand
 
 // GsPlayback
 final case class ReadFrameId(replyTo: ActorRef[RespondFrameId]) extends GsCommand
-final case class RespondFrameId(value: Long, replyTo: ActorRef[ReadFrameId]) extends GsCommand
+final case class RespondFrameId(value: Long, playState: GsPlayState, replyTo: ActorRef[ReadFrameId]) extends GsCommand
 
 final case class FileSelect(fileName: String, audioCodec: String, replyTo: ActorRef[RespondFileSelect]) extends GsCommand
 final case class RespondFileSelect(replyTo: ActorRef[FileSelect]) extends GsCommand

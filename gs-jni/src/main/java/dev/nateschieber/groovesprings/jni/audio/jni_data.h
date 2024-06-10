@@ -5,7 +5,7 @@ struct JNI_DATA{
     JNIEnv* env;
     jclass gsPlayback;
     jmethodID setCurrFrameId;
-    jmethodID getPlayState;
+    jmethodID getPlayStateInt;
     jclass jNum;
     jmethodID jNumInit;
 
@@ -13,7 +13,7 @@ struct JNI_DATA{
         env(env)
           , gsPlayback(env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread"))
           , setCurrFrameId(env->GetStaticMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V"))
-          , getPlayState(env->GetStaticMethodID (gsPlayback, "getPlayState", "()I"))
+          , getPlayStateInt(env->GetStaticMethodID (gsPlayback, "getPlayStateInt", "()I"))
           , jNum(env->FindClass("java/lang/Long"))
           , jNumInit(env->GetMethodID(jNum, "<init>", "(J)V")) {}
 };
