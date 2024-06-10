@@ -10,19 +10,31 @@ import { HttpClient } from '@angular/common/http';
 })
 @Injectable()
 export class TransportControlComponent {
-  private socket = new WebSocket('ws://localhost:8766/gs-transport-control')
+  private socket = this.getSocket()
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.socket.onopen = () => console.log('gs-transport-control opened')
     this.socket.onmessage = () => {}
-    this.socket.onclose = () => console.log('gs-transport-control closed')
-    this.socket.onerror = (e) => console.log(e)
+    this.socket.onclose = () => {
+      this.socket.close()
+      console.log('gs-transport-control closed')
+      this.socket = this.getSocket();
+    }
+    this.socket.onerror = (e) => {
+      this.socket.close()
+      console.log(e)
+      this.socket = this.getSocket();
+    }
   }
 
   ngOnDestroy() {
     this.socket.close()
+  }
+
+  getSocket() {
+    return new WebSocket('ws://localhost:8766/gs-transport-control')
   }
 
   playTrig() {

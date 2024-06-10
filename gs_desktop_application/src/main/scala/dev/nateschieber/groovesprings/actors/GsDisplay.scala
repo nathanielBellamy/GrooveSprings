@@ -15,7 +15,7 @@ import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{Flow, Sink, Source, SourceQueueWithComplete}
 import dev.nateschieber.groovesprings.traits.*
 import akka.util.Timeout
-import dev.nateschieber.groovesprings.enums.GsHttpPort
+import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlayState}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.concurrent.TimeUnit
@@ -51,8 +51,6 @@ object GsDisplay {
 class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsCommand]) extends AbstractBehavior[GsCommand](context) {
 
   implicit val timeout: Timeout = Timeout.apply(100, TimeUnit.MILLISECONDS)
-  // TODO: remove stopped
-  private var stopped: Boolean = true
   private val playbackRef: ActorRef[GsCommand] = gsPlaybackRef
 
   private var browserConnections: List[TextMessage => Unit] = List()
@@ -82,17 +80,15 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case RespondPlayTrig(replyTo) =>
+        println("GsDisplay::RespondPlayTrig")
         replyTo ! ReadFrameId(context.self)
-        stopped = false
         Behaviors.same
 
       case RespondStopTrig(replyTo) =>
-        stopped = true
         Behaviors.same
 
-        // TODO: have GsPlayback send playState along with lastFrameId
-      case RespondFrameId(lastFrameId, replyTo) =>
-        if (!stopped)
+      case RespondFrameId(lastFrameId, playState, replyTo) =>
+        if (playState == GsPlayState.PLAY)
           sendWebsocketMsg(lastFrameId.toString)
           Thread.sleep(100)
           replyTo ! ReadFrameId(context.self)

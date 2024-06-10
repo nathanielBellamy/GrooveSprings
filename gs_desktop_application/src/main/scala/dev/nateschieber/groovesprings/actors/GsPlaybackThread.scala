@@ -27,8 +27,12 @@ object GsPlaybackThread {
     currFrameId = 0
   }
 
-  @static def getPlayState(): Int = {
+  @static def getPlayStateInt(): Int = {
     playState.id
+  }
+
+  @static def getPlayState(): GsPlayState = {
+    playState
   }
 
   @static def setPlayState(newState: GsPlayState) = {
