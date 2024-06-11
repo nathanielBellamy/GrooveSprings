@@ -20,7 +20,8 @@
           {{track.title}}
         </div>
         <div>
-          {{track.album.name || track.album}}
+          <!--            TODO: debug jackson serialization to make consistent-->
+          {{(track.album || {name: 'foo'}).name || track.album}}
         </div>
         <div>
           {{track.audioCodec}}

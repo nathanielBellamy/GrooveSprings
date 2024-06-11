@@ -20,7 +20,8 @@
             {{track.releaseDate}}
           </div>
           <div>
-            {{track.album.name || track.album}}
+<!--            TODO: debug jackson serialization to make consistent-->
+            {{(track.album || {name: 'zow'}).name || track.album}}
           </div>
         </div>
       }
