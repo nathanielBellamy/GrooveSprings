@@ -1,11 +1,35 @@
 .transport_control
   width: 100%
   display: grid
-  grid-template-columns: 100px 50px 50px 50px
+  grid-template-columns: 100px 226px
+  grid-template-rows: 75px 30px
   gap: 5px
   margin: 5px
 
   &_title
+    grid-row: span 2
     border: 2px solid black
     border-radius: 5px
     text-align: center
+    display: flex
+    flex-direction: column
+    justify-content: space-around
+    align-items: center
+
+  &_buttons
+    height: 100%
+    width: 100%
+    display: grid
+    grid-template-columns: 1fr 1fr 1fr
+    gap: 5px
+
+  &_playback_speed
+    height: 100%
+    width: 100%
+    display: flex
+    justify-content: space-around
+    align-items: center
+
+.gs_playback_speed_radio
+  display: grid
+  grid-template-rows: 60% 40%
