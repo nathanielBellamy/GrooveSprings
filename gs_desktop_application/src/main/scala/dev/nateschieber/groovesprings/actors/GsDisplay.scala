@@ -84,12 +84,15 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
         replyTo ! ReadFrameId(context.self)
         Behaviors.same
 
+      case RespondPauseTrig(replyTo) =>
+        Behaviors.same
+
       case RespondStopTrig(replyTo) =>
         Behaviors.same
 
       case RespondFrameId(lastFrameId, playState, replyTo) =>
+        sendWebsocketMsg(lastFrameId.toString)
         if (playState == GsPlayState.PLAY)
-          sendWebsocketMsg(lastFrameId.toString)
           Thread.sleep(100)
           replyTo ! ReadFrameId(context.self)
         Behaviors.same

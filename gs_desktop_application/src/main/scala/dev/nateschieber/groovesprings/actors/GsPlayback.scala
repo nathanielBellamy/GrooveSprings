@@ -28,6 +28,12 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
 
   private var playbackThreadRef: ActorRef[GsCommand] = null
 
+  def clearPlaybackThread(): Unit = {
+    if (playbackThreadRef != null)
+      context.stop(playbackThreadRef)
+      playbackThreadRef = null
+  }
+
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case ReadFrameId(replyTo) =>
@@ -38,36 +44,32 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         GsPlaybackThread.stop()
         GsPlaybackThread.setFileName(fileName)
         GsPlaybackThread.setAudioCodec(audioCodec)
-        if (playbackThreadRef != null)
-          context.stop(playbackThreadRef)
-          playbackThreadRef = null
+        clearPlaybackThread()
         replyTo ! RespondFileSelect(context.self)
         Behaviors.same
 
       case PlayTrig(replyTo) =>
         println("GsPlayback :: play")
+        if (GsPlaybackThread.getPlayState() == GsPlayState.STOP)
+          GsPlaybackThread.stop() // clear currFrameId, may have been updated by native thread
+        GsPlaybackThread.play()
         if (playbackThreadRef == null)
           playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
         playbackThreadRef ! InitPlaybackThread(context.self)
-        GsPlaybackThread.setPlayState(GsPlayState.PLAY)
         replyTo ! RespondPlayTrig(context.self)
         Behaviors.same
       
       case PauseTrig(replyTo) =>
         println("GsPlayback :: pause")
-        GsPlaybackThread.setPlayState(GsPlayState.PAUSE)
-        if (playbackThreadRef != null)
-          context.stop(playbackThreadRef)
-          playbackThreadRef = null
+        GsPlaybackThread.pause()
+        clearPlaybackThread()
         replyTo ! RespondPauseTrig(context.self)
         Behaviors.same
 
       case StopTrig(replyTo) =>
         println("GsPlayback :: stop")
         GsPlaybackThread.stop()
-        if (playbackThreadRef != null)
-          context.stop(playbackThreadRef)
-          playbackThreadRef = null
+        clearPlaybackThread()
         replyTo ! RespondStopTrig(context.self)
         Behaviors.same
         

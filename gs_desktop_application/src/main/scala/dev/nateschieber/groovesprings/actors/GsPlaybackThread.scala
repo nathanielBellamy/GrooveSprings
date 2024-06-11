@@ -15,7 +15,7 @@ object GsPlaybackThread {
   //  - these variables are static so as to be accessable from native code
   //  - the same is true for their static getter+setter methods
   //  - these methods should appear only in GsPlayback
-  //  - GsPlayback cannot send messages to mutate these values
+  //  - GsPlayback cannot send messages either to deliver or to mutate these values
   //    because this thread will be blocked by native playback loop
   @static private var playState: GsPlayState = GsPlayState.STOP
   @static private var currFrameId: java.lang.Long = 0
@@ -23,8 +23,16 @@ object GsPlaybackThread {
   @static private var audioCodec: java.lang.String = null
   
   @static def stop(): Unit = {
-    playState = GsPlayState.STOP
     currFrameId = 0
+    playState = GsPlayState.STOP
+  }
+
+  @static def pause(): Unit = {
+    playState = GsPlayState.PAUSE
+  }
+
+  @static def play(): Unit = {
+    playState = GsPlayState.PLAY
   }
 
   @static def getPlayStateInt(): Int = {
@@ -40,7 +48,15 @@ object GsPlaybackThread {
   }
 
   @static def getCurrFrameId(): java.lang.Long = {
-    currFrameId
+    // NOTE:
+    // - conditioning on playState handles the transition from PLAY -> STOP
+    // - native thread may still update currFrameId after Scala sets to 0
+    //   before the ActorSystem stops + cleans up the current instance of this Actor
+    playState match {
+      case GsPlayState.STOP => 0
+      case default => currFrameId
+
+    }
   }
   
   @static def setCurrFrameId(newId: java.lang.Long): Unit = {
