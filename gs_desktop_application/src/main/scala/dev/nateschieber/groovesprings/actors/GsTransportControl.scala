@@ -71,7 +71,10 @@ class GsTransportControl(context: ActorContext[GsCommand], gsPlaybackRef: ActorR
           case "stop" =>
             playbackRef ! StopTrig(displayRef)
             TextMessage.Strict("OK - STOP")
-          case default => TextMessage.Strict("BAD MESSAGE")
+          case default =>
+            // TODO: ingest playback speed
+            println(msg)
+            TextMessage.Strict("BAD MESSAGE")
         }
       case BinaryMessage.Strict(b) => TextMessage.Strict("Ok - ws BinaryMessage")
     }

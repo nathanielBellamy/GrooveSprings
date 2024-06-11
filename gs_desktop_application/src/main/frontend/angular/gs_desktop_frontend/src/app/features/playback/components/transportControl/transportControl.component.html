@@ -14,63 +14,26 @@
       Stop
     </button>
   </div>
-  <div class="transport_control_playback_speed">
-    <div class="gs_playback_speed_radio">
-      <input type="radio"
-             name="gs_playback_speed"
-             value="-8"
-             id="_N8"/>
-      <label for="_N8">-8</label>
-    </div>
-    <div class="gs_playback_speed_radio">
-      <input type="radio"
-             name="gs_playback_speed"
-             value="-4"
-             id="_N4"/>
-      <label for="_N4">-4</label>
-    </div>
-    <div class="gs_playback_speed_radio">
-      <input type="radio"
-             name="gs_playback_speed"
-             value="-2"
-             id="_N2"/>
-      <label for="_N2">-2</label>
-    </div>
-    <div class="gs_playback_speed_radio">
-      <input type="radio"
-             name="gs_playback_speed"
-             value="-1"
-             id="_N1"/>
-      <label for="_N1">-1</label>
-    </div>
-    <div class="gs_playback_speed_radio">
-      <input type="radio"
-             name="gs_playback_speed"
-             value="1"
-             checked="true"
-             id="_1"/>
-      <label for="_1">1</label>
-    </div>
-    <div class="gs_playback_speed_radio">
-      <input type="radio"
-             name="gs_playback_speed"
-             value="2"
-             id="_2"/>
-      <label for="_2">2</label>
-    </div>
-    <div class="gs_playback_speed_radio">
-      <input type="radio"
-             name="gs_playback_speed"
+  <fieldset>
+    <legend>
+      Playback Speed
+    </legend>
+    <datalist id="gs_playback_speed_options">
+      @for (speedOpt of gsPlaybackSpeedOptions; track speedOpt; let i = $index) {
+        <option value="{{i}}"></option>
+      }
+    </datalist>
+    <div class="transport_control_playback_speed">
+      <input type="range"
+             #gs_playback_speed
+             id="gs_playback_speed"
+             class="gs_playback_speed_slider"
+             list="gs_playback_speed_options"
+             min="0"
+             max="7"
+             step="1"
              value="4"
-             id="_4"/>
-      <label for="_4">4</label>
+             (input)="handlePlaybackSpeed(gs_playback_speed.value)"/>
     </div>
-    <div class="gs_playback_speed_radio">
-      <input type="radio"
-             name="gs_playback_speed"
-             value="8"
-             id="_8"/>
-      <label for="_8">8</label>
-    </div>
-  </div>
+  </fieldset>
 </div>

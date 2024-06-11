@@ -1,16 +1,21 @@
 import { Component  } from '@angular/core'
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {AsyncPipe} from "@angular/common";
 
 @Component({
   selector: 'gsTransportControl',
   standalone: true,
   templateUrl: './transportControl.component.html',
+  imports: [
+    AsyncPipe
+  ],
   styleUrl: './transportControl.component.sass'
 })
 @Injectable()
 export class TransportControlComponent {
   private socket = this.getSocket()
+  protected gsPlaybackSpeedOptions: number[] = [-8, -4, -2, -1, 1, 2, 4, 8]
 
   constructor(private http: HttpClient) { }
 
@@ -47,5 +52,11 @@ export class TransportControlComponent {
 
   stopTrig() {
     this.socket.send('stop')
+  }
+
+  handlePlaybackSpeed(newIdx: any) {
+    const speed = this.gsPlaybackSpeedOptions[newIdx]
+    console.dir(speed)
+    this.socket.send(`${speed}`)
   }
 }
