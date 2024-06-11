@@ -4,7 +4,7 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
-import dev.nateschieber.groovesprings.enums.GsPlayState
+import dev.nateschieber.groovesprings.enums.{GsPlayState, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.traits.*
 
@@ -18,6 +18,7 @@ object GsPlaybackThread {
   //  - GsPlayback cannot send messages either to deliver or to mutate these values
   //    because this thread will be blocked by native playback loop
   @static private var playState: GsPlayState = GsPlayState.STOP
+  @static private var playbackSpeed: GsPlaybackSpeed = GsPlaybackSpeed._1
   @static private var currFrameId: java.lang.Long = 0
   @static private var fileName: java.lang.String = null
   @static private var audioCodec: java.lang.String = null

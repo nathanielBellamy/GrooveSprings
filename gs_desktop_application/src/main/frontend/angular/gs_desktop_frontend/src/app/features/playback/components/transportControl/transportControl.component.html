@@ -3,13 +3,74 @@
   <div class='transport_control_title'>
     Transport Control
   </div>
-  <button (click)="playTrig()">
-    Play
-  </button>
-  <button (click)="pauseTrig()">
-    Pause
-  </button>
-  <button (click)="stopTrig()">
-    Stop
-  </button>
+  <div class="transport_control_buttons">
+    <button (click)="playTrig()">
+      Play
+    </button>
+    <button (click)="pauseTrig()">
+      Pause
+    </button>
+    <button (click)="stopTrig()">
+      Stop
+    </button>
+  </div>
+  <div class="transport_control_playback_speed">
+    <div class="gs_playback_speed_radio">
+      <input type="radio"
+             name="gs_playback_speed"
+             value="-8"
+             id="_N8"/>
+      <label for="_N8">-8</label>
+    </div>
+    <div class="gs_playback_speed_radio">
+      <input type="radio"
+             name="gs_playback_speed"
+             value="-4"
+             id="_N4"/>
+      <label for="_N4">-4</label>
+    </div>
+    <div class="gs_playback_speed_radio">
+      <input type="radio"
+             name="gs_playback_speed"
+             value="-2"
+             id="_N2"/>
+      <label for="_N2">-2</label>
+    </div>
+    <div class="gs_playback_speed_radio">
+      <input type="radio"
+             name="gs_playback_speed"
+             value="-1"
+             id="_N1"/>
+      <label for="_N1">-1</label>
+    </div>
+    <div class="gs_playback_speed_radio">
+      <input type="radio"
+             name="gs_playback_speed"
+             value="1"
+             checked="true"
+             id="_1"/>
+      <label for="_1">1</label>
+    </div>
+    <div class="gs_playback_speed_radio">
+      <input type="radio"
+             name="gs_playback_speed"
+             value="2"
+             id="_2"/>
+      <label for="_2">2</label>
+    </div>
+    <div class="gs_playback_speed_radio">
+      <input type="radio"
+             name="gs_playback_speed"
+             value="4"
+             id="_4"/>
+      <label for="_4">4</label>
+    </div>
+    <div class="gs_playback_speed_radio">
+      <input type="radio"
+             name="gs_playback_speed"
+             value="8"
+             id="_8"/>
+      <label for="_8">8</label>
+    </div>
+  </div>
 </div>
