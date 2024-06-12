@@ -10,8 +10,8 @@ import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives.*
 import akka.stream.scaladsl.Flow
-import dev.nateschieber.groovesprings.enums.GsHttpPort
-import dev.nateschieber.groovesprings.traits.{GsCommand, PauseTrig, PlayTrig, RespondFastForwardTrig, RespondPauseTrig, RespondPlayTrig, RespondRewindTrig, RespondStopTrig, StopTrig}
+import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlaybackSpeed}
+import dev.nateschieber.groovesprings.traits.{GsCommand, PauseTrig, PlayTrig, RespondFastForwardTrig, RespondPauseTrig, RespondPlayTrig, RespondRewindTrig, RespondStopTrig, SetPlaybackSpeed, StopTrig}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -58,6 +58,13 @@ class GsTransportControl(context: ActorContext[GsCommand], gsPlaybackRef: ActorR
       }
     }
 
+  def gsPlaybackSpeedFromString(speed: String): GsPlaybackSpeed = {
+    speed match {
+      case "-1" => GsPlaybackSpeed._N1
+      case default => GsPlaybackSpeed._1
+    }
+  }
+
   def websocketFlow: Flow[Message, Message, Any] =
     Flow[Message].map {
       case TextMessage.Strict(msg) =>
@@ -72,8 +79,10 @@ class GsTransportControl(context: ActorContext[GsCommand], gsPlaybackRef: ActorR
             playbackRef ! StopTrig(displayRef)
             TextMessage.Strict("OK - STOP")
           case default =>
-            // TODO: ingest playback speed
-            println(msg)
+            println(s"GsTransportControl :: default msg: ${msg}")
+            val speed = gsPlaybackSpeedFromString(msg)
+            println(s"parsed speed :: ${speed}")
+            playbackRef ! SetPlaybackSpeed(speed, displayRef)
             TextMessage.Strict("BAD MESSAGE")
         }
       case BinaryMessage.Strict(b) => TextMessage.Strict("Ok - ws BinaryMessage")
