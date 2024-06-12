@@ -51,6 +51,18 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   {
      return paComplete;
   }
+  else if (audioData->index < 0)
+  {
+    return paComplete;
+  }
+  else if (audioData->playbackSpeed == -1.0)
+  {
+    for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
+        *out++ = audioData->buffer[audioData->index - i];
+    }
+
+    audioData->index -= framesPerBuffer * audioData->sfinfo.channels;
+  }
   else // play
   {
     // audioData->buffer --> paOut
@@ -146,7 +158,7 @@ int Audio::run()
   err = Pa_StartStream( stream );
   if( err != paNoError ) goto error;
 
-  while( audioData.playState != 0 && audioData.playState != 2) // 0: STOP, 1: PLAY, 2: PAUSE, 3: RW, 4: FF
+  while( audioData.playState != 0 && audioData.playState != 2 && audioData.index > -1 ) // 0: STOP, 1: PLAY, 2: PAUSE, 3: RW, 4: FF
   {
     // hold thread open until stopped
 
@@ -158,8 +170,6 @@ int Audio::run()
         jniData.gsPlayback,
         jniData.getPlaybackSpeedFloat
     );
-
-    std::cout << "\n audioData.playbackSpeed :: " << audioData.playbackSpeed << "\n";
 
     audioData.playState = jniData.env->CallStaticIntMethod(
         jniData.gsPlayback,
