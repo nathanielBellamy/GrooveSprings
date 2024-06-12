@@ -7,7 +7,8 @@ import scala.annotation.static
 enum GsPlaybackSpeed(valueIn: Float):
   def value = valueIn
 
-  case _1 extends GsPlaybackSpeed(1.0)
+  case _1  extends GsPlaybackSpeed(1.0)
+  case _05 extends GsPlaybackSpeed(0.5) // half-speed
   case _N1 extends GsPlaybackSpeed(-1.0)
 
 //  case _1  extends GsPlaybackSpeed(1)

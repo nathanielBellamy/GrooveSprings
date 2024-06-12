@@ -15,7 +15,7 @@ import {AsyncPipe} from "@angular/common";
 @Injectable()
 export class TransportControlComponent {
   private socket = this.getSocket()
-  protected gsPlaybackSpeedOptions: number[] = [-1.0, 1.0]
+  protected gsPlaybackSpeedOptions: number[] = [-1.0, 0.5, 1.0]
 
   constructor(private http: HttpClient) { }
 
