@@ -150,6 +150,17 @@ int Audio::run()
   {
     // hold thread open until stopped
 
+    // here is our chance to pull data out of the JVM through the jniData obj
+    // and
+    // make it accessible to our running audio callback through the audioData obj
+
+    audioData.playbackSpeed = jniData.env->CallStaticFloatMethod(
+        jniData.gsPlayback,
+        jniData.getPlaybackSpeedFloat
+    );
+
+    std::cout << "\n audioData.playbackSpeed :: " << audioData.playbackSpeed << "\n";
+
     audioData.playState = jniData.env->CallStaticIntMethod(
         jniData.gsPlayback,
         jniData.getPlayStateInt
