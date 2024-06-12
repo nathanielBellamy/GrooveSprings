@@ -84,6 +84,11 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         GsPlaybackThread.setPlayState(GsPlayState.RW)
         replyTo ! RespondRewindTrig(context.self)
         Behaviors.same
+
+      case SetPlaybackSpeed(speed, replyTo) =>
+        println(s"GsPlayback :: SetPlaybackSpeed :: speed :: ${speed}" )
+        GsPlaybackThread.setPlaybackSpeed(speed)
+        Behaviors.same
     }
   }
 

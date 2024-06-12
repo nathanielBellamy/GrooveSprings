@@ -44,6 +44,18 @@ object GsPlaybackThread {
     playState
   }
 
+  @static def setPlaybackSpeed(speed: GsPlaybackSpeed) = {
+    playbackSpeed = speed
+  }
+
+  @static def getPlaybackSpeed(): GsPlaybackSpeed = {
+    playbackSpeed
+  }
+
+  @static def getPlaybackSpeedFloat(): Float = {
+    playbackSpeed.value
+  }
+
   @static def setPlayState(newState: GsPlayState) = {
     playState = newState
   }
@@ -56,7 +68,6 @@ object GsPlaybackThread {
     playState match {
       case GsPlayState.STOP => 0
       case default => currFrameId
-
     }
   }
   
