@@ -55,7 +55,8 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   {
     return paComplete;
   }
-  else if (audioData->playbackSpeed == -1.0)
+  // audioData->buffer --> paOut
+  else if (audioData->playbackSpeed == -1.0) // reverse
   {
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
         *out++ = audioData->buffer[audioData->index - i];
@@ -63,9 +64,18 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
 
     audioData->index -= framesPerBuffer * audioData->sfinfo.channels;
   }
+  else if (audioData->playbackSpeed == 0.5) // half-speed
+  {
+    int halfFramesPerBuffer = framesPerBuffer / 2; // framesPerBuffer is a power of 2
+    for (i = 0; i < halfFramesPerBuffer * audioData->sfinfo.channels; i++) {
+      *out++ = audioData->buffer[audioData->index + i];
+      *out++ = audioData->buffer[audioData->index + i];
+    }
+
+    audioData->index += halfFramesPerBuffer * audioData->sfinfo.channels;
+  }
   else // play
   {
-    // audioData->buffer --> paOut
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
       *out++ = audioData->buffer[audioData->index + i];
     }

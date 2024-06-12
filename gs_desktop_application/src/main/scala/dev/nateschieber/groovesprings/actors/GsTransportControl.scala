@@ -61,6 +61,7 @@ class GsTransportControl(context: ActorContext[GsCommand], gsPlaybackRef: ActorR
   def gsPlaybackSpeedFromString(speed: String): GsPlaybackSpeed = {
     speed match {
       case "-1" => GsPlaybackSpeed._N1
+      case "0.5" => GsPlaybackSpeed._05
       case default => GsPlaybackSpeed._1
     }
   }
