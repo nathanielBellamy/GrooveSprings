@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "albums")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "title")
 public class Album {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -83,8 +83,8 @@ public class Album {
     return title;
   }
 
-  public void setTitle(String name) {
-    this.title = name;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public List<Track> getTracks() {
@@ -111,5 +111,16 @@ public class Album {
 
   public LocalDate getReleaseDate() {
     return releaseDate;
+  }
+
+  @Override
+  public String toString() {
+    return "Album{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", releaseDate=" + releaseDate +
+            ", genres=" + genres +
+            ", artists=" + artists +
+            '}';
   }
 }

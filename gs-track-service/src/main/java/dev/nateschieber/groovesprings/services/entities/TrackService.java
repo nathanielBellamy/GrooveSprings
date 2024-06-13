@@ -102,8 +102,8 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
   }
 
   public Track createFromGsDesktopTrackCreateDto(GsDesktopTrackCreateDto dto) {
-    List<Artist> artists = Collections.emptyList(); //artistService.findOrCreateAllByName(dto.artistNames());
-    Album album = new Album(); // albumService.findOrCreateByTitleAndArtists(dto.albumTitle());
+    List<Artist> artists = artistService.findOrCreateAllByName(dto.artistNames());
+    Album album = albumService.findOrCreateByTitleAndArtists(dto.albumTitle(), artists);
     Integer releaseYear;
     try {
       releaseYear = parseInt(dto.releaseYear());
@@ -128,9 +128,9 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
             dto.isLossless()
     );
 
-    System.out.println(track);
+//    System.out.println(track);
 
-    return new Track();
+    return trackRepository.save(track);
   }
 
   @Override
