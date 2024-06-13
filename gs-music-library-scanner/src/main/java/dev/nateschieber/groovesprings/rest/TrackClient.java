@@ -31,12 +31,14 @@ public class TrackClient extends AbstractClient {
                 .build();
     }
 
-    public boolean bulkCreate(List<?> tracks) {
+    public boolean bulkCreate(List<LocalTrackCreateDto> tracks) {
         HttpRequest request = tracksCreateRequest(tracks);
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+            System.out.println("\n bulk create \n");
+            System.out.println(response);
             return response.statusCode() == 200;
         } catch (Exception ex) {
             return false;

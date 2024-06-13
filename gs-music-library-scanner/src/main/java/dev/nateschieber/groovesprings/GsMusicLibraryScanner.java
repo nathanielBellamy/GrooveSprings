@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 public class GsMusicLibraryScanner {
 
-    public static void main() {
+    public static void main(String[] args) {
         System.out.println("======== GS MUSIC LIBRARY SCANNER");
 
         Scanner.run(new String[0]);
