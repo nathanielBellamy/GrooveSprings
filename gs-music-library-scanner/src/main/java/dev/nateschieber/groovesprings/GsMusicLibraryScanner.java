@@ -1,5 +1,7 @@
 package dev.nateschieber.groovesprings;
 
+import dev.nateschieber.groovesprings.enums.AudioCodec;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,11 +15,11 @@ public class GsMusicLibraryScanner {
     public static void main(String[] args) {
         System.out.println("======== GS MUSIC LIBRARY SCANNER");
 
-        String rootDir = System.getProperty("user.dir");
-        String musicLibDir = rootDir + "/gs_music_library";
+        String homeDir = System.getProperty("user.home");
+        String musicLibDir = homeDir + "/GrooveSprings_MusicLibrary";
+        System.out.println(musicLibDir);
 
-
-        try (Stream<Path> stream = Files.walk(Paths.get(musicLibDir), 4)) {
+        try (Stream<Path> stream = Files.walk(Paths.get(musicLibDir), 7)) {
                 List<String> files = stream
                     .filter(file -> !Files.isDirectory(file))
                     .filter(fileName -> {
@@ -39,7 +41,13 @@ public class GsMusicLibraryScanner {
     }
 
     private static boolean fileNameEndsWithValidExtension(String fileName) {
-        // TODO
-        return true;
+        boolean res = false;
+        for (AudioCodec codec : AudioCodec.values()) {
+            if (fileName.endsWith(codec.getFileExtension())) {
+                res = true;
+                break;
+            }
+        }
+        return res;
     }
 }
