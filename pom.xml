@@ -41,12 +41,13 @@
             
     <module>gs-jni</module>
 
+    <module>gs-music-library-scanner</module>
+
     <module>gs-price-service</module>
             
     <module>gs-track-service</module>
           
     <module>gs_desktop_application</module>
-
 
   </modules>
   
