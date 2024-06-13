@@ -74,6 +74,32 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
 
     audioData->index += halfFramesPerBuffer * audioData->sfinfo.channels;
   }
+  else if (audioData->playbackSpeed == -0.5) // half-speed reverse
+  {
+    int halfFramesPerBuffer = framesPerBuffer / 2; // framesPerBuffer is a power of 2
+    for (i = 0; i < halfFramesPerBuffer * audioData->sfinfo.channels; i++) {
+      *out++ = audioData->buffer[audioData->index - i];
+      *out++ = audioData->buffer[audioData->index - i];
+    }
+
+    audioData->index -= halfFramesPerBuffer * audioData->sfinfo.channels;
+  }
+  else if (audioData->playbackSpeed == 2.0) // double speed
+  {
+    for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
+      *out++ = audioData->buffer[audioData->index + (i * 2)];
+    }
+
+    audioData->index += (2 * framesPerBuffer) * audioData->sfinfo.channels;
+  }
+  else if (audioData->playbackSpeed == -2.0) // double speed reverse
+  {
+    for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
+      *out++ = audioData->buffer[audioData->index - (2 * i)];
+    }
+
+    audioData->index -= (2 * framesPerBuffer) * audioData->sfinfo.channels;
+  }
   else // play
   {
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
