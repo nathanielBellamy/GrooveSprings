@@ -1,6 +1,7 @@
 package dev.nateschieber.groovesprings;
 
 import dev.nateschieber.groovesprings.enums.AudioCodec;
+import dev.nateschieber.groovesprings.workers.Scanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,42 +13,10 @@ import java.util.stream.Stream;
 
 public class GsMusicLibraryScanner {
 
-    public static void main(String[] args) {
+    public static void main() {
         System.out.println("======== GS MUSIC LIBRARY SCANNER");
 
-        String homeDir = System.getProperty("user.home");
-        String musicLibDir = homeDir + "/GrooveSprings_MusicLibrary";
-        System.out.println(musicLibDir);
-
-        try (Stream<Path> stream = Files.walk(Paths.get(musicLibDir), 7)) {
-                List<String> files = stream
-                    .filter(file -> !Files.isDirectory(file))
-                    .filter(fileName -> {
-                        String name = fileName.getFileName().toString();
-                        boolean isNotDsStore = !name.equals(".DS_Store");
-                        boolean endsWithValidFileExtension = fileNameEndsWithValidExtension(name);
-
-                        return isNotDsStore
-                                && endsWithValidFileExtension;
-                    })
-                    .map(Path::toString)
-                    .toList();
-
-                files.forEach(System.out::println);
-        } catch(IOException e) {
-            System.out.println("File read error.");
-        }
-
+        Scanner.run(new String[0]);
     }
 
-    private static boolean fileNameEndsWithValidExtension(String fileName) {
-        boolean res = false;
-        for (AudioCodec codec : AudioCodec.values()) {
-            if (fileName.endsWith(codec.getFileExtension())) {
-                res = true;
-                break;
-            }
-        }
-        return res;
-    }
 }

@@ -8,6 +8,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpRequest}
 import akka.http.scaladsl.server.Directives.{path, *}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings}
+import dev.nateschieber.groovesprings.GsMusicLibraryScanner
 import dev.nateschieber.groovesprings.enums.GsHttpPort
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand}
@@ -43,6 +44,13 @@ class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef
 
   def routes(): Route = {
     concat(
+      path("api" / "v1" / "scan") {
+        post {
+          // TODO: pass in array of dirs from body
+          GsMusicLibraryScanner.main()
+          complete("Audio File Scan Complete;")
+        }
+      },
       path("api" / "v1" / "hello") {
         get {
           complete("Hello World! Your friend, Akka. ")

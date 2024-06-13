@@ -5,19 +5,38 @@ import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {Injectable} from "@angular/core";
 import {LibraryActionTypes} from "./library.actiontypes";
 import {FetchTracks} from "./actions/tracks.actions";
-import {map} from "rxjs";
-import {FetchAll} from "./library.actions";
+import {catchError, exhaustMap, map, of} from "rxjs";
+import {
+  FetchAlbumsFailure,
+  FetchAlbumsSuccess,
+  FetchAll,
+  LibraryScanComplete,
+  LibraryScanFailure
+} from "./library.actions";
+import {LibraryService} from "../services/library.service";
+import {AlbumsData} from "../../../models/albums/albums_data.model";
 
 @Injectable()
 export class LibraryEffects {
 
   constructor(
-    private actions$: Actions
+    private actions$: Actions,
+    private libraryService: LibraryService
   ){ }
 
   fetchAll$ = createEffect(() => this.actions$.pipe(
     ofType(LibraryActionTypes.ClearArtistsFilter, LibraryActionTypes.ClearAlbumsFilter),
     map(() => new FetchAll())
+  ))
+
+  runScan$ = createEffect(() => this.actions$.pipe(
+    ofType(LibraryActionTypes.RunLibraryScan),
+    exhaustMap(() => this.libraryService.runScan()
+      .pipe(
+        map(() => new LibraryScanComplete()),
+        catchError((e, _) => of(new LibraryScanFailure(e)))
+      )
+    )
   ))
 
 }

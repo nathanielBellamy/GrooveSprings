@@ -73,6 +73,23 @@ export class ClearAlbumsFilter implements Action, GsLibraryActionResult {
   }
 }
 
+export class RunLibraryScan implements Action {
+  readonly type = LibraryActionTypes.RunLibraryScan
+}
+
+export class LibraryScanComplete implements Action {
+  readonly type = LibraryActionTypes.LibraryScanComplete
+}
+
+export class LibraryScanFailure implements Action {
+  readonly type = LibraryActionTypes.LibraryScanFailure
+
+  constructor(e: any) {
+    console.error(e)
+  }
+
+}
+
 export * from './actions/albums.actions'
 export * from './actions/artists.actions'
 export * from './actions/tracks.actions'

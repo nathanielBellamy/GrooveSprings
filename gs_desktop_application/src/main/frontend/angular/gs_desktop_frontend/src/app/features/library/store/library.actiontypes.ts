@@ -6,6 +6,12 @@ export enum LibraryActionTypes {
   // fetch actions
   FetchAll = '[Library] Fetch All',
 
+  // Library Scan
+  RunLibraryScan = '[Library] Run Scan',
+  LibraryScanComplete = '[Library] Scan Complete',
+  LibraryScanFailure = '[Library] Scan Failure',
+
+  // fetch
   FetchAlbums = '[Albums] Fetch Albums',
   FetchAlbumsSuccess = '[Albums] Fetch Albums Success',
   FetchAlbumsFailure = '[Albums] Fetch Albums Failure',
@@ -32,5 +38,5 @@ export enum LibraryActionTypes {
   SetAlbumsFilterTracksSuccess = '[Filters] Set Albums Filter Tracks Success',
   SetAlbumsFilterTracksFailure = '[Filters] Set Albums Filter Tracks Failure',
 
-  ClearAlbumsFilter = '[Filters] Clear Albums Filter',
+  ClearAlbumsFilter = '[Filters] Clear Albums Filter'
 }

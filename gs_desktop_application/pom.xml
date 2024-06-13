@@ -30,6 +30,12 @@
     </dependency>
 
     <dependency>
+      <groupId>dev.nateschieber</groupId>
+      <artifactId>gs-music-library-scanner</artifactId>
+      <version>0.0.1</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala3-library_3</artifactId>
       <version>${scala.version}</version>

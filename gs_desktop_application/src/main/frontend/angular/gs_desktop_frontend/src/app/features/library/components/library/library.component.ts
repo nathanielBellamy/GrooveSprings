@@ -8,7 +8,7 @@ import {Artist} from "../../../../models/artists/artist.model";
 import {FetchTracks} from "../../store/actions/tracks.actions";
 import {FetchArtists} from "../../store/actions/artists.actions";
 import {FetchAlbums} from "../../store/actions/albums.actions";
-import {ClearAlbumsFilter, ClearArtistsFilter} from "../../store/library.actions";
+import {ClearAlbumsFilter, ClearArtistsFilter, RunLibraryScan} from "../../store/library.actions";
 
 @Component({
   selector: 'gsLibrary',
@@ -38,5 +38,10 @@ export class LibraryComponent implements OnInit {
 
   clearAlbumsFilter() {
     this.store$.dispatch(new ClearAlbumsFilter())
+  }
+
+  // TODO: input dirs to scan
+  handleScanClick() {
+    this.store$.dispatch(new RunLibraryScan())
   }
 }
