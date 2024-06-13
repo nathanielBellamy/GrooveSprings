@@ -24,7 +24,6 @@ public class Scanner {
 
     public static void run(String[] args) {
         List<String> musicLibDirs = musicLibDirs(List.of(args));
-        musicLibDirs.forEach(System.out::println);
 
         musicLibDirs.forEach(Scanner::runScan);
     }

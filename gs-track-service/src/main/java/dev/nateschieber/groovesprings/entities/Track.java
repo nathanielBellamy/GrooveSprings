@@ -39,7 +39,7 @@ public class Track {
   private Long id;
 
   private String title;
-  private Long duration;
+  private Integer duration;
   private int trackNumber;
   @ElementCollection
   @Enumerated(EnumType.STRING)
@@ -78,7 +78,7 @@ public class Track {
       Album album,
       String title,
       int trackNumber,
-      Long duration,
+      Integer duration,
       AudioCodec audioCodec,
       List<Genre> genres,
       LocalDate releaseDate) {
@@ -121,11 +121,11 @@ public class Track {
     return trackNumber;
   }
 
-  public long getDuration() {
+  public Integer getDuration() {
     return duration;
   }
 
-  public void setDuration(Long newDuration) {
+  public void setDuration(Integer newDuration) {
     duration = newDuration;
   }
 

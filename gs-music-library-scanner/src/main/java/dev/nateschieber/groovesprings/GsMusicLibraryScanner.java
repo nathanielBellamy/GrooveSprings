@@ -19,4 +19,8 @@ public class GsMusicLibraryScanner {
         Scanner.run(new String[0]);
     }
 
+    public static void run() {
+        Scanner.run(new String[0]);
+    }
+
 }
