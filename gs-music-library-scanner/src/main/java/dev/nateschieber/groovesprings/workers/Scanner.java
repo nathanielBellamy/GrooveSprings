@@ -1,8 +1,14 @@
 package dev.nateschieber.groovesprings.workers;
 
 import dev.nateschieber.groovesprings.enums.AudioCodec;
+import dev.nateschieber.groovesprings.rest.LocalTrackCreateDto;
 import dev.nateschieber.groovesprings.rest.TrackClient;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.AudioHeader;
+import org.jaudiotagger.tag.Tag;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,7 +42,8 @@ public class Scanner {
                     .map(Path::toString)
                     .toList();
 
-            files.forEach(System.out::println);
+            List<LocalTrackCreateDto> localTracks = localTrackCreateDtosFromFiles(files);
+            boolean res = client.bulkCreate(localTracks);
 
             // TODO:
             // - read metadata into TrackCreateDtos
@@ -47,6 +54,31 @@ public class Scanner {
         } catch(IOException e) {
             System.out.println("File read error.");
         }
+    }
+
+    private static List<LocalTrackCreateDto> localTrackCreateDtosFromFiles(List<String> files) {
+         return files
+                 .stream()
+                 .map(Scanner::localTrackCreateDtoFromFile)
+                 .toList();
+    }
+
+    private static LocalTrackCreateDto localTrackCreateDtoFromFile(String path) {
+        File file = new File(path);
+
+        try {
+            AudioFile f = AudioFileIO.read(file);
+            Tag tag = f.getTag();
+            System.out.println(tag);
+            AudioHeader header = f.getAudioHeader();
+            System.out.println(header);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return new LocalTrackCreateDto(
+                path
+        );
     }
 
     private static boolean fileNameEndsWithValidExtension(String fileName) {
