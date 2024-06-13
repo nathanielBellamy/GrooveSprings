@@ -1,6 +1,7 @@
 package dev.nateschieber.groovesprings.workers;
 
 import dev.nateschieber.groovesprings.enums.AudioCodec;
+import dev.nateschieber.groovesprings.rest.TrackClient;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,6 +21,7 @@ public class Scanner {
     }
 
     private static void runScan(String musicLibDir) {
+        TrackClient client = new TrackClient();
         try (Stream<Path> stream = Files.walk(Paths.get(musicLibDir), 7)) {
             List<String> files = stream
                     .filter(file -> !Files.isDirectory(file))
@@ -35,6 +37,13 @@ public class Scanner {
                     .toList();
 
             files.forEach(System.out::println);
+
+            // TODO:
+            // - read metadata into TrackCreateDtos
+            // - add path to Track in gs-track-service
+            // - alternatively, create LocalTrack on top of Track, similar to PricedTrack
+            // - playlist entity in gs-track-service + frontend integration
+            // - gs_desktop_work + frontend handle playlist playback
         } catch(IOException e) {
             System.out.println("File read error.");
         }
