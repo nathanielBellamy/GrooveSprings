@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import dev.nateschieber.groovesprings.rest.responses.AbstractClient;
+import dev.nateschieber.groovesprings.rest.AbstractClient;
 import org.springframework.stereotype.Service;
 
 @Service

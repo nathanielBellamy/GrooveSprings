@@ -56,7 +56,6 @@ export class TransportControlComponent {
 
   handlePlaybackSpeed(newIdx: any) {
     const speed = this.gsPlaybackSpeedOptions[newIdx]
-    console.dir(speed)
     this.socket.send(`${speed}`)
   }
 }

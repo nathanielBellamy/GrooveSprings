@@ -47,7 +47,7 @@ class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef
       path("api" / "v1" / "scan") {
         post {
           // TODO: pass in array of dirs from body
-          GsMusicLibraryScanner.main()
+          GsMusicLibraryScanner.run()
           complete("Audio File Scan Complete;")
         }
       },

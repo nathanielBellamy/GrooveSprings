@@ -129,7 +129,7 @@ public class TrackControllerTest {
   @DisplayName("TrackController#POST -> Rejects Track with Negative Duration")
   void TrackController_POST_ValidatesPositveDuration () throws Exception {
     Track mockTrack = MockTrackFactory.defaultTracks().get(0);
-    mockTrack.setDuration(-10l);
+    mockTrack.setDuration(-10);
 
     doReturn(mockTrack).when(trackService).createFromDto(ArgumentMatchers.<TrackCreateDto>any());
 

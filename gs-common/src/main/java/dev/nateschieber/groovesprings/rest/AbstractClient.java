@@ -1,4 +1,4 @@
-package dev.nateschieber.groovesprings.rest.responses;
+package dev.nateschieber.groovesprings.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 
-public class AbstractClient {
+public abstract class AbstractClient {
     protected String baseUrl;
     protected static ObjectMapper objectMapper;
     protected HttpClient client = HttpClient.newHttpClient();
