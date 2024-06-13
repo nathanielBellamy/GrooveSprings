@@ -26,5 +26,4 @@ public enum AudioCodec {
   public String getFileExtension() {
     return fileExtension;
   }
-
 }

@@ -32,6 +32,8 @@ public class TrackClient extends AbstractClient {
     }
 
     public boolean bulkCreate(List<LocalTrackCreateDto> tracks) {
+        System.out.println("here");
+        System.out.println(tracks);
         HttpRequest request = tracksCreateRequest(tracks);
 
         try {
