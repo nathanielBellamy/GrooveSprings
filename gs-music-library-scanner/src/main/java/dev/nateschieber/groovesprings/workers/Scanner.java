@@ -1,21 +1,24 @@
 package dev.nateschieber.groovesprings.workers;
 
 import dev.nateschieber.groovesprings.enums.AudioCodec;
+import dev.nateschieber.groovesprings.enums.DefaultStrings;
 import dev.nateschieber.groovesprings.rest.LocalTrackCreateDto;
 import dev.nateschieber.groovesprings.rest.TrackClient;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
+import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
-
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
+
+import static java.lang.Integer.parseInt;
 
 public class Scanner {
 
@@ -29,7 +32,7 @@ public class Scanner {
     private static void runScan(String musicLibDir) {
         TrackClient client = new TrackClient();
         try (Stream<Path> stream = Files.walk(Paths.get(musicLibDir), 7)) {
-            List<String> files = stream
+            List<Path> paths = stream
                     .filter(file -> !Files.isDirectory(file))
                     .filter(fileName -> {
                         String name = fileName.getFileName().toString();
@@ -39,10 +42,9 @@ public class Scanner {
                         return isNotDsStore
                                 && endsWithValidFileExtension;
                     })
-                    .map(Path::toString)
                     .toList();
 
-            List<LocalTrackCreateDto> localTracks = localTrackCreateDtosFromFiles(files);
+            List<LocalTrackCreateDto> localTracks = localTrackCreateDtosFromPaths(paths);
             boolean res = client.bulkCreate(localTracks);
 
             // TODO:
@@ -56,28 +58,57 @@ public class Scanner {
         }
     }
 
-    private static List<LocalTrackCreateDto> localTrackCreateDtosFromFiles(List<String> files) {
-         return files
+    private static List<LocalTrackCreateDto> localTrackCreateDtosFromPaths(List<Path> paths) {
+         return paths
                  .stream()
-                 .map(Scanner::localTrackCreateDtoFromFile)
+                 .map(Scanner::localTrackCreateDtoFromPath)
+                 .filter(Objects::nonNull)
                  .toList();
     }
 
-    private static LocalTrackCreateDto localTrackCreateDtoFromFile(String path) {
-        File file = new File(path);
+    private static LocalTrackCreateDto localTrackCreateDtoFromPath(Path path) {
+        List<String> artistNames = List.of(DefaultStrings.UNKNOWN_ARTIST.getString());
+        String albumTitle = DefaultStrings.UNTITLED_ALBUM.getString();
+        String trackTitle = DefaultStrings.UNTITLED_TRACK.getString();
+        Integer trackNumber = 0;
+        Integer trackLength = 0;
+        Integer sampleRate = 0;
+        Long bitRate = 0l;
+        Boolean isVariableBitRate = false;
+        Boolean isLoseless = false;
+        String audioCodec = "";
 
         try {
-            AudioFile f = AudioFileIO.read(file);
-            Tag tag = f.getTag();
-            System.out.println(tag);
+            AudioFile f = AudioFileIO.read(path.toFile());
+            Tag tag     = f.getTag();
             AudioHeader header = f.getAudioHeader();
-            System.out.println(header);
+            artistNames = tag.getAll(FieldKey.ARTIST);
+            albumTitle  = tag.getFirst(FieldKey.ALBUM);
+            trackNumber = parseInt(tag.getFirst(FieldKey.TRACK));
+            trackTitle  = tag.getFirst(FieldKey.TITLE);
+            trackLength = header.getTrackLength();
+            sampleRate  = header.getSampleRateAsNumber();
+            bitRate     = header.getBitRateAsNumber();
+            isVariableBitRate = header.isVariableBitRate();
+            isLoseless = header.isLossless();
+            audioCodec = header.getFormat().toUpperCase();
         } catch (Exception e) {
-            System.out.println(e);
+            // TODO: log and report failures
+            return null;
         }
 
         return new LocalTrackCreateDto(
-                path
+                path,
+                artistNames,
+                albumTitle,
+                trackTitle,
+                trackNumber,
+                trackLength,
+                sampleRate,
+                bitRate,
+                isVariableBitRate,
+                isLoseless,
+                audioCodec
         );
     }
 
