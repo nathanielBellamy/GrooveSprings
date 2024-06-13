@@ -2,7 +2,7 @@ package dev.nateschieber.groovesprings.workers;
 
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.enums.DefaultStrings;
-import dev.nateschieber.groovesprings.rest.LocalTrackCreateDto;
+import dev.nateschieber.groovesprings.rest.GsDesktopTrackCreateDto;
 import dev.nateschieber.groovesprings.rest.TrackClient;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -43,7 +43,8 @@ public class Scanner {
                     })
                     .toList();
 
-            List<LocalTrackCreateDto> localTracks = localTrackCreateDtosFromPaths(paths);
+            List<GsDesktopTrackCreateDto> localTracks = localTrackCreateDtosFromPaths(paths);
+            System.out.println(localTracks);
             boolean res = client.bulkCreate(localTracks);
 
             // TODO:
@@ -57,7 +58,7 @@ public class Scanner {
         }
     }
 
-    private static List<LocalTrackCreateDto> localTrackCreateDtosFromPaths(List<Path> paths) {
+    private static List<GsDesktopTrackCreateDto> localTrackCreateDtosFromPaths(List<Path> paths) {
          return paths
                  .stream()
                  .map(Scanner::localTrackCreateDtoFromPath)
@@ -65,7 +66,7 @@ public class Scanner {
                  .toList();
     }
 
-    private static LocalTrackCreateDto localTrackCreateDtoFromPath(Path path) {
+    private static GsDesktopTrackCreateDto localTrackCreateDtoFromPath(Path path) {
         List<String> artistNames = List.of(DefaultStrings.UNKNOWN_ARTIST.getString());
         String albumTitle = DefaultStrings.UNTITLED_ALBUM.getString();
         String trackTitle = DefaultStrings.UNTITLED_TRACK.getString();
@@ -75,7 +76,8 @@ public class Scanner {
         Long bitRate = 0l;
         Boolean isVariableBitRate = false;
         Boolean isLoseless = false;
-        String audioCodec = "";
+        AudioCodec audioCodec = AudioCodec.UNRECOGNIZED;
+        String releaseDate = "";
 
         try {
             AudioFile f = AudioFileIO.read(path.toFile());
@@ -90,13 +92,18 @@ public class Scanner {
             bitRate     = header.getBitRateAsNumber();
             isVariableBitRate = header.isVariableBitRate();
             isLoseless = header.isLossless();
-            audioCodec = header.getFormat().toUpperCase();
+            audioCodec = AudioCodec.fromStringAndBitRate(
+                    header.getFormat().toUpperCase(),
+                    bitRate,
+                    isVariableBitRate
+            );
+            releaseDate = tag.getFirst(FieldKey.YEAR);
         } catch (Exception e) {
             // TODO: log and report failures
             return null;
         }
 
-        return new LocalTrackCreateDto(
+        return new GsDesktopTrackCreateDto(
                 path,
                 artistNames,
                 albumTitle,
@@ -107,7 +114,8 @@ public class Scanner {
                 bitRate,
                 isVariableBitRate,
                 isLoseless,
-                audioCodec
+                audioCodec,
+                releaseDate
         );
     }
 
