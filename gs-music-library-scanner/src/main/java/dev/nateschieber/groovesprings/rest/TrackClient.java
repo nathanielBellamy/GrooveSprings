@@ -23,7 +23,7 @@ public class TrackClient extends AbstractClient {
                 .build();
     }
 
-    public boolean bulkCreate(List<LocalTrackCreateDto> tracks) {
+    public boolean bulkCreate(List<GsDesktopTrackCreateDto> tracks) {
         HttpRequest request = tracksCreateRequest(tracks);
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

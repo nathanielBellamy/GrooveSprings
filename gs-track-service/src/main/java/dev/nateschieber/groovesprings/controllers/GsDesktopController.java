@@ -1,4 +1,5 @@
 package dev.nateschieber.groovesprings.controllers;
+import dev.nateschieber.groovesprings.rest.GsDesktopTrackCreateDto;
 import dev.nateschieber.groovesprings.services.entities.AlbumService;
 import dev.nateschieber.groovesprings.services.entities.ArtistService;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/desktop")
@@ -30,8 +33,12 @@ public class GsDesktopController {
     }
 
     @PostMapping("/bulkCreate")
-    public ResponseEntity scanMusicLibrary() {
-        // TODO
+    public ResponseEntity scanMusicLibrary(@Valid @RequestBody List<GsDesktopTrackCreateDto> dtos) {
+        dtos
+            .stream()
+            .forEach(dto -> {
+                trackService.createFromGsDesktopTrackCreateDto(dto);
+            });
         return ResponseEntity.ok().build();
     }
 }

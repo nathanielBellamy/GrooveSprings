@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.enums.Genre;
-import dev.nateschieber.groovesprings.rest.dtos.track.TrackDto;
-import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -22,11 +20,11 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,6 +39,13 @@ public class Track {
   private String title;
   private Integer duration;
   private int trackNumber;
+
+  private String path;
+  private Integer sampleRate;
+  private Long bitRate;
+  private Boolean isVariableBitRate;
+  private Boolean isLossless;
+
   @ElementCollection
   @Enumerated(EnumType.STRING)
   private List<Genre> genres;
@@ -81,7 +86,13 @@ public class Track {
       Integer duration,
       AudioCodec audioCodec,
       List<Genre> genres,
-      LocalDate releaseDate) {
+      LocalDate releaseDate,
+      String path,
+      Integer sampleRate,
+      Long bitRate,
+      Boolean isVariableBitRate,
+      Boolean isLossless
+  ) {
     this.id = id;
     this.album = album;
     this.artists = new HashSet<>(artists); // TODO: record order
@@ -91,6 +102,11 @@ public class Track {
     this.audioCodec = audioCodec;
     this.releaseDate = releaseDate;
     this.genres = genres;
+    this.path = path;
+    this.sampleRate = sampleRate;
+    this.bitRate = bitRate;
+    this.isVariableBitRate = isVariableBitRate;
+    this.isLossless = isLossless;
   }
 
   public Track(TrackUpdateDto dto, List<Artist> newArtists, Album newAlbum) {
@@ -151,5 +167,45 @@ public class Track {
 
   public List<Genre> getGenres() {
     return genres;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public Integer getSampleRate() {
+    return sampleRate;
+  }
+
+  public Long getBitRate() {
+    return bitRate;
+  }
+
+  public Boolean getVariableBitRate() {
+    return isVariableBitRate;
+  }
+
+  public Boolean getLossless() {
+    return isLossless;
+  }
+
+  @Override
+  public String toString() {
+    return "Track{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", duration=" + duration +
+            ", trackNumber=" + trackNumber +
+            ", path='" + path + '\'' +
+            ", sampleRate=" + sampleRate +
+            ", bitRate=" + bitRate +
+            ", isVariableBitRate=" + isVariableBitRate +
+            ", isLossless=" + isLossless +
+            ", genres=" + genres +
+            ", audioCodec=" + audioCodec +
+            ", releaseDate=" + releaseDate +
+            ", album=" + album +
+            ", artists=" + artists +
+            '}';
   }
 }

@@ -4,16 +4,21 @@ import dev.nateschieber.groovesprings.entities.Album;
 import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
+import dev.nateschieber.groovesprings.enums.Genre;
 import dev.nateschieber.groovesprings.repositories.TrackRepository;
+import dev.nateschieber.groovesprings.rest.GsDesktopTrackCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static java.lang.Integer.parseInt;
 
 @Service
 public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackCreateDto> {
@@ -87,8 +92,45 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
         dto.duration(),
         dto.audioCodec(),
         dto.genres(),
-        dto.releaseDate());
+        dto.releaseDate(),
+            null,
+            null,
+            null,
+            null,
+            null);
     return trackRepository.save(track);
+  }
+
+  public Track createFromGsDesktopTrackCreateDto(GsDesktopTrackCreateDto dto) {
+    List<Artist> artists = Collections.emptyList(); //artistService.findOrCreateAllByName(dto.artistNames());
+    Album album = new Album(); // albumService.findOrCreateByTitleAndArtists(dto.albumTitle());
+    Integer releaseYear;
+    try {
+      releaseYear = parseInt(dto.releaseYear());
+    } catch (Exception e) {
+      releaseYear = Integer.valueOf(0);
+    }
+    LocalDate releaseDate = LocalDate.of(releaseYear, 1, 1);
+    Track track = new Track(
+            null,
+            artists,
+            album,
+            dto.trackTitle(),
+            dto.trackNumber(),
+            dto.trackLength(),
+            dto.audioCodec(),
+            Collections.emptyList(),
+            releaseDate,
+            dto.path().toString(),
+            dto.sampleRate(),
+            dto.bitRate(),
+            dto.isVariableBitRate(),
+            dto.isLossless()
+    );
+
+    System.out.println(track);
+
+    return new Track();
   }
 
   @Override

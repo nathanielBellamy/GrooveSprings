@@ -32,7 +32,7 @@ public class Album {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
-  private String name;
+  private String title;
   private LocalDate releaseDate;
 
   @ElementCollection
@@ -52,11 +52,11 @@ public class Album {
   public Album() {};
 
   public Album(
-      String name,
+      String title,
       List<Artist> artists,
       LocalDate releaseDate,
       List<Genre> genres) {
-    this.name = name;
+    this.title = title;
     this.setArtists(new HashSet<>(artists));
     this.genres = genres;
     this.releaseDate = releaseDate;
@@ -65,7 +65,7 @@ public class Album {
   public Album(Long id, AlbumEntityDto dto) {
     this.id = id;
     Album album = dto.album();
-    this.name = album.getName();
+    this.title = album.getTitle();
     this.artists = new HashSet<>(album.getArtists());
     this.genres = album.getGenres();
     this.releaseDate = album.getReleaseDate();
@@ -79,12 +79,12 @@ public class Album {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public String getTitle() {
+    return title;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setTitle(String name) {
+    this.title = name;
   }
 
   public List<Track> getTracks() {
