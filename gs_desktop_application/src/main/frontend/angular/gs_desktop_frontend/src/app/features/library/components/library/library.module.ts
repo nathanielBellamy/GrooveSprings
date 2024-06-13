@@ -9,6 +9,7 @@ import {ArtistsService} from "../../services/artists.service";
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {AlbumsModule} from "../albums/albums.module";
 import {TracksModule} from "../tracks/tracks.module";
+import {LibraryService} from "../../services/library.service";
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import {TracksModule} from "../tracks/tracks.module";
     NgForOf,
   ],
   providers: [
-    ArtistsService
+    ArtistsService,
+    LibraryService
   ]
 })
 export class LibraryModule {}
