@@ -5,6 +5,8 @@ import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.repositories.AlbumRepository;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,5 +66,26 @@ public class AlbumService {
     }).collect(Collectors.toList());
     artistService.saveAll(updatedArtists);
     return savedAlbum;
+  }
+
+  public Album findOrCreateByTitleAndArtists(String albumTitle, List<Artist> artists) {
+    List<Album> byTitle = albumRepository.findByTitle(albumTitle);
+    if (byTitle.size() == 0) {
+      return albumRepository.save(new Album(albumTitle, artists, null, Collections.emptyList()));
+    } else {
+
+      Album res = null;
+      for (Album album : byTitle) {
+        if (album.getArtists().equals(artists)) {
+          res = album;
+          break;
+        }
+      }
+
+      if (res == null) {
+        return albumRepository.save(new Album(albumTitle, artists, null, Collections.emptyList()));
+      }
+      return res;
+    }
   }
 }

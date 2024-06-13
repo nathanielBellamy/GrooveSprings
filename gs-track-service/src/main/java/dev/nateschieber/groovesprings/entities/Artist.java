@@ -88,4 +88,12 @@ public class Artist {
   public void addAlbum(Album album) {
     albums.add(album);
   }
+
+  @Override
+  public String toString() {
+    return "Artist{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            '}';
+  }
 }
