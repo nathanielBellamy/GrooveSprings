@@ -4,8 +4,12 @@ import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.repositories.ArtistRepository;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistBulkCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +60,25 @@ public class ArtistService {
 
   public List<Artist> createAllFromDto(ArtistBulkCreateDto dto) {
     return artistRepository.saveAll(dto.artists());
+  }
+
+  public List<Artist> findOrCreateAllByName(List<String> artistNames) {
+    List<Artist> artistsFound = artistRepository.findAllByNames(artistNames);
+    List<String> artistNamesFound = artistsFound
+            .stream()
+            .map(Artist::getName)
+            .toList();
+
+    List<String> artistNamesToCreate = artistNames
+            .stream()
+            .filter(an -> !artistNamesFound.contains(an))
+            .toList();
+
+    List<Artist> artistsCreated = artistNamesToCreate
+            .stream()
+            .map(an -> artistRepository.save(new Artist(an)))
+            .toList();
+
+    return Stream.concat(artistsFound.stream(), artistsCreated.stream()).toList();
   }
 }
