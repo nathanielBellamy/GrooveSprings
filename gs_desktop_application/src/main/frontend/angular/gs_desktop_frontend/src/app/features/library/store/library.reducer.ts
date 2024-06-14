@@ -2,7 +2,7 @@ import {Action} from '@ngrx/store'
 import {LibraryActionTypes} from "./library.actiontypes";
 import {
   ClearAlbumsFilter,
-  ClearArtistsFilter,
+  ClearArtistsFilter, ClearLibrary,
   FetchArtistsFailure,
   FetchArtistsSuccess,
   FetchTracksFailure,
@@ -84,6 +84,10 @@ export function libraryReducer(state = initialLibraryState, action: Action): Lib
 
     case LibraryActionTypes.ClearAlbumsFilter:
       res = action as ClearAlbumsFilter
+      break
+
+    case LibraryActionTypes.ClearLibrary:
+      res = action as ClearLibrary
       break
 
     default:

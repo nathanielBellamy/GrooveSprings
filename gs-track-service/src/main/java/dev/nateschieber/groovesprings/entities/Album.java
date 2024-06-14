@@ -6,16 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
 import dev.nateschieber.groovesprings.enums.Genre;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,7 +31,7 @@ public class Album {
   @Enumerated(EnumType.STRING)
   private List<Genre> genres;
 
-  @OneToMany(mappedBy = "album")
+  @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @JsonBackReference
   Set<Track> tracks;

@@ -44,15 +44,15 @@ public class Scanner {
                     .toList();
 
             List<GsDesktopTrackCreateDto> localTracks = localTrackCreateDtosFromPaths(paths);
-            System.out.println(localTracks);
-            boolean res = client.bulkCreate(localTracks);
+            client.bulkCreate(localTracks);
 
             // TODO:
-            // - read metadata into TrackCreateDtos
-            // - add path to Track in gs-track-service
-            // - alternatively, create LocalTrack on top of Track, similar to PricedTrack
-            // - playlist entity in gs-track-service + frontend integration
-            // - gs_desktop_work + frontend handle playlist playback
+            // - [x] read metadata into TrackCreateDtos
+            // - [x] add path to Track in gs-track-service
+            // - [-] alternatively, create LocalTrack on top of Track, similar to PricedTrack
+            // - [ ] playlist entity in gs-track-service + frontend integration
+            // - [ ] gs_desktop_work + frontend handle playlist playback
+            // - [ ] clickable progress bar
         } catch(IOException e) {
             System.out.println("File read error.");
         }

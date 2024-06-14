@@ -7,15 +7,13 @@ import dev.nateschieber.groovesprings.services.entities.TrackService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/desktop")
+// TODO: @Profile("desktop")
 public class GsDesktopController {
     private final AlbumService albumService;
     private final ArtistService artistService;
@@ -39,6 +37,14 @@ public class GsDesktopController {
             .forEach(dto -> {
                 trackService.createFromGsDesktopTrackCreateDto(dto);
             });
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/clearLib")
+    public ResponseEntity clearLib() {
+        artistService.deleteAll();
+        albumService.deleteAll();
+        trackService.deleteAll();
         return ResponseEntity.ok().build();
     }
 }

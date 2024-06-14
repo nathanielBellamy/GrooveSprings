@@ -10,8 +10,8 @@ import {
   FetchAlbumsFailure,
   FetchAlbumsSuccess,
   FetchAll,
-  LibraryScanComplete,
-  LibraryScanFailure
+  LibraryScanSuccess,
+  LibraryScanFailure, ClearLibraryFailure, ClearLibrarySuccess
 } from "./library.actions";
 import {LibraryService} from "../services/library.service";
 import {AlbumsData} from "../../../models/albums/albums_data.model";
@@ -25,16 +25,31 @@ export class LibraryEffects {
   ){ }
 
   fetchAll$ = createEffect(() => this.actions$.pipe(
-    ofType(LibraryActionTypes.ClearArtistsFilter, LibraryActionTypes.ClearAlbumsFilter),
+    ofType(
+      LibraryActionTypes.ClearArtistsFilter,
+      LibraryActionTypes.ClearAlbumsFilter,
+      LibraryActionTypes.LibraryScanSuccess,
+      LibraryActionTypes.ClearLibrarySuccess
+    ),
     map(() => new FetchAll())
   ))
 
   runScan$ = createEffect(() => this.actions$.pipe(
-    ofType(LibraryActionTypes.RunLibraryScan),
+    ofType(LibraryActionTypes.LibraryScan),
     exhaustMap(() => this.libraryService.runScan()
       .pipe(
-        map(() => new LibraryScanComplete()),
+        map(() => new LibraryScanSuccess()),
         catchError((e, _) => of(new LibraryScanFailure(e)))
+      )
+    )
+  ))
+
+  clearLib$ = createEffect(() => this.actions$.pipe(
+    ofType(LibraryActionTypes.ClearLibrary),
+    exhaustMap(() => this.libraryService.clearLib()
+      .pipe(
+        map(() => new ClearLibrarySuccess()),
+        catchError((e, _) => of(new ClearLibraryFailure(e)))
       )
     )
   ))

@@ -1,9 +1,15 @@
 <div class="gs_library">
   <div class="gs_library_header">
-    <button class="gs_library_scan_button"
-            (click)="handleScanClick()">
-      Scan Lib
-    </button>
+    <div class="gs_library_buttons">
+      <button class="gs_library_scan_button"
+              (click)="handleLibScanClick()">
+        Scan Lib
+      </button>
+      <button class="gs_library_scan_button"
+              (click)="handleLibClearClick()">
+        Clear Lib
+      </button>
+    </div>
 
     <div class="gs_library_filters">
       Filters

@@ -7,9 +7,14 @@ export enum LibraryActionTypes {
   FetchAll = '[Library] Fetch All',
 
   // Library Scan
-  RunLibraryScan = '[Library] Run Scan',
-  LibraryScanComplete = '[Library] Scan Complete',
+  LibraryScan = '[Library] Run Scan',
+  LibraryScanSuccess = '[Library] Scan Success',
   LibraryScanFailure = '[Library] Scan Failure',
+
+  // Clear Library
+  ClearLibrary = '[Library] Clear Library',
+  ClearLibrarySuccess = '[Library] Clear Library Success',
+  ClearLibraryFailure = '[Library] Clear Library Failure',
 
   // fetch
   FetchAlbums = '[Albums] Fetch Albums',

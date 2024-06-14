@@ -29,7 +29,7 @@ public class Artist {
 
   private String name;
 
-  @ManyToMany(mappedBy = "artists")
+  @ManyToMany(mappedBy = "artists", cascade = CascadeType.ALL)
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @JsonBackReference
   private Set<Track> tracks;

@@ -167,4 +167,8 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
     }
     return trackRepository.findByDurationBetween(min, max);
   }
+
+  public void deleteAll() {
+    trackRepository.deleteAll();
+  }
 }
