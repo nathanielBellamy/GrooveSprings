@@ -9,6 +9,7 @@ export interface Track {
   genres: string[];
   audioCodec: string;
   releaseDate: string;
+  path: string;
   album: Album;
   artists: Artist[];
 }

@@ -40,10 +40,9 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         replyTo ! RespondFrameId(GsPlaybackThread.getCurrFrameId(), GsPlaybackThread.getPlayState(), context.self)
         Behaviors.same
 
-      case FileSelect(fileName, audioCodec, replyTo) =>
+      case FileSelect(path, replyTo) =>
         GsPlaybackThread.stop()
-        GsPlaybackThread.setFileName(fileName)
-        GsPlaybackThread.setAudioCodec(audioCodec)
+        GsPlaybackThread.setFileName(path)
         clearPlaybackThread()
         replyTo ! RespondFileSelect(context.self)
         Behaviors.same

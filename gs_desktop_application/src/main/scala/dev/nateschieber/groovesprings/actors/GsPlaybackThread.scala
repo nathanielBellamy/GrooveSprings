@@ -20,7 +20,7 @@ object GsPlaybackThread {
   @static private var playState: GsPlayState = GsPlayState.STOP
   @static private var playbackSpeed: GsPlaybackSpeed = GsPlaybackSpeed._1
   @static private var currFrameId: java.lang.Long = 0
-  @static private var fileName: java.lang.String = null
+  @static private var filePath: java.lang.String = null
   @static private var audioCodec: java.lang.String = null
   
   @static def stop(): Unit = {
@@ -79,12 +79,12 @@ object GsPlaybackThread {
     }
   }
   
-  @static def getFileName(): java.lang.String = {
-    fileName
+  @static def getFilePath(): java.lang.String = {
+    filePath
   }
   
   @static def setFileName(value: java.lang.String) = {
-    fileName = value
+    filePath = value
   }
   
   @static def getAudioCodec(): java.lang.String = {
@@ -106,7 +106,7 @@ class GsPlaybackThread(context: ActorContext[GsCommand]) extends AbstractBehavio
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case InitPlaybackThread(replyTo) =>
-        JniMain.initPlaybackLoop(s"${GsPlaybackThread.getFileName()}.${GsPlaybackThread.getAudioCodec()}", GsPlaybackThread.getCurrFrameId()) // blocking
+        JniMain.initPlaybackLoop(GsPlaybackThread.getFilePath(), GsPlaybackThread.getCurrFrameId()) // blocking
         Behaviors.stopped
     }
   }

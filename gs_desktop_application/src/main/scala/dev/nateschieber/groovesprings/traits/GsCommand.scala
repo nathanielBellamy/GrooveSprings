@@ -13,7 +13,7 @@ final case class InitDisplay() extends GsCommand
 final case class ReadFrameId(replyTo: ActorRef[RespondFrameId]) extends GsCommand
 final case class RespondFrameId(value: Long, playState: GsPlayState, replyTo: ActorRef[ReadFrameId]) extends GsCommand
 
-final case class FileSelect(fileName: String, audioCodec: String, replyTo: ActorRef[RespondFileSelect]) extends GsCommand
+final case class FileSelect(path: String, replyTo: ActorRef[RespondFileSelect]) extends GsCommand
 final case class RespondFileSelect(replyTo: ActorRef[FileSelect]) extends GsCommand
 
 // GsPlaybackThread

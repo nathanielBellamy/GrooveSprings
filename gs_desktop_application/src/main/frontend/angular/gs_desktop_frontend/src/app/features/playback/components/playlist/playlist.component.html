@@ -15,7 +15,7 @@
     @for (track of playlistTracks$ | async; track track; let i = $index) {
       <div class="gs_playlist_track"
            [class.gs_playlist_current_track]="i === (currIdx$ | async)"
-           (dblclick)="handleDblClick(i)">
+           (dblclick)="handleDblClick(i, track)">
         <div>
           {{i}}:
         </div>

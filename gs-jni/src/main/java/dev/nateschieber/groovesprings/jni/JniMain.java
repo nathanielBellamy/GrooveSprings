@@ -18,9 +18,9 @@ public class JniMain {
 
   private native int addNative(int x, int y);
 
-  public static void initPlaybackLoop(String file, Long initialFrameId) {
+  public static void initPlaybackLoop(String filePath, Long initialFrameId) {
     long initFrameId = initialFrameId == null ? 0l : initialFrameId.longValue();
-    new JniMain().initPlaybackLoopNative(file, initialFrameId);
+    new JniMain().initPlaybackLoopNative(filePath, initialFrameId);
   }
 
   private native void initPlaybackLoopNative(String file, long initialFrameId);
