@@ -23,8 +23,8 @@ export class PlaylistComponent {
     this.playlistTracks$ = store$.select(state => state.playback.playlist.tracks)
   }
 
-  handleDblClick(trackIdx: number) {
-    this.store$.dispatch(new SetCurrPlaylistTrackIdx(trackIdx))
+  handleDblClick(trackIdx: number, track: Track) {
+    this.store$.dispatch(new SetCurrPlaylistTrackIdx(trackIdx, track))
   }
 
   handleClearPlaylistClick() {

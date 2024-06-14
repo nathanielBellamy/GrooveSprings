@@ -5,6 +5,7 @@ import {PlaybackComponent} from "./playback.component";
 import {PlaylistModule} from "./components/playlist/playlist.module";
 import {StoreModule} from "@ngrx/store";
 import {playbackReducer} from "./store/playback.reducer";
+import {PlaybackService} from "./services/playback.service";
 
 @NgModule({
   declarations: [PlaybackComponent],
@@ -14,6 +15,9 @@ import {playbackReducer} from "./store/playback.reducer";
     TransportControlComponent,
     PlaybackDisplayComponent,
     PlaylistModule
+  ],
+  providers: [
+    PlaybackService
   ]
 
 })

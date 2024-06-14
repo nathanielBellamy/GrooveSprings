@@ -34,15 +34,35 @@ export class ClearPlaylist implements Action, GsPlaybackAction {
   }
 }
 
+export class SetCurrFile implements Action {
+  readonly type = PlaybackActionTypes.SetCurrFile
+}
+
+export class SetCurrFileSuccess implements Action {
+  readonly type = PlaybackActionTypes.SetCurrFileSuccess
+}
+
+export class SetCurrFileFailure implements Action {
+  readonly type = PlaybackActionTypes.SetCurrFileFailure
+
+  constructor(e: any) {
+    console.error(e)
+  }
+}
+
 export class SetCurrPlaylistTrackIdx implements Action, GsPlaybackAction {
   readonly type = PlaybackActionTypes.SetCurrPlaylistTrackIdx
 
-  constructor(private payload: number) {}
+  constructor(private trackIdx: number, private track: Track) {}
 
   handle(state: PlaybackState): PlaybackState {
     return {
       ...state,
-      currPlaylistTrackIdx: this.payload
+      currPlaylistTrackIdx: this.trackIdx
     }
+  }
+
+  getTrack() {
+    return this.track
   }
 }
