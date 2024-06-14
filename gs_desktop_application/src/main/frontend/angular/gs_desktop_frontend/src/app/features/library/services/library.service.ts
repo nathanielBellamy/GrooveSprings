@@ -8,7 +8,7 @@ export class LibraryService {
   constructor(private http: HttpClient) {}
 
   runScan(): Observable<any> {
-    return this.http.post('api/v1/scan', {})
+    return this.http.post('api/v1/scan', {}, {responseType: 'text'})
   }
 
   clearLib(): Observable<any> {

@@ -48,6 +48,7 @@ public class TrackController {
   @GetMapping
   public ResponseEntity getAllTracks() {
     List<Track> tracks = trackService.findAll();
+
     return ResponseEntity.ok().body(new TrackGetAllResponse(tracks));
   }
 
