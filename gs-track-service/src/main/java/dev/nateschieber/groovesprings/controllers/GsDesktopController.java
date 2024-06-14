@@ -42,9 +42,14 @@ public class GsDesktopController {
 
     @DeleteMapping("/clearLib")
     public ResponseEntity clearLib() {
+
+        System.out.println("Clearing Library");
         artistService.deleteAll();
+        System.out.println("Done Clearing Artists");
         albumService.deleteAll();
+        System.out.println("Done Clearing Albums");
         trackService.deleteAll();
+        System.out.println("Done Clearing Tracks");
         return ResponseEntity.ok().build();
     }
 }
