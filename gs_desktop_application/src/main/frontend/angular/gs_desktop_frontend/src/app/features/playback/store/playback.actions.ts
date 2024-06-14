@@ -1,7 +1,7 @@
 import {Action} from "@ngrx/store";
 import {Track} from "../../../models/tracks/track.model";
 import {PlaybackActionTypes} from "./playback.actiontypes";
-import {PlaybackState} from "./playback.state";
+import {initialPlaybackState, PlaybackState} from "./playback.state";
 
 export abstract class GsPlaybackAction {
   handle(state: PlaybackState): PlaybackState {
@@ -12,7 +12,8 @@ export abstract class GsPlaybackAction {
 export class AddTrackToPlaylist implements Action, GsPlaybackAction {
   readonly type = PlaybackActionTypes.AddTrackToPlaylist
 
-  constructor(private payload: Track) {}
+  constructor(private payload: Track) {
+  }
 
   handle(state: PlaybackState): PlaybackState {
     return {
@@ -22,6 +23,14 @@ export class AddTrackToPlaylist implements Action, GsPlaybackAction {
         tracks: state.playlist.tracks.concat([this.payload])
       }
     }
+  }
+}
+
+export class ClearPlaylist implements Action, GsPlaybackAction {
+  readonly type = PlaybackActionTypes.ClearPlaylist
+
+  handle(_: PlaybackState): PlaybackState {
+    return initialPlaybackState
   }
 }
 

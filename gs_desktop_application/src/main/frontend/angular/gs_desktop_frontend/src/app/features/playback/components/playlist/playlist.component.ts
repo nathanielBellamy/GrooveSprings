@@ -3,7 +3,7 @@ import {Track} from "../../../../models/tracks/track.model";
 import {Observable} from "rxjs";
 import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
-import {SetCurrPlaylistTrackIdx} from "../../store/playback.actions";
+import {ClearPlaylist, SetCurrPlaylistTrackIdx} from "../../store/playback.actions";
 
 @Component({
   selector: 'gsPlaylist',
@@ -25,5 +25,9 @@ export class PlaylistComponent {
 
   handleDblClick(trackIdx: number) {
     this.store$.dispatch(new SetCurrPlaylistTrackIdx(trackIdx))
+  }
+
+  handleClearPlaylistClick() {
+    this.store$.dispatch(new ClearPlaylist())
   }
 }
