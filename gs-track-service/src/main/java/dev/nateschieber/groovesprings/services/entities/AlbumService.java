@@ -88,8 +88,4 @@ public class AlbumService {
       return res;
     }
   }
-
-  public void deleteAll() {
-    albumRepository.deleteAll();
-  }
 }

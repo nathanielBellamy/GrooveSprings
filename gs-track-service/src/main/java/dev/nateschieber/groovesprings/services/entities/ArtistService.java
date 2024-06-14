@@ -81,8 +81,4 @@ public class ArtistService {
 
     return Stream.concat(artistsFound.stream(), artistsCreated.stream()).toList();
   }
-
-  public void deleteAll() {
-    artistRepository.deleteAll();
-  }
 }
