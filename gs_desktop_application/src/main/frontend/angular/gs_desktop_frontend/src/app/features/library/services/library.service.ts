@@ -10,4 +10,8 @@ export class LibraryService {
   runScan(): Observable<any> {
     return this.http.post('api/v1/scan', {})
   }
+
+  clearLib(): Observable<any> {
+    return this.http.delete('api/v1/desktop/clearLib')
+  }
 }

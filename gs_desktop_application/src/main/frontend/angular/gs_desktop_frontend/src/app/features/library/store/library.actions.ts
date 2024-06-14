@@ -1,9 +1,8 @@
-import {LibraryState} from "./library.state";
+import {initialLibraryState, LibraryState} from "./library.state";
 import {Action} from "@ngrx/store";
 import {LibraryActionTypes} from "./library.actiontypes";
 import {Artist} from "../../../models/artists/artist.model";
 import {Album} from "../../../models/albums/album.model";
-
 
 export abstract class GsLibraryActionResult {
   public payload: any
@@ -73,12 +72,12 @@ export class ClearAlbumsFilter implements Action, GsLibraryActionResult {
   }
 }
 
-export class RunLibraryScan implements Action {
-  readonly type = LibraryActionTypes.RunLibraryScan
+export class LibraryScan implements Action {
+  readonly type = LibraryActionTypes.LibraryScan
 }
 
-export class LibraryScanComplete implements Action {
-  readonly type = LibraryActionTypes.LibraryScanComplete
+export class LibraryScanSuccess implements Action {
+  readonly type = LibraryActionTypes.LibraryScanSuccess
 }
 
 export class LibraryScanFailure implements Action {
@@ -87,7 +86,28 @@ export class LibraryScanFailure implements Action {
   constructor(e: any) {
     console.error(e)
   }
+}
 
+export class ClearLibrary implements Action, GsLibraryActionResult {
+  readonly type = LibraryActionTypes.ClearLibrary
+
+  public payload: null = null
+
+  handle(_: LibraryState): LibraryState {
+    return initialLibraryState;
+  }
+}
+
+export class ClearLibrarySuccess implements Action {
+  readonly type = LibraryActionTypes.ClearLibrarySuccess
+}
+
+export class ClearLibraryFailure implements Action {
+  readonly type = LibraryActionTypes.ClearLibraryFailure
+
+  constructor(e: any) {
+    console.error(e)
+  }
 }
 
 export * from './actions/albums.actions'

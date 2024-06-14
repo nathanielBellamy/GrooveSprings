@@ -21,7 +21,7 @@
           </div>
           <div>
 <!--            TODO: debug jackson serialization to make consistent-->
-            {{(track.album || {title: 'zow'}).name || track.album}}
+            {{(track.album || {title: 'zow'}).title || track.album}}
           </div>
         </div>
       }
