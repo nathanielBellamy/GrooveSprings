@@ -1,6 +1,9 @@
 <div class="gs_playlist">
   <h2>
     Playlist: ({{playlistName$ | async}})
+    <button (click)="handleClearPlaylistClick()">
+      Clr. Playlist
+    </button>
   </h2>
   <div class="playlist_currIdx">
     Currently Playing: {{currIdx$ | async }}
@@ -18,6 +21,9 @@
         </div>
         <div>
           {{track.title}}
+        </div>
+        <div>
+          {{track.artists}}
         </div>
         <div>
           <!--            TODO: debug jackson serialization to make consistent-->
