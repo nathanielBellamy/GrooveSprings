@@ -5,7 +5,7 @@ import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {Injectable} from "@angular/core";
 import {LibraryActionTypes} from "./library.actiontypes";
 import {FetchTracks} from "./actions/tracks.actions";
-import {catchError, exhaustMap, map, of} from "rxjs";
+import {catchError, switchMap, map, of} from "rxjs";
 import {
   FetchAlbumsFailure,
   FetchAlbumsSuccess,
@@ -36,7 +36,7 @@ export class LibraryEffects {
 
   runScan$ = createEffect(() => this.actions$.pipe(
     ofType(LibraryActionTypes.LibraryScan),
-    exhaustMap(() => this.libraryService.runScan()
+    switchMap(() => this.libraryService.runScan()
       .pipe(
         map(() => new LibraryScanSuccess()),
         catchError((e, _) => of(new LibraryScanFailure(e)))
@@ -46,7 +46,7 @@ export class LibraryEffects {
 
   clearLib$ = createEffect(() => this.actions$.pipe(
     ofType(LibraryActionTypes.ClearLibrary),
-    exhaustMap(() => this.libraryService.clearLib()
+    switchMap(() => this.libraryService.clearLib()
       .pipe(
         map(() => new ClearLibrarySuccess()),
         catchError((e, _) => of(new ClearLibraryFailure(e)))

@@ -73,19 +73,19 @@ public class AlbumService {
     if (byTitle.size() == 0) {
       return albumRepository.save(new Album(albumTitle, artists, null, Collections.emptyList()));
     } else {
-
-      Album res = null;
       for (Album album : byTitle) {
-        if (album.getArtists().equals(artists)) {
-          res = album;
-          break;
+        if (album.getArtists()
+                .stream()
+                .distinct()
+                .filter(artists::contains)
+                .toList()
+                .size() > 0) // non-empty artist intersection
+        {
+          return album;
         }
       }
 
-      if (res == null) {
-        return albumRepository.save(new Album(albumTitle, artists, null, Collections.emptyList()));
-      }
-      return res;
+      return albumRepository.save(new Album(albumTitle, artists, null, Collections.emptyList()));
     }
   }
 

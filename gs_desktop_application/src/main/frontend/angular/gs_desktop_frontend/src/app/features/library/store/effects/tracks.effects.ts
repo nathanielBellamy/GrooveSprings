@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import {map, exhaustMap, catchError, of} from "rxjs";
+import {map, switchMap, catchError, of} from "rxjs";
 import {LibraryActionTypes} from '../library.actiontypes'
 import {
   FetchTracksFailure,
@@ -22,7 +22,7 @@ export class TracksEffects {
   fetchTracks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(LibraryActionTypes.FetchTracks, LibraryActionTypes.FetchAll),
-      exhaustMap(() => this.tracksService.fetchAll()
+      switchMap(() => this.tracksService.fetchAll()
         .pipe(
           map((payload) =>new FetchTracksSuccess(payload as TracksData)),
           catchError((e, _) => of(new FetchTracksFailure(e)))
@@ -35,7 +35,7 @@ export class TracksEffects {
     this.actions$.pipe(
       ofType<SetArtistsFilter>(LibraryActionTypes.SetArtistsFilter),
       map(action => action.payload),
-      exhaustMap(artists => this.tracksService.fetchByArtistIds(artists.map(a => a.id))
+      switchMap(artists => this.tracksService.fetchByArtistIds(artists.map(a => a.id))
         .pipe(
           map((payload) => new SetArtistsFilterTracksSuccess(payload)),
           catchError((e, _) => of(new SetArtistsFilterTracksFailure(e)))
@@ -48,7 +48,7 @@ export class TracksEffects {
     this.actions$.pipe(
       ofType<SetAlbumsFilter>(LibraryActionTypes.SetAlbumsFilter),
       map(action => action.payload),
-      exhaustMap(albums => this.tracksService.fetchByAlbumIds(albums.map(a => a.id))
+      switchMap(albums => this.tracksService.fetchByAlbumIds(albums.map(a => a.id))
         .pipe(
           map((payload) => new SetAlbumsFilterTracksSuccess(payload)),
           catchError((e, _) => of(new SetAlbumsFilterTracksFailure(e)))
