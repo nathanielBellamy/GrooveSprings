@@ -36,7 +36,7 @@ public class Album {
   @JsonBackReference
   Set<Track> tracks;
 
-  @ManyToMany(mappedBy = "albums")
+  @ManyToMany(mappedBy = "albums", fetch = FetchType.EAGER)
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @JsonBackReference
   Set<Artist> artists;

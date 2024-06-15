@@ -16,6 +16,20 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
   @Query("select track from Track track join track.album album where album.id in :albumIds")
   List<Track> findByAlbumIds(@Param("albumIds") List<Long> albumIds);
 
+  @Query(
+          "select track from Track track " +
+                  "where track.title = :title " +
+                  "and track.audioCodec = :audioCodec " +
+                  "and track.trackNumber = :trackNumber " +
+                  "and track.duration = :duration"
+  )
+  List<Track> findMatch(
+          @Param("title") String title,
+          @Param("audioCodec") AudioCodec audioCodec,
+          @Param("trackNumber") Integer trackNumber,
+          @Param("duration") Integer duration
+  );
+
   List<Track> findByReleaseDateBetween(LocalDate start, LocalDate end);
   List<Track> findByAudioCodec(AudioCodec audioCodec);
   List<Track> findByDurationBetween(Long min, Long max);

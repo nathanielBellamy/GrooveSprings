@@ -4,12 +4,9 @@ import dev.nateschieber.groovesprings.entities.Album;
 import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
-import dev.nateschieber.groovesprings.enums.Genre;
 import dev.nateschieber.groovesprings.repositories.TrackRepository;
 import dev.nateschieber.groovesprings.rest.GsDesktopTrackCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
-import dev.nateschieber.groovesprings.rest.dtos.track.TrackDto;
-import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -76,7 +73,7 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
       albumService.save(album);
     }
 
-      return this.trackRepository.save(updatedTrack);
+    return this.trackRepository.save(updatedTrack);
   }
 
   @Override
@@ -103,7 +100,6 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
 
   public Track createFromGsDesktopTrackCreateDto(GsDesktopTrackCreateDto dto) {
     List<Artist> artists = artistService.findOrCreateAllByName(dto.artistNames());
-    Album album = albumService.findOrCreateByTitleAndArtists(dto.albumTitle(), artists);
     Integer releaseYear;
     try {
       releaseYear = parseInt(dto.releaseYear());
@@ -111,6 +107,7 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
       releaseYear = Integer.valueOf(0);
     }
     LocalDate releaseDate = LocalDate.of(releaseYear, 1, 1);
+    Album album = albumService.findMatchOrCreate(dto.albumTitle(), artists, releaseDate);
     Track track = new Track(
             null,
             artists,
@@ -128,7 +125,16 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
             dto.isLossless()
     );
 
-    return trackRepository.save(track);
+    List<Track> matchedTracks = trackRepository.findMatch(
+            track.getTitle(),
+            track.getAudioCodec(),
+            track.getTrackNumber(),
+            track.getDuration()
+    );
+
+    return matchedTracks.isEmpty()
+            ? trackRepository.save(track)
+            : matchedTracks.getFirst();
   }
 
   @Override
