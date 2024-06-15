@@ -6,6 +6,7 @@ import dev.nateschieber.groovesprings.repositories.AlbumRepository;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,10 @@ public class AlbumService {
 
   public Optional<Album> findById(Long id) {
     return this.albumRepository.findById(id);
+  }
+
+  public List<Album> findByTitle(String title) {
+    return albumRepository.findByTitle(title);
   }
 
   public List<Album> findByArtistIds(List<Long> artistIds) {
@@ -68,24 +73,18 @@ public class AlbumService {
     return savedAlbum;
   }
 
-  public Album findOrCreateByTitleAndArtists(String albumTitle, List<Artist> artists) {
-    List<Album> byTitle = albumRepository.findByTitle(albumTitle);
-    if (byTitle.size() == 0) {
+  public Album findMatchOrCreate(String albumTitle, List<Artist> artists, LocalDate releaseDate) {
+    // TODO:
+    //    List<Album> albumMatches = albumRepository.findMatches(
+    //            albumTitle,
+    //            artists.stream().map(Artist::getId).toList(),
+    //            releaseDate
+    //    );
+    List<Album> albumMatches = albumRepository.findByTitle(albumTitle);
+    if (albumMatches.isEmpty()) {
       return albumRepository.save(new Album(albumTitle, artists, null, Collections.emptyList()));
     } else {
-      for (Album album : byTitle) {
-        if (album.getArtists()
-                .stream()
-                .distinct()
-                .filter(artists::contains)
-                .toList()
-                .size() > 0) // non-empty artist intersection
-        {
-          return album;
-        }
-      }
-
-      return albumRepository.save(new Album(albumTitle, artists, null, Collections.emptyList()));
+      return albumMatches.getFirst();
     }
   }
 
