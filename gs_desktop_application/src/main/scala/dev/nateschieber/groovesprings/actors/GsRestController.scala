@@ -11,6 +11,7 @@ import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSett
 import dev.nateschieber.groovesprings.GsMusicLibraryScanner
 import dev.nateschieber.groovesprings.enums.GsHttpPort
 import dev.nateschieber.groovesprings.jni.JniMain
+import dev.nateschieber.groovesprings.rest.{FileSelectDto, FileSelectJsonSupport}
 import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand}
 
 import java.net.InetSocketAddress
@@ -40,7 +41,9 @@ object GsRestController {
   }
 }
 
-class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsCommand]) extends AbstractBehavior[GsCommand](context) {
+class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsCommand])
+  extends AbstractBehavior[GsCommand](context)
+    with FileSelectJsonSupport {
 
   def routes(): Route = {
     concat(
@@ -65,11 +68,10 @@ class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef
         }
       },
       path("api" / "v1" / "file-select") {
-        get {
-          parameters(Symbol("path").as[String]) { (path: String) => {
-            val msg = s"path: ${path}"
-            gsPlaybackRef ! FileSelect(path, context.self)
-//            complete(HttpEntity(ContentTypes.`application/json`, s"{\"msg\":\"${msg}\"}"))
+        put { // update GsPlaybackThread.filePath
+          entity(as[FileSelectDto]) { dto => {
+            val msg = s"path: ${dto.path}"
+            gsPlaybackRef ! FileSelect(dto.path, context.self)
             complete(msg)
           }}
         }

@@ -9,6 +9,7 @@ export class PlaybackService {
 
   setCurrFile(track: Track): Observable<any> {
     // TODO: make into a POST, put path in body to avoid formatting issues with query string
-    return this.http.get(`api/v1/file-select?path=${track.path}`, {responseType: 'text'})
+    const { path } = track
+    return this.http.put("api/v1/file-select", { path }, {responseType: 'text'})
   }
 }
