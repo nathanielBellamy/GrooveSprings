@@ -31,6 +31,14 @@ JNIEXPORT jint JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_addNative
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
   (JNIEnv *, jobject, jstring, jlong);
 
+/*
+ * Class:     dev_nateschieber_groovesprings_jni_JniMain
+ * Method:    readSfInfoNative
+ * Signature: (Ljava/lang/String;)Ldev/nateschieber/groovesprings/jni/SfInfo;
+ */
+JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_readSfInfoNative
+  (JNIEnv *, jobject, jstring);
+
 #ifdef __cplusplus
 }
 #endif

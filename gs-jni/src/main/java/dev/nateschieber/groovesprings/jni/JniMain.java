@@ -23,5 +23,13 @@ public class JniMain {
     new JniMain().initPlaybackLoopNative(filePath, initialFrameId);
   }
 
-  private native void initPlaybackLoopNative(String file, long initialFrameId);
+  private native void initPlaybackLoopNative(String filePath, long initialFrameId);
+
+  public static SfInfo readSfInfo(String filePath) {
+    SfInfo res = new JniMain().readSfInfoNative(filePath);
+    return res;
+  }
+
+  private native SfInfo readSfInfoNative(String filePath);
+
 }

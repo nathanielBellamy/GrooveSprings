@@ -33,6 +33,12 @@ public class Track {
   private Long bitRate;
   private Boolean isVariableBitRate;
   private Boolean isLossless;
+  private int sf_frames;
+  private int sf_samplerate;
+  private int sf_channels;
+  private int sf_format;
+  private int sf_sections;
+  private int sf_seekable;
 
   @ElementCollection
   @Enumerated(EnumType.STRING)
@@ -79,7 +85,13 @@ public class Track {
       Integer sampleRate,
       Long bitRate,
       Boolean isVariableBitRate,
-      Boolean isLossless
+      Boolean isLossless,
+      int sf_frames,
+      int sf_samplerate,
+      int sf_channels,
+      int sf_format,
+      int sf_sections,
+      int sf_seekable
   ) {
     this.id = id;
     this.album = album;
@@ -95,6 +107,12 @@ public class Track {
     this.bitRate = bitRate;
     this.isVariableBitRate = isVariableBitRate;
     this.isLossless = isLossless;
+    this.sf_frames = sf_frames;
+    this.sf_samplerate = sf_samplerate;
+    this.sf_channels = sf_channels;
+    this.sf_format = sf_format;
+    this.sf_sections = sf_sections;
+    this.sf_seekable = sf_seekable;
   }
 
   public Track(TrackUpdateDto dto, List<Artist> newArtists, Album newAlbum) {
@@ -175,6 +193,30 @@ public class Track {
 
   public Boolean getLossless() {
     return isLossless;
+  }
+
+  public int getSf_frames() {
+    return sf_frames;
+  }
+
+  public int getSf_samplerate() {
+    return sf_samplerate;
+  }
+
+  public int getSf_channels() {
+    return sf_channels;
+  }
+
+  public int getSf_format() {
+    return sf_format;
+  }
+
+  public int getSf_sections() {
+    return sf_sections;
+  }
+
+  public int getSf_seekable() {
+    return sf_seekable;
   }
 
   @Override

@@ -94,7 +94,13 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
             null,
             null,
             null,
-            null);
+            null,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0);
     return trackRepository.save(track);
   }
 
@@ -122,7 +128,13 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
             dto.sampleRate(),
             dto.bitRate(),
             dto.isVariableBitRate(),
-            dto.isLossless()
+            dto.isLossless(),
+            dto.sf_frames(),
+            dto.sf_samplerate(),
+            dto.sf_channels(),
+            dto.sf_format(),
+            dto.sf_sections(),
+            dto.sf_seekable()
     );
 
     List<Track> matchedTracks = trackRepository.findMatch(

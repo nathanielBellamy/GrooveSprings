@@ -9,6 +9,8 @@
 cxx = g++
 audio_src = audio/audio.cpp
 audio_obj = audio/audio.o
+java_jni_main = JniMain.java
+jni_main_header = dev_nateschieber_groovesprings_jni_JniMain.h
 jni_src = dev_nateschieber_groovesprings_jni_JniMain.cpp
 jni_obj = dev_nateschieber_groovesprings_jni_JniMain.o
 audio_deps = audio/audio.cpp audio/audio.h audio/audio_data.h audio/constants.h
@@ -33,11 +35,13 @@ link_flags = -lsndfile -lportaudio
 lib = libnative.dylib
 
 lib:
+	javac -h . $(java_jni_main) SfInfo.java # produces jni_main_header
 	$(cxx) -c -fPIC $(include_flags) $(audio_src) -o $(audio_obj)
 	$(cxx) -c -fPIC $(include_flags) $(jni_src) -o $(jni_obj)
 	$(cxx) $(os_lib_flag) -fPIC -o $(lib) $(audio_obj) $(jni_obj) -lc $(link_flags)
 
 clean:
+	rm $(jni_main_header)
 	rm $(lib)
 	rm $(audio_obj)
 	rm $(jni_obj)
