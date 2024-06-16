@@ -9,6 +9,7 @@ import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 import dev.nateschieber.groovesprings.enums.GsPlayState
+import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.traits.*
 
 import java.util.UUID
@@ -43,7 +44,6 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
       case FileSelect(path, replyTo) =>
         GsPlaybackThread.stop()
         GsPlaybackThread.setFileName(path)
-        clearPlaybackThread()
         replyTo ! RespondFileSelect(context.self)
         Behaviors.same
 

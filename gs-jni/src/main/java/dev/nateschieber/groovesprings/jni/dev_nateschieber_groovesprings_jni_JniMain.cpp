@@ -7,6 +7,7 @@
 #include <portaudio.h>
 #include "dev_nateschieber_groovesprings_jni_JniMain.h"
 #include "./audio/audio.h"
+#include "./audio/sf_info_reader.h"
 
 // NOTE:
 //   - on macOs, .dylib compilation requires main method
@@ -34,4 +35,21 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlayb
    {
       std::cout << "Message: " << e.what() << "\n";
    }
+}
+
+
+/*
+ * Class:     dev_nateschieber_groovesprings_jni_JniMain
+ * Method:    readSfInfoNative
+ * Signature: (Ljava/lang/String;)Ldev/nateschieber/groovesprings/jni/JniMain/SfInfo;
+ */
+JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_readSfInfoNative
+  (JNIEnv *env, jobject _, jstring filePath)
+{
+    std::cout<<"\nHello from readSfInfoNative \n";
+    SfInfoReader sfInfoReader(env, filePath);
+    SF_INFO sf_info = sfInfoReader.read();
+    std::cout << "sfInfoReader.sf_info.samplerate: " << sf_info.samplerate << "\n";
+
+    return sfInfoReader.jWrap(sf_info);
 }

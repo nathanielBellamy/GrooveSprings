@@ -2,6 +2,8 @@ package dev.nateschieber.groovesprings.workers;
 
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.enums.DefaultStrings;
+import dev.nateschieber.groovesprings.jni.JniMain;
+import dev.nateschieber.groovesprings.jni.SfInfo;
 import dev.nateschieber.groovesprings.rest.GsDesktopTrackCreateDto;
 import dev.nateschieber.groovesprings.rest.TrackClient;
 import org.jaudiotagger.audio.AudioFile;
@@ -78,6 +80,12 @@ public class Scanner {
         Boolean isLoseless = false;
         AudioCodec audioCodec = AudioCodec.UNRECOGNIZED;
         String releaseDate = "";
+        int sf_frames = 0;
+        int sf_samplerate = 0;
+        int sf_channels = 0;
+        int sf_format = 0;
+        int sf_sections = 0;
+        int sf_seekable = 0;
 
         try {
             AudioFile f = AudioFileIO.read(path.toFile());
@@ -98,6 +106,18 @@ public class Scanner {
                     isVariableBitRate
             );
             releaseDate = tag.getFirst(FieldKey.YEAR);
+
+            //
+
+            SfInfo sfInfo = JniMain.readSfInfo(path.toString());
+
+            sf_frames = sfInfo.frames();
+            sf_samplerate = sfInfo.samplerate();
+            sf_channels = sfInfo.channels();
+            sf_format = sfInfo.format();
+            sf_sections = sfInfo.sections();
+            sf_seekable = sfInfo.seekable();
+
         } catch (Exception e) {
             // TODO: log and report failures
             return null;
@@ -115,7 +135,13 @@ public class Scanner {
                 isVariableBitRate,
                 isLoseless,
                 audioCodec,
-                releaseDate
+                releaseDate,
+                sf_frames,
+                sf_samplerate,
+                sf_channels,
+                sf_format,
+                sf_sections,
+                sf_seekable
         );
     }
 

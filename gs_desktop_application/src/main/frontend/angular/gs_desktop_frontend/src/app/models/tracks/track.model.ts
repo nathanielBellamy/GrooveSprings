@@ -12,4 +12,5 @@ export interface Track {
   path: string;
   album: Album;
   artists: Artist[];
+  sf_frames: number;
 }

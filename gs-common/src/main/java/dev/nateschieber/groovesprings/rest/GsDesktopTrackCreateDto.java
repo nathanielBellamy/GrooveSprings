@@ -17,5 +17,11 @@ public record GsDesktopTrackCreateDto(
         Boolean      isVariableBitRate,
         Boolean      isLossless,
         AudioCodec   audioCodec,
-        String       releaseYear
+        String       releaseYear,
+        int          sf_frames,
+        int          sf_samplerate,
+        int          sf_channels,
+        int          sf_format,
+        int          sf_sections,
+        int          sf_seekable
 ) { }
