@@ -2,6 +2,8 @@ import { Component  } from '@angular/core'
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {AsyncPipe} from "@angular/common";
+import { webSocket } from "rxjs/webSocket";
+import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
 
 @Component({
   selector: 'gsTransportControl',
@@ -14,48 +16,39 @@ import {AsyncPipe} from "@angular/common";
 })
 @Injectable()
 export class TransportControlComponent {
-  private socket = this.getSocket()
+  private wsSubject: WebSocketSubject<string> = this.getWsSubject()
   protected gsPlaybackSpeedOptions: number[] = [-2.0, -1.0, -0.5, 0.5, 1.0, 2.0]
 
   constructor(private http: HttpClient) { }
 
-  ngOnInit() {
-    this.socket.onopen = () => console.log('gs-transport-control opened')
-    this.socket.onmessage = () => {}
-    this.socket.onclose = () => {
-      this.socket.close()
-      console.log('gs-transport-control closed')
-      this.socket = this.getSocket();
-    }
-    this.socket.onerror = (e) => {
-      this.socket.close()
-      console.log(e)
-      this.socket = this.getSocket();
-    }
-  }
+  getWsSubject() {
+    const subject =  webSocket<string>({
+      url: 'ws://localhost:8766/gs-transport-control',
+      deserializer: (msg: MessageEvent<any>) => msg.data
+    })
 
-  ngOnDestroy() {
-    this.socket.close()
-  }
+    subject.subscribe({
+      error: (e: any) => console.error({transportControlSocketError: e}),
+      complete: () => this.wsSubject = this.getWsSubject()
+    })
 
-  getSocket() {
-    return new WebSocket('ws://localhost:8766/gs-transport-control')
+    return subject
   }
 
   playTrig() {
-    this.socket.send('play')
+    this.wsSubject.next('play')
   }
 
   pauseTrig() {
-    this.socket.send('pause')
+    this.wsSubject.next('pause')
   }
 
   stopTrig() {
-    this.socket.send('stop')
+    this.wsSubject.next('stop')
   }
 
   handlePlaybackSpeed(newIdx: any) {
     const speed = this.gsPlaybackSpeedOptions[newIdx]
-    this.socket.send(`${speed}`)
+    this.wsSubject.next(`${speed}`)
   }
 }
