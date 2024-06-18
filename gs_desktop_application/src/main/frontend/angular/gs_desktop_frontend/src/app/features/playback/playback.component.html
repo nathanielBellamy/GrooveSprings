@@ -2,15 +2,23 @@
 <div class="gs_playback">
   <fieldset class="gs_playback_fieldset">
     <legend class="gs_playback_legend">
-      <span>
+      <span
+        class="gs_playback_legend_elem"
+        [class.selected]="currSectionIsTransport"
+        (click)="handlePlaybackSectionClick('transport')">
         Playback
       </span>
       -
-      <span>
+      <span
+        class="gs_playback_legend_elem"
+        [class.selected]="currSectionIsPlaylist"
+        (click)="handlePlaybackSectionClick('playlist')">
         Playlist
       </span>
     </legend>
-    <gsTransportControl />
-<!--    <gsPlaylist />-->
+
+
+    <gsTransportControl *ngIf="currSectionIsTransport"/>
+    <gsPlaylist *ngIf="currSectionIsPlaylist"/>
   </fieldset>
 </div>
