@@ -11,6 +11,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {gsState} from "./store/app.state";
 import {gsEffects} from "./store/app.effects";
 import {LibraryModule} from "./features/library/components/library/library.module";
+import {ContainerModule} from "./features/container/components/container/container.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,6 +23,7 @@ import {LibraryModule} from "./features/library/components/library/library.modul
     // RouterOutlet,
     LibraryModule,
     PlaybackModule,
+    ContainerModule
   ],
   providers: [
     // provideRouter(routes),

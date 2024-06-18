@@ -1,0 +1,31 @@
+
+.gs_container
+  margin: 10px
+  display: grid
+  grid-template-rows: 20% 70%
+  grid-template-columns: 100%
+  align-self: center
+  border: 5px solid black
+  border-radius: 10px
+
+  &_header
+    display: grid
+    grid-template-rows: 100%
+    grid-template-columns: 30% 70%
+    margin: 5px
+
+    &_branding
+      margin: 5px
+      display: flex
+      align-self: start
+
+      &_title
+        text-align: center
+        font: bold italic 2.5em "Fira Sans", sans-serif
+        align-self: center
+        margin-bottom: 5px
+
+      &_icon
+        height: 70px
+        width: 70px
+        align-self: center

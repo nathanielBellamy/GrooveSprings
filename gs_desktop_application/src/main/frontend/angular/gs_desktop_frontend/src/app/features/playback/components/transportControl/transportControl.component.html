@@ -1,22 +1,29 @@
 
 <div class='transport_control'>
-  <div class='transport_control_title'>
-    Transport Control
-  </div>
-  <div class="transport_control_buttons">
-    <button (click)="playTrig()">
+  <fieldset class="transport_control_buttons">
+    <legend class="transport_control_buttons_legend">
+      Transport
+    </legend>
+    <button
+      class="transport_control_button"
+      (click)="playTrig()">
       Play
     </button>
-    <button (click)="pauseTrig()">
+    <button
+      class="transport_control_button"
+      (click)="pauseTrig()">
       Pause
     </button>
-    <button (click)="stopTrig()">
+    <button
+      class="transport_control_button"
+      (click)="stopTrig()">
       Stop
     </button>
-  </div>
-  <fieldset>
-    <legend>
-      Playback Speed
+  </fieldset>
+  <gsPlaybackDisplay />
+  <fieldset class="transport_control_speed_fieldset">
+    <legend class="transport_control_speed_legend">
+      Speed
     </legend>
     <datalist id="gs_playback_speed_options">
       @for (speedOpt of gsPlaybackSpeedOptions; track speedOpt; let i = $index) {

@@ -4,13 +4,15 @@ import { HttpClient } from '@angular/common/http';
 import {AsyncPipe} from "@angular/common";
 import { webSocket } from "rxjs/webSocket";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
+import {PlaybackDisplayModule} from "../playbackDisplay/playbackDisplay.module";
 
 @Component({
   selector: 'gsTransportControl',
   standalone: true,
   templateUrl: './transportControl.component.html',
   imports: [
-    AsyncPipe
+    AsyncPipe,
+    PlaybackDisplayModule
   ],
   styleUrl: './transportControl.component.sass'
 })
