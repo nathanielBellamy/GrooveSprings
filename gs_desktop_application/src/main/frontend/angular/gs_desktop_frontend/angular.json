@@ -27,6 +27,7 @@
             "inlineStyleLanguage": "sass",
             "assets": [
               "src/groovesprings-icon.png",
+              "src/branding-background.jpg",
               "src/assets"
             ],
             "styles": [
@@ -87,6 +88,7 @@
             "inlineStyleLanguage": "sass",
             "assets": [
               "src/groovesprings-icon.png",
+              "src/branding-background.jpg",
               "src/assets"
             ],
             "styles": [
