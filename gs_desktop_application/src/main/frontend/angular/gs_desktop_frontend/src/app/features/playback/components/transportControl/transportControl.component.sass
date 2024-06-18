@@ -1,8 +1,7 @@
 .transport_control
-  width: 100%
   display: grid
-  grid-template-columns: 100px 226px
-  grid-template-rows: 75px 70px
+  grid-template-rows: 70px 70px
+  grid-template-columns: 30% 70%
   gap: 5px
   margin: 5px
 
@@ -17,18 +16,35 @@
     align-items: center
 
   &_buttons
-    height: 100%
-    width: 100%
     display: grid
-    grid-template-columns: 1fr 1fr 1fr
+    grid-template-rows: 100%
+    grid-template-columns: 30% 30% 30%
     gap: 5px
+    border: 2px solid black
+    border-radius: 5px
 
-  &_playback_speed
-    height: 100%
-    width: 100%
+    &_legend
+      font: bold italic 0.75em "Fira Sans", sans-serif
+
+
+  &_button
     display: flex
     justify-content: space-around
     align-items: center
+    align-self: center
+    height: 30px
+
+  &_playback_speed
+    display: flex
+    justify-content: space-around
+    align-items: center
+
+  &_speed_fieldset
+    border: 2px solid black
+    border-radius: 5px
+
+  &_speed_legend
+    font: bold italic 0.75em "Fira Sans", sans-serif
 
 .gs_playback_speed_slider
   width: calc(100% - 10px)
