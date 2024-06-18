@@ -25,7 +25,6 @@ export class AlbumsComponent implements OnInit {
   }
 
   handleAlbumClick(album: Album) {
-    console.dir(album)
     this.store$.dispatch(new SetAlbumsFilter([album]))
   }
 }
