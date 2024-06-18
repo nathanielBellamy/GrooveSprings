@@ -73,21 +73,22 @@ class GsTransportControl(context: ActorContext[GsCommand], gsPlaybackRef: ActorR
     Flow[Message].map {
       case TextMessage.Strict(msg) =>
         msg match {
-          case "play" =>
+          case "\"play\"" =>
             playbackRef ! PlayTrig(displayRef)
             TextMessage.Strict("OK - PLAY")
-          case "pause" =>
+          case "\"pause\"" =>
             playbackRef ! PauseTrig(displayRef)
             TextMessage.Strict("OK - PAUSE")
-          case "stop" =>
+          case "\"stop\"" =>
             playbackRef ! StopTrig(displayRef)
             TextMessage.Strict("OK - STOP")
           case default =>
-            println(s"GsTransportControl :: default msg: ${msg}")
             val speed = gsPlaybackSpeedFromString(msg)
-            println(s"parsed speed :: ${speed}")
-            playbackRef ! SetPlaybackSpeed(speed, displayRef)
-            TextMessage.Strict("BAD MESSAGE")
+            if (speed != null)
+              playbackRef ! SetPlaybackSpeed(speed, displayRef)
+              TextMessage.Strict("OK - SET PLAYBACK SPEED")
+            else
+              TextMessage.Strict("BAD MESSAGE")
         }
       case BinaryMessage.Strict(b) => TextMessage.Strict("Ok - ws BinaryMessage")
     }
