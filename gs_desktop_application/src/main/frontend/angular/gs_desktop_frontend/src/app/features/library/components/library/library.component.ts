@@ -21,6 +21,8 @@ export class LibraryComponent implements OnInit {
   protected artistsFilter$: Observable<Artist[]>
   protected albumsFilter$: Observable<Album[]>
 
+  protected currSection: string = 'library'
+
   constructor(private store$: Store<{library: LibraryState}>) {
     this.artistsFilter$ = store$.select(state => state.library.filters.artists)
     this.albumsFilter$ = store$.select(state =>  state.library.filters.albums)
@@ -32,20 +34,32 @@ export class LibraryComponent implements OnInit {
     this.store$.dispatch(new FetchTracks())
   }
 
-  clearArtistsFilter() {
+  clearArtistsFilter(): void {
     this.store$.dispatch(new ClearArtistsFilter())
   }
 
-  clearAlbumsFilter() {
+  clearAlbumsFilter(): void {
     this.store$.dispatch(new ClearAlbumsFilter())
   }
 
   // TODO: input dirs to scan
-  handleLibScanClick() {
+  handleLibScanClick(): void {
     this.store$.dispatch(new LibraryScan())
   }
 
-  handleLibClearClick() {
+  handleLibClearClick(): void {
     this.store$.dispatch(new ClearLibrary())
+  }
+
+  handleLibrarySectionClick(section: string): void {
+    this.currSection = section
+  }
+
+  get currSectionIsLibrary(): boolean {
+    return this.currSection === 'library'
+  }
+
+  get currSectionIsSettings(): boolean {
+    return this.currSection === 'settings'
   }
 }

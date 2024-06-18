@@ -1,6 +1,22 @@
-<div class="gs_library">
-  <div class="gs_library_header">
-    <div class="gs_library_buttons">
+<fieldset class="gs_library">
+  <legend class="gs_library_legend">
+    <span
+      (click)="handleLibrarySectionClick('library')"
+      [class.selected]="currSectionIsLibrary"
+      class="gs_library_legend_elem" >
+      Library
+    </span>
+    -
+    <span
+      (click)="handleLibrarySectionClick('settings')"
+      [class.selected]="currSectionIsSettings"
+      class="gs_library_legend_elem" >
+      Settings
+    </span>
+  </legend>
+    <div
+      *ngIf="currSectionIsSettings"
+      class="gs_library_buttons">
       <button class="gs_library_scan_button"
               (click)="handleLibScanClick()">
         Scan Lib
@@ -11,6 +27,7 @@
       </button>
     </div>
 
+  <div *ngIf="currSectionIsLibrary">
     <div class="gs_library_filters">
       Filters
       <div class="gs_library_filter">
@@ -44,11 +61,10 @@
         </div>
       </div>
     </div>
+    <gsArtists />
+    <gsAlbums />
+    <gsTracks />
   </div>
 
-  <gsArtists />
-  <gsAlbums />
-  <gsTracks />
 
-
-</div>
+</fieldset>
