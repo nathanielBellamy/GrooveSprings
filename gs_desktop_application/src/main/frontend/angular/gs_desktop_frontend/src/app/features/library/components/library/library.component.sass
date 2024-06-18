@@ -1,11 +1,25 @@
+.selected
+  font: bold italic 1.33em "Fira Sans", sans-serif
+  transition: font .3s
+  text-decoration: underline
+
 .gs_library
   height: calc(100vh - 20px)
-  background-color: rgba(6, 13, 118, 0.8)
-  color: white
   display: grid
   grid-template-rows: 10% 15% 15% 60%
   grid-template-columns: 100%
-  padding: 5px
+  margin: 5px
+  border: 2px solid black
+  border-radius: 5px
+
+  &_legend
+    color: black
+    font: bold italic 1.3em "Fira Sans", sans-serif
+    &_elem
+      cursor: pointer
+      &:hover
+        color: #ff8f00
+        transition: font .3s
 
   &_header
     width: 100%
