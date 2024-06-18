@@ -13,4 +13,5 @@ export interface Track {
   album: Album;
   artists: Artist[];
   sf_frames: number;
+  sf_channels: number;
 }

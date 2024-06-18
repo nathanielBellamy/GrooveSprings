@@ -5,6 +5,8 @@ import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
 import {Track} from "../../../../models/tracks/track.model";
 import {map, Observable} from "rxjs";
+import { webSocket } from "rxjs/webSocket";
+import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
 
 @Component({
   selector: 'gsPlaybackDisplay',
@@ -13,41 +15,43 @@ import {map, Observable} from "rxjs";
 })
 @Injectable()
 export class PlaybackDisplayComponent {
-  private socket = new WebSocket('ws://localhost:8767/gs-display')
-  protected lastFrameId = "0"
+  private wsSubject: WebSocketSubject<unknown> = this.getWsSubject()
   protected currTrackSfFrames: number = 100
+  protected currTrackSfChannels: number = 2
   protected currTrack$: Observable<Track>
-  protected currPercent: number = this.getCurrPercent()
+  protected currPercent: number = 0
 
   constructor(private http: HttpClient, private store$: Store<{playback: PlaybackState}>) {
     this.currTrack$ = store$.select(state => ({...state.playback.playlist.tracks[state.playback.currPlaylistTrackIdx]}))
     this.currTrack$.subscribe(track => {
         this.currTrackSfFrames = track.sf_frames
+        this.currTrackSfChannels = track.sf_channels
       }
     )
   }
 
-  getCurrPercent() {
-    return Math.round(100 * parseInt(this.lastFrameId) / this.currTrackSfFrames);
+  getWsSubject(): WebSocketSubject<unknown> {
+    const subject = webSocket('ws://localhost:8767/gs-display')
+
+    subject.subscribe({
+      next: (msg: unknown) => {
+        const msgNum: number = typeof msg === 'number' ? msg : 0
+        this.setCurrPercent(msgNum)
+
+      },
+      error: (e: any) => console.error({playbackDisplaySocketError: e}),
+      complete: () => this.wsSubject = this.getWsSubject()
+    })
+
+    return subject
   }
 
-  setCurrPercent() {
-    this.currPercent = this.getCurrPercent()
+  getCurrPercent(lastFrameId: number) {
+    return Math.round(100 * lastFrameId / (this.currTrackSfFrames * this.currTrackSfChannels))
   }
 
-  ngOnInit() {
-    this.socket.onopen = () => console.log('gs-display opened')
-    this.socket.onmessage = (e) => {
-      this.lastFrameId = e.data
-      this.setCurrPercent()
-    }
-    this.socket.onclose = () => console.log('gs-display closed')
-    this.socket.onerror = (e) => console.log(e)
+  setCurrPercent(lastFrameId: number) {
+    this.currPercent = this.getCurrPercent(lastFrameId)
   }
-
-  ngOnDestroy() {
-    this.socket.close()
-  }
-
   protected readonly JSON = JSON;
 }
