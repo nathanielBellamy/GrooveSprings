@@ -9,7 +9,19 @@ import {PlaybackDisplayComponent} from "./components/playbackDisplay/playbackDis
 })
 @Injectable()
 export class PlaybackComponent {
+  protected currSection: string = 'transport'
 
   constructor() { }
 
+  handlePlaybackSectionClick(section: string) {
+    this.currSection = section
+  }
+
+  get currSectionIsTransport(): boolean {
+    return this.currSection === 'transport'
+  }
+
+  get currSectionIsPlaylist(): boolean {
+    return this.currSection === 'playlist'
+  }
 }
