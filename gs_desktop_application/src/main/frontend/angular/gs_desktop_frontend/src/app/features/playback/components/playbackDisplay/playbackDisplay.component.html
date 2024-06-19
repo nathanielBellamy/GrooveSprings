@@ -1,9 +1,68 @@
 
 <div class="gs_playback_display">
-  <div
-    class="gs_playback_display_progress_bar"
-    [ngStyle]="{'background': 'linear-gradient(90deg, #ffffff 0 ' + currPercent + '%, #ff8f00 ' + currPercent + '% 100% )'}">
+  <fieldset class="gs_current_track">
+    <label>
+      Currently Playing
+    </label>
+    <table>
+      <thead>
+        <tr>
+          <td>
+          </td>
+          <td>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            Track:
+          </td>
+          <td>
+            {{currTrack.title}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Artist/s:
+          </td>
+          <td>
+            {{JSON.stringify(currTrack.artists)}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Album:
+          </td>
+          <td>
+            {{JSON.stringify(currTrack.album)}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Codec:
+          </td>
+          <td>
+            {{currTrack.audioCodec}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            SampleRate:
+          </td>
+          <td>
+            {{currTrack.sf_samplerate}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-  </div>
-<!--  Curr Track: {{JSON.stringify(currTrack$ | async)}}-->
+    <div
+      class="gs_playback_display_progress_bar"
+      [ngStyle]="{
+        'background': 'linear-gradient(90deg, #ff8f00 0 ' + currPercent + '%, #ffffff ' + currPercent + '% 100% )',
+        'transition': 'background 0.2s ease'
+      }">
+    </div>
+  </fieldset>
 </div>

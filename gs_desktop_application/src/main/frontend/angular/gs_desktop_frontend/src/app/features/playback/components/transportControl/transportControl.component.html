@@ -20,27 +20,26 @@
       Stop
     </button>
   </fieldset>
-  <gsPlaybackDisplay />
-  <fieldset class="transport_control_speed_fieldset">
-    <legend class="transport_control_speed_legend">
-      Speed
-    </legend>
-    <datalist id="gs_playback_speed_options">
-      @for (speedOpt of gsPlaybackSpeedOptions; track speedOpt; let i = $index) {
-        <option value="{{i}}"></option>
-      }
-    </datalist>
-    <div class="transport_control_playback_speed">
-      <input type="range"
-             #gs_playback_speed
-             id="gs_playback_speed"
-             class="gs_playback_speed_slider"
-             list="gs_playback_speed_options"
-             min="0"
-             max="{{gsPlaybackSpeedOptions.length - 1}}"
-             step="1"
-             value="4"
-             (input)="handlePlaybackSpeed(gs_playback_speed.value)"/>
-    </div>
-  </fieldset>
+<!--  <fieldset class="transport_control_speed_fieldset">-->
+<!--    <legend class="transport_control_speed_legend">-->
+<!--      Speed-->
+<!--    </legend>-->
+<!--    <datalist id="gs_playback_speed_options">-->
+<!--      @for (speedOpt of gsPlaybackSpeedOptions; track speedOpt; let i = $index) {-->
+<!--        <option value="{{i}}"></option>-->
+<!--      }-->
+<!--    </datalist>-->
+<!--    <div class="transport_control_playback_speed">-->
+<!--      <input type="range"-->
+<!--             #gs_playback_speed-->
+<!--             id="gs_playback_speed"-->
+<!--             class="gs_playback_speed_slider"-->
+<!--             list="gs_playback_speed_options"-->
+<!--             min="0"-->
+<!--             max="{{gsPlaybackSpeedOptions.length - 1}}"-->
+<!--             step="1"-->
+<!--             value="4"-->
+<!--             (input)="handlePlaybackSpeed(gs_playback_speed.value)"/>-->
+<!--    </div>-->
+<!--  </fieldset>-->
 </div>
