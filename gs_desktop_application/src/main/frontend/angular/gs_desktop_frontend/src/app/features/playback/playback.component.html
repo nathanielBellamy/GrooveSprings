@@ -17,8 +17,10 @@
       </span>
     </legend>
 
-
-    <gsTransportControl *ngIf="currSectionIsTransport"/>
+    <div class="gs_playback_current_track">
+      <gsTransportControl />
+      <gsPlaybackDisplay />
+    </div>
     <gsPlaylist *ngIf="currSectionIsPlaylist"/>
   </fieldset>
 </div>

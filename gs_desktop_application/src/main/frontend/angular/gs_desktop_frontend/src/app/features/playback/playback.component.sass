@@ -3,9 +3,12 @@
 
   &_fieldset
     height: 90%
-    background-color: rgba(211, 146, 52, 0.18)
+    background-color: rgba(253, 151, 0, 0.54)
     border: 2px solid black
     border-radius: 5px
+    display: grid
+    grid-template-rows: 100%
+    grid-template-columns: 50% 50%
 
   &_legend
     &_elem
@@ -14,6 +17,11 @@
       &:hover
         color: #ff8f00
         transition: font .3s
+
+  &_current_track
+    width: 100%
+    display: flex
+    justify-content: space-between
 
 .selected
   font: bold italic 1.35em "Fira Sans", sans-serif

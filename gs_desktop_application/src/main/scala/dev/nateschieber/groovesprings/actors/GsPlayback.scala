@@ -52,9 +52,10 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         if (GsPlaybackThread.getPlayState() == GsPlayState.STOP)
           GsPlaybackThread.stop() // clear currFrameId, may have been updated by native thread
         GsPlaybackThread.play()
-        if (playbackThreadRef == null)
-          playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
-        playbackThreadRef ! InitPlaybackThread(context.self)
+        if (GsPlaybackThread.getFilePath() != null)
+          if (playbackThreadRef == null)
+            playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
+          playbackThreadRef ! InitPlaybackThread(context.self)
         replyTo ! RespondPlayTrig(context.self)
         Behaviors.same
       

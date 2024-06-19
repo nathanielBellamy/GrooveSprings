@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
-import {Track} from "../../../../models/tracks/track.model";
+import {defaultTrack, Track} from "../../../../models/tracks/track.model";
 import {map, Observable} from "rxjs";
 import { webSocket } from "rxjs/webSocket";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
@@ -16,16 +16,14 @@ import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
 @Injectable()
 export class PlaybackDisplayComponent {
   private wsSubject: WebSocketSubject<unknown> = this.getWsSubject()
-  protected currTrackSfFrames: number = 100
-  protected currTrackSfChannels: number = 2
   protected currTrack$: Observable<Track>
+  protected currTrack: Track = defaultTrack
   protected currPercent: number = 0
 
   constructor(private http: HttpClient, private store$: Store<{playback: PlaybackState}>) {
     this.currTrack$ = store$.select(state => ({...state.playback.playlist.tracks[state.playback.currPlaylistTrackIdx]}))
     this.currTrack$.subscribe(track => {
-        this.currTrackSfFrames = track.sf_frames
-        this.currTrackSfChannels = track.sf_channels
+        this.currTrack = {...track}
       }
     )
   }
@@ -47,7 +45,9 @@ export class PlaybackDisplayComponent {
   }
 
   getCurrPercent(lastFrameId: number) {
-    return Math.round(100 * lastFrameId / (this.currTrackSfFrames * this.currTrackSfChannels))
+    const denominator = this.currTrack.sf_frames * this.currTrack.sf_channels
+    const validDenominator = typeof denominator === 'number' && denominator != 0 ? denominator : 1
+    return Math.round(100 * lastFrameId / validDenominator)
   }
 
   setCurrPercent(lastFrameId: number) {

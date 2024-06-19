@@ -21,6 +21,7 @@ Audio::Audio(JNIEnv* env, jstring jFileName, jlong initialFrameId) :
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
   free(audioData->buffer);
   sf_close(audioData->file);
+  std::cout << "\nDone freeing resources for file: " << Audio::fileName;
 };
 
 // portaudio callback
