@@ -27,7 +27,9 @@
       </button>
     </div>
 
-  <div *ngIf="currSectionIsLibrary">
+  <div
+    class="gs_library_body"
+    *ngIf="currSectionIsLibrary">
     <div class="gs_library_filters">
       Filters
       <div class="gs_library_filter">
@@ -61,9 +63,68 @@
         </div>
       </div>
     </div>
-    <gsArtists />
-    <gsAlbums />
-    <gsTracks />
+    <div class="gs_library_lists">
+      <div class="gs_library_list">
+        <header
+          (click)="handleLibraryListTitleClick('playlists')"
+          class="gs_library_list_title">
+          <div class="gs_library_list_title_text">
+            Playlists
+          </div>
+        </header>
+        <body
+          class="gs_library_list_body"
+          [class.gs_library_list_displayed]="playlistsIsDisplayed"
+          [class.gs_library_list_hidden]="!playlistsIsDisplayed">
+          I AM LIST!
+        </body>
+      </div>
+      <div class="gs_library_list">
+        <header
+          (click)="handleLibraryListTitleClick('artists')"
+          class="gs_library_list_title">
+          <div class="gs_library_list_title_text">
+            Artists
+          </div>
+        </header>
+        <body
+          class="gs_library_list_body"
+          [class.gs_library_list_displayed]="artistsIsDisplayed"
+          [class.gs_library_list_hidden]="!artistsIsDisplayed">
+          <gsArtists />
+        </body>
+      </div>
+      <div class="gs_library_list">
+        <header
+          (click)="handleLibraryListTitleClick('albums')"
+          class="gs_library_list_title">
+          <div class="gs_library_list_title_text">
+            Albums
+          </div>
+        </header>
+        <body
+          class="gs_library_list_body"
+          [class.gs_library_list_displayed]="albumsIsDisplayed"
+          [class.gs_library_list_hidden]="!albumsIsDisplayed">
+        <gsAlbums />
+        </body>
+      </div>
+      <div class="gs_library_list">
+        <header
+          (click)="handleLibraryListTitleClick('tracks')"
+          class="gs_library_list_title">
+          <div class="gs_library_list_title_text">
+            Tracks
+          </div>
+        </header>
+        <body
+          class="gs_library_list_body"
+          [class.gs_library_list_displayed]="tracksIsDisplayed"
+          [class.gs_library_list_hidden]="!tracksIsDisplayed">
+        <gsTracks />
+        </body>
+      </div>
+    </div>
   </div>
 
 

@@ -5,12 +5,15 @@
 
 .gs_library
   height: calc(100vh - 20px)
-  display: grid
-  grid-template-rows: 10% 15% 15% 60%
-  grid-template-columns: 100%
   margin: 5px
   border: 2px solid black
   border-radius: 5px
+
+  &_body
+    height: 100%
+    display: grid
+    grid-template-rows: 10% 90%
+    grid-template-columns: 100%
 
   &_legend
     color: black
@@ -50,3 +53,47 @@
     &_value
       display: flex
 
+  &_lists
+    margin: 5px
+    display: flex
+    gap: 5px
+    align-items: stretch
+
+  &_list
+    height: 100%
+    display: grid
+    grid-template-rows: 100%
+    grid-template-columns: 30px 1fr
+    overflow: hidden
+
+    &_displayed
+      max-width: 50vw
+      min-width: 350px
+      transition: max-width 1s ease, min-width 1s ease
+
+    &_hidden
+      max-width: 0
+      min-width: 0
+      transition: max-width 1s ease, min-width 1s ease
+
+    &_title
+      font: bold italic 1.5em "Fira Sans", sans-serif
+      height: 100%
+      width: 100%
+      cursor: pointer
+      text-align: right
+      border-radius: 5px
+
+      &_text
+        position: relative
+        left: 0px
+        top: 100px
+        transform: rotate(-90deg)
+
+      &:hover
+        background-color: rgba(110, 159, 170, 0.54)
+        font: bold italic 1.7em "Fira Sans", sans-serif
+        transition: background-color 0.5s ease, font 0.5s ease-in
+
+    &_body
+      overflow: hidden
