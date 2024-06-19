@@ -23,6 +23,8 @@ export class LibraryComponent implements OnInit {
 
   protected currSection: string = 'library'
 
+  protected displayedLists: string[] = ['playlists', 'artists']
+
   constructor(private store$: Store<{library: LibraryState}>) {
     this.artistsFilter$ = store$.select(state => state.library.filters.artists)
     this.albumsFilter$ = store$.select(state =>  state.library.filters.albums)
@@ -55,6 +57,14 @@ export class LibraryComponent implements OnInit {
     this.currSection = section
   }
 
+  handleLibraryListTitleClick(listName: string): void {
+    if (this.displayedLists.includes(listName)) {
+      this.displayedLists = this.displayedLists.filter(x => x !== listName)
+    } else {
+      this.displayedLists.push(listName)
+    }
+  }
+
   get currSectionIsLibrary(): boolean {
     return this.currSection === 'library'
   }
@@ -62,4 +72,21 @@ export class LibraryComponent implements OnInit {
   get currSectionIsSettings(): boolean {
     return this.currSection === 'settings'
   }
+
+  get playlistsIsDisplayed(): boolean {
+    return this.displayedLists.includes('playlists')
+  }
+
+  get artistsIsDisplayed(): boolean {
+    return this.displayedLists.includes('artists')
+  }
+
+  get albumsIsDisplayed(): boolean {
+    return this.displayedLists.includes('albums')
+  }
+
+  get tracksIsDisplayed(): boolean {
+    return this.displayedLists.includes('tracks')
+  }
+
 }
