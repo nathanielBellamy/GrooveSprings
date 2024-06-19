@@ -1,5 +1,9 @@
 
 <div class="gs_playback_display">
-  Percent: {{currPercent}} %
+  <div
+    class="gs_playback_display_progress_bar"
+    [ngStyle]="{'background': 'linear-gradient(90deg, #ffffff 0 ' + currPercent + '%, #ff8f00 ' + currPercent + '% 100% )'}">
+
+  </div>
 <!--  Curr Track: {{JSON.stringify(currTrack$ | async)}}-->
 </div>
