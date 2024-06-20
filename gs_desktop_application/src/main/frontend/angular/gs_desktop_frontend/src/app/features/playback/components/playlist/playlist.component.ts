@@ -4,6 +4,8 @@ import {Observable} from "rxjs";
 import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
 import {ClearPlaylist, SetCurrPlaylistTrackIdx, UpdateCurrPlaylistTrackidx} from "../../store/playback.actions";
+import {defaultPlaylist, Playlist} from "../../../../models/playlist/playlist.model";
+import {PlaylistCreate} from "../../../library/store/library.actions";
 
 @Component({
   selector: 'gsPlaylist',
@@ -13,19 +15,30 @@ import {ClearPlaylist, SetCurrPlaylistTrackIdx, UpdateCurrPlaylistTrackidx} from
 export class PlaylistComponent {
 
   protected currIdx$: Observable<number>
-  protected playlistName$: Observable<string>
-  protected playlistTracks$: Observable<Track[]>
+  protected playlistName: string = ""
+  protected playlistTracks: Track[] = []
 
   constructor(private store$: Store<{playback: PlaybackState}>) {
 
-    this.currIdx$ = store$.select(state => state.playback.currPlaylistTrackIdx)
-    this.playlistName$ = store$.select(state => state.playback.playlist.name)
-    this.playlistTracks$ = store$.select(state => state.playback.playlist.tracks)
+    this.currIdx$ = store$.select(state => {
+      this.playlistName = state.playback.playlist.name // harvest the initial playlistName
+      return state.playback.currPlaylistTrackIdx
+    })
+
+    store$.subscribe(state => {
+      this.playlistTracks = [...state.playback.playlist.tracks]
+    })
   }
 
   handleDblClick(trackIdx: number, track: Track) {
-    console.dir({dblClickSetCurrrTrackTo: track})
     this.store$.dispatch(new SetCurrPlaylistTrackIdx(trackIdx, track))
+  }
+
+  handleSavePlaylistClick() {
+    this.store$.dispatch(new PlaylistCreate({
+      tracks: this.playlistTracks,
+      name: this.playlistName
+    }))
   }
 
   handleClearPlaylistClick() {
