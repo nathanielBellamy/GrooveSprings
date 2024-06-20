@@ -20,8 +20,7 @@
             {{track.releaseDate}}
           </div>
           <div>
-<!--            TODO: debug jackson serialization to make consistent-->
-            {{(track.album || {title: 'zow'}).title || track.album}}
+            {{track.album.title}}
           </div>
           <div>
             <button (click)="addTrackToPlaylist(track)">
