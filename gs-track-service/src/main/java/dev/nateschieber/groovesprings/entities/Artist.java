@@ -1,11 +1,9 @@
 package dev.nateschieber.groovesprings.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -20,7 +18,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "artists")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
 public class Artist {
 
   @Id

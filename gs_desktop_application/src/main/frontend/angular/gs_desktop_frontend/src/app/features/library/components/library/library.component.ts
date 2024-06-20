@@ -5,7 +5,6 @@ import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Album} from "../../../../models/albums/album.model";
 import {Artist} from "../../../../models/artists/artist.model";
-import {FetchTracks} from "../../store/actions/tracks.actions";
 import {FetchArtists} from "../../store/actions/artists.actions";
 import {FetchAlbums} from "../../store/actions/albums.actions";
 import {ClearAlbumsFilter, ClearArtistsFilter, ClearLibrary, LibraryScan} from "../../store/library.actions";
