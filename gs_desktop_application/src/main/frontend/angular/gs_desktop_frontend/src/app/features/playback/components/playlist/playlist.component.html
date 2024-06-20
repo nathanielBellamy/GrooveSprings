@@ -13,7 +13,7 @@
       </button>
     </span>
     <button (click)="handleClearPlaylistClick()">
-      Clr. Playlist
+      Clr.
     </button>
   </div>
   <div class="playlist_tracks">
@@ -31,8 +31,7 @@
           {{track.artists}}
         </div>
         <div>
-          <!--            TODO: debug jackson serialization to make consistent-->
-          {{(track.album || {title: 'foo'}).title || track.album}}
+          {{track.album.title}}
         </div>
         <div>
           {{track.audioCodec}}

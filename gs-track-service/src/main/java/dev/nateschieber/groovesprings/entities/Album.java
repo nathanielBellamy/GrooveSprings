@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "albums")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "title")
 public class Album {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
