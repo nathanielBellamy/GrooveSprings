@@ -3,6 +3,7 @@
   height: 90%
   border: 2px solid black
   border-radius: 5px
+  overflow: hidden
 
   &_legend
     font: bold italic 0.75em "Fira Sans", sans-serif
@@ -11,16 +12,26 @@
     display: flex
     justify-content: space-between
 
-.gs_playlist_track
-  display: grid
-  grid-template-rows: 1fr
-  grid-template-columns: 5% 40% 20% 20% 1fr
-  cursor: pointer
-  &:hover
-    background-color: black
-    color: lightblue
-    box-shadow: 3px 3px
+  &_tracks
+    display: flex
+    flex-direction: column
+    align-items: stretch
+    padding-bottom: 100px
 
-.gs_playlist_current_track
-  background-color: cyan
-  color: black
+    &_container
+      height: 100%
+      overflow-y: scroll
+
+  &_track
+    display: grid
+    grid-template-rows: 1fr
+    grid-template-columns: 5% 40% 20% 20% 1fr
+    cursor: pointer
+    &:hover
+      background-color: black
+      color: lightblue
+      box-shadow: 3px 3px
+
+  &_current_track
+    background-color: cyan
+    color: black

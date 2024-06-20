@@ -27,7 +27,7 @@
             Artist/s:
           </td>
           <td>
-            {{JSON.stringify(currTrack.artists)}}
+            {{(currTrack.artists || []).join(', ')}}
           </td>
         </tr>
         <tr>
@@ -35,7 +35,7 @@
             Album:
           </td>
           <td>
-            {{JSON.stringify(currTrack.album)}}
+            {{currTrack.album.title}}
           </td>
         </tr>
         <tr>

@@ -16,27 +16,29 @@
       Clr.
     </button>
   </div>
-  <div class="playlist_tracks">
-    @for (track of playlistTracks$ | async; track track; let i = $index) {
-      <div class="gs_playlist_track"
-           [class.gs_playlist_current_track]="i === (currIdx$ | async)"
-           (dblclick)="handleDblClick(i, track)">
-        <div>
-          {{i}}:
+  <div class="gs_playlist_tracks_container">
+    <div class="gs_playlist_tracks">
+      @for (track of playlistTracks$ | async; track track; let i = $index) {
+        <div class="gs_playlist_track"
+             [class.gs_playlist_current_track]="i === (currIdx$ | async)"
+             (dblclick)="handleDblClick(i, track)">
+          <div>
+            {{i}}:
+          </div>
+          <div>
+            {{track.title}}
+          </div>
+          <div>
+            {{track.artists}}
+          </div>
+          <div>
+            {{track.album.title}}
+          </div>
+          <div>
+            {{track.audioCodec}}
+          </div>
         </div>
-        <div>
-          {{track.title}}
-        </div>
-        <div>
-          {{track.artists}}
-        </div>
-        <div>
-          {{track.album.title}}
-        </div>
-        <div>
-          {{track.audioCodec}}
-        </div>
-      </div>
-    }
+      }
+    </div>
   </div>
 </fieldset>

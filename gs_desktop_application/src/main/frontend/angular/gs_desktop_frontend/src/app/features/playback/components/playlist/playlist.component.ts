@@ -24,6 +24,7 @@ export class PlaylistComponent {
   }
 
   handleDblClick(trackIdx: number, track: Track) {
+    console.dir({dblClickSetCurrrTrackTo: track})
     this.store$.dispatch(new SetCurrPlaylistTrackIdx(trackIdx, track))
   }
 
