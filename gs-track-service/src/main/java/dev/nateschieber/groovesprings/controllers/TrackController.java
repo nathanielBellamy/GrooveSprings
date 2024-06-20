@@ -80,7 +80,7 @@ public class TrackController {
   @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity createTrack(@Valid @RequestBody TrackCreateDto dto) {
     Track trackSaved = trackService.createFromDto(dto);
-    URI uri = HttpHelper.uri("/tracks/" + trackSaved.getId());
+    URI uri = HttpHelper.uri("/api/v1/tracks/" + trackSaved.getId());
     return ResponseEntity.created(uri).body(new TrackEntityResponse(trackSaved));
   }
 

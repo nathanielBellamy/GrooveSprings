@@ -74,8 +74,14 @@ public class Track {
   @JsonIgnore
   private Set<Play> plays;
 
-
-
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "playlist_to_track",
+      joinColumns = @JoinColumn(name="playlist_id"),
+      inverseJoinColumns = @JoinColumn(name="track_id")
+  )
+  @JsonIgnore
+  private Set<Playlist> playlists;
 
   public Track() {}
 
@@ -225,6 +231,10 @@ public class Track {
 
   public int getSf_seekable() {
     return sf_seekable;
+  }
+
+  public void addPlaylist(Playlist playlist) {
+    playlists.add(playlist);
   }
 
   @Override

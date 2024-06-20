@@ -45,6 +45,11 @@ public class Artist {
   @JsonIgnore
   private Set<Album> albums;
 
+  @ManyToMany(mappedBy="artists")
+  @JsonBackReference
+  @JsonIgnore
+  private Set<Playlist> playlists;
+
   public Artist() {};
 
   public Artist(String name) {
