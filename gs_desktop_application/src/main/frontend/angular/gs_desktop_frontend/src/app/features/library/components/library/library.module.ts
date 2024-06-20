@@ -11,6 +11,7 @@ import {AlbumsModule} from "../albums/albums.module";
 import {TracksModule} from "../tracks/tracks.module";
 import {LibraryService} from "../../services/library.service";
 import {PlaylistModule} from "../../../playback/components/playlist/playlist.module";
+import {PlaylistsModule} from "../playlists/playlists.module";
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import {PlaylistModule} from "../../../playback/components/playlist/playlist.mod
     imports: [
         AlbumsModule,
         ArtistsModule,
+        PlaylistsModule,
         TracksModule,
         StoreModule.forFeature('library', libraryReducer),
         EffectsModule.forFeature(libraryEffects),

@@ -18,12 +18,14 @@ export class PlaybackDisplayComponent {
   private wsSubject: WebSocketSubject<unknown> = this.getWsSubject()
   protected currTrack$: Observable<Track>
   protected currTrack: Track = defaultTrack
+  protected currTrackArtists: string = "-"
   protected currPercent: number = 0
 
   constructor(private http: HttpClient, private store$: Store<{playback: PlaybackState}>) {
     this.currTrack$ = store$.select(state => ({...state.playback.currTrack}))
     this.currTrack$.subscribe(track => {
       console.dir({playbackDisplayReadingCurrTrack: track})
+      this.currTrackArtists = track.artists.map(a => a.name).join(', ')
       this.currTrack = {...track}
     })
   }
