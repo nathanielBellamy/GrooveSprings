@@ -2,10 +2,15 @@ import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {LibraryActionTypes} from "../../library/store/library.actiontypes";
 import {catchError, map, switchMap, of} from "rxjs";
-import {ClearPlaylist, SetCurrFileFailure, SetCurrFileSuccess, SetCurrPlaylistTrackIdx} from "./playback.actions";
+import {
+  ClearPlaylist,
+  SetCurrFileFailure,
+  SetCurrFileSuccess,
+  SetCurrPlaylistTrackIdx,
+  SetCurrTrack
+} from "./playback.actions";
 import {PlaybackActionTypes} from "./playback.actiontypes";
 import {PlaybackService} from "../services/playback.service";
-import {SetAlbumsFilterTracksFailure, SetAlbumsFilterTracksSuccess} from "../../library/store/actions/tracks.actions";
 
 @Injectable()
 export class PlaybackEffects {
@@ -15,10 +20,9 @@ export class PlaybackEffects {
     private playbackService: PlaybackService
   ) { }
 
-  // TODO: set curr file path --> play track
   setCurrFile$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<SetCurrPlaylistTrackIdx>(PlaybackActionTypes.SetCurrPlaylistTrackIdx),
+      ofType<SetCurrTrack>(PlaybackActionTypes.SetCurrTrack),
       map(action => action.getTrack()),
       switchMap(track => this.playbackService.setCurrFile(track)
         .pipe(
@@ -26,6 +30,13 @@ export class PlaybackEffects {
           catchError((e, _) => of(new SetCurrFileFailure(e)))
         )
       )
+    )
+  )
+
+  setCurrFileOnPlaylistIndexUpdate$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SetCurrPlaylistTrackIdx>(PlaybackActionTypes.SetCurrPlaylistTrackIdx),
+      map(action => new SetCurrTrack(action.getTrack()))
     )
   )
 

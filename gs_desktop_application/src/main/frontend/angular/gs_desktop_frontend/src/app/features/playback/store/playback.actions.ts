@@ -62,7 +62,24 @@ export class SetCurrPlaylistTrackIdx implements Action, GsPlaybackAction {
     }
   }
 
-  getTrack() {
+  getTrack(): Track {
+    return this.track
+  }
+}
+
+export class SetCurrTrack implements Action, GsPlaybackAction {
+  readonly type = PlaybackActionTypes.SetCurrTrack
+
+  constructor(private track: Track) {}
+
+  handle(state: PlaybackState): PlaybackState {
+    return {
+      ...state,
+      currTrack: {...this.track}
+    }
+  }
+
+  getTrack(): Track {
     return this.track
   }
 }

@@ -33,7 +33,6 @@ export class LibraryComponent implements OnInit {
   ngOnInit() {
     this.store$.dispatch(new FetchAlbums())
     this.store$.dispatch(new FetchArtists())
-    this.store$.dispatch(new FetchTracks())
   }
 
   clearArtistsFilter(): void {
