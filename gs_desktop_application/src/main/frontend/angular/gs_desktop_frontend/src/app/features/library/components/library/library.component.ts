@@ -23,7 +23,7 @@ export class LibraryComponent implements OnInit {
 
   protected currSection: string = 'library'
 
-  protected displayedLists: string[] = ['playlists', 'artists']
+  protected displayedLists: string[] = ['playlists', 'artists', 'albums']
 
   constructor(private store$: Store<{library: LibraryState}>) {
     this.artistsFilter$ = store$.select(state => state.library.filters.artists)
