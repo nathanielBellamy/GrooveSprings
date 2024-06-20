@@ -1,9 +1,6 @@
 package dev.nateschieber.groovesprings.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.enums.Genre;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
@@ -68,6 +65,18 @@ public class Track {
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @JsonManagedReference
   private Set<Artist> artists;
+
+  @OneToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+          name = "play_to_track",
+          joinColumns = @JoinColumn(name="play_id"),
+          inverseJoinColumns = @JoinColumn(name="track_id")
+  )
+  @JsonIgnore
+  private Set<Play> plays;
+
+
+
 
   public Track() {}
 

@@ -3,7 +3,7 @@ import {Store} from "@ngrx/store";
 import {LibraryState} from "../../store/library.state";
 import {Observable} from "rxjs";
 import {Track} from "../../../../models/tracks/track.model";
-import {AddTrackToPlaylist} from "../../../playback/store/playback.actions";
+import {AddTrackToPlaylist, SetCurrTrack} from "../../../playback/store/playback.actions";
 
 @Component({
   selector: 'gsTracks',
@@ -23,6 +23,10 @@ export class TracksComponent implements OnInit {
   }
 
   handleDblClick(track: Track) {
+    this.store$.dispatch(new SetCurrTrack(track))
+  }
+
+  addTrackToPlaylist(track: Track) {
     this.store$.dispatch(new AddTrackToPlaylist(track))
   }
 }

@@ -23,6 +23,11 @@
 <!--            TODO: debug jackson serialization to make consistent-->
             {{(track.album || {title: 'zow'}).title || track.album}}
           </div>
+          <div>
+            <button (click)="addTrackToPlaylist(track)">
+              +
+            </button>
+          </div>
         </div>
       }
     </div>

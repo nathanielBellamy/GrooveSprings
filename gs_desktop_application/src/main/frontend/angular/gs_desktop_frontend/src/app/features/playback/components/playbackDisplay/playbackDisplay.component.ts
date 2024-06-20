@@ -21,11 +21,8 @@ export class PlaybackDisplayComponent {
   protected currPercent: number = 0
 
   constructor(private http: HttpClient, private store$: Store<{playback: PlaybackState}>) {
-    this.currTrack$ = store$.select(state => ({...state.playback.playlist.tracks[state.playback.currPlaylistTrackIdx]}))
-    this.currTrack$.subscribe(track => {
-        this.currTrack = {...track}
-      }
-    )
+    this.currTrack$ = store$.select(state => ({...state.playback.currTrack}))
+    this.currTrack$.subscribe(track => this.currTrack = {...track})
   }
 
   getWsSubject(): WebSocketSubject<unknown> {
