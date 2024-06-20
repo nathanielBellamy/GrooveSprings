@@ -61,5 +61,11 @@ export enum LibraryActionTypes {
   SetPlaylistsFilterArtistsFailure = '[Filters] Set Playlists Filter Artists Failure',
   SetPlaylistsFilterTracksSuccess = '[Filters] Set Playlists Filter Tracks Success',
   SetPlaylistsFilterTracksFailure = '[Filters] Set Playlists Filter Tracks Failure',
-  ClearPlaylistsFilter = '[Filters] Clear Playlists Filter'
+  ClearPlaylistsFilter = '[Filters] Clear Playlists Filter',
+
+  // save
+
+  PlaylistCreate = '[Playlists] Save Playlist',
+  PlaylistCreateSuccess = '[Playlist] Save Playlist Success',
+  PlaylistCreateFailure = '[Playlist] Save Playlist Failure'
 }

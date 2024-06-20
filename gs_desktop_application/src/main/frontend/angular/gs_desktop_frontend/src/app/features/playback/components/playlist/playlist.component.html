@@ -3,7 +3,13 @@
     Playlist
   </legend>
   <div class="gs_playlist_header">
-    {{playlistName$ | async}}
+    <label for="playlistName">
+      Name:
+    </label>
+    <input type="text"
+           id="playlistName"
+           [(ngModel)]="playlistName"
+           />
     <span>
       <button (click)="updateCurrPlaylistTrackIdx(-1)">
         <
@@ -12,13 +18,16 @@
         >
       </button>
     </span>
+    <button (click)="handleSavePlaylistClick()">
+      Save
+    </button>
     <button (click)="handleClearPlaylistClick()">
       Clr.
     </button>
   </div>
   <div class="gs_playlist_tracks_container">
     <div class="gs_playlist_tracks">
-      @for (track of playlistTracks$ | async; track track; let i = $index) {
+      @for (track of playlistTracks; track track; let i = $index) {
         <div class="gs_playlist_track"
              [class.gs_playlist_current_track]="i === (currIdx$ | async)"
              (dblclick)="handleDblClick(i, track)">

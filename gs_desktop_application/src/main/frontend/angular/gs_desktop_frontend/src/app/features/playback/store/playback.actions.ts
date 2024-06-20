@@ -77,7 +77,6 @@ export class SetCurrTrack implements Action, GsPlaybackAction {
   constructor(private track: Track) {}
 
   handle(state: PlaybackState): PlaybackState {
-    console.dir({actionHandleSetCurrrTrackTo: this.track})
     return {
       ...state,
       currTrack: {...this.track}

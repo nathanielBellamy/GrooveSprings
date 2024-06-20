@@ -4,6 +4,7 @@ import {LibraryActionTypes} from "./library.actiontypes";
 import {Artist} from "../../../models/artists/artist.model";
 import {Album} from "../../../models/albums/album.model";
 import {Playlist} from "../../../models/playlist/playlist.model";
+import {PlaybackActionTypes} from "../../playback/store/playback.actiontypes";
 
 export abstract class GsLibraryActionResult {
   public payload: any
@@ -92,6 +93,13 @@ export class LibraryScanFailure implements Action {
 
   constructor(e: any) {
     console.error(e)
+  }
+}
+
+export class PlaylistCreate implements Action {
+  readonly type = LibraryActionTypes.PlaylistCreate
+
+  constructor(public playlist: Playlist) {
   }
 }
 
