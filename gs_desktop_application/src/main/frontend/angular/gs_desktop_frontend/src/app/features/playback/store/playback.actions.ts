@@ -29,8 +29,12 @@ export class AddTrackToPlaylist implements Action, GsPlaybackAction {
 export class ClearPlaylist implements Action, GsPlaybackAction {
   readonly type = PlaybackActionTypes.ClearPlaylist
 
-  handle(_: PlaybackState): PlaybackState {
-    return initialPlaybackState
+  handle(state: PlaybackState): PlaybackState {
+    return {
+      ...state,
+      playlist: initialPlaybackState.playlist,
+      currPlaylistTrackIdx: initialPlaybackState.currPlaylistTrackIdx
+    }
   }
 }
 
@@ -81,5 +85,18 @@ export class SetCurrTrack implements Action, GsPlaybackAction {
 
   getTrack(): Track {
     return this.track
+  }
+}
+
+export class UpdateCurrPlaylistTrackidx implements Action, GsPlaybackAction {
+  readonly type = PlaybackActionTypes.UpdateCurrPlaylistTrackIdx
+
+  constructor(private byVal: number) { }
+
+  handle(state: PlaybackState): PlaybackState {
+    return {
+      ...state,
+      currPlaylistTrackIdx: (state.currPlaylistTrackIdx + this.byVal) % state.playlist.tracks.length
+    }
   }
 }

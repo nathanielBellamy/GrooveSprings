@@ -2,19 +2,21 @@
   <legend class="gs_playlist_legend">
     Playlist
   </legend>
-  <h4>
-    ({{playlistName$ | async}})
+  <div class="gs_playlist_header">
+    {{playlistName$ | async}}
+    <span>
+      <button (click)="updateCurrPlaylistTrackIdx(-1)">
+        <
+      </button>
+      <button (click)="updateCurrPlaylistTrackIdx(1)">
+        >
+      </button>
+    </span>
     <button (click)="handleClearPlaylistClick()">
       Clr. Playlist
     </button>
-  </h4>
-  <div class="playlist_currIdx">
-    Currently Playing: {{currIdx$ | async }}
   </div>
   <div class="playlist_tracks">
-    <h4 >
-      Tracks:
-    </h4>
     @for (track of playlistTracks$ | async; track track; let i = $index) {
       <div class="gs_playlist_track"
            [class.gs_playlist_current_track]="i === (currIdx$ | async)"
