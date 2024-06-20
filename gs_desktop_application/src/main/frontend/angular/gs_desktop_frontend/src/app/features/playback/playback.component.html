@@ -19,7 +19,9 @@
 
     <div class="gs_playback_current_track">
       <gsTransportControl />
-      <gsPlaybackDisplay />
+      <div [ngStyle]="{'flex': 1}">
+        <gsPlaybackDisplay />
+      </div>
     </div>
     <gsPlaylist *ngIf="currSectionIsPlaylist"/>
   </fieldset>
