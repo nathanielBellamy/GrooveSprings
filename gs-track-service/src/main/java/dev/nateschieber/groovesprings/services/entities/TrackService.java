@@ -51,6 +51,10 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
     return this.trackRepository.findById(id);
   }
 
+  public List<Track> findAllById(List<Long> ids) {
+    return this.trackRepository.findAllById(ids);
+  }
+
   @Override
   public void deleteById(Long id) {
     this.trackRepository.deleteById(id);

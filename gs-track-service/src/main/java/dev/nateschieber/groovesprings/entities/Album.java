@@ -2,6 +2,7 @@ package dev.nateschieber.groovesprings.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
@@ -39,6 +40,11 @@ public class Album {
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @JsonBackReference
   Set<Artist> artists;
+
+  @ManyToMany(mappedBy="albums")
+  @JsonBackReference
+  @JsonIgnore
+  private Set<Playlist> playlists;
 
   public Album() {};
 
