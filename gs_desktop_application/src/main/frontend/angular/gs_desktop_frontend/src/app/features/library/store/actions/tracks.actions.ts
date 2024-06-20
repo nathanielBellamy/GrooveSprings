@@ -15,7 +15,7 @@ export class FetchTracksSuccess implements Action, GsLibraryActionResult {
 
   constructor(public payload: TracksData) { }
 
-  handle(state: LibraryState) {
+  handle(state: LibraryState): LibraryState {
     return {
       ...state,
       trackCount: this.payload.count,
@@ -29,10 +29,10 @@ export class FetchTracksFailure implements Action, GsLibraryActionResult {
 
   constructor(public payload: any) {}
 
-  handle(state: LibraryState) {
+  handle(state: LibraryState): LibraryState {
     console.error('GsLibraryActionFailure ## FetchTrackFailure')
     console.error(this.payload)
-    return state
+    return {...state}
   }
 }
 

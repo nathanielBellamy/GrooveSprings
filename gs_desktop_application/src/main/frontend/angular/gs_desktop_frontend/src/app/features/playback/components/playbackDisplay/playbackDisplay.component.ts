@@ -22,7 +22,10 @@ export class PlaybackDisplayComponent {
 
   constructor(private http: HttpClient, private store$: Store<{playback: PlaybackState}>) {
     this.currTrack$ = store$.select(state => ({...state.playback.currTrack}))
-    this.currTrack$.subscribe(track => this.currTrack = {...track})
+    this.currTrack$.subscribe(track => {
+      console.dir({playbackDisplayReadingCurrTrack: track})
+      this.currTrack = {...track}
+    })
   }
 
   getWsSubject(): WebSocketSubject<unknown> {
@@ -43,7 +46,7 @@ export class PlaybackDisplayComponent {
 
   getCurrPercent(lastFrameId: number) {
     const denominator = this.currTrack.sf_frames * this.currTrack.sf_channels
-    const validDenominator = typeof denominator === 'number' && denominator != 0 ? denominator : 1
+    const validDenominator = typeof denominator === 'number' && denominator != 0 && !isNaN(denominator) ? denominator : 1
     return Math.round(100 * lastFrameId / validDenominator)
   }
 

@@ -3,6 +3,7 @@ import {Action} from "@ngrx/store";
 import {LibraryActionTypes} from "./library.actiontypes";
 import {Artist} from "../../../models/artists/artist.model";
 import {Album} from "../../../models/albums/album.model";
+import {Playlist} from "../../../models/playlist/playlist.model";
 
 export abstract class GsLibraryActionResult {
   public payload: any
@@ -70,6 +71,12 @@ export class ClearAlbumsFilter implements Action, GsLibraryActionResult {
       }
     }
   }
+}
+
+export class SetPlaylistsFilter implements Action {
+  readonly type = LibraryActionTypes.SetPlaylistsFilter
+
+  constructor(public playlists: Playlist[]) { }
 }
 
 export class LibraryScan implements Action {

@@ -10,6 +10,7 @@ import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {AlbumsModule} from "../albums/albums.module";
 import {TracksModule} from "../tracks/tracks.module";
 import {LibraryService} from "../../services/library.service";
+import {PlaylistModule} from "../../../playback/components/playlist/playlist.module";
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import {LibraryService} from "../../services/library.service";
         AsyncPipe,
         NgForOf,
         NgIf,
+        PlaylistModule,
     ],
   providers: [
     ArtistsService,

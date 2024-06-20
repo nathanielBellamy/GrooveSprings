@@ -13,8 +13,8 @@ import {Artist} from "../../../../models/artists/artist.model";
 })
 @Injectable()
 export class ArtistsComponent {
-  artistCount$: Observable<number>
-  artists$: Observable<Artist[]>
+  protected artistCount$: Observable<number>
+  protected artists$: Observable<Artist[]>
 
   constructor(private store$: Store<{library: LibraryState}>) {
     this.artistCount$ = store$.select(state => state.library.artistCount)

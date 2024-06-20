@@ -15,6 +15,7 @@ import {
 } from "./library.actions";
 import {LibraryService} from "../services/library.service";
 import {AlbumsData} from "../../../models/albums/albums_data.model";
+import {PlaylistsEffects} from "./effects/playlists.effects";
 
 @Injectable()
 export class LibraryEffects {
@@ -56,4 +57,10 @@ export class LibraryEffects {
 
 }
 
-export const libraryEffects: any[] = [LibraryEffects, AlbumsEffects, ArtistsEffects, TracksEffects]
+export const libraryEffects: any[] = [
+  LibraryEffects,
+  AlbumsEffects,
+  ArtistsEffects,
+  PlaylistsEffects,
+  TracksEffects
+]
