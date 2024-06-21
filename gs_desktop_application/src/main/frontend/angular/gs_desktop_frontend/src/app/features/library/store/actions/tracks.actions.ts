@@ -5,6 +5,7 @@ import {GsLibraryActionResult} from "../library.actions";
 import {TracksData} from "../../../../models/tracks/tracks_data.model";
 import {TracksByArtistIds} from "../../../../models/tracks/tracks_by_artist_ids.model";
 import {TracksByAlbumIds} from "../../../../models/tracks/tracks_by_album_ids.model";
+import {TracksByPlaylistIds} from "../../../../models/tracks/tracks_by_playlist_ids.model";
 
 export class FetchTracks implements Action {
   readonly type = LibraryActionTypes.FetchTracks
@@ -93,5 +94,38 @@ export class SetAlbumsFilterTracksFailure implements Action, GsLibraryActionResu
     console.error('GsLibraryActionFailure ## SetAlbumsFilterTracksFailure')
     console.error(this.payload)
     return state
+  }
+}
+
+export class SetPlaylistsFilterTracksSuccess implements Action, GsLibraryActionResult {
+  readonly type = LibraryActionTypes.SetPlaylistsFilterTracksSuccess
+
+  constructor(public payload: TracksByPlaylistIds) { }
+
+
+  handle(state: LibraryState): LibraryState {
+    return {
+      ...state,
+      tracks: this.payload.tracks,
+      trackCount: this.payload.count,
+      filters: {
+        ...state.filters,
+        playlists: state.playlists.filter(pl => this.payload.playlistIds.includes(pl.id))
+      }
+    }
+  }
+}
+
+export class SetPlaylistsFilterTracksFailure implements Action, GsLibraryActionResult {
+  readonly type = LibraryActionTypes.SetPlaylistsFilterTracksFailure
+
+  constructor(public payload: any) { }
+
+  handle(state: LibraryState): LibraryState {
+    console.error('GsLibraryActionFailure ## SetPlaylistsFilterTracksFailure')
+    console.error(this.payload)
+    return {
+      ...state
+    }
   }
 }

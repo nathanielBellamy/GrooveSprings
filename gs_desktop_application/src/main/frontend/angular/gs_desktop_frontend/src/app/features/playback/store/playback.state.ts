@@ -5,6 +5,7 @@ export const initialPlaybackState: PlaybackState = {
   currPlaylistTrackIdx: 0,
   currTrack: defaultTrack,
   playlist: {
+    id: 0,
     name: "Default Playlist",
     tracks: []
   }

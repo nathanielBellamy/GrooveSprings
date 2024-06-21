@@ -15,7 +15,7 @@ import {
   SetArtistsFilterAlbumsFailure,
   SetArtistsFilterAlbumsSuccess,
   SetArtistsFilterTracksFailure,
-  SetArtistsFilterTracksSuccess
+  SetArtistsFilterTracksSuccess, SetPlaylistsFilterTracksFailure, SetPlaylistsFilterTracksSuccess
 } from "./library.actions";
 import {initialLibraryState, LibraryState} from "./library.state";
 import {FetchAlbumsFailure, FetchAlbumsSuccess} from "./actions/albums.actions";
@@ -81,6 +81,14 @@ export function libraryReducer(state = initialLibraryState, action: Action): Lib
 
     case LibraryActionTypes.SetAlbumsFilterTracksFailure:
       res = action as SetAlbumsFilterTracksFailure
+      break
+
+    case LibraryActionTypes.SetPlaylistsFilterTracksSuccess:
+      res = action as SetPlaylistsFilterTracksSuccess
+      break
+
+    case LibraryActionTypes.SetPlaylistsFilterTracksFailure:
+      res = action as SetPlaylistsFilterTracksFailure
       break
 
     case LibraryActionTypes.FetchPlaylistsSuccess:

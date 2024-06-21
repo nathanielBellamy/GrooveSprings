@@ -16,6 +16,9 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
   @Query("select track from Track track join track.album album where album.id in :albumIds")
   List<Track> findByAlbumIds(@Param("albumIds") List<Long> albumIds);
 
+  @Query("select track from Track track join track.playlists playlist where playlist.id in :playlistIds")
+  List<Track> findByPlaylistIds(@Param("playlistIds") List<Long> playlistIds);
+
   @Query(
           "select track from Track track " +
                   "where track.title = :title " +

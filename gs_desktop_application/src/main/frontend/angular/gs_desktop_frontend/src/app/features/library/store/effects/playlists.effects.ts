@@ -23,7 +23,11 @@ export class PlaylistsEffects {
 
   fetchAllPlaylists$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(LibraryActionTypes.FetchPlaylists, LibraryActionTypes.FetchAll, LibraryActionTypes.PlaylistCreateSuccess),
+      ofType(
+        LibraryActionTypes.FetchPlaylists,
+        LibraryActionTypes.FetchAll,
+        LibraryActionTypes.PlaylistCreateSuccess
+      ),
       switchMap(() => this.playlistsService.fetchAll()
         .pipe(
           map((payload) =>new FetchPlaylistsSuccess(payload as PlaylistsData)),

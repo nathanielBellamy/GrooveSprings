@@ -6,11 +6,11 @@ import {
   FetchTracksFailure,
   FetchTracksSuccess, SetAlbumsFilterTracksFailure, SetAlbumsFilterTracksSuccess,
   SetArtistsFilterTracksFailure,
-  SetArtistsFilterTracksSuccess
+  SetArtistsFilterTracksSuccess, SetPlaylistsFilterTracksFailure, SetPlaylistsFilterTracksSuccess
 } from "../actions/tracks.actions";
 import {TracksService} from "../../services/tracks.service";
 import {TracksData} from "../../../../models/tracks/tracks_data.model";
-import {SetAlbumsFilter, SetArtistsFilter} from "../library.actions";
+import {SetAlbumsFilter, SetArtistsFilter, SetPlaylistsFilter} from "../library.actions";
 
 @Injectable()
 export class TracksEffects {
@@ -39,6 +39,19 @@ export class TracksEffects {
         .pipe(
           map((payload) => new SetArtistsFilterTracksSuccess(payload)),
           catchError((e, _) => of(new SetArtistsFilterTracksFailure(e)))
+        )
+      )
+    )
+  )
+
+  fetchTracksByPlaylists$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SetPlaylistsFilter>(LibraryActionTypes.SetPlaylistsFilter),
+      map(action => action.playlists),
+      switchMap(playlists => this.tracksService.fetchByPlaylistIds(playlists.map(pl => pl.id))
+        .pipe(
+          map((payload) => new SetPlaylistsFilterTracksSuccess(payload)),
+          catchError((e,_) => of(new SetPlaylistsFilterTracksFailure(e)))
         )
       )
     )
