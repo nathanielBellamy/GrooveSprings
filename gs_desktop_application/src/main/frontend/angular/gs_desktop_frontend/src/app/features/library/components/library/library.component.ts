@@ -9,6 +9,8 @@ import {FetchArtists} from "../../store/actions/artists.actions";
 import {FetchAlbums} from "../../store/actions/albums.actions";
 import {ClearAlbumsFilter, ClearArtistsFilter, ClearLibrary, LibraryScan} from "../../store/library.actions";
 import {FetchPlaylists} from "../../store/actions/playlists.actions";
+import {Playlist} from "../../../../models/playlist/playlist.model";
+import {ClearPlaylist} from "../../../playback/store/playback.actions";
 
 @Component({
   selector: 'gsLibrary',
@@ -20,6 +22,7 @@ export class LibraryComponent implements OnInit {
 
   protected artistsFilter$: Observable<Artist[]>
   protected albumsFilter$: Observable<Album[]>
+  protected playlistsFilter$: Observable<Playlist[]>
 
   protected currSection: string = 'library'
 
@@ -28,6 +31,7 @@ export class LibraryComponent implements OnInit {
   constructor(private store$: Store<{library: LibraryState}>) {
     this.artistsFilter$ = store$.select(state => state.library.filters.artists)
     this.albumsFilter$ = store$.select(state =>  state.library.filters.albums)
+    this.playlistsFilter$ = store$.select(state => state.library.filters.playlists)
   }
 
   ngOnInit() {
@@ -42,6 +46,11 @@ export class LibraryComponent implements OnInit {
 
   clearAlbumsFilter(): void {
     this.store$.dispatch(new ClearAlbumsFilter())
+  }
+
+  clearPlaylistsFilter(): void {
+    // this.store$.dispatch(new ClearPlaylistsFilter())
+    console.log('clear playlist filter')
   }
 
   // TODO: input dirs to scan

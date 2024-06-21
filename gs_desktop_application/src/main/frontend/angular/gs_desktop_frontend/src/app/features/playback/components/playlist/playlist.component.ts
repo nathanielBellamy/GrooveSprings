@@ -36,6 +36,7 @@ export class PlaylistComponent {
 
   handleSavePlaylistClick() {
     this.store$.dispatch(new PlaylistCreate({
+      id: 0,
       tracks: this.playlistTracks,
       name: this.playlistName
     }))

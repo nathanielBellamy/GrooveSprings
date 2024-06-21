@@ -36,6 +36,21 @@
       </div>
       <div class="gs_library_filter">
         <div>
+          Playlists
+          <button (click)="clearPlaylistsFilter()">
+            X
+          </button>
+        </div>
+        <div class="gs_library_filter_list">
+          @for(playlist of playlistsFilter$ | async; track playlist;) {
+            <div class="gs_library_filter_val">
+              {{playlist.name}}
+            </div>
+          }
+        </div>
+      </div>
+      <div class="gs_library_filter">
+        <div>
           Artists
           <button (click)="clearArtistsFilter()">
             X

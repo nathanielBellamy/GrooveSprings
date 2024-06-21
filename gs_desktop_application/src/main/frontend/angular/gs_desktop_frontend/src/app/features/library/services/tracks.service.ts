@@ -9,6 +9,8 @@ import {ArtistsGetByAlbumIds} from "../../../models/artists/artists_get_by_album
 import {ArtistsByAlbumIds} from "../../../models/artists/artists_by_album_ids.model";
 import {TracksGetByAlbumIds} from "../../../models/tracks/tracks_get_by_album_ids.model";
 import {TracksByAlbumIds} from "../../../models/tracks/tracks_by_album_ids.model";
+import {TracksByPlaylistIds} from "../../../models/tracks/tracks_by_playlist_ids.model";
+import {TracksGetByPlaylistIds} from "../../../models/tracks/trakcs_get_by_playlist_ids.model";
 
 @Injectable()
 export class TracksService {
@@ -21,6 +23,16 @@ export class TracksService {
           const tracksRes: TracksGetAll = res as TracksGetAll
           const { count, tracks }: TracksData  = tracksRes.data
           return { count, tracks }
+        })
+      )
+  }
+
+  fetchByPlaylistIds(playlistIds: number[]): Observable<TracksByPlaylistIds> {
+    return this.http.post(`api/v1/tracks/byPlaylistIds`, { playlistIds })
+      .pipe(
+        map( res => {
+          const tracksRes: TracksGetByPlaylistIds = res as TracksGetByPlaylistIds
+          return tracksRes.data
         })
       )
   }
