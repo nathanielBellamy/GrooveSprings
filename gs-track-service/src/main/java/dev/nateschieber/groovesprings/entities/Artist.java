@@ -14,6 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -88,6 +90,9 @@ public class Artist {
   }
 
   public void addAlbum(Album album) {
+    if (albums == null) {
+      this.albums = new HashSet<>();
+    }
     albums.add(album);
   }
 

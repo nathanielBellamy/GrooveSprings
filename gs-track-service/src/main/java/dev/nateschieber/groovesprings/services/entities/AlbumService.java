@@ -86,7 +86,12 @@ public class AlbumService {
     //    );
     List<Album> albumMatches = albumRepository.findByTitle(albumTitle);
     if (albumMatches.isEmpty()) {
-      return albumRepository.save(new Album(albumTitle, artists, null, Collections.emptyList()));
+      Album albumSaved = albumRepository.save(new Album(albumTitle, artists, null, Collections.emptyList()));
+      artists.forEach(artist -> {
+        artist.addAlbum(albumSaved);
+        artistService.save(artist);
+      });
+      return albumSaved;
     } else {
       return albumMatches.getFirst();
     }

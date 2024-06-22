@@ -47,14 +47,14 @@ public class GsDesktopController {
     public ResponseEntity clearLib() {
 
         System.out.println("Clearing Library");
-        artistService.deleteAll();
-        System.out.println("Done Clearing Artists");
-        albumService.deleteAll();
-        System.out.println("Done Clearing Albums");
         trackService.deleteAll();
         System.out.println("Done Clearing Tracks");
         playlistService.deleteAll();
         System.out.println("Done Clearing Playlists");
+        artistService.deleteAll();
+        System.out.println("Done Clearing Artists");
+        albumService.deleteAll();
+        System.out.println("Done Clearing Albums");
         System.out.println("Done Clearing Library");
         return ResponseEntity.ok().build();
     }
