@@ -27,8 +27,7 @@ export class LibraryEffects {
 
   fetchAll$ = createEffect(() => this.actions$.pipe(
     ofType(
-      LibraryActionTypes.ClearArtistsFilter,
-      LibraryActionTypes.ClearAlbumsFilter,
+      LibraryActionTypes.ClearFilters,
       LibraryActionTypes.LibraryScanSuccess,
       LibraryActionTypes.ClearLibrarySuccess
     ),

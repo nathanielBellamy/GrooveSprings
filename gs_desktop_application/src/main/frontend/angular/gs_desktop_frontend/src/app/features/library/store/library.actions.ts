@@ -5,6 +5,7 @@ import {Artist} from "../../../models/artists/artist.model";
 import {Album} from "../../../models/albums/album.model";
 import {Playlist} from "../../../models/playlist/playlist.model";
 import {PlaybackActionTypes} from "../../playback/store/playback.actiontypes";
+import {emptyLibraryFilters} from "./library.filters";
 
 export abstract class GsLibraryActionResult {
   public payload: any
@@ -29,46 +30,46 @@ export class FetchAll implements Action {
 }
 
 
-export class SetArtistsFilter implements Action {
+export class SetArtistsFilter implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.SetArtistsFilter
 
-  constructor(public payload: Artist[]) {
-  }
-}
-
-export class ClearArtistsFilter implements Action, GsLibraryActionResult {
-  readonly type = LibraryActionTypes.ClearArtistsFilter
-
-  public payload: null = null
+  constructor(public payload: Artist[]) { }
 
   handle(state: LibraryState): LibraryState {
     return {
       ...state,
       filters: {
-        ...state.filters,
-        artists: []
+        ...emptyLibraryFilters,
+        artists: this.payload
       }
     }
   }
 }
 
-export class SetAlbumsFilter implements Action {
-  readonly type = LibraryActionTypes.SetAlbumsFilter
-
-  constructor(public payload: Album[]) {}
-}
-
-export class ClearAlbumsFilter implements Action, GsLibraryActionResult {
-  readonly type = LibraryActionTypes.ClearAlbumsFilter
+export class ClearFilters implements Action, GsLibraryActionResult {
+  readonly type = LibraryActionTypes.ClearFilters
 
   public payload: null = null
 
   handle(state: LibraryState): LibraryState {
     return {
       ...state,
+      filters: emptyLibraryFilters
+    }
+  }
+}
+
+export class SetAlbumsFilter implements Action, GsLibraryActionResult {
+  readonly type = LibraryActionTypes.SetAlbumsFilter
+
+  constructor(public payload: Album[]) {}
+
+  handle(state: LibraryState): LibraryState {
+    return {
+      ...state,
       filters: {
-        ...state.filters,
-        albums: []
+        ...emptyLibraryFilters,
+        albums: this.payload
       }
     }
   }
@@ -77,7 +78,17 @@ export class ClearAlbumsFilter implements Action, GsLibraryActionResult {
 export class SetPlaylistsFilter implements Action {
   readonly type = LibraryActionTypes.SetPlaylistsFilter
 
-  constructor(public playlists: Playlist[]) { }
+  constructor(public payload: Playlist[]) { }
+
+  handle(state: LibraryState): LibraryState {
+    return {
+      ...state,
+      filters: {
+        ...emptyLibraryFilters,
+        playlists: this.payload
+      }
+    }
+  }
 }
 
 export class LibraryScan implements Action {

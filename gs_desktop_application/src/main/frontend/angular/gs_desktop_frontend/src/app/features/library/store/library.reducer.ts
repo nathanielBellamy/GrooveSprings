@@ -1,21 +1,21 @@
 import {Action} from '@ngrx/store'
 import {LibraryActionTypes} from "./library.actiontypes";
 import {
-  ClearAlbumsFilter,
-  ClearArtistsFilter, ClearLibrary,
+  ClearFilters,
+  ClearLibrary,
   FetchArtistsFailure,
   FetchArtistsSuccess,
   FetchTracksFailure,
   FetchTracksSuccess,
   GsLibraryActionResult,
-  Identity,
+  Identity, SetAlbumsFilter,
   SetAlbumsFilterArtistsSuccess,
   SetAlbumsFilterTracksFailure,
-  SetAlbumsFilterTracksSuccess,
+  SetAlbumsFilterTracksSuccess, SetArtistsFilter,
   SetArtistsFilterAlbumsFailure,
   SetArtistsFilterAlbumsSuccess,
   SetArtistsFilterTracksFailure,
-  SetArtistsFilterTracksSuccess, SetPlaylistsFilterTracksFailure, SetPlaylistsFilterTracksSuccess
+  SetArtistsFilterTracksSuccess, SetPlaylistsFilter, SetPlaylistsFilterTracksFailure, SetPlaylistsFilterTracksSuccess
 } from "./library.actions";
 import {initialLibraryState, LibraryState} from "./library.state";
 import {FetchAlbumsFailure, FetchAlbumsSuccess} from "./actions/albums.actions";
@@ -67,8 +67,21 @@ export function libraryReducer(state = initialLibraryState, action: Action): Lib
       res = action as SetArtistsFilterTracksFailure
       break
 
-    case LibraryActionTypes.ClearArtistsFilter:
-      res = action as ClearArtistsFilter
+    case LibraryActionTypes.ClearFilters:
+      res = action as ClearFilters
+      break
+
+    case LibraryActionTypes.SetPlaylistsFilter:
+      res = action as SetPlaylistsFilter
+      break
+
+
+    case LibraryActionTypes.SetArtistsFilter:
+      res = action as SetArtistsFilter
+      break
+
+    case LibraryActionTypes.SetAlbumsFilter:
+      res = action as SetAlbumsFilter
       break
 
     case LibraryActionTypes.SetAlbumsFilterArtistsSuccess:
@@ -101,10 +114,6 @@ export function libraryReducer(state = initialLibraryState, action: Action): Lib
 
     case LibraryActionTypes.PlaylistCreateSuccess:
       res = action as PlaylistCreateSuccess
-      break
-
-    case LibraryActionTypes.ClearAlbumsFilter:
-      res = action as ClearAlbumsFilter
       break
 
     case LibraryActionTypes.ClearLibrary:

@@ -12,7 +12,7 @@
   &_body
     height: 100%
     display: grid
-    grid-template-rows: 10% 90%
+    grid-template-rows: 5% 95%
     grid-template-columns: 100%
 
   &_legend
@@ -37,18 +37,23 @@
 
   &_filters
     width: 100%
-    display: flex
+    display: grid
+    grid-template-rows: 100%
+    grid-template-columns: 32% 32% 32% 3%
     justify-content: space-around
     align-items: center
 
     &_title
       font: bold italic 1.3em "Fira Sans", sans-serif
 
-
   &_filter
+    height: 100%
     display: grid
     grid-template-rows: 10% 90%
     grid-template-columns: 1fr
+    border-radius: 5px
+    border: 3px solid black
+    gap: 5px
 
     &_list
       display: flex

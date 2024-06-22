@@ -47,7 +47,7 @@ export class TracksEffects {
   fetchTracksByPlaylists$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SetPlaylistsFilter>(LibraryActionTypes.SetPlaylistsFilter),
-      map(action => action.playlists),
+      map(action => action.payload),
       switchMap(playlists => this.tracksService.fetchByPlaylistIds(playlists.map(pl => pl.id))
         .pipe(
           map((payload) => new SetPlaylistsFilterTracksSuccess(payload)),
