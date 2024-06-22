@@ -36,6 +36,8 @@ export enum LibraryActionTypes {
   FetchPlaylistsFailure = '[Playlists] Fetch Playlists Failure',
 
   // filter actions
+  ClearFilters = '[Filters] Clear Filters',
+
   SetArtistsFilter = '[Filters] Set Artists Filter',
   SetArtistsFilterAlbumsSuccess = '[Filters] Set Artists Filter Albums Success',
   SetArtistsFilterAlbumsFailure = '[Filters] Set Artists Filter Albums Failure',
@@ -43,7 +45,6 @@ export enum LibraryActionTypes {
   SetArtistsFilterTracksFailure = '[Filters] Set Artists Filter Tracks Failure',
   SetArtistsFilterPlaylistsSuccess = '[Filters] Set Artists Filter Playlists Success',
   SetArtistsFilterPlaylistsFailure = '[Filters] Set Artists Filter Playlists Failure',
-  ClearArtistsFilter = '[Filters] Clear Artists Filter',
 
   SetAlbumsFilter = '[Filters] Set Albums Filter',
   SetAlbumsFilterArtistsSuccess = '[Filters] Set Albums Filter Artists Success',
@@ -52,7 +53,6 @@ export enum LibraryActionTypes {
   SetAlbumsFilterTracksFailure = '[Filters] Set Albums Filter Tracks Failure',
   SetAlbumsFilterPlaylistsSuccess = '[Filters] Set Albums Filter Playlists Success',
   SetAlbumsFilterPlaylistsFailure = '[Filters] Set Albums Filter Playlists Failure',
-  ClearAlbumsFilter = '[Filters] Clear Albums Filter',
 
   SetPlaylistsFilter = '[Filters] Set Playlists Filter',
   SetPlaylistsFilterAlbumsSuccess = '[Filters] Set Playlists Filter Albums Success',
@@ -61,10 +61,8 @@ export enum LibraryActionTypes {
   SetPlaylistsFilterArtistsFailure = '[Filters] Set Playlists Filter Artists Failure',
   SetPlaylistsFilterTracksSuccess = '[Filters] Set Playlists Filter Tracks Success',
   SetPlaylistsFilterTracksFailure = '[Filters] Set Playlists Filter Tracks Failure',
-  ClearPlaylistsFilter = '[Filters] Clear Playlists Filter',
 
   // save
-
   PlaylistCreate = '[Playlists] Save Playlist',
   PlaylistCreateSuccess = '[Playlist] Save Playlist Success',
   PlaylistCreateFailure = '[Playlist] Save Playlist Failure'

@@ -7,7 +7,7 @@ import {Album} from "../../../../models/albums/album.model";
 import {Artist} from "../../../../models/artists/artist.model";
 import {FetchArtists} from "../../store/actions/artists.actions";
 import {FetchAlbums} from "../../store/actions/albums.actions";
-import {ClearAlbumsFilter, ClearArtistsFilter, ClearLibrary, LibraryScan} from "../../store/library.actions";
+import {ClearFilters, ClearLibrary, LibraryScan} from "../../store/library.actions";
 import {FetchPlaylists} from "../../store/actions/playlists.actions";
 import {Playlist} from "../../../../models/playlist/playlist.model";
 
@@ -39,17 +39,8 @@ export class LibraryComponent implements OnInit {
     this.store$.dispatch(new FetchPlaylists())
   }
 
-  clearArtistsFilter(): void {
-    this.store$.dispatch(new ClearArtistsFilter())
-  }
-
-  clearAlbumsFilter(): void {
-    this.store$.dispatch(new ClearAlbumsFilter())
-  }
-
-  clearPlaylistsFilter(): void {
-    // this.store$.dispatch(new ClearPlaylistsFilter())
-    console.log('clear playlist filter')
+  handleClearFiltersClick() {
+    this.store$.dispatch(new ClearFilters())
   }
 
   // TODO: input dirs to scan

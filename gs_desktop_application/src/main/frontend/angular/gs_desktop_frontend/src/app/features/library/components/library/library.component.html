@@ -30,15 +30,9 @@
     class="gs_library_body"
     *ngIf="currSectionIsLibrary">
     <div class="gs_library_filters">
-      <div class="gs_library_filters_title">
-        Now Showing:
-      </div>
       <div class="gs_library_filter">
         <div>
           Playlists
-          <button (click)="clearPlaylistsFilter()">
-            X
-          </button>
         </div>
         <div class="gs_library_filter_list">
           @for(playlist of playlistsFilter$ | async; track playlist;) {
@@ -51,9 +45,6 @@
       <div class="gs_library_filter">
         <div>
           Artists
-          <button (click)="clearArtistsFilter()">
-            X
-          </button>
         </div>
         <div class="gs_library_filter_list">
           @for(artist of artistsFilter$ | async; track artist;) {
@@ -66,9 +57,6 @@
       <div class="gs_library_filter">
         <div>
           Albums
-          <button (click)="clearAlbumsFilter()">
-            X
-          </button>
         </div>
         <div class="gs_library_filter_list">
           @for(album of albumsFilter$ | async; track album;) {
@@ -78,6 +66,9 @@
           }
         </div>
       </div>
+      <button (click)="handleClearFiltersClick()">
+        X
+      </button>
     </div>
     <div class="gs_library_lists">
       <div class="gs_library_list">
