@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ArtistService {
-  private ArtistRepository artistRepository;
+  private final ArtistRepository artistRepository;
 
   @Autowired
   public ArtistService(
@@ -29,6 +29,10 @@ public class ArtistService {
 
   public List<Artist> findByAlbumIds(List<Long> albumIds) {
     return this.artistRepository.findByAlbumIds(albumIds);
+  }
+
+  public List<Artist> findByPlaylistIds(List<Long> playlistIds) {
+    return this.artistRepository.findByPlaylistIds(playlistIds);
   }
 
   public Optional<Artist> findById(Long id) {
@@ -45,9 +49,7 @@ public class ArtistService {
   }
 
   public Artist save(Artist artist) {
-    Artist savedArtist = this.artistRepository.save(artist);
-
-    return savedArtist;
+    return this.artistRepository.save(artist);
   }
 
   public void saveAll(List<Artist> artists) {

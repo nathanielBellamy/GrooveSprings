@@ -13,12 +13,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/playlists")
@@ -32,14 +27,14 @@ public class PlaylistController {
   }
 
   @GetMapping
-  public ResponseEntity getAllPlaylists() {
+  public ResponseEntity<PlaylistGetAllResponse> getAllPlaylists() {
     List<Playlist> playlists = playlistService.findAll();
 
     return ResponseEntity.ok().body(new PlaylistGetAllResponse(playlists));
   }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity getPlaylistById(@PathVariable("id") Long id) {
+  public ResponseEntity<PlaylistEntityResponse> getPlaylistById(@PathVariable("id") Long id) {
     Optional<Playlist> playlist = playlistService.findById(id);
     if (playlist.isPresent()) {
       ResponseEntity<PlaylistEntityResponse> resEnt = new ResponseEntity<>(
@@ -52,9 +47,9 @@ public class PlaylistController {
   }
 
   @GetMapping(value = "/{id}/tracks")
-  public ResponseEntity getTracksByPlaylistId(@PathVariable("id") Long id) {
+  public ResponseEntity<PlaylistTracksResponse> getTracksByPlaylistId(@PathVariable("id") Long id) {
     Optional<Playlist> playlistOpt = playlistService.findById(id);
-    if (!playlistOpt.isPresent()) {
+    if (playlistOpt.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
     Playlist playlist = playlistOpt.get();
@@ -63,7 +58,7 @@ public class PlaylistController {
   }
 
   @PostMapping
-  public ResponseEntity createPlaylist(@RequestBody PlaylistCreateDto dto) {
+  public ResponseEntity<PlaylistEntityResponse> createPlaylist(@RequestBody PlaylistCreateDto dto) {
     Playlist playlistSaved = playlistService.createFromDto(dto);
     URI uri = HttpHelper.uri("/api/v1/playlists/" + playlistSaved.getId());
     return ResponseEntity.created(uri).body(new PlaylistEntityResponse(playlistSaved));

@@ -14,19 +14,18 @@
       Settings
     </span>
   </legend>
-    <div
-      *ngIf="currSectionIsSettings"
-      class="gs_library_buttons">
-      <button class="gs_library_scan_button"
-              (click)="handleLibScanClick()">
-        Scan Lib
-      </button>
-      <button class="gs_library_scan_button"
-              (click)="handleLibClearClick()">
-        Clear Lib
-      </button>
-    </div>
-
+  <div
+    *ngIf="currSectionIsSettings"
+    class="gs_library_buttons">
+    <button class="gs_library_scan_button"
+            (click)="handleLibScanClick()">
+      Scan Lib
+    </button>
+    <button class="gs_library_scan_button"
+            (click)="handleLibClearClick()">
+      Clear Lib
+    </button>
+  </div>
   <div
     class="gs_library_body"
     *ngIf="currSectionIsLibrary">
@@ -82,67 +81,49 @@
     </div>
     <div class="gs_library_lists">
       <div class="gs_library_list">
-        <header
-          (click)="handleLibraryListTitleClick('playlists')"
-          class="gs_library_list_title">
+        <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
             Playlists
           </div>
         </header>
         <body
-          class="gs_library_list_body"
-          [class.gs_library_list_displayed]="playlistsIsDisplayed"
-          [class.gs_library_list_hidden]="!playlistsIsDisplayed">
+          class="gs_library_list_body">
           <gsPlaylists />
         </body>
       </div>
       <div class="gs_library_list">
-        <header
-          (click)="handleLibraryListTitleClick('artists')"
-          class="gs_library_list_title">
+        <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
             Artists
           </div>
         </header>
         <body
-          class="gs_library_list_body"
-          [class.gs_library_list_displayed]="artistsIsDisplayed"
-          [class.gs_library_list_hidden]="!artistsIsDisplayed">
+          class="gs_library_list_body">
           <gsArtists />
         </body>
       </div>
       <div class="gs_library_list">
-        <header
-          (click)="handleLibraryListTitleClick('albums')"
-          class="gs_library_list_title">
+        <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
             Albums
           </div>
         </header>
         <body
-          class="gs_library_list_body"
-          [class.gs_library_list_displayed]="albumsIsDisplayed"
-          [class.gs_library_list_hidden]="!albumsIsDisplayed">
+          class="gs_library_list_body">
         <gsAlbums />
         </body>
       </div>
-      <div class="gs_library_list">
-        <header
-          (click)="handleLibraryListTitleClick('tracks')"
-          class="gs_library_list_title">
+      <div class="gs_library_list gs_library_list_tracks">
+        <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
             Tracks
           </div>
         </header>
         <body
-          class="gs_library_list_body"
-          [class.gs_library_list_displayed]="tracksIsDisplayed"
-          [class.gs_library_list_hidden]="!tracksIsDisplayed">
+          class="gs_library_list_body">
         <gsTracks />
         </body>
       </div>
     </div>
   </div>
-
-
 </fieldset>

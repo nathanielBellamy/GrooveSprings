@@ -10,7 +10,6 @@ import {FetchAlbums} from "../../store/actions/albums.actions";
 import {ClearAlbumsFilter, ClearArtistsFilter, ClearLibrary, LibraryScan} from "../../store/library.actions";
 import {FetchPlaylists} from "../../store/actions/playlists.actions";
 import {Playlist} from "../../../../models/playlist/playlist.model";
-import {ClearPlaylist} from "../../../playback/store/playback.actions";
 
 @Component({
   selector: 'gsLibrary',
@@ -66,14 +65,6 @@ export class LibraryComponent implements OnInit {
     this.currSection = section
   }
 
-  handleLibraryListTitleClick(listName: string): void {
-    if (this.displayedLists.includes(listName)) {
-      this.displayedLists = this.displayedLists.filter(x => x !== listName)
-    } else {
-      this.displayedLists.push(listName)
-    }
-  }
-
   get currSectionIsLibrary(): boolean {
     return this.currSection === 'library'
   }
@@ -81,21 +72,4 @@ export class LibraryComponent implements OnInit {
   get currSectionIsSettings(): boolean {
     return this.currSection === 'settings'
   }
-
-  get playlistsIsDisplayed(): boolean {
-    return this.displayedLists.includes('playlists')
-  }
-
-  get artistsIsDisplayed(): boolean {
-    return this.displayedLists.includes('artists')
-  }
-
-  get albumsIsDisplayed(): boolean {
-    return this.displayedLists.includes('albums')
-  }
-
-  get tracksIsDisplayed(): boolean {
-    return this.displayedLists.includes('tracks')
-  }
-
 }
