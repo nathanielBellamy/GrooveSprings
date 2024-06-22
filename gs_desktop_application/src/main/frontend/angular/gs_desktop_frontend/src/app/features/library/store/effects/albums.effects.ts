@@ -45,7 +45,6 @@ export class AlbumsEffects {
     )
   )
 
-
   fetchAlbumsByPlaylist$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SetPlaylistsFilter>(LibraryActionTypes.SetPlaylistsFilter),
