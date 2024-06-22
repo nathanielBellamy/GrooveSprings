@@ -6,13 +6,8 @@ import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistBulkCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistGetByAlbumIdsDto;
-import dev.nateschieber.groovesprings.rest.responses.artist.ArtistAlbumsResponse;
-import dev.nateschieber.groovesprings.rest.responses.artist.ArtistBulkCreateResponse;
-import dev.nateschieber.groovesprings.rest.responses.artist.ArtistDeleteResponse;
-import dev.nateschieber.groovesprings.rest.responses.artist.ArtistEntityResponse;
-import dev.nateschieber.groovesprings.rest.responses.artist.ArtistGetAllResponse;
-import dev.nateschieber.groovesprings.rest.responses.artist.ArtistGetByAlbumIdsResponse;
-import dev.nateschieber.groovesprings.rest.responses.artist.ArtistTracksResponse;
+import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistGetByPlaylistIdsDto;
+import dev.nateschieber.groovesprings.rest.responses.artist.*;
 import dev.nateschieber.groovesprings.services.entities.ArtistService;
 import java.net.URI;
 import java.util.List;
@@ -42,19 +37,34 @@ public class ArtistController {
   }
 
   @GetMapping
-  public ResponseEntity getAllArtists() {
+  public ResponseEntity<ArtistGetAllResponse> getAllArtists() {
     List<Artist> artists = artistService.findAll();
-    return ResponseEntity.ok().body(new ArtistGetAllResponse(artists));
+    return new ResponseEntity<ArtistGetAllResponse> (
+            new ArtistGetAllResponse(artists),
+            HttpStatus.OK
+    );
   }
 
   @PostMapping(value="byAlbumIds")
-  public ResponseEntity getArtistsByAlbumIds(@RequestBody ArtistGetByAlbumIdsDto dto) {
+  public ResponseEntity<ArtistGetByAlbumIdsResponse> getArtistsByAlbumIds(@RequestBody ArtistGetByAlbumIdsDto dto) {
     List<Artist> artists = artistService.findByAlbumIds(dto.albumIds());
-    return ResponseEntity.ok().body(new ArtistGetByAlbumIdsResponse(artists, dto.albumIds()));
+    return new ResponseEntity<ArtistGetByAlbumIdsResponse>(
+        new ArtistGetByAlbumIdsResponse(artists, dto.albumIds()),
+        HttpStatus.OK
+    );
+  }
+
+  @PostMapping(value = "byPlaylistIds")
+  public ResponseEntity<ArtistGetByPlaylistIdsResponse> getArtistsByPlaylistIds(@RequestBody ArtistGetByPlaylistIdsDto dto) {
+    List<Artist> artists = artistService.findByPlaylistIds(dto.playlistIds());
+    return new ResponseEntity<ArtistGetByPlaylistIdsResponse>(
+            new ArtistGetByPlaylistIdsResponse(artists, dto.playlistIds()),
+            HttpStatus.OK
+    );
   }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity getArtistById(@PathVariable("id") Long id) {
+  public ResponseEntity<ArtistEntityResponse> getArtistById(@PathVariable("id") Long id) {
     Optional<Artist> artist = artistService.findById(id);
     if (artist.isPresent()) {
       ResponseEntity<ArtistEntityResponse> resEnt = new ResponseEntity<>(
@@ -67,7 +77,7 @@ public class ArtistController {
   }
 
   @GetMapping(value="/{id}/albums")
-  public ResponseEntity getArtistAlbums(@PathVariable("id") Long id) {
+  public ResponseEntity<ArtistAlbumsResponse> getArtistAlbums(@PathVariable("id") Long id) {
     Optional<Artist> artist = artistService.findById(id);
     if (!artist.isPresent()) {
       return ResponseEntity.notFound().build();
@@ -90,13 +100,13 @@ public class ArtistController {
 
   // TODO: why am I getting a 415 on this one all of a sudden?
   @PostMapping(value = "/bulk/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity createArtists(@RequestBody ArtistBulkCreateDto dto) {
+  public ResponseEntity<ArtistBulkCreateResponse> createArtists(@RequestBody ArtistBulkCreateDto dto) {
     List<Artist> createdArtists = artistService.createAllFromDto(dto);
     return ResponseEntity.ok().body(new ArtistBulkCreateResponse(createdArtists));
   }
 
   @PutMapping(value = "/{id}")
-  public ResponseEntity updateArtist(@PathVariable("id") Long id, @RequestBody ArtistEntityDto dto) {
+  public ResponseEntity<ArtistEntityResponse> updateArtist(@PathVariable("id") Long id, @RequestBody ArtistEntityDto dto) {
     Optional<Artist> loadedArtist = artistService.findById(id);
     if (!loadedArtist.isPresent()){
       return ResponseEntity.notFound().build();
@@ -107,13 +117,13 @@ public class ArtistController {
   }
 
   @DeleteMapping(value = "/{id}")
-  public ResponseEntity deleteArtist(@PathVariable("id") Long id) {
+  public ResponseEntity<ArtistDeleteResponse> deleteArtist(@PathVariable("id") Long id) {
     artistService.deleteById(id);
     return ResponseEntity.ok().body(new ArtistDeleteResponse(id));
   }
 
   @GetMapping(value = "/{id}/tracks")
-  public ResponseEntity getArtistTracks(@PathVariable("id") Long id) {
+  public ResponseEntity<ArtistTracksResponse> getArtistTracks(@PathVariable("id") Long id) {
     Optional<Artist> artist = artistService.findById(id);
     if (!artist.isPresent()) {
       return ResponseEntity.notFound().build();

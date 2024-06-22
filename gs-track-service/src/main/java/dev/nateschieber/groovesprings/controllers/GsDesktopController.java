@@ -2,6 +2,7 @@ package dev.nateschieber.groovesprings.controllers;
 import dev.nateschieber.groovesprings.rest.GsDesktopTrackCreateDto;
 import dev.nateschieber.groovesprings.services.entities.AlbumService;
 import dev.nateschieber.groovesprings.services.entities.ArtistService;
+import dev.nateschieber.groovesprings.services.entities.PlaylistService;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
 
 import jakarta.validation.Valid;
@@ -18,16 +19,18 @@ public class GsDesktopController {
     private final AlbumService albumService;
     private final ArtistService artistService;
     private final TrackService trackService;
+    private final PlaylistService playlistService;
 
     @Autowired
     public GsDesktopController(
             AlbumService albumService,
             ArtistService artistService,
-            TrackService trackService
-    ) {
+            TrackService trackService,
+            PlaylistService playlistService) {
         this.albumService = albumService;
         this.artistService = artistService;
         this.trackService = trackService;
+        this.playlistService = playlistService;
     }
 
     @PostMapping("/bulkCreate")
@@ -50,6 +53,9 @@ public class GsDesktopController {
         System.out.println("Done Clearing Albums");
         trackService.deleteAll();
         System.out.println("Done Clearing Tracks");
+        playlistService.deleteAll();
+        System.out.println("Done Clearing Playlists");
+        System.out.println("Done Clearing Library");
         return ResponseEntity.ok().build();
     }
 }

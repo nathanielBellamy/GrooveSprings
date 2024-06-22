@@ -60,7 +60,9 @@
   &_lists
     width: 100%
     margin: 5px
-    display: flex
+    display: grid
+    grid-template-rows: 30% 70%
+    grid-template-columns: 1fr 1fr 1fr
     gap: 5px
     overflow-x: scroll
     overflow-y: hidden
@@ -73,21 +75,13 @@
     overflow: hidden
     flex: 0 0 1fr
 
-    &_displayed
-      max-width: 50vw
-      min-width: 350px
-      transition: max-width 1s ease, min-width 1s ease
-
-    &_hidden
-      max-width: 0
-      min-width: 0
-      transition: max-width 1s ease, min-width 1s ease
+    &_tracks
+      grid-column: span 3
 
     &_title
       font: bold italic 1.5em "Fira Sans", sans-serif
       height: 100%
       width: 100%
-      cursor: pointer
       text-align: right
       border-radius: 5px
 
@@ -96,11 +90,6 @@
         left: 0px
         top: 100px
         transform: rotate(-90deg)
-
-      &:hover
-        background-color: rgba(110, 159, 170, 0.54)
-        font: bold italic 1.7em "Fira Sans", sans-serif
-        transition: background-color 0.5s ease, font 0.5s ease-in
 
     &_body
       overflow: hidden

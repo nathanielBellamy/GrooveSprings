@@ -110,6 +110,10 @@ public class Album {
     return releaseDate;
   }
 
+  public void addPlaylist(Playlist playlsit) {
+    playlists.add(playlsit);
+  }
+
   @Override
   public String toString() {
     return "Album{" +

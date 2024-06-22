@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AlbumService {
-  private AlbumRepository albumRepository;
-  private ArtistService artistService;
+  private final AlbumRepository albumRepository;
+  private final ArtistService artistService;
 
   @Autowired
   public AlbumService(
@@ -41,6 +41,10 @@ public class AlbumService {
 
   public List<Album> findByArtistIds(List<Long> artistIds) {
     return this.albumRepository.findByArtistIds(artistIds);
+  }
+
+  public List<Album> findByPlaylistIds(List<Long> playlistIds) {
+    return this.albumRepository.findByPlaylistIds(playlistIds);
   }
 
   public void deleteById(Long id) {

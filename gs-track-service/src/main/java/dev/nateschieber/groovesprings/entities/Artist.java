@@ -91,6 +91,10 @@ public class Artist {
     albums.add(album);
   }
 
+  public void addPlaylist(Playlist playlist) {
+    playlists.add(playlist);
+  }
+
   @Override
   public String toString() {
     return "Artist{" +
