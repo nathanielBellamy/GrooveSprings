@@ -5,6 +5,8 @@ import {ArtistsGetAll} from "../../../models/artists/artists_get_all.model";
 import {Artist} from "../../../models/artists/artist.model";
 import {ArtistsGetByAlbumIds} from "../../../models/artists/artists_get_by_album_ids.model";
 import {ArtistsByAlbumIds} from "../../../models/artists/artists_by_album_ids.model";
+import {ArtistsGetByPlaylistIds} from "../../../models/artists/artists_get_by_playlist_ids.model";
+import {ArtistsByPlaylistIds} from "../../../models/artists/artists_by_playlist_ids.model";
 
 @Injectable()
 export class ArtistsService {
@@ -31,6 +33,18 @@ export class ArtistsService {
           const { count, artists, albumIds }: ArtistsByAlbumIds = artistsRes.data
           artists.sort((a,b) => this.artistNameSort(a,b))
           return {count, artists, albumIds}
+        })
+      )
+  }
+
+  fetchByPlaylistIds(playlistIds: number[]) {
+    return this.http.post('api/v1/artists/byPlaylistIds', {playlistIds})
+      .pipe(
+        map( res => {
+          const artistsRes = res as ArtistsGetByPlaylistIds
+          const { count, artists, playlistIds }: ArtistsByPlaylistIds = artistsRes.data
+          artists.sort((a,b) => this.artistNameSort(a,b))
+          return {count, artists, playlistIds}
         })
       )
   }

@@ -5,6 +5,8 @@ import {AlbumsGetAll} from "../../../models/albums/albums_get_all.model";
 import {AlbumsData} from "../../../models/albums/albums_data.model";
 import {AlbumsGetByArtistIds} from "../../../models/albums/albums_get_by_artist_ids.model";
 import {AlbumsByArtistIds} from "../../../models/albums/albums_by_artist_ids.model";
+import {AlbumsByPlaylistIds} from "../../../models/albums/albums_by_playlist_ids.model";
+import {AlbumsGetByPlaylistIds} from "../../../models/albums/albums_get_by_playlist_ids.model";
 
 @Injectable()
 export class AlbumsService {
@@ -31,4 +33,13 @@ export class AlbumsService {
       )
   }
 
+  fetchByPlaylistIds(playlistIds: number[]): Observable<AlbumsByPlaylistIds> {
+    return this.http.post(`api/v1/albums/byPlaylistIds`, { playlistIds })
+      .pipe(
+        map(res => {
+          const albumsRes: AlbumsGetByPlaylistIds = res as AlbumsGetByPlaylistIds
+          return albumsRes.data
+        })
+      )
+  }
 }

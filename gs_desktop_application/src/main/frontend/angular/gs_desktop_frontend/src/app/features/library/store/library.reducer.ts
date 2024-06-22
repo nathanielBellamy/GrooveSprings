@@ -8,14 +8,20 @@ import {
   FetchTracksFailure,
   FetchTracksSuccess,
   GsLibraryActionResult,
-  Identity, SetAlbumsFilter,
+  Identity,
+  SetAlbumsFilter,
   SetAlbumsFilterArtistsSuccess,
   SetAlbumsFilterTracksFailure,
-  SetAlbumsFilterTracksSuccess, SetArtistsFilter,
+  SetAlbumsFilterTracksSuccess,
+  SetArtistsFilter,
   SetArtistsFilterAlbumsFailure,
   SetArtistsFilterAlbumsSuccess,
   SetArtistsFilterTracksFailure,
-  SetArtistsFilterTracksSuccess, SetPlaylistsFilter, SetPlaylistsFilterTracksFailure, SetPlaylistsFilterTracksSuccess
+  SetArtistsFilterTracksSuccess,
+  SetPlaylistsFilter, SetPlaylistsFilterAlbumsFailure,
+  SetPlaylistsFilterAlbumsSuccess, SetPlaylistsFilterArtistsFailure, SetPlaylistsFilterArtistsSuccess,
+  SetPlaylistsFilterTracksFailure,
+  SetPlaylistsFilterTracksSuccess
 } from "./library.actions";
 import {initialLibraryState, LibraryState} from "./library.state";
 import {FetchAlbumsFailure, FetchAlbumsSuccess} from "./actions/albums.actions";
@@ -102,6 +108,22 @@ export function libraryReducer(state = initialLibraryState, action: Action): Lib
 
     case LibraryActionTypes.SetPlaylistsFilterTracksFailure:
       res = action as SetPlaylistsFilterTracksFailure
+      break
+
+    case LibraryActionTypes.SetPlaylistsFilterAlbumsSuccess:
+      res = action as SetPlaylistsFilterAlbumsSuccess
+      break
+
+    case LibraryActionTypes.SetPlaylistsFilterAlbumsFailure:
+      res = action as SetPlaylistsFilterAlbumsFailure
+      break
+
+    case LibraryActionTypes.SetPlaylistsFilterArtistsSuccess:
+      res = action as SetPlaylistsFilterArtistsSuccess
+      break
+
+    case LibraryActionTypes.SetPlaylistsFilterArtistsFailure:
+      res = action as SetPlaylistsFilterArtistsFailure
       break
 
     case LibraryActionTypes.FetchPlaylistsSuccess:
