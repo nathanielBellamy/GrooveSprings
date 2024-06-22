@@ -3,10 +3,15 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {map, switchMap, catchError, of} from "rxjs";
 import {AlbumsService} from "../../services/albums.service";
 import {LibraryActionTypes} from "../library.actiontypes";
-import {FetchAlbumsFailure, FetchAlbumsSuccess, SetArtistsFilterAlbumsSuccess} from "../actions/albums.actions";
+import {
+  FetchAlbumsFailure,
+  FetchAlbumsSuccess,
+  SetArtistsFilterAlbumsSuccess,
+  SetPlaylistsFilterAlbumsSuccess
+} from "../actions/albums.actions";
 import {AlbumsData} from "../../../../models/albums/albums_data.model";
 
-import {SetArtistsFilter} from "../library.actions";
+import {SetArtistsFilter, SetPlaylistsFilter} from "../library.actions";
 
 @Injectable()
 export class AlbumsEffects {
@@ -40,4 +45,17 @@ export class AlbumsEffects {
     )
   )
 
+
+  fetchAlbumsByPlaylist$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SetPlaylistsFilter>(LibraryActionTypes.SetPlaylistsFilter),
+      map(action => action.payload),
+      switchMap( playlists => this.albumsService.fetchByPlaylistIds(playlists.map(a => a.id))
+        .pipe(
+          map((payload) => new SetPlaylistsFilterAlbumsSuccess(payload)),
+          catchError((e, _) => of(new FetchAlbumsFailure(e)))
+        )
+      )
+    )
+  )
 }

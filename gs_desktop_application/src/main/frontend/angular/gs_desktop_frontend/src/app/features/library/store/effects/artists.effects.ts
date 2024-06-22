@@ -7,9 +7,9 @@ import {
   FetchArtistsFailure,
   FetchArtistsSuccess,
   SetAlbumsFilterArtistsFailure,
-  SetAlbumsFilterArtistsSuccess
+  SetAlbumsFilterArtistsSuccess, SetPlaylistsFilterArtistsFailure, SetPlaylistsFilterArtistsSuccess
 } from "../actions/artists.actions";
-import {SetAlbumsFilter} from "../library.actions";
+import {SetAlbumsFilter, SetPlaylistsFilter} from "../library.actions";
 
 @Injectable()
 export class ArtistsEffects {
@@ -38,6 +38,19 @@ export class ArtistsEffects {
         .pipe(
           map((payload) => new SetAlbumsFilterArtistsSuccess(payload)),
           catchError((e, _) => of(new SetAlbumsFilterArtistsFailure(e)))
+        )
+      )
+    )
+  )
+
+  fetchArtistsByPlaylists$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SetPlaylistsFilter>(LibraryActionTypes.SetPlaylistsFilter),
+      map(action => action.payload),
+      switchMap((playlists) => this.artistService.fetchByPlaylistIds(playlists.map(pl => pl.id))
+        .pipe(
+          map((payload) => new SetPlaylistsFilterArtistsSuccess(payload)),
+          catchError((e, _) => of(new SetPlaylistsFilterArtistsFailure(e)))
         )
       )
     )
