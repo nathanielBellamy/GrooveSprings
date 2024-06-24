@@ -22,15 +22,21 @@ export class LibraryComponent implements OnInit {
   protected artistsFilter$: Observable<Artist[]>
   protected albumsFilter$: Observable<Album[]>
   protected playlistsFilter$: Observable<Playlist[]>
+  protected playlistCount$: Observable<number>
+  protected artistCount$: Observable<number>
+  protected albumCount$: Observable<number>
+  protected trackCount$: Observable<number>
 
   protected currSection: string = 'library'
-
-  protected displayedLists: string[] = ['playlists', 'artists', 'albums']
 
   constructor(private store$: Store<{library: LibraryState}>) {
     this.artistsFilter$ = store$.select(state => state.library.filters.artists)
     this.albumsFilter$ = store$.select(state =>  state.library.filters.albums)
     this.playlistsFilter$ = store$.select(state => state.library.filters.playlists)
+    this.playlistCount$ = store$.select(state => state.library.playlistCount)
+    this.artistCount$ = store$.select(state => state.library.artistCount)
+    this.albumCount$ = store$.select(state => state.library.albumCount)
+    this.trackCount$ = store$.select(state => state.library.trackCount)
   }
 
   ngOnInit() {
