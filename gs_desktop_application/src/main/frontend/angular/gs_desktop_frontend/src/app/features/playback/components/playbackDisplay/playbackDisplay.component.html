@@ -4,53 +4,45 @@
     <legend class="gs_current_track_legend">
       Currently Playing
     </legend>
-    <table>
-      <thead>
-        <tr>
-          <td>
-          </td>
-          <td>
-          </td>
-        </tr>
-      </thead>
+    <table class="gs_playback_display_table">
       <tbody>
-        <tr>
+        <tr class="gs_playback_display_table_row">
           <td>
             Track:
           </td>
-          <td>
+          <td class="gs_playback_display_table_cell_value">
             {{currTrack.title}}
           </td>
         </tr>
-        <tr>
+        <tr class="gs_playback_display_table_row">
           <td>
             Artist/s:
           </td>
-          <td>
+          <td class="gs_playback_display_table_cell_value">
             {{currTrackArtists}}
           </td>
         </tr>
-        <tr>
+        <tr class="gs_playback_display_table_row">
           <td>
             Album:
           </td>
-          <td>
+          <td class="gs_playback_display_table_cell_value">
             {{currTrack.album.title}}
           </td>
         </tr>
-        <tr>
+        <tr class="gs_playback_display_table_row">
           <td>
             Codec:
           </td>
-          <td>
+          <td class="gs_playback_display_table_cell_value">
             {{currTrack.audioCodec}}
           </td>
         </tr>
-        <tr>
+        <tr class="gs_playback_display_table_row">
           <td>
             SampleRate:
           </td>
-          <td>
+          <td class="gs_playback_display_table_cell_value">
             {{currTrack.sf_samplerate}}
           </td>
         </tr>

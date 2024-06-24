@@ -9,6 +9,19 @@
     border: 2px solid black
     border-radius: 5px
 
+  &_table
+    width: 100%
+
+    &_row
+      display: grid
+      grid-template-rows: 100%
+      grid-template-columns: 25% 75%
+
+    &_cell
+      &_value
+        display: flex
+        justify-content: space-around
+
 .gs_current_track
   height: 100%
   width: 100%
