@@ -1,7 +1,4 @@
 <div class="gs_playlists">
-  <h4>
-    Playlists ({{playlistCount$ | async}})
-  </h4>
   <div class="gs_playlist_list_container">
     <div class="gs_plyalist_list">
       @for(playlist of playlists$ | async; track playlist; let i = $index) {

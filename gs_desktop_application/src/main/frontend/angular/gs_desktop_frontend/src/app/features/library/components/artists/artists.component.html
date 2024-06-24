@@ -1,7 +1,4 @@
 <div class="gs_artists">
-  <h4>
-    Artists ({{artistCount$ | async}})
-  </h4>
   <div class="gs_artist_list_container">
     <div class="gs_artist_list">
       @for(artist of artists$ | async; track artist; let i = $index) {

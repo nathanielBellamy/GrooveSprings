@@ -12,11 +12,9 @@ import {SetPlaylistsFilter} from "../../store/library.actions";
 })
 @Injectable()
 export class PlaylistsComponent {
-  protected playlistCount$: Observable<number>
   protected playlists$: Observable<Playlist[]>
 
   constructor(private store$: Store<{library: LibraryState}>) {
-    this.playlistCount$ = store$.select(state => state.library.playlists.length)
     this.playlists$ = store$.select(state => state.library.playlists)
   }
 

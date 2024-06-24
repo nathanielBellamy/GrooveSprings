@@ -13,6 +13,10 @@
       class="gs_library_legend_elem" >
       Settings
     </span>
+    -
+    <button (click)="handleClearFiltersClick()">
+      X
+    </button>
   </legend>
   <div
     *ngIf="currSectionIsSettings"
@@ -29,85 +33,71 @@
   <div
     class="gs_library_body"
     *ngIf="currSectionIsLibrary">
-    <div class="gs_library_filters">
-      <div class="gs_library_filter">
-        <div>
-          Playlists
-        </div>
-        <div class="gs_library_filter_list">
-          @for(playlist of playlistsFilter$ | async; track playlist;) {
-            <div class="gs_library_filter_val">
-              {{playlist.name}}
-            </div>
-          }
-        </div>
-      </div>
-      <div class="gs_library_filter">
-        <div>
-          Artists
-        </div>
-        <div class="gs_library_filter_list">
-          @for(artist of artistsFilter$ | async; track artist;) {
-            <div class="gs_library_filter_val">
-              {{artist.name}}
-            </div>
-          }
-        </div>
-      </div>
-      <div class="gs_library_filter">
-        <div>
-          Albums
-        </div>
-        <div class="gs_library_filter_list">
-          @for(album of albumsFilter$ | async; track album;) {
-            <div class="gs_library_filter_val">
-              {{album.title}}
-            </div>
-          }
-        </div>
-      </div>
-      <button (click)="handleClearFiltersClick()">
-        X
-      </button>
-    </div>
     <div class="gs_library_lists">
       <div class="gs_library_list">
         <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
-            Playlists
+            {{ (playlistCount$ | async)}} &nbsp; Playlists
           </div>
         </header>
         <body
           class="gs_library_list_body">
+          <div class="gs_library_filter">
+            <div class="gs_library_filter_list">
+              @for(playlist of playlistsFilter$ | async; track playlist;) {
+                <div class="gs_library_filter_val">
+                  {{playlist.name}}
+                </div>
+              }
+            </div>
+          </div>
           <gsPlaylists />
         </body>
       </div>
       <div class="gs_library_list">
         <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
-            Artists
+            {{ artistCount$ | async }} &nbsp; Artists
           </div>
         </header>
         <body
           class="gs_library_list_body">
+          <div class="gs_library_filter">
+            <div class="gs_library_filter_list">
+              @for(artist of artistsFilter$ | async; track artist;) {
+                <div class="gs_library_filter_val">
+                  {{artist.name}}
+                </div>
+              }
+            </div>
+          </div>
           <gsArtists />
         </body>
       </div>
       <div class="gs_library_list">
         <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
-            Albums
+            {{ albumCount$ | async }} &nbsp; Albums
           </div>
         </header>
         <body
           class="gs_library_list_body">
-        <gsAlbums />
+          <div class="gs_library_filter">
+            <div class="gs_library_filter_list">
+              @for(album of albumsFilter$ | async; track album;) {
+                <div class="gs_library_filter_val">
+                  {{album.title}}
+                </div>
+              }
+            </div>
+          </div>
+          <gsAlbums />
         </body>
       </div>
       <div class="gs_library_list gs_library_list_tracks">
         <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
-            Tracks
+            {{ trackCount$ | async }} &nbsp; Tracks
           </div>
         </header>
         <body
