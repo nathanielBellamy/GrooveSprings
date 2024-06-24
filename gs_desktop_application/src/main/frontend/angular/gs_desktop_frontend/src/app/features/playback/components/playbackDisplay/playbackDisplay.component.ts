@@ -24,7 +24,7 @@ export class PlaybackDisplayComponent {
   constructor(private http: HttpClient, private store$: Store<{playback: PlaybackState}>) {
     this.currTrack$ = store$.select(state => ({...state.playback.currTrack}))
     this.currTrack$.subscribe(track => {
-      this.currTrackArtists = track.artists.map(a => a.name).join(', ')
+      this.currTrackArtists = track.artists.length ? track.artists.map(a => a.name).join(', ') : "-"
       this.currTrack = {...track}
     })
   }
