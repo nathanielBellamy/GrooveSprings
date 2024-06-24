@@ -2,17 +2,18 @@
 .gs_tracks
   height: 100%
   overflow: hidden
-  display: grid
-  grid-template-rows: 1fr
-  grid-template-columns: 10% 90%
-  gap: 5px
+  display: flex
+  justify-content: space-around
+  align-items: stretch
 
 .gs_track_list
-  height: fit-content
+  height: 100%
+  margin-top: 10px
   padding: 0 0 20px 0
   display: flex
   flex-direction: column
   align-items: stretch
+  gap: 5px
   width: 100%
   &_container
     height: 100%
@@ -23,12 +24,13 @@
   display: grid
   grid-template-rows: 1fr
   grid-template-columns: 25% 10% 5% 20% 25% 15%
+  margin: 2px 5px 2px 15px
   cursor: pointer
-  margin: 2px
   width: 100%
+  font: bold 1.1em "Fira Sans", sans-serif
+
   &:hover
-    background-color: black
-    color: lightblue
+    background-color: #d58d58
     box-shadow: 3px 3px
     margin: 3px
     transition: margin 0.15s

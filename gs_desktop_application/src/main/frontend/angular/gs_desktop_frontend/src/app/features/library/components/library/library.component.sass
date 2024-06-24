@@ -48,13 +48,14 @@
 
   &_filter
     height: 100%
-    display: grid
-    grid-template-rows: 10% 90%
-    grid-template-columns: 1fr
+    display: flex
+    justify-content: space-around
+    align-items: center
     border-radius: 5px 5px 0 0
     border: 3px solid black
     gap: 5px
     background-color: rgba(121, 220, 202, 0.43)
+    font: bold italic 1.3em "Fira Sans", sans-serif
 
     &_list
       display: flex
@@ -94,11 +95,20 @@
       &_text
         position: relative
         left: 0px
-        top: 100px
+        top: 140px
         transform: rotate(-90deg)
         white-space: nowrap
         display: flex
-        justify-content: space-between
+        gap: 10px
+
+        &_count
+          margin-left: -20px
+          min-width: 50px
+          text-align: right
+
+        &_name
+          flex-grow: 1
+          text-align: center
 
     &_body
       overflow: hidden
@@ -107,3 +117,8 @@
       display: grid
       grid-template-rows: 15% 85%
       grid-template-columns: 100%
+
+      &_track
+        overflow: hidden
+        border-radius: 5px
+        background-color: rgba(144, 185, 177, 0.43)

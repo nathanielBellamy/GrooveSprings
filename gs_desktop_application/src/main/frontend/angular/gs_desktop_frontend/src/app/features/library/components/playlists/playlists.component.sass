@@ -1,7 +1,39 @@
+.gs_playlists
+  height: 100%
+  width: 100%
+  overflow: hidden
+  gap: 5px
+
+
+
+.gs_playlist_list
+  width: 100%
+  display: flex
+  flex-direction: column
+  align-items: stretch
+  gap: 5px
+
+  &_container
+    height: 100%
+    width: 100%
+    padding-bottom: 100px
+    overflow-y: scroll
+    margin-top: 10px
 
 .gs_playlist
   cursor: pointer
+  width: 100%
+  display: grid
+  grid-template-rows: 100%
+  grid-template-columns: 10% 90%
+
+  &_index
+    margin-left: 5px
+    font: bold italic 1em "Fira Sans", sans-serif
+
+  &_name
+    font: bold 1.1em "Fira Sans", sans-serif
 
   &:hover
-    background-color: #ff8f00
+    background-color: #d58d58
     transition: background-color .1s ease

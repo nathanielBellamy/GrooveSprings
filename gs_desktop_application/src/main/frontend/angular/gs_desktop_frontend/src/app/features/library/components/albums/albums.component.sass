@@ -1,9 +1,9 @@
 .gs_albums
   height: 100%
-  display: grid
-  grid-template-rows: 1fr
-  grid-template-columns: 10% 90%
-  gap: 5px
+  width: 100%
+  display: flex
+  justify-content: space-between
+  align-items: stretch
 
 .gs_album_list
   height: fit-content
@@ -12,16 +12,25 @@
   flex-direction: column
   justify-content: space-around
   align-self: center
+  margin-top: 10px
+  gap: 5px
 
   &_container
     height: 100%
+    width: 100%
     overflow-y: scroll
 
 .gs_album
-  display: grid
-  grid-template-rows: 1fr
-  grid-template-columns: 30% 70%
   cursor: pointer
+  display: grid
+  grid-template-rows: 100%
+  grid-template-columns: 10% 90%
   &:hover
-    background-color: cyan
-    color: black
+    background-color: #d58d58
+
+  &_index
+    margin-left: 5px
+    font: bold italic 1em "Fira Sans", sans-serif
+
+  &_name
+    font: bold 1.1em "Fira Sans", sans-serif

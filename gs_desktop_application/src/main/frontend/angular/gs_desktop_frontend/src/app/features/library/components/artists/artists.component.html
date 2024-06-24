@@ -1,10 +1,19 @@
 <div class="gs_artists">
   <div class="gs_artist_list_container">
+<!--    <div class="gs_artist">-->
+<!--      <span class="gs_artist_index">1. &nbsp;</span>-->
+<!--      EXAMPLE-->
+<!--    </div>-->
     <div class="gs_artist_list">
       @for(artist of artists$ | async; track artist; let i = $index) {
-        <div class="artist"
+        <div class="gs_artist"
              (click)="handleArtistClick(artist)">
-          {{artist.name}}
+          <span class="gs_artist_index">
+            {{i}}. &nbsp;
+          </span>
+          <span class="gs_artist_name">
+            {{artist.name}}
+          </span>
         </div>
       }
     </div>

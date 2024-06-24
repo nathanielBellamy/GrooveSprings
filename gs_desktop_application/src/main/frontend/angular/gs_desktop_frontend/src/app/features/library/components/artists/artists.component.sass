@@ -2,10 +2,9 @@
 .gs_artists
   height: 100%
   overflow-y: scroll
-  display: grid
-  grid-template-rows: 1fr
-  grid-template-columns: 10% 90%
-  gap: 5px
+  display: flex
+  justify-content: space-around
+  align-items: stretch
 
 .gs_artist_list
   display: flex
@@ -14,15 +13,25 @@
   align-self: center
   overflow-y: scroll
   height: fit-content
+  gap: 5px
+
   &_container
     height: 100%
+    width: 100%
     overflow-y: scroll
+    margin-top: 10px
 
-.artist
+.gs_artist
   cursor: pointer
   margin: 2px
   &:hover
-    background-color: black
-    color: teal
+    background-color: #d58d58
     margin: 3px
     transition: margin 0.15s
+
+  &_index
+    margin-left: 5px
+    font: bold italic 1em "Fira Sans", sans-serif
+
+  &_name
+    font: bold 1.1em "Fira Sans", sans-serif
