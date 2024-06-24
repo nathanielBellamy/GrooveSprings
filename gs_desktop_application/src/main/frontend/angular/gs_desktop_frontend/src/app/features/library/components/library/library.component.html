@@ -37,7 +37,12 @@
       <div class="gs_library_list">
         <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
-            {{ (playlistCount$ | async)}} &nbsp; Playlists
+            <span class="gs_library_list_title_text_count">
+              {{ playlistCount$ | async }}
+            </span>
+            <span class="gs_library_list_title_text_name">
+              Playlist/s
+            </span>
           </div>
         </header>
         <body
@@ -57,7 +62,12 @@
       <div class="gs_library_list">
         <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
-            {{ artistCount$ | async }} &nbsp; Artists
+            <span class="gs_library_list_title_text_count">
+              {{ artistCount$ | async }}
+            </span>
+            <span class="gs_library_list_title_text_name">
+              Artist/s
+            </span>
           </div>
         </header>
         <body
@@ -66,7 +76,7 @@
             <div class="gs_library_filter_list">
               @for(artist of artistsFilter$ | async; track artist;) {
                 <div class="gs_library_filter_val">
-                  {{artist.name}}
+                  {{ artist.name }}
                 </div>
               }
             </div>
@@ -77,7 +87,12 @@
       <div class="gs_library_list">
         <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
-            {{ albumCount$ | async }} &nbsp; Albums
+            <span class="gs_library_list_title_text_count">
+              {{ albumCount$ | async }}
+            </span>
+            <span class="gs_library_list_title_text_name">
+              Album/s
+            </span>
           </div>
         </header>
         <body
@@ -97,11 +112,16 @@
       <div class="gs_library_list gs_library_list_tracks">
         <header class="gs_library_list_title">
           <div class="gs_library_list_title_text">
-            {{ trackCount$ | async }} &nbsp; Tracks
+            <span class="gs_library_list_title_text_count">
+              {{ (trackCount$ | async) }}
+            </span>
+            <span class="gs_library_list_title_text_name">
+              Track/s
+            </span>
           </div>
         </header>
         <body
-          class="gs_library_list_body">
+          class="gs_library_list_body_track">
         <gsTracks />
         </body>
       </div>

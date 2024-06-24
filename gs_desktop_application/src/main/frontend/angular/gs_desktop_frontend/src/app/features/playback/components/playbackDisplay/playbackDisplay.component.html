@@ -10,7 +10,8 @@
           <td>
             Track:
           </td>
-          <td class="gs_playback_display_table_cell_value">
+          <td title="{{currTrack.title}}"
+              class="gs_playback_display_table_cell_value">
             {{currTrack.title}}
           </td>
         </tr>
@@ -18,7 +19,8 @@
           <td>
             Artist/s:
           </td>
-          <td class="gs_playback_display_table_cell_value">
+          <td title="{{currTrackArtists}}"
+              class="gs_playback_display_table_cell_value">
             {{currTrackArtists}}
           </td>
         </tr>
@@ -26,7 +28,8 @@
           <td>
             Album:
           </td>
-          <td class="gs_playback_display_table_cell_value">
+          <td title="{{currTrack.album.title}}"
+              class="gs_playback_display_table_cell_value">
             {{currTrack.album.title}}
           </td>
         </tr>
@@ -36,6 +39,14 @@
           </td>
           <td class="gs_playback_display_table_cell_value">
             {{currTrack.audioCodec}}
+          </td>
+        </tr>
+        <tr class="gs_playback_display_table_row">
+          <td>
+            BitRate:
+          </td>
+          <td class="gs_playback_display_table_cell_value">
+            {{currTrack.bitRate}}
           </td>
         </tr>
         <tr class="gs_playback_display_table_row">

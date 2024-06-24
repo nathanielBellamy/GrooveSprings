@@ -14,7 +14,8 @@ export const defaultTrack: Track = {
   artists: [],
   sf_frames: 0,
   sf_channels: 0,
-  sf_samplerate: 0
+  sf_samplerate: 0,
+  bitRate: 0
 }
 
 export interface Track {
@@ -31,4 +32,5 @@ export interface Track {
   sf_frames: number;
   sf_channels: number;
   sf_samplerate: number;
+  bitRate: number;
 }

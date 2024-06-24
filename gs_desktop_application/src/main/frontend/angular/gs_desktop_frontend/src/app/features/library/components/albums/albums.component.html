@@ -1,15 +1,23 @@
 <div class="gs_albums">
   <div class="gs_album_list_container">
     <div class="gs_album_list">
-      @for(album of albums$ | async; track album) {
+<!--      <div class="gs_album">-->
+<!--          <span class="gs_album_index">-->
+<!--            1.-->
+<!--          </span>-->
+<!--        <span class="gs_album_name">-->
+<!--            EXAMPLE ALBUM TITLE-->
+<!--          </span>-->
+<!--      </div>-->
+      @for(album of albums$ | async; track album; let i = $index) {
         <div class="gs_album"
              (click)="handleAlbumClick(album)">
-          <div>
+          <span class="gs_album_index">
+            {{i}}.
+          </span>
+          <span class="gs_album_name">
             {{album.title}}
-          </div>
-          <div>
-            {{album.releaseDate}}
-          </div>
+          </span>
         </div>
       }
     </div>

@@ -1,7 +1,9 @@
 
 .gs_playback_display
+  width: 100%
   display: flex
   align-items: center
+  overflow: hidden
 
   &_progress_bar
     width: 100%
@@ -15,12 +17,13 @@
     &_row
       display: grid
       grid-template-rows: 100%
-      grid-template-columns: 25% 75%
+      grid-template-columns: 30% 70%
 
     &_cell
       &_value
         display: flex
-        justify-content: space-around
+        white-space: nowrap
+        text-overflow: ellipsis
 
 .gs_current_track
   height: 100%

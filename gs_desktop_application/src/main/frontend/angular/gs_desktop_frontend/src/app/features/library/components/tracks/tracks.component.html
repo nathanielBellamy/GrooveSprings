@@ -1,6 +1,28 @@
 <div class="gs_tracks">
   <div class="gs_track_list_container">
     <div class="gs_track_list">
+<!--      <div class="gs_track">-->
+<!--        <div>-->
+<!--          Example Title-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          Codec-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          Duration-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          Released-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          Album Title-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <button>-->
+<!--            +-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </div>-->
       @for(track of tracks$ | async; track track) {
         <div class="gs_track"
              (dblclick)="handleDblClick(track)">
