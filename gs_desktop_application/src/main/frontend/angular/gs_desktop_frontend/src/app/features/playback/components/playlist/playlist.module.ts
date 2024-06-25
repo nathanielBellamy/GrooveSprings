@@ -2,6 +2,7 @@ import {PlaylistComponent} from "./playlist.component";
 import {NgModule} from "@angular/core";
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {gsPipes} from "../../../../pipes/gsPipes.pipe";
 
 @NgModule({
   declarations: [PlaylistComponent],
@@ -9,7 +10,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
         AsyncPipe,
         NgForOf,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        gsPipes
     ],
   exports: [PlaylistComponent]
 })

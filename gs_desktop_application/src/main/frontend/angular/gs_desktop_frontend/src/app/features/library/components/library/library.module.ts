@@ -12,6 +12,7 @@ import {TracksModule} from "../tracks/tracks.module";
 import {LibraryService} from "../../services/library.service";
 import {PlaylistModule} from "../../../playback/components/playlist/playlist.module";
 import {PlaylistsModule} from "../playlists/playlists.module";
+import {SettingsModule} from "../settings/settings.module";
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import {PlaylistsModule} from "../playlists/playlists.module";
         ArtistsModule,
         PlaylistsModule,
         TracksModule,
+        SettingsModule,
         StoreModule.forFeature('library', libraryReducer),
         EffectsModule.forFeature(libraryEffects),
         AsyncPipe,

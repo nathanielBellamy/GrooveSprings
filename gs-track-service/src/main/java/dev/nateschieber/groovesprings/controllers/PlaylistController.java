@@ -2,9 +2,7 @@ package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Playlist;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
-import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistByArtistIdsDto;
 import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistCreateDto;
-import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistDto;
 import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistGetByAlbumIdsDto;
 import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistGetByArtistIdsDto;
 import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistEntityResponse;
