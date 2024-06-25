@@ -1,6 +1,6 @@
 import {Artist} from "./artist.model";
 
-export interface ArtistsAll {
+export interface ArtistsData {
   count: number;
   artists: Artist[];
 }

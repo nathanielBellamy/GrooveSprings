@@ -82,6 +82,14 @@ public class PlaylistService {
     return playlistSaved;
   }
 
+  public List<Playlist> findByAlbumIds(List<Long> albumIds) {
+    return playlistRepository.findByAlbumIds(albumIds);
+  }
+
+  public List<Playlist> findByArtistIds(List<Long> artistIds) {
+    return playlistRepository.findByArtistIds(artistIds);
+  }
+
   public void deleteAll() {
     playlistRepository.deleteAll();
   }

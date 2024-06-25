@@ -2,7 +2,7 @@ import {Action} from "@ngrx/store";
 import {LibraryActionTypes} from "../library.actiontypes";
 import {LibraryState} from "../library.state";
 import {GsLibraryActionResult} from "../library.actions";
-import {ArtistsAll} from "../../../../models/artists/artists_all.model";
+import {ArtistsData} from "../../../../models/artists/artists_data.model";
 import {ArtistsByAlbumIds} from "../../../../models/artists/artists_by_album_ids.model";
 import {ArtistsByPlaylistIds} from "../../../../models/artists/artists_by_playlist_ids.model";
 
@@ -13,7 +13,7 @@ export class FetchArtists implements Action {
 export class FetchArtistsSuccess implements Action, GsLibraryActionResult {
   readonly type = LibraryActionTypes.FetchArtistsSuccess
 
-  constructor(public payload: ArtistsAll) { }
+  constructor(public payload: ArtistsData) { }
 
   handle(state: LibraryState) {
     return {
