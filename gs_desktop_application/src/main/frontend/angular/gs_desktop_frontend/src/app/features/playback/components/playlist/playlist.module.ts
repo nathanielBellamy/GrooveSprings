@@ -1,14 +1,15 @@
 import {PlaylistComponent} from "./playlist.component";
 import {NgModule} from "@angular/core";
 import {AsyncPipe, NgForOf} from "@angular/common";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [PlaylistComponent],
     imports: [
         AsyncPipe,
         NgForOf,
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule
     ],
   exports: [PlaylistComponent]
 })

@@ -54,6 +54,7 @@ export class ClearFilters implements Action, GsLibraryActionResult {
   handle(state: LibraryState): LibraryState {
     return {
       ...state,
+      tracks: [],
       filters: emptyLibraryFilters
     }
   }

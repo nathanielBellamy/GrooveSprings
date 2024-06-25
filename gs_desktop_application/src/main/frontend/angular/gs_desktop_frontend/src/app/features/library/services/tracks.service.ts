@@ -11,6 +11,9 @@ import {TracksGetByAlbumIds} from "../../../models/tracks/tracks_get_by_album_id
 import {TracksByAlbumIds} from "../../../models/tracks/tracks_by_album_ids.model";
 import {TracksByPlaylistIds} from "../../../models/tracks/tracks_by_playlist_ids.model";
 import {TracksGetByPlaylistIds} from "../../../models/tracks/trakcs_get_by_playlist_ids.model";
+import {Action} from "@ngrx/store";
+import {LibraryActionTypes} from "../store/library.actiontypes";
+import {SetAlbumsFilter, SetArtistsFilter, SetPlaylistsFilter} from "../store/library.actions";
 
 @Injectable()
 export class TracksService {
@@ -25,6 +28,20 @@ export class TracksService {
           return { count, tracks }
         })
       )
+  }
+
+  fetchByAction(action: Action): Observable<TracksByPlaylistIds | TracksByAlbumIds | TracksByArtistIds> {
+    switch (action.type) {
+      case LibraryActionTypes.SetPlaylistsFilter:
+        const splf = action as SetPlaylistsFilter
+        return this.fetchByPlaylistIds(splf.payload.map(pl => pl.id))
+      case LibraryActionTypes.SetAlbumsFilter:
+        const salf = action as SetAlbumsFilter
+        return this.fetchByAlbumIds(salf.payload.map(al => al.id))
+      default: // case LibraryActionTypes.SetArtistsFilter:
+        const sarf = action as SetArtistsFilter
+        return this.fetchByArtistIds(sarf.payload.map(ar => ar.id))
+    }
   }
 
   fetchByPlaylistIds(playlistIds: number[]): Observable<TracksByPlaylistIds> {
