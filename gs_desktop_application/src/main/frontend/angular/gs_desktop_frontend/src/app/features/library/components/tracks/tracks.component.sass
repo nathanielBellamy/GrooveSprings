@@ -23,15 +23,22 @@
 .gs_track
   display: grid
   grid-template-rows: 1fr
-  grid-template-columns: 25% 10% 5% 20% 25% 15%
-  margin: 2px 5px 2px 15px
+  grid-template-columns: 20% 5% 25% 15% 5% 10% 10% 10%
+  padding: 2px 5px 0px 15px
   cursor: pointer
   width: 100%
-  font: bold 1.1em "Fira Sans", sans-serif
+  font: bold 0.8em "Fira Sans", sans-serif
+
+  &_add_to_playlist_button
+    &_container
+      width: 100%
+      height: 100%
+      display: flex
+      justify-content: space-around
 
   &:hover
-    background-color: #d58d58
-    box-shadow: 3px 3px
-    margin: 3px
-    transition: margin 0.15s
+    background-color: rgba(255, 131, 36, 0.85)
+    transition: background-color 0.15s
 
+.even
+  background-color: rgba(144, 185, 177, 0.23)

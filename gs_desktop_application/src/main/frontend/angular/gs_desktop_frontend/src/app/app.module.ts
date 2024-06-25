@@ -14,7 +14,9 @@ import {LibraryModule} from "./features/library/components/library/library.modul
 import {ContainerModule} from "./features/container/components/container/container.module";
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+  ],
   imports: [
     StoreModule.forRoot(gsState),
     EffectsModule.forRoot(gsEffects),
