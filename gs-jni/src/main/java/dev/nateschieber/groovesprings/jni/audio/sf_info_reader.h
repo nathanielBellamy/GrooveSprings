@@ -22,16 +22,16 @@ struct SfInfoReader
     };
 
     jobject jWrap(SF_INFO sf_info) {
-       std::cout << "\n sf_info:::::::: \n";
-       std::cout << "\n    " << SfInfoReader::filePath;
-       std::cout << "\n    " << (int) sf_info.frames;
-       std::cout << "\n    " << sf_info.samplerate;
-       std::cout << "\n    " << sf_info.channels;
-       std::cout << "\n    " << sf_info.format;
-       std::cout << "\n    " << sf_info.sections;
-       std::cout << "\n    " << sf_info.seekable;
-       std::cout << "\n    " << SfInfoReader::jSfInfo;
-       std::cout << "\n    " << SfInfoReader::jSfInfoInit;
+//       std::cout << "\n sf_info:::::::: \n";
+//       std::cout << "\n    " << SfInfoReader::filePath;
+//       std::cout << "\n    " << (int) sf_info.frames;
+//       std::cout << "\n    " << sf_info.samplerate;
+//       std::cout << "\n    " << sf_info.channels;
+//       std::cout << "\n    " << sf_info.format;
+//       std::cout << "\n    " << sf_info.sections;
+//       std::cout << "\n    " << sf_info.seekable;
+//       std::cout << "\n    " << SfInfoReader::jSfInfo;
+//       std::cout << "\n    " << SfInfoReader::jSfInfoInit;
       jobject res = SfInfoReader::env->NewObject(
         SfInfoReader::jSfInfo,
         SfInfoReader::jSfInfoInit,

@@ -111,8 +111,7 @@ export class LibraryScanFailure implements Action {
 export class PlaylistCreate implements Action {
   readonly type = LibraryActionTypes.PlaylistCreate
 
-  constructor(public playlist: Playlist) {
-  }
+  constructor(public playlist: Playlist) {}
 }
 
 export class ClearLibrary implements Action, GsLibraryActionResult {

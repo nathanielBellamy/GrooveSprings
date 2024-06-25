@@ -7,7 +7,7 @@ import {Album} from "../../../../models/albums/album.model";
 import {Artist} from "../../../../models/artists/artist.model";
 import {FetchArtists} from "../../store/actions/artists.actions";
 import {FetchAlbums} from "../../store/actions/albums.actions";
-import {ClearFilters, ClearLibrary, LibraryScan} from "../../store/library.actions";
+import {ClearFilters, ClearLibrary, FetchAll, LibraryScan} from "../../store/library.actions";
 import {FetchPlaylists} from "../../store/actions/playlists.actions";
 import {Playlist} from "../../../../models/playlist/playlist.model";
 
@@ -40,9 +40,7 @@ export class LibraryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store$.dispatch(new FetchAlbums())
-    this.store$.dispatch(new FetchArtists())
-    this.store$.dispatch(new FetchPlaylists())
+    this.store$.dispatch(new FetchAll())
   }
 
   handleClearFiltersClick() {

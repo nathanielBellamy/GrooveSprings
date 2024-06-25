@@ -6,8 +6,6 @@ import {LibraryActionTypes} from '../library.actiontypes'
 import {
   FetchArtistsFailure,
   FetchArtistsSuccess,
-  SetAlbumsFilterArtistsFailure,
-  SetAlbumsFilterArtistsSuccess, SetPlaylistsFilterArtistsFailure, SetPlaylistsFilterArtistsSuccess
 } from "../actions/artists.actions";
 import {FetchAll, SetAlbumsFilter, SetPlaylistsFilter} from "../library.actions";
 import {ArtistsData} from "../../../../models/artists/artists_data.model";
@@ -34,30 +32,4 @@ export class ArtistsEffects {
       )
     )
   )
-
-  // fetchArtistsByAlbums$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType<SetAlbumsFilter>(LibraryActionTypes.SetAlbumsFilter),
-  //     map(action => action.payload),
-  //     switchMap((albums) => this.artistService.fetchByAlbumIds(albums.map(a => a.id))
-  //       .pipe(
-  //         map((payload) => new SetAlbumsFilterArtistsSuccess(payload)),
-  //         catchError((e, _) => of(new SetAlbumsFilterArtistsFailure(e)))
-  //       )
-  //     )
-  //   )
-  // )
-  //
-  // fetchArtistsByPlaylists$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType<SetPlaylistsFilter>(LibraryActionTypes.SetPlaylistsFilter),
-  //     map(action => action.payload),
-  //     switchMap((playlists) => this.artistService.fetchByPlaylistIds(playlists.map(pl => pl.id))
-  //       .pipe(
-  //         map((payload) => new SetPlaylistsFilterArtistsSuccess(payload)),
-  //         catchError((e, _) => of(new SetPlaylistsFilterArtistsFailure(e)))
-  //       )
-  //     )
-  //   )
-  // )
 }

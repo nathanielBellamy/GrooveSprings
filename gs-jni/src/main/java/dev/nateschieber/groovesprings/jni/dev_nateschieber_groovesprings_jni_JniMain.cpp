@@ -46,10 +46,8 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlayb
 JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_readSfInfoNative
   (JNIEnv *env, jobject _, jstring filePath)
 {
-    std::cout<<"\nHello from readSfInfoNative \n";
     SfInfoReader sfInfoReader(env, filePath);
     SF_INFO sf_info = sfInfoReader.read();
-    std::cout << "sfInfoReader.sf_info.samplerate: " << sf_info.samplerate << "\n";
 
     return sfInfoReader.jWrap(sf_info);
 }
