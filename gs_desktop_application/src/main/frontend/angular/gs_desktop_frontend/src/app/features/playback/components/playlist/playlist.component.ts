@@ -23,6 +23,10 @@ export class PlaylistComponent {
     name: new FormControl<string>(this.playlistName, [
       Validators.minLength(3),
       Validators.required
+    ]),
+    tracks: new FormControl<Track[]>(this.playlistTracks, [
+      Validators.minLength(1),
+      Validators.required
     ])
   })
 
@@ -54,7 +58,7 @@ export class PlaylistComponent {
     this.store$.dispatch(new ClearPlaylist())
   }
 
-  updateCurrPlaylistTrackIdx(byVal: number) {
-    this.store$.dispatch(new UpdateCurrPlaylistTrackidx(byVal))
-  }
+  // updateCurrPlaylistTrackIdx(byVal: number) {
+  //   this.store$.dispatch(new UpdateCurrPlaylistTrackidx(byVal))
+  // }
 }

@@ -1,49 +1,65 @@
 <fieldset class="gs_playlist">
   <legend class="gs_playlist_legend">
-    Playlist
-  </legend>
-  <div class="gs_playlist_header">
     <form [formGroup]="playlistForm">
-      <label for="playlistName">
-        Name:
+      <label for="playlistName"
+             class="gs_playlist_name">
+        Playlist:
         <input type="text"
                id="playlistName"
+               class="gs_playlist_name_input"
                [formControl]="playlistForm.controls.name"
         />
       </label>
-      <button type="submit"
-              (click)="handleSavePlaylistClick()"
-              [disabled]="!playlistForm.valid"
-              >
-        Save
-      </button>
-      <button (click)="handleClearPlaylistClick()">
-        Clr.
-      </button>
     </form>
-    <span>
-      <button (click)="updateCurrPlaylistTrackIdx(-1)">
-        <
-      </button>
-      <button (click)="updateCurrPlaylistTrackIdx(1)">
-        >
-      </button>
-    </span>
-  </div>
+    -
+    <button type="submit"
+            (click)="handleSavePlaylistClick()"
+            [disabled]="!playlistForm.valid"
+    >
+      Save
+    </button>
+    -
+    <button (click)="handleClearPlaylistClick()">
+      Clear
+    </button>
+  </legend>
   <div class="gs_playlist_tracks_container">
     <div class="gs_playlist_tracks">
+<!--      <div class="gs_playlist_track gs_playlist_current_track">-->
+<!--        <div class="gs_playlist_track_index">-->
+<!--          1.-->
+<!--        </div>-->
+<!--        <div class="gs_playlist_track_name">-->
+<!--          EXAMPLE PLAYLIST TRACK TITLE-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          {{ 201 | toHHMMSS }}-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          EXAMPLE TRACK ARTIST-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          EXAMPLE TRACK ALBUM-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          FLAC-->
+<!--        </div>-->
+<!--      </div>-->
       @for (track of playlistTracks; track track; let i = $index) {
         <div class="gs_playlist_track"
              [class.gs_playlist_current_track]="i === (currIdx$ | async)"
              (dblclick)="handleDblClick(i, track)">
-          <div>
-            {{i}}:
+          <div class="gs_playlist_track_index">
+            {{i + 1}}.
           </div>
           <div>
             {{track.title}}
           </div>
           <div>
-            {{track.artists[0].name}}
+            {{track.duration | toHHMMSS}}
+          </div>
+          <div>
+            {{track.artists | pluck: "name" | join: ", "}}
           </div>
           <div>
             {{track.album.title}}

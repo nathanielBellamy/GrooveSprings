@@ -47,7 +47,7 @@ export class PlaylistsService {
   }
 
   fetchByArtistIds(artistIds: number[]): Observable<PlaylistsByArtistIds> {
-    return this.http.post(this.url, { artistIds })
+    return this.http.post(this.url + "/byArtistIds", { artistIds })
       .pipe(
         map( res => {
           const playlistRes: PlaylistsGetByArtistIds = res as PlaylistsGetByArtistIds
@@ -58,7 +58,7 @@ export class PlaylistsService {
   }
 
   fetchByAlbumIds(albumIds: number[]): Observable<PlaylistsByAlbumIds> {
-    return this.http.post(this.url, { albumIds })
+    return this.http.post(this.url + "/byAlbumIds", { albumIds })
       .pipe(
         map(res => {
           const playlistRes: PlaylistsGetByAlbumIds = res as PlaylistsGetByAlbumIds

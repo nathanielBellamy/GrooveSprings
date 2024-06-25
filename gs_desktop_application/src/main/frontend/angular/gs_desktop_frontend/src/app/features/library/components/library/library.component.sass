@@ -1,7 +1,6 @@
 .selected
-  font: bold italic 1.33em "Fira Sans", sans-serif
-  transition: font .3s
-  text-decoration: underline
+  font: bold italic 1.2em "Fira Sans", sans-serif
+  transition: font .3s ease
 
 .gs_library
   height: calc(100vh - 20px)
@@ -17,7 +16,6 @@
 
   &_legend
     color: black
-    font: bold italic 1.3em "Fira Sans", sans-serif
     &_elem
       cursor: pointer
       &:hover
@@ -48,9 +46,11 @@
 
   &_filter
     height: 100%
-    display: flex
-    justify-content: space-around
-    align-items: center
+    width: calc(100% - 6px)
+    margin: 0 0 0 1px
+    display: grid
+    grid-template-rows: 100%
+    grid-template-columns: 90% 10%
     border-radius: 5px 5px 0 0
     border: 3px solid black
     gap: 5px
@@ -59,12 +59,20 @@
     white-space: nowrap
     text-overflow: ellipsis
 
+    &_clear_button
+      display: flex
+      justify-content: space-around
+      align-items: center
+
     &_list
       display: flex
       flex-direction: column
 
-    &_value
+    &_val
+      height: 100%
       display: flex
+      align-items: center
+      margin-left: 10px
 
   &_lists
     width: 100%

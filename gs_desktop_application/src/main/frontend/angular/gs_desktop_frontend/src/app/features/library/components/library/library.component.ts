@@ -49,15 +49,6 @@ export class LibraryComponent implements OnInit {
     this.store$.dispatch(new ClearFilters())
   }
 
-  // TODO: input dirs to scan
-  handleLibScanClick(): void {
-    this.store$.dispatch(new LibraryScan())
-  }
-
-  handleLibClearClick(): void {
-    this.store$.dispatch(new ClearLibrary())
-  }
-
   handleLibrarySectionClick(section: string): void {
     this.currSection = section
   }

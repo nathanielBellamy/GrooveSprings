@@ -1,34 +1,23 @@
 <fieldset class="gs_library">
   <legend class="gs_library_legend">
-    <span
+    <button
       (click)="handleLibrarySectionClick('library')"
       [class.selected]="currSectionIsLibrary"
       class="gs_library_legend_elem" >
       Library
-    </span>
+    </button>
     -
-    <span
+    <button
       (click)="handleLibrarySectionClick('settings')"
       [class.selected]="currSectionIsSettings"
       class="gs_library_legend_elem" >
       Settings
-    </span>
-    -
-    <button (click)="handleClearFiltersClick()">
-      X
     </button>
   </legend>
   <div
     *ngIf="currSectionIsSettings"
     class="gs_library_buttons">
-    <button class="gs_library_scan_button"
-            (click)="handleLibScanClick()">
-      Scan Lib
-    </button>
-    <button class="gs_library_scan_button"
-            (click)="handleLibClearClick()">
-      Clear Lib
-    </button>
+    <gsSettings />
   </div>
   <div
     class="gs_library_body"
@@ -49,11 +38,19 @@
           class="gs_library_list_body">
           <div class="gs_library_filter">
             <div class="gs_library_filter_list">
+<!--              <div class="gs_library_filter_val">-->
+<!--                EXAMPLE PLAYLIST NAME-->
+<!--              </div>-->
               @for(playlist of playlistsFilter$ | async; track playlist;) {
                 <div class="gs_library_filter_val">
                   {{playlist.name}}
                 </div>
               }
+            </div>
+            <div class="gs_library_filter_clear_button">
+              <button (click)="handleClearFiltersClick()">
+                X
+              </button>
             </div>
           </div>
           <gsPlaylists />
@@ -80,6 +77,11 @@
                 </div>
               }
             </div>
+            <div class="gs_library_filter_clear_button">
+              <button (click)="handleClearFiltersClick()">
+                X
+              </button>
+            </div>
           </div>
           <gsArtists />
         </body>
@@ -104,6 +106,11 @@
                   {{album.title}}
                 </div>
               }
+            </div>
+            <div class="gs_library_filter_clear_button">
+              <button (click)="handleClearFiltersClick()">
+                X
+              </button>
             </div>
           </div>
           <gsAlbums />
