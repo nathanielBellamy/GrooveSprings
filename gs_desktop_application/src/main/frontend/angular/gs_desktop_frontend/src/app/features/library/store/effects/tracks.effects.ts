@@ -22,7 +22,7 @@ export class TracksEffects {
 
   fetchTracks$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<FetchTracks | SetArtistsFilter | SetAlbumsFilter | SetPlaylistsFilter>(
+      ofType<SetArtistsFilter | SetAlbumsFilter | SetPlaylistsFilter>(
         LibraryActionTypes.SetArtistsFilter,
         LibraryActionTypes.SetAlbumsFilter,
         LibraryActionTypes.SetPlaylistsFilter

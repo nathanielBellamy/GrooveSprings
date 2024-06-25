@@ -2,9 +2,15 @@ package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Playlist;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
+import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistByArtistIdsDto;
 import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistCreateDto;
+import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistDto;
+import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistGetByAlbumIdsDto;
+import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistGetByArtistIdsDto;
 import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistGetAllResponse;
+import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistGetByAlbumIdsResponse;
+import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistGetByArtistIdsResponse;
 import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistTracksResponse;
 import dev.nateschieber.groovesprings.services.entities.PlaylistService;
 import java.net.URI;
@@ -62,5 +68,23 @@ public class PlaylistController {
     Playlist playlistSaved = playlistService.createFromDto(dto);
     URI uri = HttpHelper.uri("/api/v1/playlists/" + playlistSaved.getId());
     return ResponseEntity.created(uri).body(new PlaylistEntityResponse(playlistSaved));
+  }
+
+  @PostMapping(value = "/byAlbumIds")
+  public ResponseEntity<PlaylistGetByAlbumIdsResponse> getPlaylistByAlbumIds(@RequestBody PlaylistGetByAlbumIdsDto dto) {
+    List<Playlist> playlists = playlistService.findByAlbumIds(dto.albumIds());
+    ResponseEntity<PlaylistGetByAlbumIdsResponse> resEnt = new ResponseEntity<>(
+        new PlaylistGetByAlbumIdsResponse(dto.albumIds(), playlists),
+        HttpStatus.OK);
+    return resEnt;
+  }
+
+  @PostMapping(value = "/byArtistIds")
+  public ResponseEntity<PlaylistGetByArtistIdsResponse> getPlaylistByArtistIds(@RequestBody PlaylistGetByArtistIdsDto dto) {
+    List<Playlist> playlists = playlistService.findByArtistIds(dto.artistIds());
+    ResponseEntity<PlaylistGetByArtistIdsResponse> resEnt = new ResponseEntity<>(
+        new PlaylistGetByArtistIdsResponse(dto.artistIds(), playlists),
+        HttpStatus.OK);
+    return resEnt;
   }
 }

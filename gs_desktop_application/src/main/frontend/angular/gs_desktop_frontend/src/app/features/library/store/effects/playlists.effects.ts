@@ -11,8 +11,7 @@ import {
   PlaylistCreateSuccess
 } from "../actions/playlists.actions";
 import {Playlist} from "../../../../models/playlist/playlist.model";
-import {PlaylistCreateRes} from "../../../../models/playlist/playlist_create_res.model";
-import {PlaylistCreate} from "../library.actions";
+import {FetchAll, PlaylistCreate, SetAlbumsFilter, SetArtistsFilter} from "../library.actions";
 
 @Injectable()
 export class PlaylistsEffects {
@@ -21,14 +20,14 @@ export class PlaylistsEffects {
     private playlistsService: PlaylistsService,
   ) {}
 
-  fetchAllPlaylists$ = createEffect(() =>
+  fetchPlaylists$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(
-        LibraryActionTypes.FetchPlaylists,
+      ofType<FetchAll | SetArtistsFilter | SetAlbumsFilter>(
         LibraryActionTypes.FetchAll,
-        LibraryActionTypes.PlaylistCreateSuccess
+        LibraryActionTypes.SetArtistsFilter,
+        LibraryActionTypes.SetAlbumsFilter
       ),
-      switchMap(() => this.playlistsService.fetchAll()
+      switchMap((action) => this.playlistsService.fetchByAction(action)
         .pipe(
           map((payload) =>new FetchPlaylistsSuccess(payload as PlaylistsData)),
           catchError((e, _) => of(new FetchPlaylistsFailure(e)))

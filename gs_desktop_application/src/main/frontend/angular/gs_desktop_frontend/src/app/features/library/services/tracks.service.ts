@@ -10,7 +10,7 @@ import {ArtistsByAlbumIds} from "../../../models/artists/artists_by_album_ids.mo
 import {TracksGetByAlbumIds} from "../../../models/tracks/tracks_get_by_album_ids.model";
 import {TracksByAlbumIds} from "../../../models/tracks/tracks_by_album_ids.model";
 import {TracksByPlaylistIds} from "../../../models/tracks/tracks_by_playlist_ids.model";
-import {TracksGetByPlaylistIds} from "../../../models/tracks/trakcs_get_by_playlist_ids.model";
+import {TracksGetByPlaylistIds} from "../../../models/tracks/tracks_get_by_playlist_ids.model";
 import {Action} from "@ngrx/store";
 import {LibraryActionTypes} from "../store/library.actiontypes";
 import {SetAlbumsFilter, SetArtistsFilter, SetPlaylistsFilter} from "../store/library.actions";
