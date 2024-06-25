@@ -3,8 +3,7 @@ import {Track} from "../../../../models/tracks/track.model";
 import {Observable} from "rxjs";
 import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
-import {ClearPlaylist, SetCurrPlaylistTrackIdx, UpdateCurrPlaylistTrackidx} from "../../store/playback.actions";
-import {defaultPlaylist, Playlist} from "../../../../models/playlist/playlist.model";
+import {ClearPlaylist, SetCurrPlaylistTrackIdx} from "../../store/playback.actions";
 import {PlaylistCreate} from "../../../library/store/library.actions";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 
@@ -22,10 +21,6 @@ export class PlaylistComponent {
   playlistForm = new FormGroup({
     name: new FormControl<string>(this.playlistName, [
       Validators.minLength(3),
-      Validators.required
-    ]),
-    tracks: new FormControl<Track[]>(this.playlistTracks, [
-      Validators.minLength(1),
       Validators.required
     ])
   })
@@ -50,15 +45,12 @@ export class PlaylistComponent {
     this.store$.dispatch(new PlaylistCreate({
       id: 0,
       tracks: this.playlistTracks,
-      name: this.playlistName
+      name: this.playlistForm.get('name')?.getRawValue()
     }))
   }
 
   handleClearPlaylistClick() {
+    this.playlistForm.get('name')?.setValue("")
     this.store$.dispatch(new ClearPlaylist())
   }
-
-  // updateCurrPlaylistTrackIdx(byVal: number) {
-  //   this.store$.dispatch(new UpdateCurrPlaylistTrackidx(byVal))
-  // }
 }
