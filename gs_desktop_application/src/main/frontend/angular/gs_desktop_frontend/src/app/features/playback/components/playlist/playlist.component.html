@@ -3,13 +3,24 @@
     Playlist
   </legend>
   <div class="gs_playlist_header">
-    <label for="playlistName">
-      Name:
-    </label>
-    <input type="text"
-           id="playlistName"
-           [(ngModel)]="playlistName"
-           />
+    <form [formGroup]="playlistForm">
+      <label for="playlistName">
+        Name:
+        <input type="text"
+               id="playlistName"
+               [formControl]="playlistForm.controls.name"
+        />
+      </label>
+      <button type="submit"
+              (click)="handleSavePlaylistClick()"
+              [disabled]="!playlistForm.valid"
+              >
+        Save
+      </button>
+      <button (click)="handleClearPlaylistClick()">
+        Clr.
+      </button>
+    </form>
     <span>
       <button (click)="updateCurrPlaylistTrackIdx(-1)">
         <
@@ -18,12 +29,6 @@
         >
       </button>
     </span>
-    <button (click)="handleSavePlaylistClick()">
-      Save
-    </button>
-    <button (click)="handleClearPlaylistClick()">
-      Clr.
-    </button>
   </div>
   <div class="gs_playlist_tracks_container">
     <div class="gs_playlist_tracks">

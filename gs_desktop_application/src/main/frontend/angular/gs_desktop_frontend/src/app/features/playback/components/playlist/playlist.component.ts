@@ -6,6 +6,7 @@ import {PlaybackState} from "../../store/playback.state";
 import {ClearPlaylist, SetCurrPlaylistTrackIdx, UpdateCurrPlaylistTrackidx} from "../../store/playback.actions";
 import {defaultPlaylist, Playlist} from "../../../../models/playlist/playlist.model";
 import {PlaylistCreate} from "../../../library/store/library.actions";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'gsPlaylist',
@@ -17,6 +18,13 @@ export class PlaylistComponent {
   protected currIdx$: Observable<number>
   protected playlistName: string = ""
   protected playlistTracks: Track[] = []
+
+  playlistForm = new FormGroup({
+    name: new FormControl<string>(this.playlistName, [
+      Validators.minLength(3),
+      Validators.required
+    ])
+  })
 
   constructor(private store$: Store<{playback: PlaybackState}>) {
 
