@@ -3,8 +3,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {AsyncPipe} from "@angular/common";
 import { webSocket } from "rxjs/webSocket";
-import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
-import {PlaybackDisplayModule} from "../playbackDisplay/playbackDisplay.module";
+import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject"
+import {PlaybackDisplayModule} from "../playbackDisplay/playbackDisplay.module"
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import { faPlay, faPause, faStop, faForwardFast, faBackward } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'gsTransportControl',
@@ -12,7 +14,8 @@ import {PlaybackDisplayModule} from "../playbackDisplay/playbackDisplay.module";
   templateUrl: './transportControl.component.html',
   imports: [
     AsyncPipe,
-    PlaybackDisplayModule
+    PlaybackDisplayModule,
+    FontAwesomeModule
   ],
   styleUrl: './transportControl.component.sass'
 })
@@ -20,6 +23,11 @@ import {PlaybackDisplayModule} from "../playbackDisplay/playbackDisplay.module";
 export class TransportControlComponent {
   private wsSubject: WebSocketSubject<string> = this.getWsSubject()
   protected gsPlaybackSpeedOptions: number[] = [-2.0, -1.0, -0.5, 0.5, 1.0, 2.0]
+  protected faPlay = faPlay
+  protected faPause = faPause
+  protected faStop = faStop
+  protected faForwardFast = faForwardFast
+  protected faBackward = faBackward
 
   constructor(private http: HttpClient) { }
 
