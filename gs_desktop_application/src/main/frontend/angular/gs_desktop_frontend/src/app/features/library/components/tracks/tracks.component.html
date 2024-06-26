@@ -29,6 +29,10 @@
 <!--          </button>-->
 <!--        </div>-->
 <!--      </div>-->
+      <div  class="gs_tracks_select_message"
+            *ngIf="(trackCount$ | async) == 0">
+        Select a Playlist, Artist, or Album to see Tracks
+      </div>
       @for(track of tracks$ | async; track track; let i = $index) {
         <div class="gs_track"
              [class.even]="i % 2 === 0"
