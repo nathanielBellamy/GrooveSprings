@@ -12,5 +12,9 @@ export enum PlaybackActionTypes {
 
   SetPlaylistAsCurr = "[Playback] Set Playlist As Curr",
   SetPlaylistAsCurrSuccess = "[Playback] Set Playlist As Curr Success",
-  SetPlaylistAsCurrFailure = "[Playback] Set Playlist As Curr Failure"
+  SetPlaylistAsCurrFailure = "[Playback] Set Playlist As Curr Failure",
+
+  FetchLastTrack = "[Playback] Fetch Last Track",
+  FetchLastTrackSuccess = "[Playback] Fetch Last Track Success",
+  FetchLastTrackFailure = "[Playback] Fetch Last Track Failure"
 }

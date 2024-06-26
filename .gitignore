@@ -48,3 +48,5 @@ build/
 **/frontend-dist/**
 
 gs_music_library/**
+
+__GROOVE_SPRINGS__LAST_TRACK__.json

@@ -3,19 +3,24 @@ package dev.nateschieber.groovesprings.actors
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
-import akka.http.scaladsl.{Http}
-import akka.http.scaladsl.model.{HttpRequest}
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.server.Directives.{path, *}
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.GsMusicLibraryScanner
+import dev.nateschieber.groovesprings.actors.GsRestController.lastTrackCacheFile
 import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.rest.{FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
 import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand, PauseTrig, PlayTrig, StopTrig}
 
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Files, Path, Paths}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object GsRestController {
+
+  private var lastTrackCacheFile: String = "__GROOVE_SPRINGS__LAST_TRACK__.json"
 
   val GsRestControllerServiceKey = ServiceKey[GsCommand]("gs_rest_controller")
 
@@ -71,6 +76,11 @@ class GsRestController(
           }}
         }
       },
+      path("api" / "v1" / "lastTrack"){
+        get {
+          complete(loadLastTrackJson())
+        }
+      },
       // Transport Controls
       path("api" / "v1" / "transport" / "play") {
         get {
@@ -103,6 +113,7 @@ class GsRestController(
         put { // update GsPlaybackThread.filePath
           entity(as[FileSelectDto]) { dto => {
             val msg = s"path: ${dto.path}"
+            cacheLastTrack(dto.trackJson)
             gsPlaybackRef ! FileSelect(dto.path, context.self)
             complete(msg)
           }}
@@ -142,6 +153,17 @@ class GsRestController(
       case  2.0    => GsPlaybackSpeed._2
       case default => GsPlaybackSpeed._1 // case 1
     }
+  }
+
+  def cacheLastTrack(trackJson: String): Unit = {
+    Files.write(Paths.get(lastTrackCacheFile), trackJson.getBytes(StandardCharsets.UTF_8))
+  }
+
+  def loadLastTrackJson(): String = {
+    val trackJsonPath = Path.of(lastTrackCacheFile)
+    if (!Files.exists(trackJsonPath))
+      return "{}"
+    Files.readString(trackJsonPath, StandardCharsets.UTF_8)
   }
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {

@@ -4,9 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
 import {defaultTrack, Track} from "../../../../models/tracks/track.model";
-import {map, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import { webSocket } from "rxjs/webSocket";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
+import {FetchLastTrack} from "../../store/playback.actions";
 
 @Component({
   selector: 'gsPlaybackDisplay',
@@ -34,6 +35,7 @@ export class PlaybackDisplayComponent {
 
   ngOnInit() {
     this.pingIntervalId = setInterval(() => this.pingSocket(), this.pingInterval)
+    this.store$.dispatch(new FetchLastTrack())
   }
 
   ngOnDestroy() {
@@ -69,5 +71,6 @@ export class PlaybackDisplayComponent {
   setCurrPercent(lastFrameId: number) {
     this.currPercent = this.getCurrPercent(lastFrameId)
   }
+
   protected readonly JSON = JSON;
 }

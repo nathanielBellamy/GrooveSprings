@@ -124,3 +124,11 @@ export class UpdateCurrPlaylistTrackidx implements Action, GsPlaybackAction {
     }
   }
 }
+
+export class FetchLastTrack implements Action {
+  readonly type = PlaybackActionTypes.FetchLastTrack
+}
+
+export class FetchLastTrackFailure implements Action {
+  readonly type = PlaybackActionTypes.FetchLastTrackFailure
+}
