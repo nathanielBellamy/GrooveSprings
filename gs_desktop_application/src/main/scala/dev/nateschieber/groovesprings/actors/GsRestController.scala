@@ -3,29 +3,30 @@ package dev.nateschieber.groovesprings.actors
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
-import akka.http.scaladsl.{ClientTransport, Http}
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpRequest}
+import akka.http.scaladsl.{Http}
+import akka.http.scaladsl.model.{HttpRequest}
 import akka.http.scaladsl.server.Directives.{path, *}
 import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings}
 import dev.nateschieber.groovesprings.GsMusicLibraryScanner
-import dev.nateschieber.groovesprings.enums.GsHttpPort
+import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
-import dev.nateschieber.groovesprings.rest.{FileSelectDto, FileSelectJsonSupport}
-import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand}
+import dev.nateschieber.groovesprings.rest.{FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
+import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand, PauseTrig, PlayTrig, StopTrig}
 
-import java.net.InetSocketAddress
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object GsRestController {
 
   val GsRestControllerServiceKey = ServiceKey[GsCommand]("gs_rest_controller")
 
-  def apply(gsPlaybackRef: ActorRef[GsCommand]): Behavior[GsCommand] = Behaviors.setup {
+  def apply(
+             gsPlaybackRef: ActorRef[GsCommand],
+             gsDisplayRef: ActorRef[GsCommand]
+           ): Behavior[GsCommand] = Behaviors.setup {
     context =>
       given system: ActorSystem[Nothing] = context.system
 
-      val gsRestController = new GsRestController(context, gsPlaybackRef)
+      val gsRestController = new GsRestController(context, gsPlaybackRef, gsDisplayRef)
 
       lazy val server = Http()
         .newServerAt("localhost", GsHttpPort.GsRestController.port)
@@ -41,9 +42,12 @@ object GsRestController {
   }
 }
 
-class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsCommand])
+class GsRestController(
+                        context: ActorContext[GsCommand],
+                        gsPlaybackRef: ActorRef[GsCommand],
+                        gsDisplayRef: ActorRef[GsCommand])
   extends AbstractBehavior[GsCommand](context)
-    with FileSelectJsonSupport {
+    with FileSelectJsonSupport with PlaybackSpeedJsonSupport {
 
   def routes(): Route = {
     concat(
@@ -64,6 +68,34 @@ class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef
         get {
           parameters(Symbol("x").as[Int], Symbol("y").as[Int]) { (x: Int, y: Int) => {
             complete("result: " + JniMain.add(x, y))
+          }}
+        }
+      },
+      // Transport Controls
+      path("api" / "v1" / "transport" / "play") {
+        get {
+          gsPlaybackRef ! PlayTrig(gsDisplayRef)
+          complete("play")
+        }
+      },
+      path("api" / "v1" / "transport" / "pause") {
+        get {
+          gsPlaybackRef ! PauseTrig(gsDisplayRef)
+          complete("pause")
+        }
+      },
+      path("api" / "v1" / "transport" / "stop") {
+        get {
+          gsPlaybackRef ! StopTrig(gsDisplayRef)
+          complete("stop")
+        }
+      },
+      path("api" / "v1" / "transport" / "playbackSpeed") {
+        post {
+          entity(as[PlaybackSpeedDto]) { dto => {
+            val speed = dto.speed
+            val gsSpeed: GsPlaybackSpeed = gsPlaybackSpeedFromDouble(dto.speed)
+            complete(s"playbackSpeed: $gsSpeed")
           }}
         }
       },
@@ -101,6 +133,16 @@ class GsRestController(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef
     )
   }
 
+  def gsPlaybackSpeedFromDouble(speed: Double): GsPlaybackSpeed = {
+    speed match {
+      case -2.0    => GsPlaybackSpeed._N2
+      case -1.0    => GsPlaybackSpeed._N1
+      case -0.5    => GsPlaybackSpeed._N05
+      case  0.5    => GsPlaybackSpeed._05
+      case  2.0    => GsPlaybackSpeed._2
+      case default => GsPlaybackSpeed._1 // case 1
+    }
+  }
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     Behaviors.same
