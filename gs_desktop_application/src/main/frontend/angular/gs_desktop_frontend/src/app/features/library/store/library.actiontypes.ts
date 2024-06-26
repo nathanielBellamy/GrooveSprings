@@ -65,5 +65,9 @@ export enum LibraryActionTypes {
   // save
   PlaylistCreate = '[Playlists] Save Playlist',
   PlaylistCreateSuccess = '[Playlist] Save Playlist Success',
-  PlaylistCreateFailure = '[Playlist] Save Playlist Failure'
+  PlaylistCreateFailure = '[Playlist] Save Playlist Failure',
+
+  PlaylistUpdate = '[Playlists] Update Playlist',
+  PlaylistUpdateSuccess = '[Playlists] Update Playlist Success',
+  PlaylistUpdateFailure = '[Playlists] Update Playlist Failure'
 }

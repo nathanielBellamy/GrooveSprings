@@ -6,12 +6,14 @@ import dev.nateschieber.groovesprings.entities.Playlist;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.repositories.PlaylistRepository;
 import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistCreateDto;
-import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistDto;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +47,18 @@ public class PlaylistService {
   public Playlist createFromDto(PlaylistCreateDto dto) {
     Playlist playlist = new Playlist(dto.name(), dto.trackIds());
 
-    List<Track> tracks = trackService.findAllById(dto.trackIds());
+    return addAllRelationsToPlaylistByTrackIds(playlist);
+  }
+
+  public Playlist updateFromDto(Playlist playlist, PlaylistUpdateDto dto) {
+    playlist.setName(dto.name());
+    playlist.removeAllTracks();
+
+    return addAllRelationsToPlaylistByTrackIds(playlist);
+  }
+
+  public Playlist addAllRelationsToPlaylistByTrackIds(Playlist playlist) {
+    List<Track> tracks = trackService.findAllById(playlist.getTrackIds());
     playlist.setTracks(new HashSet<>(tracks));
 
     Set<Album> albums = tracks

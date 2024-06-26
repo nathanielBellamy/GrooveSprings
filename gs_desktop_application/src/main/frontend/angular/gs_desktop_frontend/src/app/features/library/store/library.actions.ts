@@ -8,6 +8,7 @@ import {PlaybackActionTypes} from "../../playback/store/playback.actiontypes";
 import {emptyLibraryFilters} from "./library.filters";
 import {GsPlaybackAction} from "../../playback/store/playback.actions";
 import {PlaybackState} from "../../playback/store/playback.state";
+import {PlaylistUpdateDto} from "../../../models/playlist/playlist_update_dto.model";
 
 export abstract class GsLibraryActionResult {
   public payload: any
@@ -114,6 +115,12 @@ export class PlaylistCreate implements Action {
   readonly type = LibraryActionTypes.PlaylistCreate
 
   constructor(public playlist: Playlist) {}
+}
+
+export class PlaylistUpdate implements Action {
+  readonly type = LibraryActionTypes.PlaylistUpdate
+
+  constructor(public dto: PlaylistUpdateDto) {}
 }
 
 export class ClearLibrary implements Action, GsLibraryActionResult {

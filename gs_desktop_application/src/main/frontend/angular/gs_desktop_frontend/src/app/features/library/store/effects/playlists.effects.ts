@@ -8,10 +8,10 @@ import {
   FetchPlaylistsFailure,
   FetchPlaylistsSuccess,
   PlaylistCreateFailure,
-  PlaylistCreateSuccess
+  PlaylistCreateSuccess, PlaylistUpdateFailure, PlaylistUpdateSuccess
 } from "../actions/playlists.actions";
 import {Playlist} from "../../../../models/playlist/playlist.model";
-import {FetchAll, PlaylistCreate, SetAlbumsFilter, SetArtistsFilter} from "../library.actions";
+import {FetchAll, PlaylistCreate, PlaylistUpdate, SetAlbumsFilter, SetArtistsFilter} from "../library.actions";
 
 @Injectable()
 export class PlaylistsEffects {
@@ -44,6 +44,19 @@ export class PlaylistsEffects {
         .pipe(
           map((payload) => new PlaylistCreateSuccess(payload)),
           catchError((e, _) => of(new PlaylistCreateFailure(e)))
+        )
+      )
+    )
+  )
+
+  updatePlaylist$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<PlaylistUpdate>(LibraryActionTypes.PlaylistUpdate),
+      map(action => action.dto),
+      switchMap(dto => this.playlistsService.update(dto)
+        .pipe(
+          map((payload) => new PlaylistUpdateSuccess(payload)),
+          catchError((e, _) => of(new PlaylistUpdateFailure(e)))
         )
       )
     )

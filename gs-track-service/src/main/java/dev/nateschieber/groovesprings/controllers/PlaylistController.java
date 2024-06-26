@@ -1,15 +1,18 @@
 package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.entities.Playlist;
+import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistGetByAlbumIdsDto;
 import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistGetByArtistIdsDto;
+import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistUpdateDto;
 import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistGetAllResponse;
 import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistGetByAlbumIdsResponse;
 import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistGetByArtistIdsResponse;
 import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistTracksResponse;
+import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistUpdateResponse;
 import dev.nateschieber.groovesprings.services.entities.PlaylistService;
 import java.net.URI;
 import java.util.List;
@@ -66,6 +69,22 @@ public class PlaylistController {
     Playlist playlistSaved = playlistService.createFromDto(dto);
     URI uri = HttpHelper.uri("/api/v1/playlists/" + playlistSaved.getId());
     return ResponseEntity.created(uri).body(new PlaylistEntityResponse(playlistSaved));
+  }
+
+  @PutMapping(value = "/{id}")
+  public ResponseEntity<PlaylistUpdateResponse> updatePlaylist(@PathVariable("id") Long id, @RequestBody PlaylistUpdateDto dto) {
+    Optional<Playlist> playlistOpt = playlistService.findById(id);
+    if (playlistOpt.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    } else {
+      Playlist playlistUpdated = playlistService.updateFromDto(playlistOpt.get(), dto);
+
+      ResponseEntity<PlaylistUpdateResponse> resEnt = new ResponseEntity<>(
+              new PlaylistUpdateResponse(playlistUpdated),
+              HttpStatus.OK
+      );
+      return resEnt;
+    }
   }
 
   @PostMapping(value = "/byAlbumIds")

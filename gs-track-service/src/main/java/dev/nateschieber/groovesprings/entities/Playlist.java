@@ -15,6 +15,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -115,5 +116,9 @@ public class Playlist {
 
   public void setAlbums(Set<Album> albums) {
     this.albums = albums;
+  }
+
+  public void removeAllTracks() {
+    this.tracks = new HashSet<>();
   }
 }
