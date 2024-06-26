@@ -20,6 +20,9 @@ export class PlaybackDisplayComponent {
   protected currTrack: Track = defaultTrack
   protected currTrackArtists: string = "-"
   protected currPercent: number = 0
+  // ping ws to keep alive
+  private pingIntervalId: number = 0 // setInterval returns non-zero number
+  private pingInterval: number = 30 * 1000 // every 30 seconds
 
   constructor(private http: HttpClient, private store$: Store<{playback: PlaybackState}>) {
     this.currTrack$ = store$.select(state => ({...state.playback.currTrack}))
@@ -27,6 +30,18 @@ export class PlaybackDisplayComponent {
       this.currTrackArtists = track.artists.length ? track.artists.map(a => a.name).join(', ') : "-"
       this.currTrack = {...track}
     })
+  }
+
+  ngOnInit() {
+    this.pingIntervalId = setInterval(() => this.pingSocket(), this.pingInterval)
+  }
+
+  ngOnDestroy() {
+    if (this.pingIntervalId) clearInterval(this.pingIntervalId)
+  }
+
+  pingSocket() {
+    this.wsSubject.next('ping')
   }
 
   getWsSubject(): WebSocketSubject<unknown> {
