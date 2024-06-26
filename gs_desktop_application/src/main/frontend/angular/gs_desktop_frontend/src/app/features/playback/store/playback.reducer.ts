@@ -8,6 +8,8 @@ import {
   SetCurrTrack,
   SetPlaylistAsCurr, SetPlaylistAsCurrSuccess
 } from "./playback.actions";
+import {LibraryActionTypes} from "../../library/store/library.actiontypes";
+import {PlaylistUpdate} from "../../library/store/library.actions";
 
 
 export function playbackReducer(state = initialPlaybackState, action: Action): PlaybackState {
@@ -31,6 +33,10 @@ export function playbackReducer(state = initialPlaybackState, action: Action): P
 
     case PlaybackActionTypes.SetPlaylistAsCurrSuccess:
       actionT = action as SetPlaylistAsCurrSuccess
+      return actionT.handle(state)
+
+    case LibraryActionTypes.PlaylistUpdate:
+      actionT = action as PlaylistUpdate
       return actionT.handle(state)
 
     default:
