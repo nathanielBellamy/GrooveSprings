@@ -3,7 +3,7 @@ import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {LibraryActionTypes} from "../../library/store/library.actiontypes";
 import {catchError, map, switchMap, of} from "rxjs";
 import {
-  ClearPlaylist,
+  ClearPlaylist, FetchLastTrackFailure,
   SetCurrFileFailure,
   SetCurrFileSuccess,
   SetCurrPlaylistTrackIdx,
@@ -11,6 +11,7 @@ import {
 } from "./playback.actions";
 import {PlaybackActionTypes} from "./playback.actiontypes";
 import {PlaybackService} from "../services/playback.service";
+import {Track} from "../../../models/tracks/track.model";
 
 @Injectable()
 export class PlaybackEffects {
@@ -36,7 +37,24 @@ export class PlaybackEffects {
     )
   )
 
-  setCurrFile$ = createEffect(() =>
+  fetchLastTrack$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PlaybackActionTypes.FetchLastTrack),
+      switchMap(() => this.playbackService.fetchLastTrack()
+        .pipe(
+          map((res: any) => {
+            let parsedTrack: Track = JSON.parse(res)
+            // check for valid parse
+            if (!parsedTrack.hasOwnProperty('path')) return new FetchLastTrackFailure()
+            return new SetCurrTrack(parsedTrack)
+          }),
+          catchError((e,_) => of(new FetchLastTrackFailure))
+        )
+      )
+    )
+  )
+
+  setCurrTrack$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SetCurrTrack>(PlaybackActionTypes.SetCurrTrack),
       map(action => action.getTrack()),
