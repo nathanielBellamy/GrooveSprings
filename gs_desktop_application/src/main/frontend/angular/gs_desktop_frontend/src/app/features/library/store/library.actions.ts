@@ -117,10 +117,20 @@ export class PlaylistCreate implements Action {
   constructor(public playlist: Playlist) {}
 }
 
-export class PlaylistUpdate implements Action {
+export class PlaylistUpdate implements Action, GsPlaybackAction {
   readonly type = LibraryActionTypes.PlaylistUpdate
 
   constructor(public dto: PlaylistUpdateDto) {}
+
+  handle(state: PlaybackState): PlaybackState {
+    return {
+      ...state,
+      playlist: {
+        ...state.playlist,
+        name: this.dto.name
+      }
+    }
+  }
 }
 
 export class ClearLibrary implements Action, GsLibraryActionResult {
