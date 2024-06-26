@@ -7,14 +7,12 @@
 
     <div class="gs_playback_fieldset_section">
       <div class="gs_playback_fieldset_current_track">
-        <gsTransportControl />
-        <div [ngStyle]="{'flex': 1}">
-          <gsPlaybackDisplay />
-        </div>
+        <gsTransportControl [ngStyle]="{'height': '100%', 'display': 'flex', 'flex-direction': 'column'}"/>
+        <gsPlaybackDisplay [ngStyle]="{'height': '100%', 'display': 'flex', 'flex-direction': 'column'}"/>
       </div>
     </div>
     <div class="gs_playback_fieldset_section">
-      <gsPlaylist />
+      <gsPlaylist [ngStyle]="{'flex': 1}"/>
     </div>
   </fieldset>
 </div>
