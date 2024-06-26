@@ -64,3 +64,25 @@ export class PlaylistCreateFailure implements Action, GsLibraryActionResult {
     return {...state}
   }
 }
+
+export class PlaylistUpdateSuccess implements Action, GsLibraryActionResult {
+  public readonly type = LibraryActionTypes.PlaylistUpdateSuccess
+
+  constructor(public payload: any) { }
+
+  handle(state: LibraryState): LibraryState {
+    // TODO?
+    return {...state}
+  }
+}
+
+export class PlaylistUpdateFailure implements Action, GsLibraryActionResult {
+  public readonly type = LibraryActionTypes.PlaylistUpdateFailure
+
+  constructor(public payload: any) { }
+
+  handle(state: LibraryState): LibraryState {
+    // TODO?
+    return {...state}
+  }
+}

@@ -12,6 +12,8 @@ import {PlaylistsByArtistIds} from "../../../models/playlist/playlists_by_artist
 import {PlaylistsGetByArtistIds} from "../../../models/playlist/playlists_get_by_artist_ids.model";
 import {PlaylistsByAlbumIds} from "../../../models/playlist/playlists_by_album_ids.model";
 import {PlaylistsGetByAlbumIds} from "../../../models/playlist/playlists_get_by_album_ids.model";
+import {PlaylistUpdateDto} from "../../../models/playlist/playlist_update_dto.model";
+import {PlaylistUpdateRes} from "../../../models/playlist/playlist_update_res.model";
 
 @Injectable()
 export class PlaylistsService {
@@ -74,6 +76,16 @@ export class PlaylistsService {
         map(res => {
           const playlistCreate: PlaylistCreateRes = res as PlaylistCreateRes
           return playlistCreate.data.playlist
+        })
+      )
+  }
+
+  update(dto: PlaylistUpdateDto): Observable<Playlist> {
+    return this.http.put(this.url + `/${dto.id}`, dto)
+      .pipe(
+        map(res => {
+          const playlistUpdate: PlaylistUpdateRes = res as PlaylistUpdateRes
+          return playlistUpdate.data.playlist
         })
       )
   }

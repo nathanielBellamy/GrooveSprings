@@ -4,7 +4,7 @@ import {Observable} from "rxjs";
 import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
 import {ClearPlaylist, SetCurrPlaylistTrackIdx} from "../../store/playback.actions";
-import {PlaylistCreate} from "../../../library/store/library.actions";
+import {PlaylistCreate, PlaylistUpdate} from "../../../library/store/library.actions";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
@@ -46,20 +46,33 @@ export class PlaylistComponent {
 
   handleSavePlaylistClick() {
     // TODO: update vs create based on this.playlistId
-    this.store$.dispatch(new PlaylistCreate({
-      id: 0,
-      tracks: this.playlistTracks,
-      name: this.playlistForm.get('name')?.getRawValue()
-    }))
+    if (this.playlistId > 0) { // update
+      this.store$.dispatch(new PlaylistUpdate({
+          id: this.playlistId,
+          name: this.getPlaylistName(),
+          trackIds: this.playlistTracks.map(t => t.id)
+        })
+      )
+    } else { // create
+      this.store$.dispatch(new PlaylistCreate({
+        id: 0,
+        tracks: this.playlistTracks,
+        name: this.getPlaylistName()
+      }))
+    }
   }
 
-  handleClearPlaylistClick() {
+  handleClearPlaylistClick(): void {
     this.playlistForm.get('name')?.setValue("")
     this.store$.dispatch(new ClearPlaylist())
   }
 
-  setPlaylistName(name: string) {
+  setPlaylistName(name: string): void {
     this.playlistName = name
     this.playlistForm.get('name')?.setValue(this.playlistName)
+  }
+
+  getPlaylistName(): string {
+    return this.playlistForm.get('name')?.getRawValue()
   }
 }
