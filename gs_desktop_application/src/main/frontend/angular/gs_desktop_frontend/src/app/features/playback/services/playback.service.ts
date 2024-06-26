@@ -11,7 +11,7 @@ export class PlaybackService {
   setCurrFile(track: Track): Observable<any> {
     // TODO: make into a POST, put path in body to avoid formatting issues with query string
     const { path } = track
-    return this.http.put("api/v1/file-select", { path: "foo bar", trackJson: JSON.stringify(track) }, {responseType: 'text'})
+    return this.http.put("api/v1/file-select", { path, trackJson: JSON.stringify(track) }, {responseType: 'text'})
   }
 
   fetchPlaylistTracks(playlist: Playlist): Observable<any> {

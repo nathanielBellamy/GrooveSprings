@@ -12,7 +12,7 @@ import dev.nateschieber.groovesprings.actors.GsRestController.lastTrackCacheFile
 import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.rest.{FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand, PauseTrig, PlayTrig, StopTrig}
+import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand, PauseTrig, PlayTrig, SetPlaybackSpeed, StopTrig}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -105,6 +105,7 @@ class GsRestController(
           entity(as[PlaybackSpeedDto]) { dto => {
             val speed = dto.speed
             val gsSpeed: GsPlaybackSpeed = gsPlaybackSpeedFromDouble(dto.speed)
+            gsPlaybackRef ! SetPlaybackSpeed(gsSpeed, gsDisplayRef)
             complete(s"playbackSpeed: $gsSpeed")
           }}
         }

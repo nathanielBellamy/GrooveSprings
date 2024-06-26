@@ -9,7 +9,6 @@ import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 import dev.nateschieber.groovesprings.enums.GsPlayState
-import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.traits.*
 
 import java.util.UUID
@@ -49,7 +48,7 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         Behaviors.same
 
       case PlayTrig(replyTo) =>
-        println("GsPlayback :: play")
+//        println("GsPlayback :: play")
         if (GsPlaybackThread.getPlayState() == GsPlayState.STOP)
           GsPlaybackThread.stop() // clear currFrameId, may have been updated by native thread
         GsPlaybackThread.play()
@@ -61,33 +60,33 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         Behaviors.same
       
       case PauseTrig(replyTo) =>
-        println("GsPlayback :: pause")
+//        println("GsPlayback :: pause")
         GsPlaybackThread.pause()
         clearPlaybackThread()
         replyTo ! RespondPauseTrig(context.self)
         Behaviors.same
 
       case StopTrig(replyTo) =>
-        println("GsPlayback :: stop")
+//        println("GsPlayback :: stop")
         GsPlaybackThread.stop()
         clearPlaybackThread()
         replyTo ! RespondStopTrig(context.self)
         Behaviors.same
         
       case FastForwardTrig(replyTo) =>
-        println("GsPlayback :: fastForward")
+//        println("GsPlayback :: fastForward")
         GsPlaybackThread.setPlayState(GsPlayState.FF)
         replyTo ! RespondFastForwardTrig(context.self)
         Behaviors.same
 
       case RewindTrig(replyTo) =>
-        println("GsPlayback :: rewind")
+//        println("GsPlayback :: rewind")
         GsPlaybackThread.setPlayState(GsPlayState.RW)
         replyTo ! RespondRewindTrig(context.self)
         Behaviors.same
 
       case SetPlaybackSpeed(speed, replyTo) =>
-        println(s"GsPlayback :: SetPlaybackSpeed :: speed :: ${speed}" )
+//        println(s"GsPlayback :: SetPlaybackSpeed :: speed :: ${speed}" )
         GsPlaybackThread.setPlaybackSpeed(speed)
         Behaviors.same
     }
