@@ -4,6 +4,7 @@ import {Playlist} from "../../../../models/playlist/playlist.model";
 import {LibraryState} from "../../store/library.state";
 import {Store} from "@ngrx/store";
 import {SetPlaylistsFilter} from "../../store/library.actions";
+import {SetPlaylistAsCurr} from "../../../playback/store/playback.actions";
 
 @Component({
   selector: 'gsPlaylists',
@@ -20,5 +21,9 @@ export class PlaylistsComponent {
 
   handlePlaylistClick(playlist: Playlist) {
     this.store$.dispatch( new SetPlaylistsFilter([playlist]))
+  }
+
+  handleSetPlaylistAsCurrClick(playlist: Playlist) {
+    this.store$.dispatch( new SetPlaylistAsCurr(playlist))
   }
 }

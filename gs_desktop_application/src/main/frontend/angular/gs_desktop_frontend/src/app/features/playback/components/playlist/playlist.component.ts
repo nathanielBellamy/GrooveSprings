@@ -15,6 +15,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 export class PlaylistComponent {
 
   protected currIdx$: Observable<number>
+  protected playlistId: number = 0
   protected playlistName: string = ""
   protected playlistTracks: Track[] = []
 
@@ -28,12 +29,14 @@ export class PlaylistComponent {
   constructor(private store$: Store<{playback: PlaybackState}>) {
 
     this.currIdx$ = store$.select(state => {
-      this.playlistName = state.playback.playlist.name // harvest the initial playlistName
+      this.setPlaylistName(state.playback.playlist.name) // harvest initial name
       return state.playback.currPlaylistTrackIdx
     })
 
     store$.subscribe(state => {
-      this.playlistTracks = [...state.playback.playlist.tracks]
+      this.playlistId = state.playback.playlist.id
+      this.setPlaylistName(state.playback.playlist.name)
+      this.playlistTracks = [...(state.playback.playlist.tracks || [])]
     })
   }
 
@@ -42,6 +45,7 @@ export class PlaylistComponent {
   }
 
   handleSavePlaylistClick() {
+    // TODO: update vs create based on this.playlistId
     this.store$.dispatch(new PlaylistCreate({
       id: 0,
       tracks: this.playlistTracks,
@@ -52,5 +56,10 @@ export class PlaylistComponent {
   handleClearPlaylistClick() {
     this.playlistForm.get('name')?.setValue("")
     this.store$.dispatch(new ClearPlaylist())
+  }
+
+  setPlaylistName(name: string) {
+    this.playlistName = name
+    this.playlistForm.get('name')?.setValue(this.playlistName)
   }
 }

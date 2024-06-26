@@ -6,6 +6,8 @@ import {Album} from "../../../models/albums/album.model";
 import {Playlist} from "../../../models/playlist/playlist.model";
 import {PlaybackActionTypes} from "../../playback/store/playback.actiontypes";
 import {emptyLibraryFilters} from "./library.filters";
+import {GsPlaybackAction} from "../../playback/store/playback.actions";
+import {PlaybackState} from "../../playback/store/playback.state";
 
 export abstract class GsLibraryActionResult {
   public payload: any

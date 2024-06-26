@@ -7,7 +7,7 @@ import {
   SetCurrFileFailure,
   SetCurrFileSuccess,
   SetCurrPlaylistTrackIdx,
-  SetCurrTrack
+  SetCurrTrack, SetPlaylistAsCurr, SetPlaylistAsCurrFailure, SetPlaylistAsCurrSuccess
 } from "./playback.actions";
 import {PlaybackActionTypes} from "./playback.actiontypes";
 import {PlaybackService} from "../services/playback.service";
@@ -19,6 +19,22 @@ export class PlaybackEffects {
     private actions$: Actions,
     private playbackService: PlaybackService
   ) { }
+
+  getPlaylistTracks$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SetPlaylistAsCurr>(PlaybackActionTypes.SetPlaylistAsCurr),
+      switchMap((action) => this.playbackService.fetchPlaylistTracks(action.payload)
+        .pipe(
+          map((res) => new SetPlaylistAsCurrSuccess({
+            id: res.data.playlist.id,
+            name: res.data.playlist.name,
+            tracks: res.data.tracks
+          })),
+          catchError((e, _) => of(new SetPlaylistAsCurrFailure()))
+        )
+      )
+    )
+  )
 
   setCurrFile$ = createEffect(() =>
     this.actions$.pipe(

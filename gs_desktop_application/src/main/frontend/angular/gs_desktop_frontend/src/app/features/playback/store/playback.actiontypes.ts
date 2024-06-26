@@ -8,5 +8,9 @@ export enum PlaybackActionTypes {
   SetCurrFileFailure = "[Playback] Set Curr File Failure",
 
   SetCurrTrack = "[Playback] Set Curr Track",
-  UpdateCurrPlaylistTrackIdx = "[Playback] Update Curr Playlist Track Idx"
+  UpdateCurrPlaylistTrackIdx = "[Playback] Update Curr Playlist Track Idx",
+
+  SetPlaylistAsCurr = "[Playback] Set Playlist As Curr",
+  SetPlaylistAsCurrSuccess = "[Playback] Set Playlist As Curr Success",
+  SetPlaylistAsCurrFailure = "[Playback] Set Playlist As Curr Failure"
 }

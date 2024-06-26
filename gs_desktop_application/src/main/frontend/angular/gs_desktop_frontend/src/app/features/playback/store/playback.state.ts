@@ -1,14 +1,10 @@
-import {Playlist} from "../../../models/playlist/playlist.model";
+import {defaultPlaylist, Playlist} from "../../../models/playlist/playlist.model";
 import {defaultTrack, Track} from "../../../models/tracks/track.model";
 
 export const initialPlaybackState: PlaybackState = {
   currPlaylistTrackIdx: 0,
   currTrack: defaultTrack,
-  playlist: {
-    id: 0,
-    name: "Default Playlist",
-    tracks: []
-  }
+  playlist: defaultPlaylist
 }
 
 export interface PlaybackState {
