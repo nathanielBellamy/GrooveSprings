@@ -44,7 +44,15 @@ export class PlaylistComponent {
     this.store$.dispatch(new SetCurrPlaylistTrackIdx(trackIdx, track))
   }
 
-  handleSavePlaylistClick() {
+  handleSaveAsPlaylistClick(): void {
+    this.store$.dispatch(new PlaylistCreate({
+      id: 0,
+      tracks: this.playlistTracks,
+      name: this.getPlaylistName()
+    }))
+  }
+
+  handleSavePlaylistClick(): void {
     // TODO: update vs create based on this.playlistId
     if (this.playlistId > 0) { // update
       this.store$.dispatch(new PlaylistUpdate({
