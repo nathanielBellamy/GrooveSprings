@@ -80,7 +80,6 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case RespondPlayTrig(replyTo) =>
-        println("GsDisplay::RespondPlayTrig")
         replyTo ! ReadFrameId(context.self)
         Behaviors.same
 

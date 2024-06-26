@@ -17,6 +17,15 @@
         </tr>
         <tr class="gs_playback_display_table_row">
           <td>
+            Length:
+          </td>
+          <td title="{{currTrack.duration | toHHMMSS}}"
+              class="gs_playback_display_table_cell_value">
+            {{currTrack.duration | toHHMMSS}}
+          </td>
+        </tr>
+        <tr class="gs_playback_display_table_row">
+          <td>
             Artist/s:
           </td>
           <td title="{{currTrackArtists}}"
