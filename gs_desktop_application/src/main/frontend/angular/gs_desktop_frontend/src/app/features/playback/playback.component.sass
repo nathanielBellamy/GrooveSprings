@@ -10,12 +10,21 @@
     grid-template-rows: 100%
     grid-template-columns: 50% 50%
 
+    &_section
+      height: 100%
+      overflow: hidden
+      display: flex
+      flex-direction: column
+      justify-content: space-around
+      align-items: stretch
+
+    &_current_track
+      width: 100%
+      display: flex
+
+
   &_legend
     font: bold italic 1.3em "Fira Sans", sans-serif
-
-  &_current_track
-    overflow: hidden
-    display: flex
 
 .selected
   font: bold italic 1.35em "Fira Sans", sans-serif
