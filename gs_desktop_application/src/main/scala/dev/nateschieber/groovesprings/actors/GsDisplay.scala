@@ -64,7 +64,7 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
 
   def websocketFlow: Flow[Message, Message, Any] = {
     // based on https://github.com/JannikArndt/simple-akka-websocket-server-push/blob/master/src/main/scala/WebSocket.scala
-    val inbound: Sink[Message, Any] = Sink.foreach(_ => ())
+    val inbound: Sink[Message, Any] = Sink.foreach(_ => ()) // frontend pings to keep alive, but backend does not use pings
     val outbound: Source[Message, SourceQueueWithComplete[Message]] = Source.queue[Message](16, OverflowStrategy.fail)
 
     Flow.fromSinkAndSourceMat(inbound, outbound)((_, outboundMat) => {
