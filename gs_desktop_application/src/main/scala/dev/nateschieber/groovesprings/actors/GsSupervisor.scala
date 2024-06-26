@@ -11,8 +11,7 @@ object GsSupervisor {
     context =>
       val playbackRef = context.spawn(GsPlayback(), "gs_playback")
       val displayRef = context.spawn(GsDisplay(playbackRef), "gs_display")
-      val restControllerRef = context.spawn(GsRestController(playbackRef), "gs_rest_controller")
-      val transportControlRef = context.spawn(GsTransportControl(playbackRef, displayRef), "gs_transport_control")
+      val restControllerRef = context.spawn(GsRestController(playbackRef, displayRef), "gs_rest_controller")
 
       displayRef ! InitDisplay()
 
