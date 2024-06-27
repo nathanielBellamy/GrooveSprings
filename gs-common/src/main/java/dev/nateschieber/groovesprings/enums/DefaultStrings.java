@@ -6,7 +6,7 @@ public enum DefaultStrings {
     // private String es;
     // private String fr;
     UNKNOWN_ARTIST("Unknown Artist"),
-    UNTITLED_ALBUM("Untitled (Album)"),
+    UNKNOWN_ALBUM("Unknown Album"),
     UNTITLED_TRACK("Untitled (Track)");
 
     private String str;
