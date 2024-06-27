@@ -48,9 +48,12 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         Behaviors.same
 
       case PlayTrig(replyTo) =>
-//        println("GsPlayback :: play")
-        if (GsPlaybackThread.getPlayState() == GsPlayState.STOP)
+        val playState = GsPlaybackThread.getPlayState()
+        if (playState == GsPlayState.PLAY)
+          return Behaviors.same
+        if (playState == GsPlayState.STOP)
           GsPlaybackThread.stop() // clear currFrameId, may have been updated by native thread
+          clearPlaybackThread()
         GsPlaybackThread.play()
         if (GsPlaybackThread.getFilePath() != null)
           if (playbackThreadRef == null)

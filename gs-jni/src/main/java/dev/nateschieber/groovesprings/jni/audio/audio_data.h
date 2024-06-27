@@ -11,6 +11,7 @@ struct AUDIO_DATA {
     long        readcount;
     int         playState;
     float       playbackSpeed;
+    bool        readComplete;
 
     AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, int playState) :
           buffer(buffer)
@@ -18,7 +19,8 @@ struct AUDIO_DATA {
         , sfinfo(sfinfo)
         , index(index)
         , readcount(readcount)
-        , playState(playState) {}
+        , playState(playState)
+        , readComplete(false) {}
 };
 
 #endif
