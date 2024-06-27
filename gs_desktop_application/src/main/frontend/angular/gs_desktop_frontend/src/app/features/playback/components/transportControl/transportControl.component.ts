@@ -5,16 +5,13 @@ import {AsyncPipe} from "@angular/common";
 import {PlaybackDisplayModule} from "../playbackDisplay/playbackDisplay.module"
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { faPlay, faPause, faStop, faForwardFast, faBackward } from '@fortawesome/free-solid-svg-icons'
+import {Store} from "@ngrx/store";
+import {PlaybackState} from "../../store/playback.state";
+import {PauseTrig, PlaybackSpeedTrig, PlayTrig, StopTrig} from "../../store/playback.actions";
 
 @Component({
   selector: 'gsTransportControl',
-  standalone: true,
   templateUrl: './transportControl.component.html',
-  imports: [
-    AsyncPipe,
-    PlaybackDisplayModule,
-    FontAwesomeModule
-  ],
   styleUrl: './transportControl.component.sass'
 })
 @Injectable()
@@ -26,22 +23,22 @@ export class TransportControlComponent {
   protected faForwardFast = faForwardFast
   protected faBackward = faBackward
 
-  constructor(private http: HttpClient) { }
+  constructor(private store$: Store<{playback: PlaybackState}>) { }
 
   playTrig() {
-    this.http.get('api/v1/transport/play', {responseType: 'text'}).subscribe()
+    this.store$.dispatch(new PlayTrig())
   }
 
   pauseTrig() {
-    this.http.get('api/v1/transport/pause', {responseType: 'text'}).subscribe()
+    this.store$.dispatch(new PauseTrig())
   }
 
   stopTrig() {
-    this.http.get('api/v1/transport/stop', {responseType: 'text'}).subscribe()
+    this.store$.dispatch(new StopTrig())
   }
 
   handlePlaybackSpeed(newIdx: any) {
     const speed = this.gsPlaybackSpeedOptions[newIdx]
-    this.http.post('api/v1/transport/playbackSpeed', { speed }, {responseType: 'text'}).subscribe()
+    this.store$.dispatch(new PlaybackSpeedTrig(speed))
   }
 }

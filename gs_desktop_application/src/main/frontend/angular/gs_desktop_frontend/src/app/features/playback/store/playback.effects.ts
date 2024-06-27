@@ -3,15 +3,16 @@ import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {LibraryActionTypes} from "../../library/store/library.actiontypes";
 import {catchError, map, switchMap, of} from "rxjs";
 import {
-  ClearPlaylist, FetchLastTrackFailure,
+  ClearPlaylist, FetchLastTrackFailure, PauseTrig, PlaybackSpeedTrig, PlayTrig,
   SetCurrFileFailure,
   SetCurrFileSuccess,
   SetCurrPlaylistTrackIdx,
-  SetCurrTrack, SetPlaylistAsCurr, SetPlaylistAsCurrFailure, SetPlaylistAsCurrSuccess
+  SetCurrTrack, SetPlaylistAsCurr, SetPlaylistAsCurrFailure, SetPlaylistAsCurrSuccess, StopTrig
 } from "./playback.actions";
 import {PlaybackActionTypes} from "./playback.actiontypes";
 import {PlaybackService} from "../services/playback.service";
 import {Track} from "../../../models/tracks/track.model";
+import {Identity} from "../../library/store/library.actions";
 
 @Injectable()
 export class PlaybackEffects {
@@ -46,7 +47,7 @@ export class PlaybackEffects {
             let parsedTrack: Track = JSON.parse(res)
             // check for valid parse
             if (!parsedTrack.hasOwnProperty('path')) return new FetchLastTrackFailure()
-            return new SetCurrTrack(parsedTrack)
+            return new SetCurrTrack(parsedTrack, true)
           }),
           catchError((e,_) => of(new FetchLastTrackFailure))
         )
@@ -57,20 +58,29 @@ export class PlaybackEffects {
   setCurrTrack$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SetCurrTrack>(PlaybackActionTypes.SetCurrTrack),
-      map(action => action.getTrack()),
-      switchMap(track => this.playbackService.setCurrFile(track)
+      switchMap((action) => this.playbackService.setCurrFile(action.getTrack())
         .pipe(
-          map(() => new SetCurrFileSuccess()),
+          map(() => new SetCurrFileSuccess(action.initialLoad)),
           catchError((e, _) => of(new SetCurrFileFailure(e)))
         )
       )
     )
   )
 
+  playOnSetCurrTrack$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<SetCurrFileSuccess>(PlaybackActionTypes.SetCurrFileSuccess),
+      map((action) => {
+        if (action.initialLoad) return new Identity()
+        return new PlayTrig()
+      })
+    )
+  )
+
   setCurrFileOnPlaylistIndexUpdate$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SetCurrPlaylistTrackIdx>(PlaybackActionTypes.SetCurrPlaylistTrackIdx),
-      map(action => new SetCurrTrack(action.getTrack()))
+      map(action => new SetCurrTrack(action.getTrack(), false))
     )
   )
 
@@ -78,4 +88,21 @@ export class PlaybackEffects {
     ofType(LibraryActionTypes.ClearLibrary),
     map(() => new ClearPlaylist())
   ))
+
+  transportControlTrig$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<PlayTrig | PauseTrig | StopTrig | PlaybackSpeedTrig>(
+        PlaybackActionTypes.PlayTrig,
+        PlaybackActionTypes.PauseTrig,
+        PlaybackActionTypes.StopTrig,
+        PlaybackActionTypes.PlaybackSpeedTrig
+      ),
+      switchMap((action) => this.playbackService.transportControlTrig(action)
+        .pipe(
+          map(() => new Identity()),
+          catchError((e, _) => of(new Identity()))
+        )
+      )
+    )
+  )
 }

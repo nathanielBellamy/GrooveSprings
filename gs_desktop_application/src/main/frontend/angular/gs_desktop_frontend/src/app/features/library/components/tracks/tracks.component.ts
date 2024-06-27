@@ -23,7 +23,7 @@ export class TracksComponent implements OnInit {
   }
 
   handleDblClick(track: Track) {
-    this.store$.dispatch(new SetCurrTrack(track))
+    this.store$.dispatch(new SetCurrTrack(track, false))
   }
 
   addTrackToPlaylist(track: Track) {
