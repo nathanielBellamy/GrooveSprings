@@ -7,7 +7,6 @@ import {defaultTrack, Track} from "../../../../models/tracks/track.model";
 import {Observable} from "rxjs";
 import { webSocket } from "rxjs/webSocket";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
-import {FetchLastTrack} from "../../store/playback.actions";
 
 @Component({
   selector: 'gsPlaybackDisplay',
@@ -35,7 +34,6 @@ export class PlaybackDisplayComponent {
 
   ngOnInit() {
     this.pingIntervalId = setInterval(() => this.pingSocket(), this.pingInterval)
-    this.store$.dispatch(new FetchLastTrack())
   }
 
   ngOnDestroy() {

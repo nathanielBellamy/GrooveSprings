@@ -3,16 +3,17 @@ import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {LibraryActionTypes} from "../../library/store/library.actiontypes";
 import {catchError, map, switchMap, of} from "rxjs";
 import {
-  ClearPlaylist, FetchLastTrackFailure, PauseTrig, PlaybackSpeedTrig, PlayTrig,
+  ClearPlaylist, FetchLastState, FetchLastStateFailure, PauseTrig, PlaybackSpeedTrig, PlayTrig,
   SetCurrFileFailure,
   SetCurrFileSuccess,
   SetCurrPlaylistTrackIdx,
-  SetCurrTrack, SetPlaylistAsCurr, SetPlaylistAsCurrFailure, SetPlaylistAsCurrSuccess, StopTrig
+  SetCurrTrack, SetPlaybackState, SetPlaylistAsCurr, SetPlaylistAsCurrFailure, SetPlaylistAsCurrSuccess, StopTrig
 } from "./playback.actions";
 import {PlaybackActionTypes} from "./playback.actiontypes";
 import {PlaybackService} from "../services/playback.service";
 import {Track} from "../../../models/tracks/track.model";
 import {Identity} from "../../library/store/library.actions";
+import {PlaybackState} from "./playback.state";
 
 @Injectable()
 export class PlaybackEffects {
@@ -38,18 +39,18 @@ export class PlaybackEffects {
     )
   )
 
-  fetchLastTrack$ = createEffect(() =>
+  fetchLastState$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(PlaybackActionTypes.FetchLastTrack),
-      switchMap(() => this.playbackService.fetchLastTrack()
+      ofType(PlaybackActionTypes.FetchLastState),
+      switchMap(() => this.playbackService.fetchLastState()
         .pipe(
           map((res: any) => {
-            let parsedTrack: Track = JSON.parse(res)
+            let parsedState: PlaybackState = JSON.parse(res)
             // check for valid parse
-            if (!parsedTrack.hasOwnProperty('path')) return new FetchLastTrackFailure()
-            return new SetCurrTrack(parsedTrack, true)
+            if (!parsedState.hasOwnProperty('currTrack')) return new FetchLastStateFailure()
+            return new SetPlaybackState(parsedState)
           }),
-          catchError((e,_) => of(new FetchLastTrackFailure))
+          catchError((e,_) => of(new FetchLastStateFailure))
         )
       )
     )
@@ -98,6 +99,23 @@ export class PlaybackEffects {
         PlaybackActionTypes.PlaybackSpeedTrig
       ),
       switchMap((action) => this.playbackService.transportControlTrig(action)
+        .pipe(
+          map(() => new Identity()),
+          catchError((e, _) => of(new Identity()))
+        )
+      )
+    )
+  )
+
+  cachePlaybackState$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        PlaybackActionTypes.AddTrackToPlaylist,
+        PlaybackActionTypes.ClearPlaylist,
+        PlaybackActionTypes.SetPlaylistAsCurrSuccess,
+        PlaybackActionTypes.SetCurrPlaylistTrackIdx,
+      ),
+      switchMap(() => this.playbackService.cacheState()
         .pipe(
           map(() => new Identity()),
           catchError((e, _) => of(new Identity()))

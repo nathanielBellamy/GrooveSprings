@@ -1,6 +1,6 @@
 package dev.nateschieber.groovesprings.rest
 
-case class FileSelectDto(path: String, trackJson: String)
+case class FileSelectDto(path: String, stateJson: String)
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 

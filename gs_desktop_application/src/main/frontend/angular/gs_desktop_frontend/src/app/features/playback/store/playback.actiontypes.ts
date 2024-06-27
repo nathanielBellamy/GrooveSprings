@@ -14,9 +14,11 @@ export enum PlaybackActionTypes {
   SetPlaylistAsCurrSuccess = "[Playback] Set Playlist As Curr Success",
   SetPlaylistAsCurrFailure = "[Playback] Set Playlist As Curr Failure",
 
-  FetchLastTrack = "[Playback] Fetch Last Track",
-  FetchLastTrackSuccess = "[Playback] Fetch Last Track Success",
-  FetchLastTrackFailure = "[Playback] Fetch Last Track Failure",
+  FetchLastState = "[Playback] Fetch Last State",
+  FetchLastStateSuccess = "[Playback] Fetch Last State Success",
+  FetchLastStateFailure = "[Playback] Fetch Last State Failure",
+  SetPlaybackState = "[Playback] Set Playback State",
+  CachePlaybackState = "[Playback] Cache Playback State",
 
   PlayTrig = "[Playback] Play Trig",
   PauseTrig = "[Playback] Pause Trig",

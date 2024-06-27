@@ -127,12 +127,12 @@ export class UpdateCurrPlaylistTrackidx implements Action, GsPlaybackAction {
   }
 }
 
-export class FetchLastTrack implements Action {
-  readonly type = PlaybackActionTypes.FetchLastTrack
+export class FetchLastState implements Action {
+  readonly type = PlaybackActionTypes.FetchLastState
 }
 
-export class FetchLastTrackFailure implements Action {
-  readonly type = PlaybackActionTypes.FetchLastTrackFailure
+export class FetchLastStateFailure implements Action {
+  readonly type = PlaybackActionTypes.FetchLastStateFailure
 }
 
 export class PlayTrig implements Action {
@@ -151,4 +151,18 @@ export class PlaybackSpeedTrig implements Action {
   readonly type = PlaybackActionTypes.PlaybackSpeedTrig
 
   constructor(public speed: number) { }
+}
+
+export class SetPlaybackState implements Action, GsPlaybackAction {
+  readonly type = PlaybackActionTypes.SetPlaybackState
+
+  constructor(public state: PlaybackState) { }
+
+  public handle(_: PlaybackState): PlaybackState {
+    return {...this.state}
+  }
+}
+
+export class CachePlaybackState implements Action {
+  readonly type = PlaybackActionTypes.CachePlaybackState
 }
