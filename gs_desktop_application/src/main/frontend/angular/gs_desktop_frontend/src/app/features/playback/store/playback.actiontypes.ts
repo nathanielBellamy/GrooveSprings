@@ -16,5 +16,10 @@ export enum PlaybackActionTypes {
 
   FetchLastTrack = "[Playback] Fetch Last Track",
   FetchLastTrackSuccess = "[Playback] Fetch Last Track Success",
-  FetchLastTrackFailure = "[Playback] Fetch Last Track Failure"
+  FetchLastTrackFailure = "[Playback] Fetch Last Track Failure",
+
+  PlayTrig = "[Playback] Play Trig",
+  PauseTrig = "[Playback] Pause Trig",
+  StopTrig = "[Playback] Stop Trig",
+  PlaybackSpeedTrig = "[Playback] Playback Speed Trig",
 }

@@ -8,13 +8,14 @@ import {playbackReducer} from "./store/playback.reducer";
 import {PlaybackService} from "./services/playback.service";
 import {PlaybackDisplayModule} from "./components/playbackDisplay/playbackDisplay.module";
 import {NgIf, NgStyle} from "@angular/common";
+import {TransportControlModule} from "./components/transportControl/transportControl.module";
 
 @NgModule({
   declarations: [PlaybackComponent],
   exports: [PlaybackComponent],
     imports: [
         StoreModule.forFeature('playback', playbackReducer),
-        TransportControlComponent,
+        TransportControlModule,
         PlaybackDisplayModule,
         PlaylistModule,
         NgIf,

@@ -68,6 +68,8 @@ export class SetCurrFile implements Action {
 
 export class SetCurrFileSuccess implements Action {
   readonly type = PlaybackActionTypes.SetCurrFileSuccess
+
+  constructor(public initialLoad: boolean) { }
 }
 
 export class SetCurrFileFailure implements Action {
@@ -98,7 +100,7 @@ export class SetCurrPlaylistTrackIdx implements Action, GsPlaybackAction {
 export class SetCurrTrack implements Action, GsPlaybackAction {
   readonly type = PlaybackActionTypes.SetCurrTrack
 
-  constructor(private track: Track) {}
+  constructor(private track: Track, public initialLoad: boolean) {}
 
   handle(state: PlaybackState): PlaybackState {
     return {
@@ -131,4 +133,22 @@ export class FetchLastTrack implements Action {
 
 export class FetchLastTrackFailure implements Action {
   readonly type = PlaybackActionTypes.FetchLastTrackFailure
+}
+
+export class PlayTrig implements Action {
+  readonly type = PlaybackActionTypes.PlayTrig
+}
+
+export class PauseTrig implements Action {
+  readonly type = PlaybackActionTypes.PauseTrig
+}
+
+export class StopTrig implements Action {
+  readonly type = PlaybackActionTypes.StopTrig
+}
+
+export class PlaybackSpeedTrig implements Action {
+  readonly type = PlaybackActionTypes.PlaybackSpeedTrig
+
+  constructor(public speed: number) { }
 }
