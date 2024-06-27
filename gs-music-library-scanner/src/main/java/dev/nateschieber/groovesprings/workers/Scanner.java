@@ -37,11 +37,7 @@ public class Scanner {
                     .filter(file -> !Files.isDirectory(file))
                     .filter(fileName -> {
                         String name = fileName.getFileName().toString();
-                        boolean isNotDsStore = !name.equals(".DS_Store");
-                        boolean endsWithValidFileExtension = fileNameEndsWithValidExtension(name);
-
-                        return isNotDsStore
-                                && endsWithValidFileExtension;
+                        return fileNameEndsWithValidExtension(name);
                     })
                     .toList();
 
@@ -51,8 +47,8 @@ public class Scanner {
             // TODO:
             // - [x] read metadata into TrackCreateDtos
             // - [x] add path to Track in gs-track-service
-            // - [-] alternatively, create LocalTrack on top of Track, similar to PricedTrack
-            // - [ ] playlist entity in gs-track-service + frontend integration
+            // - [x] alternatively, create LocalTrack on top of Track, similar to PricedTrack
+            // - [x] playlist entity in gs-track-service + frontend integration
             // - [ ] gs_desktop_work + frontend handle playlist playback
             // - [ ] clickable progress bar
         } catch(IOException e) {
@@ -69,23 +65,23 @@ public class Scanner {
     }
 
     private static GsDesktopTrackCreateDto localTrackCreateDtoFromPath(Path path) {
-        List<String> artistNames = List.of(DefaultStrings.UNKNOWN_ARTIST.getString());
-        String albumTitle = DefaultStrings.UNTITLED_ALBUM.getString();
-        String trackTitle = DefaultStrings.UNTITLED_TRACK.getString();
-        Integer trackNumber = 0;
-        Integer trackLength = 0;
-        Integer sampleRate = 0;
-        Long bitRate = 0l;
-        Boolean isVariableBitRate = false;
-        Boolean isLoseless = false;
-        AudioCodec audioCodec = AudioCodec.UNRECOGNIZED;
-        String releaseDate = "";
-        int sf_frames = 0;
-        int sf_samplerate = 0;
-        int sf_channels = 0;
-        int sf_format = 0;
-        int sf_sections = 0;
-        int sf_seekable = 0;
+        List<String> artistNames; // List.of(DefaultStrings.UNKNOWN_ARTIST.getString());
+        String albumTitle; // DefaultStrings.UNTITLED_ALBUM.getString();
+        String trackTitle; // DefaultStrings.UNTITLED_TRACK.getString();
+        Integer trackNumber; // 0;
+        Integer trackLength; // 0;
+        Integer sampleRate; // 0;
+        Long bitRate; // 0l;
+        Boolean isVariableBitRate; // false;
+        Boolean isLoseless; // false;
+        AudioCodec audioCodec; // AudioCodec.UNRECOGNIZED;
+        String releaseDate; // "";
+        int sf_frames; // 0;
+        int sf_samplerate; // 0;
+        int sf_channels; // 0;
+        int sf_format; // 0;
+        int sf_sections; // 0;
+        int sf_seekable; // 0;
 
         try {
             AudioFile f = AudioFileIO.read(path.toFile());
@@ -93,7 +89,11 @@ public class Scanner {
             AudioHeader header = f.getAudioHeader();
             artistNames = tag.getAll(FieldKey.ARTIST);
             albumTitle  = tag.getFirst(FieldKey.ALBUM);
-            trackNumber = parseInt(tag.getFirst(FieldKey.TRACK));
+            try {
+                trackNumber = parseInt(tag.getFirst(FieldKey.TRACK));
+            } catch (NumberFormatException e) {
+                trackNumber = 0;
+            }
             trackTitle  = tag.getFirst(FieldKey.TITLE);
             trackLength = header.getTrackLength();
             sampleRate  = header.getSampleRateAsNumber();
@@ -107,7 +107,17 @@ public class Scanner {
             );
             releaseDate = tag.getFirst(FieldKey.YEAR);
 
-            //
+            if (artistNames.isEmpty()) {
+                artistNames = List.of(DefaultStrings.UNKNOWN_ARTIST.getString());
+            }
+            if (albumTitle == null || albumTitle.isBlank()) {
+                albumTitle = DefaultStrings.UNKNOWN_ALBUM.getString();
+            }
+            if (trackTitle == null || trackTitle.isEmpty()) {
+                // if no title is found in meta-data, use filename as track title
+                String[] fileSplit = path.getFileName().toString().split("\\.");
+                trackTitle = fileSplit[0];
+            }
 
             SfInfo sfInfo = JniMain.readSfInfo(path.toString());
 
