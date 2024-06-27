@@ -42,18 +42,25 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
 
   if( audioData->buffer == NULL )
   {
-      for( i=0; i < framesPerBuffer; i++ )
-      {
-          *out++ = 0;  /* left - silent */
-          *out++ = 0;  /* right - silent */
-      }
+//      for( i=0; i < framesPerBuffer; i++ )
+//      {
+//          *out++ = 0;  /* left - silent */
+//          *out++ = 0;  /* right - silent */
+//      }
+     audioData->index = 0;
+     audioData->readComplete = true;
+     return paComplete;
   }
-  else if (audioData->index > audioData->sfinfo.frames * audioData->sfinfo.channels + 1)
+  else if (audioData->index > audioData->sfinfo.frames * audioData->sfinfo.channels - 1)
   {
+     audioData->index = 0;
+     audioData->readComplete = true;
      return paComplete;
   }
   else if (audioData->index < 0)
   {
+    audioData->index = 0;
+    audioData->readComplete = true;
     return paComplete;
   }
   // audioData->buffer --> paOut
@@ -64,6 +71,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
     }
 
     audioData->index -= framesPerBuffer * audioData->sfinfo.channels;
+    return paContinue;
   }
   else if (audioData->playbackSpeed == 0.5) // half-speed
   {
@@ -74,6 +82,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
     }
 
     audioData->index += halfFramesPerBuffer * audioData->sfinfo.channels;
+    return paContinue;
   }
   else if (audioData->playbackSpeed == -0.5) // half-speed reverse
   {
@@ -84,6 +93,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
     }
 
     audioData->index -= halfFramesPerBuffer * audioData->sfinfo.channels;
+    return paContinue;
   }
   else if (audioData->playbackSpeed == 2.0) // double speed
   {
@@ -92,6 +102,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
     }
 
     audioData->index += (2 * framesPerBuffer) * audioData->sfinfo.channels;
+    return paContinue;
   }
   else if (audioData->playbackSpeed == -2.0) // double speed reverse
   {
@@ -100,17 +111,27 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
     }
 
     audioData->index -= (2 * framesPerBuffer) * audioData->sfinfo.channels;
+    return paContinue;
   }
-  else // play
+  else if (audioData->index < audioData->sfinfo.frames * audioData->sfinfo.channels)// play, regular speed
   {
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
-      *out++ = audioData->buffer[audioData->index + i];
+        if (audioData->index + i < audioData->sfinfo.frames * audioData->sfinfo.channels) {
+          *out++ = audioData->buffer[audioData->index + i];
+        } else {
+          audioData->index = 0;
+          audioData->readComplete = true;
+          return paComplete;
+        }
     }
-
     audioData->index += framesPerBuffer * audioData->sfinfo.channels;
-  }
 
-  return paContinue;
+    return paContinue;
+  } else {
+    audioData->index = 0;
+    audioData->readComplete = true;
+    return paComplete;
+  }
 };
 
 int Audio::run()
@@ -149,7 +170,6 @@ int Audio::run()
   }
 
   sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
-  std::cout << "initialFrameId: " << initialFrameId << "\n";
   AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1);
 
   // init jniData
@@ -168,7 +188,7 @@ int Audio::run()
       fprintf(stderr,"\nError: No default input device.");
       goto error;
   }
-  inputParameters.channelCount = 2;       /* stereo in from file */
+  inputParameters.channelCount = audioData.sfinfo.channels;       /* stereo in from file */
   inputParameters.sampleFormat = PA_SAMPLE_TYPE;
   inputParameters.hostApiSpecificStreamInfo = NULL;
 
@@ -177,7 +197,7 @@ int Audio::run()
       fprintf(stderr,"\nError: No default output device.");
       goto error;
   }
-  outputParameters.channelCount = 2;       /* stereo output */
+  outputParameters.channelCount = audioData.sfinfo.channels;
   outputParameters.sampleFormat = PA_SAMPLE_TYPE;
   outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
   outputParameters.hostApiSpecificStreamInfo = NULL;
@@ -196,13 +216,21 @@ int Audio::run()
   err = Pa_StartStream( stream );
   if( err != paNoError ) goto error;
 
-  while( audioData.playState != 0 && audioData.playState != 2 && audioData.index > -1 ) // 0: STOP, 1: PLAY, 2: PAUSE, 3: RW, 4: FF
+  while( audioData.playState != 0
+            && audioData.playState != 2
+            && audioData.index > -1
+            && audioData.index < audioData.sfinfo.frames * audioData.sfinfo.channels - 1
+  ) // 0: STOP, 1: PLAY, 2: PAUSE, 3: RW, 4: FF
   {
     // hold thread open until stopped
 
     // here is our chance to pull data out of the JVM through the jniData obj
     // and
     // make it accessible to our running audio callback through the audioData obj
+
+    if (audioData.readComplete) {
+        Audio::jSetPlayState(&jniData, 0); // stop
+    }
 
     audioData.playbackSpeed = jniData.env->CallStaticFloatMethod(
         jniData.gsPlayback,
@@ -220,7 +248,13 @@ int Audio::run()
 //    std::cout << "\n =========== \n";
 
    Audio::jSetCurrFrameId(&jniData, (int) audioData.index);
+  }
 
+
+  if (audioData.playState == 1) {
+      Audio::jSetPlayState(&jniData, 0);
+  } else {
+      Audio::jSetPlayState(&jniData, audioData.playState);
   }
 
   err = Pa_StopStream( stream );
@@ -234,6 +268,7 @@ int Audio::run()
 
   error:
     Pa_Terminate();
+    Audio::jSetPlayState(&jniData, 0);
     Audio::freeAudioData(&audioData);
     fprintf( stderr, "\nAn error occurred while using the portaudio stream" );
     fprintf( stderr, "\nError number: %d", err );
@@ -246,13 +281,30 @@ void Audio::jSetCurrFrameId(
     int currFrameId
 ){
    jobject jCurrFrameId = jniData->env->NewObject(
-        jniData->jNum,
-        jniData->jNumInit,
+        jniData->jLong,
+        jniData->jLongInit,
         currFrameId
    );
    jniData->env->CallVoidMethod(
         jniData->gsPlayback,
         jniData->setCurrFrameId,
         jCurrFrameId
+   );
+}
+
+void Audio::jSetPlayState(
+    JNI_DATA* jniData,
+    int newPlayState
+){
+   jobject jNewPlayState = jniData->env->NewObject(
+        jniData->jInteger,
+        jniData->jIntegerInit,
+        newPlayState
+   );
+   jniData->env->CallVoidMethod(
+        jniData->gsPlayback,
+        jniData->setPlayStateInt,
+//        jNewPlayState
+        newPlayState
    );
 }

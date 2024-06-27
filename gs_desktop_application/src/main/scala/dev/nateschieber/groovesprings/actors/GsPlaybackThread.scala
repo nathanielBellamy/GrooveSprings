@@ -12,7 +12,7 @@ import scala.annotation.static
 
 object GsPlaybackThread {
   // NOTE
-  //  - these variables are static so as to be accessable from native code
+  //  - these variables are static so as to be accessible from native code
   //  - the same is true for their static getter+setter methods
   //  - these methods should appear only in GsPlayback
   //  - GsPlayback cannot send messages either to deliver or to mutate these values
@@ -60,6 +60,10 @@ object GsPlaybackThread {
     playState = newState
   }
 
+  @static def setPlayStateInt(newState: Int) = {
+    playState = playStateFromInt(newState)
+  }
+
   @static def getCurrFrameId(): java.lang.Long = {
     // NOTE:
     // - conditioning on playState handles the transition from PLAY -> STOP
@@ -93,6 +97,16 @@ object GsPlaybackThread {
   
   @static def setAudioCodec(value: java.lang.String) = {
     audioCodec = value
+  }
+
+  @static def playStateFromInt(i: Int): GsPlayState = {
+    i match {
+      case 4       => GsPlayState.FF
+      case 3       => GsPlayState.RW
+      case 2       => GsPlayState.PAUSE
+      case 1       => GsPlayState.PLAY
+      case default => GsPlayState.STOP
+    }
   }
 
   def apply(): Behavior[GsCommand] = Behaviors.setup {

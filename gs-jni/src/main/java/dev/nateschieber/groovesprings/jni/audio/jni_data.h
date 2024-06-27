@@ -6,18 +6,24 @@ struct JNI_DATA{
     jclass gsPlayback;
     jmethodID setCurrFrameId;
     jmethodID getPlayStateInt;
+    jmethodID setPlayStateInt;
     jmethodID getPlaybackSpeedFloat;
-    jclass jNum;
-    jmethodID jNumInit;
+    jclass jLong;
+    jmethodID jLongInit;
+    jclass jInteger;
+    jmethodID jIntegerInit;
 
     JNI_DATA(JNIEnv* env) :
         env(env)
           , gsPlayback(env->FindClass("dev/nateschieber/groovesprings/actors/GsPlaybackThread"))
           , setCurrFrameId(env->GetStaticMethodID (gsPlayback, "setCurrFrameId", "(Ljava/lang/Long;)V"))
           , getPlayStateInt(env->GetStaticMethodID (gsPlayback, "getPlayStateInt", "()I"))
+          , setPlayStateInt(env->GetStaticMethodID (gsPlayback, "setPlayStateInt", "(I)V"))
           , getPlaybackSpeedFloat(env->GetStaticMethodID (gsPlayback, "getPlaybackSpeedFloat", "()F"))
-          , jNum(env->FindClass("java/lang/Long"))
-          , jNumInit(env->GetMethodID(jNum, "<init>", "(J)V")) {}
+          , jLong(env->FindClass("java/lang/Long"))
+          , jLongInit(env->GetMethodID(jLong, "<init>", "(J)V"))
+          , jInteger(env->FindClass("java/lang/Integer"))
+          , jIntegerInit(env->GetMethodID(jInteger, "<init>", "(I)V")) {}
 };
 
 #endif
