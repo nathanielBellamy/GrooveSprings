@@ -2,7 +2,7 @@ import {Album} from "../../../models/albums/album.model";
 import {Artist} from "../../../models/artists/artist.model";
 import {Track} from "../../../models/tracks/track.model";
 import {emptyLibraryFilters, LibraryFilters} from "./library.filters";
-import {Playlist} from "../../../models/playlist/playlist.model";
+import {PlaylistRepr} from "../../../models/playlist/playlist_repr.model";
 
 export interface LibraryState {
   albumCount: number;
@@ -11,7 +11,7 @@ export interface LibraryState {
   artists: Artist[];
   filters: LibraryFilters;
   playlistCount: number;
-  playlists: Playlist[];
+  playlists: PlaylistRepr[];
   trackCount: number;
   tracks: Track[];
 }

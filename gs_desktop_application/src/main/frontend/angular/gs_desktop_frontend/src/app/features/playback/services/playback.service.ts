@@ -7,6 +7,7 @@ import {PauseTrig, PlaybackSpeedTrig, PlayTrig, StopTrig} from "../store/playbac
 import {PlaybackActionTypes} from "../store/playback.actiontypes";
 import {PlaybackState} from "../store/playback.state";
 import {Store} from "@ngrx/store";
+import {PlaylistRepr} from "../../../models/playlist/playlist_repr.model";
 
 @Injectable()
 export class PlaybackService {
@@ -24,7 +25,7 @@ export class PlaybackService {
     return this.http.put("api/v1/cacheState", {stateJson: JSON.stringify(this.state)}, {responseType: 'text'})
   }
 
-  fetchPlaylistTracks(playlist: Playlist): Observable<any> {
+  fetchPlaylistTracks(playlist: PlaylistRepr): Observable<any> {
     return this.http.get("api/v1/playlists/" + playlist.id + "/tracks")
   }
 

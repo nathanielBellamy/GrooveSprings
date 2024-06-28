@@ -17,7 +17,7 @@
 .gs_track_list
   height: 100%
   margin-top: 10px
-  padding: 0 0 20px 0
+  padding: 0 0 50px 0
   display: flex
   flex-direction: column
   align-items: stretch
@@ -27,15 +27,23 @@
     height: 100%
     width: 100%
     overflow-y: scroll
+    overflow-x: hidden
 
 .gs_track
   display: grid
   grid-template-rows: 1fr
-  grid-template-columns: 20% 5% 15% 25% 5% 10% 10% 10%
-  padding: 2px 5px 0px 15px
+  grid-template-columns: 2% 20% 5% 15% 24% 3% 10% 10% 10%
+  padding: 2px 5px 0px 10px
   cursor: pointer
   width: 100%
   font: bold 0.8em "Fira Sans", sans-serif
+
+  &_index
+    text-align: left
+    font: bold italic 1em "Fira Sans", sans-serif
+
+  &_title
+    padding-left: 10px
 
   &_add_to_playlist_button
     &_container

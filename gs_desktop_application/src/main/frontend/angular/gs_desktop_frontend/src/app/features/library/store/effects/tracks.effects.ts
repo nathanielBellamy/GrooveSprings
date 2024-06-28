@@ -27,7 +27,7 @@ export class TracksEffects {
       switchMap((action) => this.tracksService.fetchByAction(action)
         .pipe(
           // TODO: return correct action by type?
-          map((payload) =>new FetchTracksSuccess(payload as TracksData)),
+          map((payload) => new FetchTracksSuccess(payload as TracksData)),
           catchError((e, _) => of(new FetchTracksFailure(e)))
         )
       )
