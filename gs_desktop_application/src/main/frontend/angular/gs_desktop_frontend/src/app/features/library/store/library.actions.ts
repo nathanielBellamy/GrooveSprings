@@ -9,6 +9,7 @@ import {emptyLibraryFilters} from "./library.filters";
 import {GsPlaybackAction} from "../../playback/store/playback.actions";
 import {PlaybackState} from "../../playback/store/playback.state";
 import {PlaylistUpdateDto} from "../../../models/playlist/playlist_update_dto.model";
+import {PlaylistRepr} from "../../../models/playlist/playlist_repr.model";
 
 export abstract class GsLibraryActionResult {
   public payload: any
@@ -83,7 +84,7 @@ export class SetAlbumsFilter implements Action, GsLibraryActionResult {
 export class SetPlaylistsFilter implements Action {
   readonly type = LibraryActionTypes.SetPlaylistsFilter
 
-  constructor(public payload: Playlist[]) { }
+  constructor(public payload: PlaylistRepr[]) { }
 
   handle(state: LibraryState): LibraryState {
     return {

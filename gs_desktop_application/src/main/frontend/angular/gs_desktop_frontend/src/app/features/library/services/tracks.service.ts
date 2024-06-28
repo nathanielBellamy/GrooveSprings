@@ -14,6 +14,7 @@ import {TracksGetByPlaylistIds} from "../../../models/tracks/tracks_get_by_playl
 import {Action} from "@ngrx/store";
 import {LibraryActionTypes} from "../store/library.actiontypes";
 import {SetAlbumsFilter, SetArtistsFilter, SetPlaylistsFilter} from "../store/library.actions";
+import {Track} from "../../../models/tracks/track.model";
 
 @Injectable()
 export class TracksService {
@@ -34,7 +35,7 @@ export class TracksService {
     switch (action.type) {
       case LibraryActionTypes.SetPlaylistsFilter:
         const splf = action as SetPlaylistsFilter
-        return this.fetchByPlaylistIds(splf.payload.map(pl => pl.id))
+        return this.fetchByPlaylistIds(splf.payload.map(pl => pl.id), splf)
       case LibraryActionTypes.SetAlbumsFilter:
         const salf = action as SetAlbumsFilter
         return this.fetchByAlbumIds(salf.payload.map(al => al.id))
@@ -44,11 +45,20 @@ export class TracksService {
     }
   }
 
-  fetchByPlaylistIds(playlistIds: number[]): Observable<TracksByPlaylistIds> {
+  fetchByPlaylistIds(playlistIds: number[], splf: SetPlaylistsFilter): Observable<TracksByPlaylistIds> {
     return this.http.post(`api/v1/tracks/byPlaylistIds`, { playlistIds })
       .pipe(
         map( res => {
+          // TODO:
+          // - at the moment, we assume just 1 Playlist was loaded (this is all the UI allows)
+          // - the same track may appear on multiple playlists
+          // - q: do we want to duplicate the track in the track results?
           const tracksRes: TracksGetByPlaylistIds = res as TracksGetByPlaylistIds
+          tracksRes.data.tracks.sort((a,b) => {
+            const aIndex = splf.payload[0].trackIds.indexOf(a.id)
+            const bIndex = splf.payload[0].trackIds.indexOf(b.id)
+            return aIndex - bIndex
+          })
           return tracksRes.data
         })
       )
@@ -59,6 +69,7 @@ export class TracksService {
       .pipe(
         map(res => {
           const tracksRes: TracksGetByArtistIds = res as TracksGetByArtistIds
+          tracksRes.data.tracks.sort(this.sortTracksByAlbum)
           return tracksRes.data
         })
       )
@@ -70,9 +81,17 @@ export class TracksService {
         map(res => {
           const artistsRes = res as TracksGetByAlbumIds
           const { count, tracks, albumIds }: TracksByAlbumIds = artistsRes.data
-          tracks.sort((a,b) => a.trackNumber - b.trackNumber)
+          tracks.sort(this.sortTracksByAlbum)
           return {count, tracks, albumIds}
         })
       )
+  }
+
+  sortTracksByAlbum(a: Track, b: Track): number {
+    if (a.album.id == b.album.id) {
+      return a.trackNumber - b.trackNumber
+    } else {
+      return a.album.title.localeCompare(b.album.title)
+    }
   }
 }

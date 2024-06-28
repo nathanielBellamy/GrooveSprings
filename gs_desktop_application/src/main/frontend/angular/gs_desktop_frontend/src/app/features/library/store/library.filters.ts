@@ -1,7 +1,7 @@
 import {Artist} from "../../../models/artists/artist.model";
 import {Album} from "../../../models/albums/album.model";
 import {Track} from "../../../models/tracks/track.model";
-import {Playlist} from "../../../models/playlist/playlist.model";
+import {PlaylistRepr} from "../../../models/playlist/playlist_repr.model";
 
 export const emptyLibraryFilters: LibraryFilters = {
   albums: [],
@@ -13,6 +13,6 @@ export const emptyLibraryFilters: LibraryFilters = {
 export interface LibraryFilters {
   albums: Album[];
   artists: Artist[];
-  playlists: Playlist[];
+  playlists: PlaylistRepr[];
   tracks: Track[];
 }

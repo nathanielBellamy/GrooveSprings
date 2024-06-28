@@ -10,6 +10,7 @@ import {FetchAlbums} from "../../store/actions/albums.actions";
 import {ClearFilters, ClearLibrary, FetchAll, LibraryScan} from "../../store/library.actions";
 import {FetchPlaylists} from "../../store/actions/playlists.actions";
 import {Playlist} from "../../../../models/playlist/playlist.model";
+import {PlaylistRepr} from "../../../../models/playlist/playlist_repr.model";
 
 @Component({
   selector: 'gsLibrary',
@@ -21,7 +22,7 @@ export class LibraryComponent implements OnInit {
 
   protected artistsFilter$: Observable<Artist[]>
   protected albumsFilter$: Observable<Album[]>
-  protected playlistsFilter$: Observable<Playlist[]>
+  protected playlistsFilter$: Observable<PlaylistRepr[]>
   protected playlistCount$: Observable<number>
   protected artistCount$: Observable<number>
   protected albumCount$: Observable<number>

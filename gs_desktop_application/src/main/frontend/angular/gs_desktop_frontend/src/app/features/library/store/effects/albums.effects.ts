@@ -27,7 +27,11 @@ export class AlbumsEffects {
       ),
       switchMap((action) => this.albumsService.fetchByAction(action)
         .pipe(
-          map((payload) => new FetchAlbumsSuccess(payload as AlbumsData)),
+          map((payload) => {
+            const parsedPayload = payload as AlbumsData
+            parsedPayload.albums.sort((a,b) => a.title.localeCompare(b.title))
+            return new FetchAlbumsSuccess(parsedPayload)
+          }),
           catchError((e, _) => of(new FetchAlbumsFailure(e)))
         )
       )

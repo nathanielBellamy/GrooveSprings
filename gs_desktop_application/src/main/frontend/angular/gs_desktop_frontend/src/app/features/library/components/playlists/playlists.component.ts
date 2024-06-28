@@ -5,6 +5,7 @@ import {LibraryState} from "../../store/library.state";
 import {Store} from "@ngrx/store";
 import {SetPlaylistsFilter} from "../../store/library.actions";
 import {SetPlaylistAsCurr} from "../../../playback/store/playback.actions";
+import {PlaylistRepr} from "../../../../models/playlist/playlist_repr.model";
 
 @Component({
   selector: 'gsPlaylists',
@@ -13,17 +14,17 @@ import {SetPlaylistAsCurr} from "../../../playback/store/playback.actions";
 })
 @Injectable()
 export class PlaylistsComponent {
-  protected playlists$: Observable<Playlist[]>
+  protected playlists$: Observable<PlaylistRepr[]>
 
   constructor(private store$: Store<{library: LibraryState}>) {
     this.playlists$ = store$.select(state => state.library.playlists)
   }
 
-  handlePlaylistClick(playlist: Playlist) {
+  handlePlaylistClick(playlist: PlaylistRepr) {
     this.store$.dispatch( new SetPlaylistsFilter([playlist]))
   }
 
-  handleSetPlaylistAsCurrClick(playlist: Playlist) {
+  handleSetPlaylistAsCurrClick(playlist: PlaylistRepr) {
     this.store$.dispatch( new SetPlaylistAsCurr(playlist))
   }
 }

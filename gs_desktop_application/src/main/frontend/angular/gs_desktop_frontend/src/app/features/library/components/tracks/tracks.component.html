@@ -2,6 +2,9 @@
   <div class="gs_track_list_container">
     <div class="gs_track_list">
 <!--      <div class="gs_track even">-->
+<!--        <span class="gs_track_index">-->
+<!--            {{0 + 1}}. &nbsp;-->
+<!--        </span>-->
 <!--        <div>-->
 <!--          EXAMPLE TRACK TITLE-->
 <!--        </div>-->
@@ -37,7 +40,10 @@
         <div class="gs_track"
              [class.even]="i % 2 === 0"
              (dblclick)="handleDblClick(track)">
-          <div>
+          <span class="gs_track_index">
+              {{i + 1}}. &nbsp;
+          </span>
+          <div class="gs_track_title">
             {{ track.title }}
           </div>
           <div>

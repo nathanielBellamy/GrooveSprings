@@ -3,6 +3,7 @@ import {Track} from "../../../models/tracks/track.model";
 import {PlaybackActionTypes} from "./playback.actiontypes";
 import {initialPlaybackState, PlaybackState} from "./playback.state";
 import {Playlist} from "../../../models/playlist/playlist.model";
+import {PlaylistRepr} from "../../../models/playlist/playlist_repr.model";
 
 export abstract class GsPlaybackAction {
   handle(state: PlaybackState): PlaybackState {
@@ -30,7 +31,7 @@ export class AddTrackToPlaylist implements Action, GsPlaybackAction {
 export class SetPlaylistAsCurr implements Action { // awaited in playback.reducer.ts
   readonly type = PlaybackActionTypes.SetPlaylistAsCurr
 
-  constructor(public payload: Playlist) { }
+  constructor(public payload: PlaylistRepr) { }
 }
 
 export class SetPlaylistAsCurrSuccess implements Action, GsPlaybackAction {
