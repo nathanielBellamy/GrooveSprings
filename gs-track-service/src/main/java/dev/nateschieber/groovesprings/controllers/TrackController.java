@@ -1,17 +1,18 @@
-package dev.nateschieber.groovesprings.controllers;
+ package dev.nateschieber.groovesprings.controllers;
 
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
-import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
-import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
-import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
+import dev.nateschieber.groovesprings.rest.dtos.track.*;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackDeleteResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackEntityResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TrackGetAllResponse;
+import dev.nateschieber.groovesprings.rest.responses.track.TracksByAlbumIdsResponse;
+import dev.nateschieber.groovesprings.rest.responses.track.TracksByArtistIdsResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByAudioCodecResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByDurationResponse;
 import dev.nateschieber.groovesprings.rest.responses.track.TracksByYearResponse;
+import dev.nateschieber.groovesprings.rest.responses.track.TracksByPlaylistIdsResponse;
 import dev.nateschieber.groovesprings.services.entities.TrackService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -45,11 +46,30 @@ public class TrackController {
   @GetMapping
   public ResponseEntity getAllTracks() {
     List<Track> tracks = trackService.findAll();
+
     return ResponseEntity.ok().body(new TrackGetAllResponse(tracks));
   }
 
+  @PostMapping(value = "/byArtistIds")
+  public ResponseEntity getTracksByArtistIds(@Valid @RequestBody TrackGetByArtistIdsDto dto) {
+    List<Track> tracks = trackService.findByArtistIds(dto.artistIds());
+    return ResponseEntity.ok().body(new TracksByArtistIdsResponse(tracks, dto.artistIds()));
+  }
+
+  @PostMapping(value = "byAlbumIds")
+  public ResponseEntity getTracksByAlbumIds(@Valid @RequestBody TrackGetByAlbumIdsDto dto) {
+    List<Track> tracks = trackService.findByAlbumIds(dto.albumIds());
+    return ResponseEntity.ok().body(new TracksByAlbumIdsResponse(tracks, dto.albumIds()));
+  }
+
+  @PostMapping(value = "byPlaylistIds")
+  public ResponseEntity getTracksByPlaylistIds(@Valid @RequestBody TrackGetByPlaylistIdsDto dto) {
+    List<Track> tracks = trackService.findByPlaylistIds(dto.playlistIds());
+    return ResponseEntity.ok().body(new TracksByPlaylistIdsResponse(tracks, dto.playlistIds()));
+  }
+
   @GetMapping(value = "/{id}")
-  public ResponseEntity getTrackById(@PathVariable Long id) {
+  public ResponseEntity getTrackById(@PathVariable("id") Long id) {
     Optional<Track> track = trackService.findById(id);
     if (track.isPresent()) {
       ResponseEntity<TrackEntityResponse> resEnt = new ResponseEntity<>(
@@ -64,7 +84,7 @@ public class TrackController {
   @PostMapping(value = "create", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity createTrack(@Valid @RequestBody TrackCreateDto dto) {
     Track trackSaved = trackService.createFromDto(dto);
-    URI uri = HttpHelper.uri("/tracks/" + trackSaved.getId());
+    URI uri = HttpHelper.uri("/api/v1/tracks/" + trackSaved.getId());
     return ResponseEntity.created(uri).body(new TrackEntityResponse(trackSaved));
   }
 
@@ -80,7 +100,7 @@ public class TrackController {
   }
 
   @DeleteMapping(value = "/{id}")
-  public ResponseEntity deleteTrack(@PathVariable Long id) {
+  public ResponseEntity deleteTrack(@PathVariable("id") Long id) {
     trackService.deleteById(id);
     return ResponseEntity.ok().body(new TrackDeleteResponse(id));
   }

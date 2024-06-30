@@ -1,11 +1,9 @@
 package dev.nateschieber.groovesprings.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.rest.dtos.artist.ArtistEntityDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -16,11 +14,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "artists")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
 public class Artist {
 
   @Id
@@ -29,7 +28,7 @@ public class Artist {
 
   private String name;
 
-  @ManyToMany(mappedBy = "artists")
+  @ManyToMany(mappedBy = "artists", cascade = CascadeType.ALL)
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @JsonBackReference
   private Set<Track> tracks;
@@ -44,6 +43,11 @@ public class Artist {
   @JsonManagedReference
   @JsonIgnore
   private Set<Album> albums;
+
+  @ManyToMany(mappedBy="artists")
+  @JsonBackReference
+  @JsonIgnore
+  private Set<Playlist> playlists;
 
   public Artist() {};
 
@@ -86,6 +90,21 @@ public class Artist {
   }
 
   public void addAlbum(Album album) {
+    if (albums == null) {
+      this.albums = new HashSet<>();
+    }
     albums.add(album);
+  }
+
+  public void addPlaylist(Playlist playlist) {
+    playlists.add(playlist);
+  }
+
+  @Override
+  public String toString() {
+    return "Artist{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            '}';
   }
 }

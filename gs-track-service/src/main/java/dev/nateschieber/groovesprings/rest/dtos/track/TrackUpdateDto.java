@@ -17,8 +17,8 @@ public record TrackUpdateDto(
     String title,
     @NotNull @Min(1)
     int trackNumber,
-    @NotNull @Min(1l)
-    Long duration,
+    @NotNull @Min(0)
+    Integer duration,
     @NotNull
     AudioCodec audioCodec,
     List<Genre> genres,

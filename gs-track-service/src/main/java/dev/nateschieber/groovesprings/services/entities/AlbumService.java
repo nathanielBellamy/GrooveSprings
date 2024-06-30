@@ -5,6 +5,9 @@ import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.repositories.AlbumRepository;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
+
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AlbumService {
-  private AlbumRepository albumRepository;
-  private ArtistService artistService;
+  private final AlbumRepository albumRepository;
+  private final ArtistService artistService;
 
   @Autowired
   public AlbumService(
@@ -30,6 +33,18 @@ public class AlbumService {
 
   public Optional<Album> findById(Long id) {
     return this.albumRepository.findById(id);
+  }
+
+  public List<Album> findByTitle(String title) {
+    return albumRepository.findByTitle(title);
+  }
+
+  public List<Album> findByArtistIds(List<Long> artistIds) {
+    return this.albumRepository.findByArtistIds(artistIds);
+  }
+
+  public List<Album> findByPlaylistIds(List<Long> playlistIds) {
+    return this.albumRepository.findByPlaylistIds(playlistIds);
   }
 
   public void deleteById(Long id) {
@@ -60,5 +75,29 @@ public class AlbumService {
     }).collect(Collectors.toList());
     artistService.saveAll(updatedArtists);
     return savedAlbum;
+  }
+
+  public Album findMatchOrCreate(String albumTitle, List<Artist> artists, LocalDate releaseDate) {
+    // TODO:
+    //    List<Album> albumMatches = albumRepository.findMatches(
+    //            albumTitle,
+    //            artists.stream().map(Artist::getId).toList(),
+    //            releaseDate
+    //    );
+    List<Album> albumMatches = albumRepository.findByTitle(albumTitle);
+    if (albumMatches.isEmpty()) {
+      Album albumSaved = albumRepository.save(new Album(albumTitle, artists, null, Collections.emptyList()));
+      artists.forEach(artist -> {
+        artist.addAlbum(albumSaved);
+        artistService.save(artist);
+      });
+      return albumSaved;
+    } else {
+      return albumMatches.getFirst();
+    }
+  }
+
+  public void deleteAll() {
+    albumRepository.deleteAll();
   }
 }

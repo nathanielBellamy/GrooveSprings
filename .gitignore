@@ -31,3 +31,22 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Compiled Native Code ###
+*.o
+
+# linux
+*.so
+
+#macos
+*.dylib
+*.o~
+*.DS_Store
+
+*.log
+
+**/frontend-dist/**
+
+gs_music_library/**
+
+__GROOVE_SPRINGS__LAST_STATE__.json

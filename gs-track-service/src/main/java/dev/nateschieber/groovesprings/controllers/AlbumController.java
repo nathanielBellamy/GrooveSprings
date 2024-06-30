@@ -6,12 +6,10 @@ import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.helpers.HttpHelper;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
-import dev.nateschieber.groovesprings.rest.responses.album.AlbumDeleteResponse;
-import dev.nateschieber.groovesprings.rest.responses.album.AlbumEntityResponse;
-import dev.nateschieber.groovesprings.rest.responses.album.AlbumGetAllResponse;
-import dev.nateschieber.groovesprings.rest.responses.album.AlbumTracksResponse;
+import dev.nateschieber.groovesprings.rest.dtos.album.AlbumGetByArtistIdsDto;
+import dev.nateschieber.groovesprings.rest.dtos.album.AlbumGetByPlaylistIdsDto;
+import dev.nateschieber.groovesprings.rest.responses.album.*;
 import dev.nateschieber.groovesprings.services.entities.AlbumService;
-import jakarta.validation.constraints.Null;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -42,15 +40,27 @@ public class AlbumController {
   }
 
   @GetMapping
-  public ResponseEntity getAllAlbums() {
+  public ResponseEntity<AlbumGetAllResponse> getAllAlbums() {
     List<Album> albums = albumService.findAll();
     return ResponseEntity.ok().body(new AlbumGetAllResponse(albums));
   }
 
+  @PostMapping("/byArtistIds")
+  public ResponseEntity<AlbumByArtistIdsResponse> getAlbumsByArtistIds(@RequestBody AlbumGetByArtistIdsDto dto) {
+    List<Album> albums = albumService.findByArtistIds(dto.artistIds());
+    return ResponseEntity.ok().body(new AlbumByArtistIdsResponse(dto.artistIds(), albums));
+  }
+
+  @PostMapping("/byPlaylistIds")
+  public ResponseEntity<AlbumByPlaylistIdsResponse> getAlbumsByPlaylistIds(@RequestBody AlbumGetByPlaylistIdsDto dto) {
+    List<Album> albums = albumService.findByPlaylistIds(dto.playlistIds());
+    return ResponseEntity.ok().body(new AlbumByPlaylistIdsResponse(albums, dto.playlistIds()));
+  }
+
   @GetMapping(value = "/{id}")
-  public ResponseEntity getAlbumById(@PathVariable Long id) {
+  public ResponseEntity<AlbumEntityResponse> getAlbumById(@PathVariable("id") Long id) {
     Optional<Album> album = albumService.findById(id);
-    if (!album.isPresent()) {
+    if (album.isEmpty()) {
       return ResponseEntity.notFound().build();
     } else {
       ResponseEntity<AlbumEntityResponse> resEnt = new ResponseEntity<>(
@@ -61,9 +71,9 @@ public class AlbumController {
   }
 
   @GetMapping(value = "/{id}/tracks")
-  public ResponseEntity getAlbumTracksByAlbumId(@PathVariable Long id, @RequestParam(required = false) AudioCodec audioCodec) {
+  public ResponseEntity<AlbumTracksResponse> getAlbumTracksByAlbumId(@PathVariable("id") Long id, @RequestParam(required = false) AudioCodec audioCodec) {
     Optional<Album> album = albumService.findById(id);
-    if (!album.isPresent()) {
+    if (album.isEmpty()) {
       return ResponseEntity.notFound().build();
     } else {
       List<Track> tracks;
@@ -83,7 +93,7 @@ public class AlbumController {
   }
 
   @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity createAlbum(@RequestBody AlbumCreateDto dto) {
+  public ResponseEntity<AlbumEntityResponse> createAlbum(@RequestBody AlbumCreateDto dto) {
     Album albumSaved = albumService.createFromDto(dto);
 
     URI uri = HttpHelper.uri("/albums/" + albumSaved.getId());
@@ -91,9 +101,9 @@ public class AlbumController {
   }
 
   @PutMapping(value = "/{id}")
-  public ResponseEntity updateAlbum(@PathVariable Long id, @RequestBody AlbumEntityDto dto) {
+  public ResponseEntity<AlbumEntityResponse> updateAlbum(@PathVariable("id") Long id, @RequestBody AlbumEntityDto dto) {
     Optional<Album> loadedAlbum = albumService.findById(id);
-    if (!loadedAlbum.isPresent()){
+    if (loadedAlbum.isEmpty()){
       return ResponseEntity.notFound().build();
     } else {
       Album updatedAlbum = albumService.update(id, dto);
@@ -102,7 +112,7 @@ public class AlbumController {
   }
 
   @DeleteMapping(value = "/{id}")
-  public ResponseEntity deleteAlbum(@PathVariable Long id) {
+  public ResponseEntity<AlbumDeleteResponse> deleteAlbum(@PathVariable("id") Long id) {
     albumService.deleteById(id);
     return ResponseEntity.ok().body(new AlbumDeleteResponse(id));
   }

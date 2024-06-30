@@ -2,20 +2,13 @@ package dev.nateschieber.groovesprings.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dev.nateschieber.groovesprings.rest.dtos.album.AlbumEntityDto;
 import dev.nateschieber.groovesprings.enums.Genre;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,37 +19,41 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "albums")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
 public class Album {
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
-  private String name;
+  private String title;
   private LocalDate releaseDate;
 
   @ElementCollection
   @Enumerated(EnumType.STRING)
   private List<Genre> genres;
 
-  @OneToMany(mappedBy = "album")
+  @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @JsonBackReference
   Set<Track> tracks;
 
-  @ManyToMany(mappedBy = "albums")
+  @ManyToMany(mappedBy = "albums", fetch = FetchType.EAGER)
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @JsonBackReference
   Set<Artist> artists;
 
+  @ManyToMany(mappedBy="albums")
+  @JsonBackReference
+  @JsonIgnore
+  private Set<Playlist> playlists;
+
   public Album() {};
 
   public Album(
-      String name,
+      String title,
       List<Artist> artists,
       LocalDate releaseDate,
       List<Genre> genres) {
-    this.name = name;
+    this.title = title;
     this.setArtists(new HashSet<>(artists));
     this.genres = genres;
     this.releaseDate = releaseDate;
@@ -65,7 +62,7 @@ public class Album {
   public Album(Long id, AlbumEntityDto dto) {
     this.id = id;
     Album album = dto.album();
-    this.name = album.getName();
+    this.title = album.getTitle();
     this.artists = new HashSet<>(album.getArtists());
     this.genres = album.getGenres();
     this.releaseDate = album.getReleaseDate();
@@ -79,12 +76,12 @@ public class Album {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public String getTitle() {
+    return title;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public List<Track> getTracks() {
@@ -111,5 +108,20 @@ public class Album {
 
   public LocalDate getReleaseDate() {
     return releaseDate;
+  }
+
+  public void addPlaylist(Playlist playlsit) {
+    playlists.add(playlsit);
+  }
+
+  @Override
+  public String toString() {
+    return "Album{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", releaseDate=" + releaseDate +
+            ", genres=" + genres +
+            ", artists=" + artists +
+            '}';
   }
 }

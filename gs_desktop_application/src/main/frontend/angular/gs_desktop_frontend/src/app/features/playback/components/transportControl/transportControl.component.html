@@ -1,0 +1,51 @@
+
+<div class='transport_control'>
+  <fieldset class="transport_control_buttons">
+    <legend class="transport_control_buttons_legend">
+      Transport
+    </legend>
+    <button
+      class="transport_control_button"
+      (click)="playTrig()">
+      <fa-icon [icon]="faPlay"></fa-icon>
+    </button>
+    <button
+      class="transport_control_button"
+      (click)="pauseTrig()">
+      <fa-icon [icon]="faPause"></fa-icon>
+    </button>
+    <button
+      class="transport_control_button"
+      (click)="stopTrig()">
+      <fa-icon [icon]="faStop"></fa-icon>
+    </button>
+    <button class="transport_control_button">
+      <fa-icon [icon]="faBackward"></fa-icon>
+    </button>
+    <button class="transport_control_button">
+      <fa-icon [icon]="faForwardFast"></fa-icon>
+    </button>
+  </fieldset>
+  <fieldset class="transport_control_speed_fieldset">
+    <legend class="transport_control_speed_legend">
+      Speed
+    </legend>
+    <datalist id="gs_playback_speed_options">
+      @for (speedOpt of gsPlaybackSpeedOptions; track speedOpt; let i = $index) {
+        <option value="{{i}}"></option>
+      }
+    </datalist>
+    <div class="transport_control_playback_speed">
+      <input type="range"
+             #gs_playback_speed
+             id="gs_playback_speed"
+             class="gs_playback_speed_slider"
+             list="gs_playback_speed_options"
+             min="0"
+             max="{{gsPlaybackSpeedOptions.length - 1}}"
+             step="1"
+             value="4"
+             (input)="handlePlaybackSpeed(gs_playback_speed.value)"/>
+    </div>
+  </fieldset>
+</div>

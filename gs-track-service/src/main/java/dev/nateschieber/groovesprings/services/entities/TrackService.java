@@ -5,15 +5,17 @@ import dev.nateschieber.groovesprings.entities.Artist;
 import dev.nateschieber.groovesprings.entities.Track;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.repositories.TrackRepository;
+import dev.nateschieber.groovesprings.rest.GsDesktopTrackCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackCreateDto;
-import dev.nateschieber.groovesprings.rest.dtos.track.TrackDto;
-import dev.nateschieber.groovesprings.rest.dtos.track.TrackEntityDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static java.lang.Integer.parseInt;
 
 @Service
 public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackCreateDto> {
@@ -36,9 +38,25 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
     return this.trackRepository.findAll();
   }
 
+  public List<Track> findByArtistIds(List<Long> artistIds) {
+    return this.trackRepository.findByArtistIds(artistIds);
+  }
+
+  public List<Track> findByAlbumIds(List<Long> albumIds) {
+    return trackRepository.findByAlbumIds(albumIds);
+  }
+
+  public List<Track> findByPlaylistIds(List<Long> playlistIds) {
+    return trackRepository.findByPlaylistIds(playlistIds);
+  }
+
   @Override
   public Optional<Track> findById(Long id) {
     return this.trackRepository.findById(id);
+  }
+
+  public List<Track> findAllById(List<Long> ids) {
+    return this.trackRepository.findAllById(ids);
   }
 
   @Override
@@ -63,7 +81,7 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
       albumService.save(album);
     }
 
-      return this.trackRepository.save(updatedTrack);
+    return this.trackRepository.save(updatedTrack);
   }
 
   @Override
@@ -79,8 +97,64 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
         dto.duration(),
         dto.audioCodec(),
         dto.genres(),
-        dto.releaseDate());
+        dto.releaseDate(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0);
     return trackRepository.save(track);
+  }
+
+  public Track createFromGsDesktopTrackCreateDto(GsDesktopTrackCreateDto dto) {
+    List<Artist> artists = artistService.findOrCreateAllByName(dto.artistNames());
+    Integer releaseYear;
+    try {
+      releaseYear = parseInt(dto.releaseYear());
+    } catch (Exception e) {
+      releaseYear = Integer.valueOf(0);
+    }
+    LocalDate releaseDate = LocalDate.of(releaseYear, 1, 1);
+    Album album = albumService.findMatchOrCreate(dto.albumTitle(), artists, releaseDate);
+    Track track = new Track(
+            null,
+            artists,
+            album,
+            dto.trackTitle(),
+            dto.trackNumber(),
+            dto.trackLength(),
+            dto.audioCodec(),
+            Collections.emptyList(),
+            releaseDate,
+            dto.path().toString(),
+            dto.sampleRate(),
+            dto.bitRate(),
+            dto.isVariableBitRate(),
+            dto.isLossless(),
+            dto.sf_frames(),
+            dto.sf_samplerate(),
+            dto.sf_channels(),
+            dto.sf_format(),
+            dto.sf_sections(),
+            dto.sf_seekable()
+    );
+
+    List<Track> matchedTracks = trackRepository.findMatch(
+            track.getTitle(),
+            track.getAudioCodec(),
+            track.getTrackNumber(),
+            track.getDuration()
+    );
+
+    return matchedTracks.isEmpty()
+            ? trackRepository.save(track)
+            : matchedTracks.getFirst();
   }
 
   @Override
@@ -116,5 +190,11 @@ public class TrackService implements ITrackService<Track, TrackUpdateDto, TrackC
       max = Long.MAX_VALUE;
     }
     return trackRepository.findByDurationBetween(min, max);
+  }
+
+  // TODO: findMatch
+
+  public void deleteAll() {
+    trackRepository.deleteAll();
   }
 }
