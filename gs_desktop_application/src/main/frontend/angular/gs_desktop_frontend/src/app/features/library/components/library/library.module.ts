@@ -13,6 +13,7 @@ import {LibraryService} from "../../services/library.service";
 import {PlaylistModule} from "../../../playback/components/playlist/playlist.module";
 import {PlaylistsModule} from "../playlists/playlists.module";
 import {SettingsModule} from "../settings/settings.module";
+import {LengthPipe} from "../../../../pipes/length.pipe";
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import {SettingsModule} from "../settings/settings.module";
         NgForOf,
         NgIf,
         PlaylistModule,
+        LengthPipe,
     ],
   providers: [
     ArtistsService,

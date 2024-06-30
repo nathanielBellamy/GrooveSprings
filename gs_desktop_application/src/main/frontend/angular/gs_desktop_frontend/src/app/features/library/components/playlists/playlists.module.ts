@@ -2,6 +2,7 @@ import {PlaylistsComponent} from "./playlists.component";
 import {NgModule} from "@angular/core";
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {PlaylistsService} from "../../services/playlists.service";
+import {gsPipes} from "../../../../pipes/gsPipes.pipe";
 
 @NgModule({
   declarations: [PlaylistsComponent],
@@ -9,7 +10,8 @@ import {PlaylistsService} from "../../services/playlists.service";
   providers: [PlaylistsService],
   imports: [
     NgForOf,
-    AsyncPipe
+    AsyncPipe,
+    gsPipes
   ],
 })
 export class PlaylistsModule {}

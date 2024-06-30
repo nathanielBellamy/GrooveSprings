@@ -11,6 +11,7 @@
 <!--      </div>-->
       @for(album of albums$ | async; track album; let i = $index) {
         <div class="gs_album"
+             [class.curr_filter]="albumsFilter$ | async | containsById: album"
              (click)="handleAlbumClick(album)">
           <span class="gs_album_index">
             {{i + 1}}.

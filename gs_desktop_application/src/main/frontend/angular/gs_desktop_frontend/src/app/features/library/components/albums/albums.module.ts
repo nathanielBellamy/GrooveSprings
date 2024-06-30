@@ -2,6 +2,7 @@ import {AlbumsComponent} from "./albums.component";
 import {NgModule} from "@angular/core";
 import {AsyncPipe, NgForOf} from "@angular/common";
 import {AlbumsService} from "../../services/albums.service";
+import {gsPipes} from "../../../../pipes/gsPipes.pipe";
 
 @NgModule({
   declarations: [AlbumsComponent],
@@ -9,7 +10,8 @@ import {AlbumsService} from "../../services/albums.service";
   providers: [AlbumsService],
   imports: [
     NgForOf,
-    AsyncPipe
+    AsyncPipe,
+    gsPipes
   ],
 })
 export class AlbumsModule {}
