@@ -36,7 +36,10 @@
         </header>
         <body
           class="gs_library_list_body">
-          <div class="gs_library_filter">
+          <div
+            class="gs_library_filter"
+            [class.curr_filter]="playlistsFilter$ | async | length"
+          >
             <div class="gs_library_filter_list">
 <!--              <div class="gs_library_filter_val">-->
 <!--                EXAMPLE PLAYLIST NAME-->
@@ -69,7 +72,10 @@
         </header>
         <body
           class="gs_library_list_body">
-          <div class="gs_library_filter">
+          <div
+            class="gs_library_filter"
+            [class.curr_filter]="artistsFilter$ | async | length"
+          >
             <div class="gs_library_filter_list">
               @for(artist of artistsFilter$ | async; track artist;) {
                 <div class="gs_library_filter_val">
@@ -99,7 +105,10 @@
         </header>
         <body
           class="gs_library_list_body">
-          <div class="gs_library_filter">
+          <div
+            class="gs_library_filter"
+            [class.curr_filter]="albumsFilter$ | async | length"
+          >
             <div class="gs_library_filter_list">
               @for(album of albumsFilter$ | async; track album;) {
                 <div class="gs_library_filter_val">

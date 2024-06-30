@@ -15,10 +15,12 @@ import {Artist} from "../../../../models/artists/artist.model";
 export class ArtistsComponent {
   protected artistCount$: Observable<number>
   protected artists$: Observable<Artist[]>
+  protected artistsFilter$: Observable<Artist[]>
 
   constructor(private store$: Store<{library: LibraryState}>) {
     this.artistCount$ = store$.select(state => state.library.artistCount)
     this.artists$ = store$.select(state => state.library.artists)
+    this.artistsFilter$ = store$.select(state => state.library.filters.artists)
   }
 
   ngOnInit() {

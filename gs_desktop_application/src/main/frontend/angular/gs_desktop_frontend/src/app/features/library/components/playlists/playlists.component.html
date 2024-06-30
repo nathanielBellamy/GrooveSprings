@@ -7,6 +7,7 @@
 <!--      </div>-->
       @for(playlist of playlists$ | async; track playlist; let i = $index) {
         <div class="gs_playlist"
+             [class.curr_filter]="playlistsFilter$ | async | containsById: playlist"
              (click)="handlePlaylistClick(playlist)">
           <span class="gs_playlist_index">
             {{i + 1}}. &nbsp;

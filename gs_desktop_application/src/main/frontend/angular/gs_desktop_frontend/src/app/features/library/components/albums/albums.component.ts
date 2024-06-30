@@ -15,10 +15,12 @@ import {SetAlbumsFilter} from "../../store/library.actions";
 export class AlbumsComponent implements OnInit {
   protected albumCount$: Observable<number>
   protected albums$: Observable<Album[]>
+  protected albumsFilter$: Observable<Album[]>
 
   constructor(private store$: Store<{ library: LibraryState }>) {
     this.albumCount$ = store$.select(state => state.library.albumCount)
     this.albums$ = store$.select(state => state.library.albums)
+    this.albumsFilter$ = store$.select(state => state.library.filters.albums)
   }
 
   ngOnInit() {

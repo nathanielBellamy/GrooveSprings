@@ -15,9 +15,11 @@ import {PlaylistRepr} from "../../../../models/playlist/playlist_repr.model";
 @Injectable()
 export class PlaylistsComponent {
   protected playlists$: Observable<PlaylistRepr[]>
+  protected playlistsFilter$: Observable<PlaylistRepr[]>
 
   constructor(private store$: Store<{library: LibraryState}>) {
     this.playlists$ = store$.select(state => state.library.playlists)
+    this.playlistsFilter$ = store$.select(state => state.library.filters.playlists)
   }
 
   handlePlaylistClick(playlist: PlaylistRepr) {
