@@ -8,6 +8,7 @@ struct JNI_DATA{
     jmethodID getPlayStateInt;
     jmethodID setPlayStateInt;
     jmethodID getPlaybackSpeedFloat;
+    jmethodID setReadComplete;
     jclass jLong;
     jmethodID jLongInit;
     jclass jInteger;
@@ -20,6 +21,7 @@ struct JNI_DATA{
           , getPlayStateInt(env->GetStaticMethodID (gsPlayback, "getPlayStateInt", "()I"))
           , setPlayStateInt(env->GetStaticMethodID (gsPlayback, "setPlayStateInt", "(I)V"))
           , getPlaybackSpeedFloat(env->GetStaticMethodID (gsPlayback, "getPlaybackSpeedFloat", "()F"))
+          , setReadComplete(env->GetStaticMethodID (gsPlayback, "setReadComplete", "(Z)V"))
           , jLong(env->FindClass("java/lang/Long"))
           , jLongInit(env->GetMethodID(jLong, "<init>", "(J)V"))
           , jInteger(env->FindClass("java/lang/Integer"))
