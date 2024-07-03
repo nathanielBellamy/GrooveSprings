@@ -1,10 +1,8 @@
 package dev.nateschieber.groovesprings.entities
 
-case class Track(
-                id: Long,
-                path: String,
-                json: String
-                )
+case class Track(id: Long,
+                 path: String,
+                 json: String)
 
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import spray.json.{DefaultJsonProtocol, RootJsonFormat}
