@@ -4,7 +4,7 @@ import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.lastStateCacheFile
-import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport}
+import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState}
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
 import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand, PauseTrig, PlayTrig, SetPlaybackSpeed, StopTrig}
 
@@ -15,6 +15,9 @@ import spray.json.*
 
 import scala.annotation.static
 
+// protocol import needed to call .convertTo[AppState]
+import dev.nateschieber.groovesprings.entities.AppStateJsonProtocol._
+
 object GsAppStateManager {
 
   private var lastStateCacheFile: String = "__GROOVE_SPRINGS__LAST_STATE__.json"
@@ -22,16 +25,20 @@ object GsAppStateManager {
 
   val GsAppStateManagerServiceKey = ServiceKey[GsCommand]("gs_rest_controller")
 
-  @static def loadAppState(): AppState = {
+  @static private def loadAppState(): AppState = {
     val appStatePath = Path.of(lastStateCacheFile)
+    if (!Files.exists(appStatePath))
+      return EmptyAppState
     val appStateJson = Files.readString(appStatePath, StandardCharsets.UTF_8)
-    // TODO: get AppStateJsonSupport here
-    val appState: AppState = appStateJson.parseJson.convertTo[AppState]
-    appState
+    appStateJson.parseJson.convertTo[AppState]
   }
 
-  def cacheLastState(stateJson: String): Unit = {
-    Files.write(Paths.get(lastStateCacheFile), stateJson.getBytes(StandardCharsets.UTF_8))
+  @static private def cacheState(appState: AppState): Unit = {
+    Files.write(Paths.get(lastStateCacheFile), appState.toJson.compactPrint.getBytes(StandardCharsets.UTF_8))
+  }
+
+  private def printState(): Unit = {
+    println(appState.toJson.prettyPrint)
   }
 
   def apply(
