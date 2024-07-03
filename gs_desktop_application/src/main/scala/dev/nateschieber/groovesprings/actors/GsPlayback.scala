@@ -36,8 +36,11 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
-      case ReadFrameId(replyTo) =>
-        replyTo ! RespondFrameId(GsPlaybackThread.getCurrFrameId(), GsPlaybackThread.getPlayState(), context.self)
+      case ReadPlaybackThreadState(replyTo) =>
+        replyTo ! RespondPlaybackThreadState(GsPlaybackThread.getCurrFrameId(), 
+                                             GsPlaybackThread.getPlayState(),
+                                             GsPlaybackThread.getReadComplete(),
+                                             context.self)
         Behaviors.same
 
       case FileSelect(path, replyTo) =>

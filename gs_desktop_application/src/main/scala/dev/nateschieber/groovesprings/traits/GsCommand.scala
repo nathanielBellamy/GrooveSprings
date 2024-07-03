@@ -10,8 +10,8 @@ sealed trait GsCommand
 final case class InitDisplay() extends GsCommand
 
 // GsPlayback
-final case class ReadFrameId(replyTo: ActorRef[RespondFrameId]) extends GsCommand
-final case class RespondFrameId(value: Long, playState: GsPlayState, replyTo: ActorRef[ReadFrameId]) extends GsCommand
+final case class ReadPlaybackThreadState(replyTo: ActorRef[RespondPlaybackThreadState]) extends GsCommand
+final case class RespondPlaybackThreadState(frameId: Long, playState: GsPlayState, readComplete: Boolean, replyTo: ActorRef[ReadPlaybackThreadState]) extends GsCommand
 
 final case class FileSelect(path: String, replyTo: ActorRef[RespondFileSelect]) extends GsCommand
 final case class RespondFileSelect(replyTo: ActorRef[FileSelect]) extends GsCommand
@@ -24,7 +24,7 @@ final case class RespondStopPlaybackThread(replyTo: ActorRef[StopPlaybackThread]
 
 
 // GsPlayback
-final case class RespondPlayTrig(replyTo: ActorRef[PlayTrig | ReadFrameId]) extends GsCommand
+final case class RespondPlayTrig(replyTo: ActorRef[PlayTrig | ReadPlaybackThreadState]) extends GsCommand
 final case class RespondPauseTrig(replyTo: ActorRef[PauseTrig]) extends GsCommand
 final case class RespondStopTrig(replyTo: ActorRef[StopTrig]) extends GsCommand
 final case class RespondFastForwardTrig(replyTo: ActorRef[FastForwardTrig]) extends GsCommand

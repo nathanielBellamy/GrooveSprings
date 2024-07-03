@@ -17,7 +17,16 @@ object GsPlaybackThread {
   //  - these methods should appear only in GsPlayback
   //  - GsPlayback cannot send messages either to deliver or to mutate these values
   //    because this thread will be blocked by native playback loop
+
+  // |  var          |  env    |  access        |
+  // -------------------------------------------
+  // |  playState    |  jvm    |  read + write  |
+  // |  playState    |  native |  read + write  |
+  // |  readComplete |  jvm    |  read          |
+  // |  readComplete | native  |  read + write  |
+
   @static private var playState: GsPlayState = GsPlayState.STOP
+  @static private var readComplete: Boolean = false
   @static private var playbackSpeed: GsPlaybackSpeed = GsPlaybackSpeed._1
   @static private var currFrameId: java.lang.Long = 0
   @static private var filePath: java.lang.String = null
@@ -33,15 +42,32 @@ object GsPlaybackThread {
   }
 
   @static def play(): Unit = {
+    readComplete = false
     playState = GsPlayState.PLAY
+  }
+
+  @static def getPlayState(): GsPlayState = {
+    playState
   }
 
   @static def getPlayStateInt(): Int = {
     playState.id
   }
 
-  @static def getPlayState(): GsPlayState = {
-    playState
+  @static def setPlayState(newState: GsPlayState) = {
+    playState = newState
+  }
+
+  @static def setPlayStateInt(newState: Int) = {
+    playState = playStateFromInt(newState)
+  }
+
+  @static def getReadComplete(): Boolean = {
+    readComplete
+  }
+
+  @static def setReadComplete(newRC: Boolean): Unit = {
+    readComplete = newRC
   }
 
   @static def setPlaybackSpeed(speed: GsPlaybackSpeed) = {
@@ -54,14 +80,6 @@ object GsPlaybackThread {
 
   @static def getPlaybackSpeedFloat(): Float = {
     playbackSpeed.value
-  }
-
-  @static def setPlayState(newState: GsPlayState) = {
-    playState = newState
-  }
-
-  @static def setPlayStateInt(newState: Int) = {
-    playState = playStateFromInt(newState)
   }
 
   @static def getCurrFrameId(): java.lang.Long = {

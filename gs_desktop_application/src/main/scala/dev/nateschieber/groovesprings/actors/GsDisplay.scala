@@ -80,7 +80,7 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case RespondPlayTrig(replyTo) =>
-        replyTo ! ReadFrameId(context.self)
+        replyTo ! ReadPlaybackThreadState(context.self)
         Behaviors.same
 
       case RespondPauseTrig(replyTo) =>
@@ -89,15 +89,18 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
       case RespondStopTrig(replyTo) =>
         Behaviors.same
 
-      case RespondFrameId(lastFrameId, playState, replyTo) =>
+      case RespondPlaybackThreadState(lastFrameId, playState, readComplete, replyTo) =>
+        if (readComplete)
+          sendWebsocketMsg("-1")
+          return Behaviors.same
         sendWebsocketMsg(lastFrameId.toString)
         if (playState == GsPlayState.PLAY)
           Thread.sleep(100)
-          replyTo ! ReadFrameId(context.self)
+          replyTo ! ReadPlaybackThreadState(context.self)
         Behaviors.same
 
       case InitDisplay() =>
-        playbackRef ! ReadFrameId(context.self)
+        playbackRef ! ReadPlaybackThreadState(context.self)
         Behaviors.same
     }
   }
