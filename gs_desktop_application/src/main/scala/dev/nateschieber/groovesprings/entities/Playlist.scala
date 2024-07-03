@@ -1,15 +1,12 @@
 package dev.nateschieber.groovesprings.entities
 
-case class Playlist(
-                   id: Long,
-                   name: String,
-                   tracks: Array[Track]
-                   )
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import spray.json.{DefaultJsonProtocol, RootJsonFormat}
+case class Playlist(id: Long,
+                    name: String,
+                    tracks: List[Track])
 
-trait PlaylistJsonSupport extends SprayJsonSupport with DefaultJsonProtocol   {
-  implicit object playlistFormat extends RootJsonFormat[Playlist] {
-    // TODO
-  }
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import spray.json.{DefaultJsonProtocol, JsonFormat, RootJsonFormat}
+
+trait PlaylistJsonSupport extends SprayJsonSupport with DefaultJsonProtocol with TrackJsonSupport   {
+  implicit val playlistFormat: RootJsonFormat[Playlist] = jsonFormat3(Playlist.apply)
 }

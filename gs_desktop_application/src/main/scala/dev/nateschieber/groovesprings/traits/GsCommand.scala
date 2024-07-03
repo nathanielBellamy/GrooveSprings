@@ -1,6 +1,7 @@
 package dev.nateschieber.groovesprings.traits
 
 import akka.actor.typed.ActorRef
+import dev.nateschieber.groovesprings.entities.Track
 import dev.nateschieber.groovesprings.enums.{GsPlayState, GsPlaybackSpeed}
 
 sealed trait GsCommand
@@ -13,7 +14,7 @@ final case class InitDisplay() extends GsCommand
 final case class ReadPlaybackThreadState(replyTo: ActorRef[RespondPlaybackThreadState]) extends GsCommand
 final case class RespondPlaybackThreadState(frameId: Long, playState: GsPlayState, readComplete: Boolean, replyTo: ActorRef[ReadPlaybackThreadState]) extends GsCommand
 
-final case class FileSelect(path: String, replyTo: ActorRef[RespondFileSelect]) extends GsCommand
+final case class FileSelect(track: Track, replyTo: ActorRef[RespondFileSelect]) extends GsCommand
 final case class RespondFileSelect(replyTo: ActorRef[FileSelect]) extends GsCommand
 
 // GsPlaybackThread
@@ -38,4 +39,8 @@ final case class StopTrig(replyTo: ActorRef[RespondStopTrig]) extends GsCommand
 final case class FastForwardTrig(replyTo: ActorRef[RespondFastForwardTrig]) extends GsCommand
 final case class RewindTrig(replyTo: ActorRef[RespondRewindTrig]) extends GsCommand
 final case class SetPlaybackSpeed(speed: GsPlaybackSpeed, replyTo: ActorRef[RespondSetPlaybackSpeed]) extends GsCommand
+
+// GsRestController
+
+// GsAppStateManager
 

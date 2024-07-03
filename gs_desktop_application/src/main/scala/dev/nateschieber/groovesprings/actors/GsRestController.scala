@@ -8,7 +8,8 @@ import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.server.Directives.{path, *}
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.GsMusicLibraryScanner
-import dev.nateschieber.groovesprings.actors.GsRestController.lastStateCacheFile
+import dev.nateschieber.groovesprings.actors.GsRestController.appStateCacheFile
+import dev.nateschieber.groovesprings.entities.{Track, TrackJsonSupport}
 import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
@@ -20,18 +21,19 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object GsRestController {
 
-  private var lastStateCacheFile: String = "__GROOVE_SPRINGS__LAST_STATE__.json"
+  private var appStateCacheFile: String = "__GROOVE_SPRINGS__LAST_STATE__.json"
 
   val GsRestControllerServiceKey = ServiceKey[GsCommand]("gs_rest_controller")
 
   def apply(
+             gsAppStateManagerRef: ActorRef[GsCommand],
              gsPlaybackRef: ActorRef[GsCommand],
              gsDisplayRef: ActorRef[GsCommand]
            ): Behavior[GsCommand] = Behaviors.setup {
     context =>
       given system: ActorSystem[Nothing] = context.system
 
-      val gsRestController = new GsRestController(context, gsPlaybackRef, gsDisplayRef)
+      val gsRestController = new GsRestController(context, gsAppStateManagerRef, gsPlaybackRef, gsDisplayRef)
 
       lazy val server = Http()
         .newServerAt("localhost", GsHttpPort.GsRestController.port)
@@ -49,10 +51,11 @@ object GsRestController {
 
 class GsRestController(
                         context: ActorContext[GsCommand],
+                        gsAppStateManagerRef: ActorRef[GsCommand],
                         gsPlaybackRef: ActorRef[GsCommand],
                         gsDisplayRef: ActorRef[GsCommand])
   extends AbstractBehavior[GsCommand](context)
-    with FileSelectJsonSupport with PlaybackSpeedJsonSupport with CacheStateJsonSupport {
+    with TrackJsonSupport with PlaybackSpeedJsonSupport with CacheStateJsonSupport {
 
   def routes(): Route = {
     concat(
@@ -78,13 +81,16 @@ class GsRestController(
       },
       path("api" / "v1" / "lastState"){
         get {
-          complete(loadLastStateJson())
+          // TODO:
+          //   - client initial state hydration
+          //   - Client -http-> GsRestController -> GsAppStateManager -> GsDisplay -ws-> Client
+          complete("loading")
         }
       },
       path("api" / "v1" / "cacheState") {
         put {
           entity(as[CacheStateDto]) { dto => {
-            cacheLastState(dto.stateJson)
+//            cacheLastState(dto.stateJson)
             complete("cached")
           }}
         }
@@ -120,11 +126,9 @@ class GsRestController(
       },
       path("api" / "v1" / "file-select") {
         put { // update GsPlaybackThread.filePath
-          entity(as[FileSelectDto]) { dto => {
-            val msg = s"path: ${dto.path}"
-            cacheLastState(dto.stateJson)
-            gsPlaybackRef ! FileSelect(dto.path, context.self)
-            complete(msg)
+          entity(as[Track]) { track => {
+            gsAppStateManagerRef ! FileSelect(track, context.self)
+            complete("file-select")
           }}
         }
       },
@@ -162,17 +166,6 @@ class GsRestController(
       case  2.0    => GsPlaybackSpeed._2
       case default => GsPlaybackSpeed._1 // case 1
     }
-  }
-
-  def cacheLastState(stateJson: String): Unit = {
-    Files.write(Paths.get(lastStateCacheFile), stateJson.getBytes(StandardCharsets.UTF_8))
-  }
-
-  def loadLastStateJson(): String = {
-    val trackJsonPath = Path.of(lastStateCacheFile)
-    if (!Files.exists(trackJsonPath))
-      return "{}"
-    Files.readString(trackJsonPath, StandardCharsets.UTF_8)
   }
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {

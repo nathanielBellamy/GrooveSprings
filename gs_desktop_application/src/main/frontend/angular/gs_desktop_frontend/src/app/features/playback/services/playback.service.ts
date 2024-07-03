@@ -8,6 +8,7 @@ import {PlaybackActionTypes} from "../store/playback.actiontypes";
 import {PlaybackState} from "../store/playback.state";
 import {Store} from "@ngrx/store";
 import {PlaylistRepr} from "../../../models/playlist/playlist_repr.model";
+import {playbackStateSrvrFromPlaybackState} from "../../../models/srvr/playbackState.srvr.model";
 
 @Injectable()
 export class PlaybackService {
@@ -22,7 +23,7 @@ export class PlaybackService {
   }
 
   cacheState(): Observable<any> {
-    return this.http.put("api/v1/cacheState", {stateJson: JSON.stringify(this.state)}, {responseType: 'text'})
+    return this.http.put("api/v1/cacheState", playbackStateSrvrFromPlaybackState(this.state as PlaybackState), {responseType: 'text'})
   }
 
   fetchPlaylistTracks(playlist: PlaylistRepr): Observable<any> {
