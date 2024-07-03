@@ -24,6 +24,8 @@ class Audio
 
         static void jSetPlayState(JNI_DATA* jniData, int newPlayState);
 
+        static void jSetReadComplete(JNI_DATA* jniData);
+
         static int callback(const void *inputBuffer, void *outputBuffer,
                             unsigned long framesPerBuffer,
                             const PaStreamCallbackTimeInfo* timeInfo,

@@ -230,6 +230,7 @@ int Audio::run()
 
     if (audioData.readComplete) {
         Audio::jSetPlayState(&jniData, 0); // stop
+        break;
     }
 
     audioData.playbackSpeed = jniData.env->CallStaticFloatMethod(
@@ -256,6 +257,7 @@ int Audio::run()
   } else {
       Audio::jSetPlayState(&jniData, audioData.playState);
   }
+  Audio::jSetReadComplete(&jniData);
 
   err = Pa_StopStream( stream );
   if( err != paNoError ) goto error;
@@ -265,6 +267,7 @@ int Audio::run()
   Pa_Terminate();
   Audio::freeAudioData(&audioData);
   return 0;
+
 
   error:
     Pa_Terminate();
@@ -296,15 +299,19 @@ void Audio::jSetPlayState(
     JNI_DATA* jniData,
     int newPlayState
 ){
-   jobject jNewPlayState = jniData->env->NewObject(
-        jniData->jInteger,
-        jniData->jIntegerInit,
-        newPlayState
-   );
    jniData->env->CallVoidMethod(
         jniData->gsPlayback,
         jniData->setPlayStateInt,
-//        jNewPlayState
         newPlayState
+   );
+}
+
+void Audio::jSetReadComplete(
+    JNI_DATA* jniData
+){
+   jniData->env->CallVoidMethod(
+        jniData->gsPlayback,
+        jniData->setReadComplete,
+        true
    );
 }
