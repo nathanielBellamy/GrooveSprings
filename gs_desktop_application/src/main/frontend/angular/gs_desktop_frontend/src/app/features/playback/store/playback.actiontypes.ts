@@ -24,4 +24,6 @@ export enum PlaybackActionTypes {
   PauseTrig = "[Playback] Pause Trig",
   StopTrig = "[Playback] Stop Trig",
   PlaybackSpeedTrig = "[Playback] Playback Speed Trig",
+
+  NextTrack = "[Playback] Next Track",
 }

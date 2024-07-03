@@ -167,3 +167,15 @@ export class SetPlaybackState implements Action, GsPlaybackAction {
 export class CachePlaybackState implements Action {
   readonly type = PlaybackActionTypes.CachePlaybackState
 }
+
+export class NextTrack implements Action {
+  readonly type = PlaybackActionTypes.NextTrack
+
+  public handle(state: PlaybackState): PlaybackState {
+    const newPlaylistCurrTrackIndex: number = (state.currPlaylistTrackIdx + 1) % (state.playlist.tracks.length)
+    return {
+      ...state,
+      currPlaylistTrackIdx: newPlaylistCurrTrackIndex,
+    }
+  }
+}

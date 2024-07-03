@@ -3,7 +3,7 @@ import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {LibraryActionTypes} from "../../library/store/library.actiontypes";
 import {catchError, map, switchMap, of} from "rxjs";
 import {
-  ClearPlaylist, FetchLastState, FetchLastStateFailure, PauseTrig, PlaybackSpeedTrig, PlayTrig,
+  ClearPlaylist, FetchLastState, FetchLastStateFailure, NextTrack, PauseTrig, PlaybackSpeedTrig, PlayTrig,
   SetCurrFileFailure,
   SetCurrFileSuccess,
   SetCurrPlaylistTrackIdx,
@@ -14,14 +14,19 @@ import {PlaybackService} from "../services/playback.service";
 import {Track} from "../../../models/tracks/track.model";
 import {Identity} from "../../library/store/library.actions";
 import {PlaybackState} from "./playback.state";
+import {Store} from "@ngrx/store";
 
 @Injectable()
 export class PlaybackEffects {
+  private state: PlaybackState | Object = {}
 
   constructor(
     private actions$: Actions,
-    private playbackService: PlaybackService
-  ) { }
+    private playbackService: PlaybackService,
+    private store$: Store<{playback: PlaybackState}>
+  ) {
+    store$.subscribe((state) => this.state = {...state.playback})
+  }
 
   getPlaylistTracks$ = createEffect(() =>
     this.actions$.pipe(
@@ -121,6 +126,18 @@ export class PlaybackEffects {
           catchError((e, _) => of(new Identity()))
         )
       )
+    )
+  )
+
+  playNextTrack$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType<NextTrack>(
+        PlaybackActionTypes.NextTrack
+      ),
+      map(() => {
+        const state = this.state as PlaybackState
+        return new SetCurrTrack(state.playlist.tracks[state.currPlaylistTrackIdx], false)
+      })
     )
   )
 }
