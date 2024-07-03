@@ -4,6 +4,8 @@ case class Track(id: Long,
                  path: String,
                  json: String)
 
+val EmptyTrack = Track(0, "", "{}")
+
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 
