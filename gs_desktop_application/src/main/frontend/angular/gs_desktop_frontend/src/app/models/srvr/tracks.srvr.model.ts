@@ -16,9 +16,7 @@ export function trackSrvrFromTrack(track: Track): TrackSrvr {
 
 export function trackFromTrackSrvr(ts: TrackSrvr): Track {
   try {
-    const parsedTrack = JSON.parse(ts.json) as Track
-    console.dir({parsedTrack})
-    return parsedTrack
+    return JSON.parse(ts.json) as Track
   } catch(e) {
     console.error(e)
     return defaultTrack

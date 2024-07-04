@@ -53,12 +53,8 @@ export class PlaybackDisplayComponent {
       next: (msg: unknown) => {
         const msgNum: number = typeof msg === 'number' ? msg : 0
         if (typeof msg !== 'number') { // then it is state update
-          console.dir({msg})
           try {
-            const parsedStateSrvr = msg as PlaybackStateSrvr
-            console.dir({parsedStateSrvr})
-            const newAppState: PlaybackState = playbackStateFromPlaybackStateSrvr(parsedStateSrvr)
-            console.dir({newAppState})
+            const newAppState: PlaybackState = playbackStateFromPlaybackStateSrvr(msg as PlaybackStateSrvr)
             this.store$.dispatch(new HydrateAppState(newAppState))
           } catch(e) {
             console.error(e)
