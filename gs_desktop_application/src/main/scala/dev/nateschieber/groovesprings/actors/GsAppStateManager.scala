@@ -7,9 +7,9 @@ import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import akka.stream.impl
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.appState
-import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState}
+import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState, Track}
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand, PauseTrig, PlayTrig, SetPlaybackSpeed, StopTrig}
+import dev.nateschieber.groovesprings.traits.{GsCommand, PauseTrig, PlayTrig, RespondTrackSelect, SetPlaybackSpeed, StopTrig, TrackSelect}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -24,7 +24,7 @@ import dev.nateschieber.groovesprings.entities.AppStateJsonProtocol._
 object GsAppStateManager {
 
   private val stateCacheFile: String = "__GROOVE_SPRINGS__STATE_CACHE__.json"
-  private val appState: AppState = GsAppStateManager.loadAppState()
+  private var appState: AppState = GsAppStateManager.loadAppState()
 
   val GsAppStateManagerServiceKey = ServiceKey[GsCommand]("gs_rest_controller")
 
@@ -65,9 +65,16 @@ class GsAppStateManager(
     println(appState.toJson.prettyPrint)
   }
 
+  def setCurrTrack(appState: AppState, track: Track): AppState = {
+    AppState(track, appState.currPlaylistTrackIdx, appState.playlist)
+  }
+
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
-      case FileSelect(track, replyTo) =>
+      case TrackSelect(track, replyTo) =>
+        println("==GsAppStateManager::TrackSelect:: " + track.toJson.prettyPrint)
+        appState = setCurrTrack(appState, track)
+        replyTo ! RespondTrackSelect(context.self)
         Behaviors.same
 
       case default =>

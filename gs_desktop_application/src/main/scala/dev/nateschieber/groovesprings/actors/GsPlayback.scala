@@ -43,11 +43,11 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
                                              context.self)
         Behaviors.same
 
-      case FileSelect(track, replyTo) =>
+      case TrackSelect(track, replyTo) =>
         GsPlaybackThread.stop()
         clearPlaybackThread()
         GsPlaybackThread.setFileName(track.path)
-        replyTo ! RespondFileSelect(context.self)
+        replyTo ! RespondTrackSelect(context.self)
         Behaviors.same
 
       case PlayTrig(replyTo) =>
