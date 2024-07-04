@@ -9,7 +9,7 @@ import akka.stream.impl
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.appState
 import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState, Track}
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{GsCommand, PauseTrig, PlayTrig, RespondTrackSelect, SetPlaybackSpeed, StopTrig, TrackSelect}
+import dev.nateschieber.groovesprings.traits.{GsCommand, InitialTrackSelect, PauseTrig, PlayTrig, RespondTrackSelect, SetPlaybackSpeed, StopTrig, TrackSelect}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -49,6 +49,9 @@ object GsAppStateManager {
 
       val manager = new GsAppStateManager(context, gsPlaybackRef, gsDisplayRef)
       println("==GS Startup State::")
+      gsPlaybackRef ! InitialTrackSelect(manager.getAppState().currTrack)
+      // TODO:
+      //   gsDisplayRef ! UpdateDisplay(manager.getAppState())
       manager.printState()
       manager
   }
@@ -65,6 +68,14 @@ class GsAppStateManager(
     println(appState.toJson.prettyPrint)
   }
 
+  private def getAppState(): AppState = {
+    AppState(appState.currTrack, appState.currPlaylistTrackIdx, appState.playlist)
+  }
+  
+  private def setAppState(newState: AppState): Unit = {
+    appState = AppState(newState.currTrack, newState.currPlaylistTrackIdx, newState.playlist)
+  }
+
   def setCurrTrack(appState: AppState, track: Track): AppState = {
     AppState(track, appState.currPlaylistTrackIdx, appState.playlist)
   }
@@ -74,7 +85,15 @@ class GsAppStateManager(
       case TrackSelect(track, replyTo) =>
         println("==GsAppStateManager::TrackSelect:: " + track.toJson.prettyPrint)
         appState = setCurrTrack(appState, track)
+
+        // TODO: un-overload TrackSelect
+        gsPlaybackRef ! TrackSelect(track, context.self)
         replyTo ! RespondTrackSelect(context.self)
+        Behaviors.same
+
+      case RespondTrackSelect(_) =>
+        // auto play on TrackSelect
+        gsPlaybackRef ! PlayTrig(context.self)
         Behaviors.same
 
       case default =>

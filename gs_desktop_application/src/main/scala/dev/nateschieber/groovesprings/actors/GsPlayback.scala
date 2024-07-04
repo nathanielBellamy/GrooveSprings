@@ -50,6 +50,12 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         replyTo ! RespondTrackSelect(context.self)
         Behaviors.same
 
+      case InitialTrackSelect(track) =>
+        GsPlaybackThread.stop()
+        clearPlaybackThread()
+        GsPlaybackThread.setFileName(track.path)
+        Behaviors.same
+
       case PlayTrig(replyTo) =>
         val playState = GsPlaybackThread.getPlayState()
         if (playState == GsPlayState.PLAY)

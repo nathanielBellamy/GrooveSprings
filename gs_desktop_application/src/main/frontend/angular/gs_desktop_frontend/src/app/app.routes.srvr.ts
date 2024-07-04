@@ -1,7 +1,7 @@
 
 // TODO: load from env
 const apiVersionPrefix = "api/v1"
-const transportPrefix = "api/transport"
+const transportPrefix = apiVersionPrefix + "/transport"
 
 export class AppRoutesSrvr {
   static trackSelect() {

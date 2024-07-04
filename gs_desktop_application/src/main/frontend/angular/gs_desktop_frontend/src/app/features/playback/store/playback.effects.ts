@@ -73,16 +73,6 @@ export class PlaybackEffects {
     )
   )
 
-  playOnSetCurrTrack$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<SetCurrFileSuccess>(PlaybackActionTypes.SetCurrFileSuccess),
-      map((action) => {
-        if (action.initialLoad) return new Identity()
-        return new PlayTrig()
-      })
-    )
-  )
-
   setCurrFileOnPlaylistIndexUpdate$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SetCurrPlaylistTrackIdx>(PlaybackActionTypes.SetCurrPlaylistTrackIdx),
