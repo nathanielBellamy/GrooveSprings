@@ -14,8 +14,11 @@ final case class InitDisplay() extends GsCommand
 final case class ReadPlaybackThreadState(replyTo: ActorRef[RespondPlaybackThreadState]) extends GsCommand
 final case class RespondPlaybackThreadState(frameId: Long, playState: GsPlayState, readComplete: Boolean, replyTo: ActorRef[ReadPlaybackThreadState]) extends GsCommand
 
-final case class TrackSelect(track: Track, replyTo: ActorRef[RespondTrackSelect]) extends GsCommand
+
+final case class TrackSelect(track: Track, replyTo: ActorRef[RespondTrackSelect]) extends GsCommand // auto-play
 final case class RespondTrackSelect(replyTo: ActorRef[TrackSelect]) extends GsCommand
+
+final case class InitialTrackSelect(track: Track) extends GsCommand // no auto-play
 
 // GsPlaybackThread
 final case class InitPlaybackThread(replyTo: ActorRef[RespondInitPlaybackThread]) extends GsCommand
