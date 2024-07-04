@@ -44,6 +44,9 @@ final case class RewindTrig(replyTo: ActorRef[RespondRewindTrig]) extends GsComm
 final case class SetPlaybackSpeed(speed: GsPlaybackSpeed, replyTo: ActorRef[RespondSetPlaybackSpeed]) extends GsCommand
 
 // GsRestController
+final case class HydrateStateToDisplay() extends GsCommand
 
 // GsAppStateManager
+final case class HydrateState(appStateJson: String, replyTo: ActorRef[RespondHydrateState]) extends GsCommand
+final case class RespondHydrateState(replyTo: ActorRef[HydrateState]) extends GsCommand
 

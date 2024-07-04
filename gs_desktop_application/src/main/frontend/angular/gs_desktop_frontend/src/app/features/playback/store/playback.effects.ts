@@ -3,7 +3,7 @@ import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {LibraryActionTypes} from "../../library/store/library.actiontypes";
 import {catchError, map, switchMap, of} from "rxjs";
 import {
-  ClearPlaylist, FetchLastState, FetchLastStateFailure, NextTrack, PauseTrig, PlaybackSpeedTrig, PlayTrig,
+  ClearPlaylist, FetchAppState, FetchLastStateFailure, NextTrack, PauseTrig, PlaybackSpeedTrig, PlayTrig,
   SetCurrFileFailure,
   SetCurrFileSuccess,
   SetCurrPlaylistTrackIdx,
@@ -46,8 +46,8 @@ export class PlaybackEffects {
 
   fetchLastState$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(PlaybackActionTypes.FetchLastState),
-      switchMap(() => this.playbackService.fetchLastState()
+      ofType(PlaybackActionTypes.FetchAppState),
+      switchMap(() => this.playbackService.fetchAppState()
         .pipe(
           map((res: any) => {
             let parsedState: PlaybackState = JSON.parse(res)

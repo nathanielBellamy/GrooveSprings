@@ -23,4 +23,8 @@ export class AppRoutesSrvr {
   static playbackSpeed() {
     return transportPrefix + "/playbackSpeed"
   }
+
+  static appState() {
+    return apiVersionPrefix + "/appState"
+  }
 }
