@@ -179,3 +179,13 @@ export class NextTrack implements Action {
     }
   }
 }
+
+export class HydrateAppState implements Action, GsPlaybackAction {
+  readonly type = PlaybackActionTypes.HydrateAppState
+
+  constructor(public payload: PlaybackState) { }
+
+  public handle(_: PlaybackState): PlaybackState {
+    return {...this.payload}
+  }
+}

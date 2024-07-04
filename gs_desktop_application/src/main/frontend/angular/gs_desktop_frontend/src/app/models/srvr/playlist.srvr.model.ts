@@ -1,4 +1,4 @@
-import {TrackSrvr, trackSrvrFromTrack} from "./tracks.srvr.model";
+import {trackFromTrackSrvr, TrackSrvr, trackSrvrFromTrack} from "./tracks.srvr.model";
 import {Playlist} from "../playlist/playlist.model";
 
 export interface PlaylistSrvr {
@@ -12,5 +12,13 @@ export function playlistSrvrFromPlaylist(pl: Playlist): PlaylistSrvr {
     id: pl.id,
     name: pl.name,
     tracks: pl.tracks.map(trackSrvrFromTrack)
+  }
+}
+
+export function playlistFromPlaylistSrvr(pls: PlaylistSrvr): Playlist {
+  return {
+    id: pls.id,
+    name: pls.name,
+    tracks: pls.tracks.map(trackFromTrackSrvr)
   }
 }

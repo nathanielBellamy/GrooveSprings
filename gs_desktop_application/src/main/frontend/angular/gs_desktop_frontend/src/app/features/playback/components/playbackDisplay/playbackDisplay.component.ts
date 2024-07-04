@@ -7,7 +7,8 @@ import {defaultTrack, Track} from "../../../../models/tracks/track.model";
 import {Observable} from "rxjs";
 import { webSocket } from "rxjs/webSocket";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
-import {NextTrack} from "../../store/playback.actions";
+import {HydrateAppState, NextTrack} from "../../store/playback.actions";
+import {playbackStateFromPlaybackStateSrvr, PlaybackStateSrvr} from "../../../../models/srvr/playbackState.srvr.model";
 
 @Component({
   selector: 'gsPlaybackDisplay',
@@ -51,16 +52,24 @@ export class PlaybackDisplayComponent {
     subject.subscribe({
       next: (msg: unknown) => {
         const msgNum: number = typeof msg === 'number' ? msg : 0
-        // TODO:
-        //   - inject Store
-        //   - hydrate PlaybackState from websocket json
-        if (typeof msg !== 'number') console.dir({msg})
+        if (typeof msg !== 'number') { // then it is state update
+          console.dir({msg})
+          try {
+            const parsedStateSrvr = msg as PlaybackStateSrvr
+            console.dir({parsedStateSrvr})
+            const newAppState: PlaybackState = playbackStateFromPlaybackStateSrvr(parsedStateSrvr)
+            console.dir({newAppState})
+            this.store$.dispatch(new HydrateAppState(newAppState))
+          } catch(e) {
+            console.error(e)
+          }
+        }
         if (msgNum !== -1) {
           this.setCurrPercent(msgNum)
           return
         } else {
           this.setCurrPercent(0)
-          this.store$.dispatch(new NextTrack())
+          // this.store$.dispatch(new NextTrack())
         }
       },
       error: (e: any) => console.error({playbackDisplaySocketError: e}),
