@@ -3,7 +3,7 @@ import {Action} from "@ngrx/store";
 import {PlaybackActionTypes} from "./playback.actiontypes";
 import {
   AddTrackToPlaylist,
-  ClearPlaylist, NextTrack,
+  ClearPlaylist, HydrateAppState, NextTrack,
   SetCurrPlaylistTrackIdx,
   SetCurrTrack, SetPlaybackState,
   SetPlaylistAsCurr, SetPlaylistAsCurrSuccess
@@ -45,6 +45,10 @@ export function playbackReducer(state = initialPlaybackState, action: Action): P
 
     case PlaybackActionTypes.NextTrack:
       actionT = action as NextTrack
+      return actionT.handle(state)
+
+    case PlaybackActionTypes.HydrateAppState:
+      actionT = action as HydrateAppState
       return actionT.handle(state)
 
     default:
