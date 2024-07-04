@@ -49,4 +49,4 @@ build/
 
 gs_music_library/**
 
-__GROOVE_SPRINGS__LAST_STATE__.json
+__GROOVE_SPRINGS__STATE_CACHE__.json
