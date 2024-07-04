@@ -2,13 +2,14 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Track} from "../../../models/tracks/track.model";
-import {Playlist} from "../../../models/playlist/playlist.model";
 import {PauseTrig, PlaybackSpeedTrig, PlayTrig, StopTrig} from "../store/playback.actions";
 import {PlaybackActionTypes} from "../store/playback.actiontypes";
 import {PlaybackState} from "../store/playback.state";
 import {Store} from "@ngrx/store";
 import {PlaylistRepr} from "../../../models/playlist/playlist_repr.model";
 import {playbackStateSrvrFromPlaybackState} from "../../../models/srvr/playbackState.srvr.model";
+import {trackSrvrFromTrack} from "../../../models/srvr/tracks.srvr.model";
+import {AppRoutesSrvr} from "../../../app.routes.srvr";
 
 @Injectable()
 export class PlaybackService {
@@ -19,7 +20,7 @@ export class PlaybackService {
 
   setCurrFile(track: Track): Observable<any> {
     const { path } = track
-    return this.http.put("api/v1/file-select", { path, stateJson: JSON.stringify(this.state)}, {responseType: 'text'})
+    return this.http.put(AppRoutesSrvr.trackSelect(), trackSrvrFromTrack(track), {responseType: 'text'})
   }
 
   cacheState(): Observable<any> {
@@ -37,14 +38,14 @@ export class PlaybackService {
   transportControlTrig(action: PlayTrig | PauseTrig | StopTrig | PlaybackSpeedTrig): Observable<any> {
     switch (action.type) {
       case PlaybackActionTypes.PlayTrig:
-        return this.http.get('api/v1/transport/play', {responseType: 'text'})
+        return this.http.get(AppRoutesSrvr.play(), {responseType: 'text'})
       case PlaybackActionTypes.PauseTrig:
-        return this.http.get('api/v1/transport/pause', {responseType: 'text'})
+        return this.http.get(AppRoutesSrvr.pause(), {responseType: 'text'})
       case PlaybackActionTypes.PlaybackSpeedTrig:
         const actionT = action as PlaybackSpeedTrig
-        return this.http.post('api/v1/transport/playbackSpeed', { speed: actionT.speed }, {responseType: 'text'})
+        return this.http.post(AppRoutesSrvr.playbackSpeed(), { speed: actionT.speed }, {responseType: 'text'})
       default: // PlaybackActionTypes.StopTrig
-        return this.http.get('api/v1/transport/stop', {responseType: 'text'})
+        return this.http.get(AppRoutesSrvr.stop(), {responseType: 'text'})
     }
   }
 }

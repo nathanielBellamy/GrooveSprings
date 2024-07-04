@@ -5,7 +5,7 @@ import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
-import akka.http.scaladsl.server.Directives.{path, *}
+import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.GsMusicLibraryScanner
 import dev.nateschieber.groovesprings.actors.GsRestController.appStateCacheFile
@@ -13,7 +13,7 @@ import dev.nateschieber.groovesprings.entities.{Track, TrackJsonSupport}
 import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand, PauseTrig, PlayTrig, SetPlaybackSpeed, StopTrig}
+import dev.nateschieber.groovesprings.traits.{TrackSelect, GsCommand, PauseTrig, PlayTrig, SetPlaybackSpeed, StopTrig}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -124,11 +124,11 @@ class GsRestController(
           }}
         }
       },
-      path("api" / "v1" / "file-select") {
+      path("api" / "v1" / "trackSelect") {
         put { // update GsPlaybackThread.filePath
           entity(as[Track]) { track => {
-            gsAppStateManagerRef ! FileSelect(track, context.self)
-            complete("file-select")
+            gsAppStateManagerRef ! TrackSelect(track, context.self)
+            complete("Track Selected")
           }}
         }
       },
