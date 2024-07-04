@@ -51,6 +51,10 @@ export class PlaybackDisplayComponent {
     subject.subscribe({
       next: (msg: unknown) => {
         const msgNum: number = typeof msg === 'number' ? msg : 0
+        // TODO:
+        //   - inject Store
+        //   - hydrate PlaybackState from websocket json
+        if (typeof msg !== 'number') console.dir({msg})
         if (msgNum !== -1) {
           this.setCurrPercent(msgNum)
           return

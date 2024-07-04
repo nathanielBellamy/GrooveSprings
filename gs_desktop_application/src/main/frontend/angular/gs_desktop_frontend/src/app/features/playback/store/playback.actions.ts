@@ -128,12 +128,12 @@ export class UpdateCurrPlaylistTrackidx implements Action, GsPlaybackAction {
   }
 }
 
-export class FetchLastState implements Action {
-  readonly type = PlaybackActionTypes.FetchLastState
+export class FetchAppState implements Action {
+  readonly type = PlaybackActionTypes.FetchAppState
 }
 
 export class FetchLastStateFailure implements Action {
-  readonly type = PlaybackActionTypes.FetchLastStateFailure
+  readonly type = PlaybackActionTypes.FetchAppStateFailure
 }
 
 export class PlayTrig implements Action {

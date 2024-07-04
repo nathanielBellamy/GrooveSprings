@@ -1,7 +1,7 @@
 import {Component, Injectable} from '@angular/core'
 import {TransportControlComponent} from "./components/transportControl/transportControl.component";
 import {PlaybackDisplayComponent} from "./components/playbackDisplay/playbackDisplay.component";
-import {FetchLastState} from "./store/playback.actions";
+import {FetchAppState} from "./store/playback.actions";
 import {PlaybackState} from "./store/playback.state";
 import {Store} from "@ngrx/store";
 
@@ -16,6 +16,6 @@ export class PlaybackComponent {
   constructor(private store$: Store<{playback: PlaybackState}>) { }
 
   ngOnInit() {
-    this.store$.dispatch(new FetchLastState())
+    this.store$.dispatch(new FetchAppState())
   }
 }

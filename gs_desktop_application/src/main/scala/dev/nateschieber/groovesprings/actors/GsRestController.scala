@@ -13,7 +13,7 @@ import dev.nateschieber.groovesprings.entities.{Track, TrackJsonSupport}
 import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{TrackSelect, GsCommand, PauseTrig, PlayTrig, SetPlaybackSpeed, StopTrig}
+import dev.nateschieber.groovesprings.traits.{GsCommand, HydrateStateToDisplay, PauseTrig, PlayTrig, SetPlaybackSpeed, StopTrig, TrackSelect}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -79,11 +79,12 @@ class GsRestController(
           }}
         }
       },
-      path("api" / "v1" / "lastState"){
+      path("api" / "v1" / "appState"){
         get {
           // TODO:
           //   - client initial state hydration
           //   - Client -http-> GsRestController -> GsAppStateManager -> GsDisplay -ws-> Client
+          gsAppStateManagerRef ! HydrateStateToDisplay()
           complete("loading")
         }
       },

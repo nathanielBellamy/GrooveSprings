@@ -99,6 +99,11 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
           replyTo ! ReadPlaybackThreadState(context.self)
         Behaviors.same
 
+      case HydrateState(appStateJson, replyTo) =>
+        sendWebsocketMsg(appStateJson)
+        replyTo ! RespondHydrateState(context.self)
+        Behaviors.same
+
       case InitDisplay() =>
         playbackRef ! ReadPlaybackThreadState(context.self)
         Behaviors.same

@@ -31,8 +31,8 @@ export class PlaybackService {
     return this.http.get("api/v1/playlists/" + playlist.id + "/tracks")
   }
 
-  fetchLastState(): Observable<any> {
-    return this.http.get("api/v1/lastState", {responseType: 'text'})
+  fetchAppState(): Observable<any> {
+    return this.http.get(AppRoutesSrvr.appState(), {responseType: 'text'})
   }
 
   transportControlTrig(action: PlayTrig | PauseTrig | StopTrig | PlaybackSpeedTrig): Observable<any> {
