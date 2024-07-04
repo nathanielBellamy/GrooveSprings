@@ -1,8 +1,11 @@
 package dev.nateschieber.groovesprings.actors
 
+import akka.Done
+import akka.actor.CoordinatedShutdown
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
+import akka.stream.impl
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.appState
 import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState}
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
@@ -11,6 +14,8 @@ import dev.nateschieber.groovesprings.traits.{FileSelect, GsCommand, PauseTrig, 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
 import scala.annotation.static
+import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 // spray + protocol import needed to call .convertTo[AppState]
 import spray.json._
@@ -43,6 +48,7 @@ object GsAppStateManager {
       given system: ActorSystem[Nothing] = context.system
 
       val manager = new GsAppStateManager(context, gsPlaybackRef, gsDisplayRef)
+      println("==GS Startup State::")
       manager.printState()
       manager
   }
@@ -66,6 +72,16 @@ class GsAppStateManager(
 
       case default =>
         Behaviors.same
+    }
+  }
+
+  CoordinatedShutdown(context.system).addTask(CoordinatedShutdown.PhaseBeforeServiceUnbind, "cacheStateOnShutdown") { () =>
+    Future {
+      println("==GS Shutdown State::")
+      printState()
+      GsAppStateManager.cacheState(appState)
+      println("==GsAppStateManager Cache State Done ==")
+      Done
     }
   }
 }
