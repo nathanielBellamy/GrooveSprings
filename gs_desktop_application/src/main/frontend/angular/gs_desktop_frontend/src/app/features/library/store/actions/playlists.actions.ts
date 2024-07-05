@@ -37,43 +37,22 @@ export class FetchPlaylistsFailure implements Action, GsLibraryActionResult {
   }
 }
 
-export class PlaylistCreateSuccess implements Action, GsLibraryActionResult {
+export class PlaylistCreateSuccess implements Action {
   public readonly type = LibraryActionTypes.PlaylistCreate
 
   constructor(public payload: Playlist) { }
-
-  handle(state: LibraryState): LibraryState {
-    // TODO?
-
-    console.dir({playlistCreateSuccess: this.payload})
-
-    return {...state}
-  }
 }
 
-export class PlaylistCreateFailure implements Action, GsLibraryActionResult {
+export class PlaylistCreateFailure implements Action {
   public readonly type = LibraryActionTypes.PlaylistCreateFailure
 
   constructor(public payload: any) { }
-
-  handle(state: LibraryState): LibraryState {
-    // TODO?
-
-    console.dir({playlistCreateError: this.payload})
-
-    return {...state}
-  }
 }
 
-export class PlaylistUpdateSuccess implements Action, GsLibraryActionResult {
+export class PlaylistUpdateSuccess implements Action {
   public readonly type = LibraryActionTypes.PlaylistUpdateSuccess
 
-  constructor(public payload: any) { }
-
-  handle(state: LibraryState): LibraryState {
-    // TODO?
-    return {...state}
-  }
+  constructor(public payload: Playlist) { }
 }
 
 export class PlaylistUpdateFailure implements Action, GsLibraryActionResult {

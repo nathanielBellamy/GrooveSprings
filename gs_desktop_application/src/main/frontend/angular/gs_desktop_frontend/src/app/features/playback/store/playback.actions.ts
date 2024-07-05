@@ -117,16 +117,6 @@ export class PlaybackSpeedTrig implements Action {
   constructor(public speed: number) { }
 }
 
-export class SetPlaybackState implements Action, GsPlaybackAction {
-  readonly type = PlaybackActionTypes.SetPlaybackState
-
-  constructor(public state: PlaybackState) { }
-
-  public handle(_: PlaybackState): PlaybackState {
-    return {...this.state}
-  }
-}
-
 export class CachePlaybackState implements Action {
   readonly type = PlaybackActionTypes.CachePlaybackState
 }
