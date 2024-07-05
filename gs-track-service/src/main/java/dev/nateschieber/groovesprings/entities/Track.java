@@ -1,11 +1,17 @@
 package dev.nateschieber.groovesprings.entities;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.nateschieber.groovesprings.enums.AudioCodec;
 import dev.nateschieber.groovesprings.enums.Genre;
+import dev.nateschieber.groovesprings.rest.dtos.track.TrackSrvrDto;
 import dev.nateschieber.groovesprings.rest.dtos.track.TrackUpdateDto;
 import jakarta.persistence.*;
 
+import java.net.http.HttpRequest;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
@@ -235,6 +241,23 @@ public class Track {
 
   public void addPlaylist(Playlist playlist) {
     playlists.add(playlist);
+  }
+
+  public TrackSrvrDto toTrackSrvrDto() {
+    ObjectMapper om = new ObjectMapper();
+    om.registerModule(new JavaTimeModule());
+    ObjectWriter ow = om.writer();
+    String json;
+    try {
+      json = ow.writeValueAsString(this);
+    } catch (JsonProcessingException ex) {
+      json = "{}";
+    }
+    return new TrackSrvrDto(
+            id,
+            path,
+            json
+    );
   }
 
   @Override

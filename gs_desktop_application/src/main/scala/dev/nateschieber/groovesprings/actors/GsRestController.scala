@@ -175,6 +175,8 @@ class GsRestController(
         // 2. GsRestController (GsRC) proxies crud request to gs-track-service
         // 3. GsRC receives response and triggers state update + hydrate
         // 4. client receives state update through gs-display ws
+        // TODO:
+        //  - 5. client triggers playlists fetch on completion of http call
         extractUnmatchedPath { remaining =>
           extractMethod { method =>
             extractRequestEntity { requestEntity =>
