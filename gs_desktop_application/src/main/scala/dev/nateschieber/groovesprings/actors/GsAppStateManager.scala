@@ -106,11 +106,11 @@ class GsAppStateManager(
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case TrackSelect(track, replyTo) =>
-        println("==GsAppStateManager::TrackSelect:: " + track.toJson.prettyPrint)
         appState = setCurrTrack(appState, track)
 
         // TODO: un-overload TrackSelect
         gsPlaybackRef ! TrackSelect(track, context.self)
+        hydrateState()
         replyTo ! RespondTrackSelect(context.self)
         Behaviors.same
 

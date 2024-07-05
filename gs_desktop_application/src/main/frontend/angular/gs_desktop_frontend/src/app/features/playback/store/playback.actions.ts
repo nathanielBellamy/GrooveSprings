@@ -72,17 +72,10 @@ export class SetCurrPlaylistTrackIdx implements Action {
   constructor(public trackIdx: number) {}
 }
 
-export class SetCurrTrack implements Action, GsPlaybackAction {
+export class SetCurrTrack implements Action {
   readonly type = PlaybackActionTypes.SetCurrTrack
 
   constructor(private track: Track, public initialLoad: boolean) {}
-
-  handle(state: PlaybackState): PlaybackState {
-    return {
-      ...state,
-      currTrack: {...this.track}
-    }
-  }
 
   getTrack(): Track {
     return this.track
