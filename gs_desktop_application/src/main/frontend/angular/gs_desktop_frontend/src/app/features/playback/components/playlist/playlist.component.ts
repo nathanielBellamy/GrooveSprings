@@ -53,7 +53,6 @@ export class PlaylistComponent {
   }
 
   handleSavePlaylistClick(): void {
-    // TODO: update vs create based on this.playlistId
     if (this.playlistId > 0) { // update
       this.store$.dispatch(new PlaylistUpdate({
           id: this.playlistId,

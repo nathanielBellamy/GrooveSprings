@@ -25,7 +25,7 @@ import {
 } from "./library.actions";
 import {initialLibraryState, LibraryState} from "./library.state";
 import {FetchAlbumsFailure, FetchAlbumsSuccess} from "./actions/albums.actions";
-import {FetchPlaylistsFailure, FetchPlaylistsSuccess, PlaylistCreateSuccess} from "./actions/playlists.actions";
+import {FetchPlaylistsFailure, FetchPlaylistsSuccess} from "./actions/playlists.actions";
 
 export function libraryReducer(state = initialLibraryState, action: Action): LibraryState {
   let res: GsLibraryActionResult
@@ -132,10 +132,6 @@ export function libraryReducer(state = initialLibraryState, action: Action): Lib
 
     case LibraryActionTypes.FetchPlaylistsFailure:
       res = action as FetchPlaylistsFailure
-      break
-
-    case LibraryActionTypes.PlaylistCreateSuccess:
-      res = action as PlaylistCreateSuccess
       break
 
     case LibraryActionTypes.ClearLibrary:
