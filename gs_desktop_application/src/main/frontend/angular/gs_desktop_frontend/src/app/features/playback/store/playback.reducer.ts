@@ -14,9 +14,9 @@ export function playbackReducer(state = initialPlaybackState, action: Action): P
   var actionT: any = null
   switch (action.type) {
 
-    case PlaybackActionTypes.SetPlaylistAsCurrSuccess:
-      actionT = action as SetPlaylistAsCurrSuccess
-      return actionT.handle(state)
+    // case PlaybackActionTypes.SetPlaylistAsCurrSuccess:
+    //   actionT = action as SetPlaylistAsCurrSuccess
+    //   return actionT.handle(state)
 
     case LibraryActionTypes.PlaylistUpdate:
       actionT = action as PlaylistUpdate

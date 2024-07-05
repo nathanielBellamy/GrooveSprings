@@ -39,4 +39,8 @@ export class AppRoutesSrvr {
   static currPlaylistTrackIdx(newIdx: number) {
     return apiVersionPrefix + "/currPlaylistTrackIdx?newIdx=" + newIdx
   }
+
+  static setPlaylist() {
+    return apiVersionPrefix + "/setPlaylist"
+  }
 }

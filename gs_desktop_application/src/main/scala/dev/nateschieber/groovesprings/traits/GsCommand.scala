@@ -1,7 +1,7 @@
 package dev.nateschieber.groovesprings.traits
 
 import akka.actor.typed.ActorRef
-import dev.nateschieber.groovesprings.entities.Track
+import dev.nateschieber.groovesprings.entities.{Playlist, Track}
 import dev.nateschieber.groovesprings.enums.{GsPlayState, GsPlaybackSpeed}
 
 sealed trait GsCommand
@@ -55,3 +55,6 @@ final case class RespondClearPlaylist(replyTo: ActorRef[ClearPlaylist]) extends 
 
 final case class CurrPlaylistTrackIdx(newIdx: Int, replyTo: ActorRef[RespondCurrPlaylistTrackIdx]) extends GsCommand
 final case class RespondCurrPlaylistTrackIdx(replyTo: ActorRef[CurrPlaylistTrackIdx]) extends GsCommand
+
+final case class SetPlaylist(playlist: Playlist, replyTo: ActorRef[RespondSetPlaylist]) extends GsCommand
+final case class RespondSetPlaylist(replyTo: ActorRef[SetPlaylist]) extends GsCommand
