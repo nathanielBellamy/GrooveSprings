@@ -13,7 +13,7 @@ import dev.nateschieber.groovesprings.entities.{Track, TrackJsonSupport}
 import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, GsCommand, HydrateStateToDisplay, PauseTrig, PlayTrig, SetPlaybackSpeed, StopTrig, TrackSelect}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, PauseTrig, PlayTrig, SetPlaybackSpeed, StopTrig, TrackSelect}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -145,6 +145,14 @@ class GsRestController(
         delete {
           gsAppStateManagerRef ! ClearPlaylist(context.self)
           complete("Playlist Cleared")
+        }
+      },
+      path("api" / "v1" / "currPlaylistTrackIdx") {
+        put {
+          parameters(Symbol("newIdx").as[Int]) { (newIdx: Int) => {
+            gsAppStateManagerRef ! CurrPlaylistTrackIdx(newIdx, context.self)
+            complete("Curr Playlist Track Idx")
+          }}
         }
       },
       pathPrefix("api" / "v1") {

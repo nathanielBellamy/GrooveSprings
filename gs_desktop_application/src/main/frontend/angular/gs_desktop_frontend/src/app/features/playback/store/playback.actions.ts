@@ -66,21 +66,10 @@ export class SetCurrFileFailure implements Action {
   }
 }
 
-export class SetCurrPlaylistTrackIdx implements Action, GsPlaybackAction {
+export class SetCurrPlaylistTrackIdx implements Action {
   readonly type = PlaybackActionTypes.SetCurrPlaylistTrackIdx
 
-  constructor(private trackIdx: number, private track: Track) {}
-
-  handle(state: PlaybackState): PlaybackState {
-    return {
-      ...state,
-      currPlaylistTrackIdx: this.trackIdx
-    }
-  }
-
-  getTrack(): Track {
-    return this.track
-  }
+  constructor(public trackIdx: number) {}
 }
 
 export class SetCurrTrack implements Action, GsPlaybackAction {

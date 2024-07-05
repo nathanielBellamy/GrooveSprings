@@ -7,9 +7,9 @@ import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import akka.stream.impl
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.appState
-import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState, EmptyPlaylist, Playlist, Track}
+import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState, EmptyPlaylist, EmptyTrack, Playlist, Track}
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, PauseTrig, PlayTrig, RespondAddTrackToPlaylist, RespondHydrateState, RespondTrackSelect, SetPlaybackSpeed, StopTrig, TrackSelect}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, PauseTrig, PlayTrig, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondTrackSelect, SetPlaybackSpeed, StopTrig, TrackSelect}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -91,6 +91,18 @@ class GsAppStateManager(
     AppState(appState.currTrack, appState.currPlaylistTrackIdx, EmptyPlaylist)
   }
 
+  private def setCurrPlaylistTrackIdx(state: AppState, newIdx: Int): AppState = {
+    var optTrack = appState.playlist.tracks.lift(newIdx)
+    if (optTrack.isDefined)
+      AppState(optTrack.get, newIdx, appState.playlist)
+    else
+      AppState(EmptyTrack, 0, appState.playlist)
+  }
+
+  private def hydrateState(): Unit = {
+    gsDisplayRef ! HydrateState(appState.toJson.compactPrint, context.self)
+  }
+
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case TrackSelect(track, replyTo) =>
@@ -104,22 +116,29 @@ class GsAppStateManager(
 
       case RespondTrackSelect(_) =>
         // auto play on TrackSelect
-        gsPlaybackRef ! PlayTrig(context.self)
+        gsPlaybackRef ! PlayTrig(gsDisplayRef)
         Behaviors.same
 
       case HydrateStateToDisplay() =>
-        gsDisplayRef ! HydrateState(appState.toJson.compactPrint, context.self)
+        hydrateState()
         Behaviors.same
 
       case AddTrackToPlaylist(track, replyTo) =>
         appState = addTrackToPlaylist(appState, track)
-        gsDisplayRef ! HydrateState(appState.toJson.compactPrint, context.self)
+        hydrateState()
         replyTo ! RespondAddTrackToPlaylist(context.self)
         Behaviors.same
 
       case ClearPlaylist(replyTo) =>
         appState = clearPlaylist(appState)
-        gsDisplayRef ! HydrateState(appState.toJson.compactPrint, context.self)
+        hydrateState()
+        Behaviors.same
+
+      case CurrPlaylistTrackIdx(newIdx, replyTo) =>
+        appState = setCurrPlaylistTrackIdx(appState, newIdx)
+        gsPlaybackRef ! TrackSelect(appState.currTrack, context.self)
+        hydrateState()
+        replyTo ! RespondCurrPlaylistTrackIdx(context.self)
         Behaviors.same
 
       case RespondHydrateState(replyTo) =>

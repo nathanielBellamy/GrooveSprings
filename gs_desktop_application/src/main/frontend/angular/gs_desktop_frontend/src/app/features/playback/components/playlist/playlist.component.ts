@@ -41,7 +41,7 @@ export class PlaylistComponent {
   }
 
   handleDblClick(trackIdx: number, track: Track) {
-    this.store$.dispatch(new SetCurrPlaylistTrackIdx(trackIdx, track))
+    this.store$.dispatch(new SetCurrPlaylistTrackIdx(trackIdx))
   }
 
   handleSaveAsPlaylistClick(): void {

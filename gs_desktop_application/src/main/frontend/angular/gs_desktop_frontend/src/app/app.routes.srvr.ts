@@ -35,4 +35,8 @@ export class AppRoutesSrvr {
   static clearPlaylist() {
     return apiVersionPrefix + "/clearPlaylist"
   }
+
+  static currPlaylistTrackIdx(newIdx: number) {
+    return apiVersionPrefix + "/currPlaylistTrackIdx?newIdx=" + newIdx
+  }
 }
