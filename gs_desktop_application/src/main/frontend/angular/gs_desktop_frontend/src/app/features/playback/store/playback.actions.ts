@@ -11,21 +11,10 @@ export abstract class GsPlaybackAction {
   }
 }
 
-export class AddTrackToPlaylist implements Action, GsPlaybackAction {
+export class AddTrackToPlaylist implements Action {
   readonly type = PlaybackActionTypes.AddTrackToPlaylist
 
-  constructor(private payload: Track) {
-  }
-
-  handle(state: PlaybackState): PlaybackState {
-    return {
-      ...state,
-      playlist: {
-        ...state.playlist,
-        tracks: state.playlist.tracks.concat([this.payload])
-      }
-    }
-  }
+  constructor(public payload: Track) { }
 }
 
 export class SetPlaylistAsCurr implements Action { // awaited in playback.reducer.ts
@@ -61,10 +50,6 @@ export class ClearPlaylist implements Action, GsPlaybackAction {
       currPlaylistTrackIdx: initialPlaybackState.currPlaylistTrackIdx
     }
   }
-}
-
-export class SetCurrFile implements Action {
-  readonly type = PlaybackActionTypes.SetCurrFile
 }
 
 export class SetCurrFileSuccess implements Action {
@@ -130,10 +115,6 @@ export class UpdateCurrPlaylistTrackidx implements Action, GsPlaybackAction {
 
 export class FetchAppState implements Action {
   readonly type = PlaybackActionTypes.FetchAppState
-}
-
-export class FetchLastStateFailure implements Action {
-  readonly type = PlaybackActionTypes.FetchAppStateFailure
 }
 
 export class PlayTrig implements Action {

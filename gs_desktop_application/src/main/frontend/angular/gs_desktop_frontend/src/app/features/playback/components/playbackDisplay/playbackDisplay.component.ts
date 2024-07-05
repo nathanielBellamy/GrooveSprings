@@ -4,10 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
 import {defaultTrack, Track} from "../../../../models/tracks/track.model";
-import {Observable} from "rxjs";
+import {Observable, tap} from "rxjs";
 import { webSocket } from "rxjs/webSocket";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
-import {HydrateAppState, NextTrack} from "../../store/playback.actions";
+import {FetchAppState, HydrateAppState, NextTrack} from "../../store/playback.actions";
 import {playbackStateFromPlaybackStateSrvr, PlaybackStateSrvr} from "../../../../models/srvr/playbackState.srvr.model";
 
 @Component({
@@ -40,6 +40,7 @@ export class PlaybackDisplayComponent {
 
   ngOnDestroy() {
     if (this.pingIntervalId) clearInterval(this.pingIntervalId)
+    this.wsSubject.unsubscribe()
   }
 
   pingSocket() {
@@ -47,29 +48,34 @@ export class PlaybackDisplayComponent {
   }
 
   getWsSubject(): WebSocketSubject<unknown> {
-    const subject = webSocket('ws://localhost:8767/gs-display')
+    const subject = webSocket({
+      url: 'ws://localhost:8767/gs-display',
+      openObserver: {
+        next: () => this.store$.dispatch(new FetchAppState())
+      }
+    })
 
-    subject.subscribe({
-      next: (msg: unknown) => {
-        const msgNum: number = typeof msg === 'number' ? msg : 0
-        if (typeof msg !== 'number') { // then it is state update
-          try {
-            const newAppState: PlaybackState = playbackStateFromPlaybackStateSrvr(msg as PlaybackStateSrvr)
-            this.store$.dispatch(new HydrateAppState(newAppState))
-          } catch(e) {
-            console.error(e)
+    subject
+      .subscribe({
+        next: (msg: unknown) => {
+          const msgNum: number = typeof msg === 'number' ? msg : 0
+          if (typeof msg !== 'number') { // then it is state update
+            try {
+              const newAppState: PlaybackState = playbackStateFromPlaybackStateSrvr(msg as PlaybackStateSrvr)
+              this.store$.dispatch(new HydrateAppState(newAppState))
+            } catch(e) {
+              console.error(e)
+            }
           }
-        }
-        if (msgNum !== -1) {
-          this.setCurrPercent(msgNum)
-          return
-        } else {
-          this.setCurrPercent(0)
-          // this.store$.dispatch(new NextTrack())
-        }
-      },
-      error: (e: any) => console.error({playbackDisplaySocketError: e}),
-      complete: () => this.wsSubject = this.getWsSubject()
+          if (msgNum !== -1) {
+            this.setCurrPercent(msgNum)
+            return
+          } else {
+            this.setCurrPercent(0)
+          }
+        },
+        error: (e: any) => console.error({playbackDisplaySocketError: e}),
+        complete: () => this.wsSubject = this.getWsSubject()
     })
 
     return subject

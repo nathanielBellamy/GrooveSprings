@@ -16,6 +16,6 @@ export class PlaybackComponent {
   constructor(private store$: Store<{playback: PlaybackState}>) { }
 
   ngOnInit() {
-    this.store$.dispatch(new FetchAppState())
+    // this.store$.dispatch(new FetchAppState())
   }
 }

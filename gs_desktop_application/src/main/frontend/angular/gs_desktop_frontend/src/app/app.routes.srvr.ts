@@ -27,4 +27,12 @@ export class AppRoutesSrvr {
   static appState() {
     return apiVersionPrefix + "/appState"
   }
+
+  static addTrackToPlaylist() {
+    return apiVersionPrefix + "/addTrackToPlaylist"
+  }
+
+  static clearPlaylist() {
+    return apiVersionPrefix + "/clearPlaylist"
+  }
 }
