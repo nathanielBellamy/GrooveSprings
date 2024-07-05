@@ -23,9 +23,9 @@ export class PlaybackService {
     return this.http.put(AppRoutesSrvr.trackSelect(), trackSrvrFromTrack(track), {responseType: 'text'})
   }
 
-  cacheState(): Observable<any> {
-    return this.http.put("api/v1/cacheState", playbackStateSrvrFromPlaybackState(this.state as PlaybackState), {responseType: 'text'})
-  }
+  // cacheState(): Observable<any> {
+  //   return this.http.put("api/v1/cacheState", playbackStateSrvrFromPlaybackState(this.state as PlaybackState), {responseType: 'text'})
+  // }
 
   fetchPlaylistTracks(playlist: PlaylistRepr): Observable<any> {
     return this.http.get("api/v1/playlists/" + playlist.id + "/tracks")
@@ -47,5 +47,13 @@ export class PlaybackService {
       default: // PlaybackActionTypes.StopTrig
         return this.http.get(AppRoutesSrvr.stop(), {responseType: 'text'})
     }
+  }
+
+  addTrackToPlaylist(track: Track): Observable<any> {
+    return this.http.put(AppRoutesSrvr.addTrackToPlaylist(), trackSrvrFromTrack(track), {responseType: 'text'})
+  }
+
+  clearPlaylist(): Observable<any> {
+    return this.http.delete(AppRoutesSrvr.clearPlaylist(), {responseType: 'text'})
   }
 }

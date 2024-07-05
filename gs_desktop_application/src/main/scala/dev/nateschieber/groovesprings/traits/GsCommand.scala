@@ -6,14 +6,12 @@ import dev.nateschieber.groovesprings.enums.{GsPlayState, GsPlaybackSpeed}
 
 sealed trait GsCommand
 
-
 // GsDisplay
 final case class InitDisplay() extends GsCommand
 
 // GsPlayback
 final case class ReadPlaybackThreadState(replyTo: ActorRef[RespondPlaybackThreadState]) extends GsCommand
 final case class RespondPlaybackThreadState(frameId: Long, playState: GsPlayState, readComplete: Boolean, replyTo: ActorRef[ReadPlaybackThreadState]) extends GsCommand
-
 
 final case class TrackSelect(track: Track, replyTo: ActorRef[RespondTrackSelect]) extends GsCommand // auto-play
 final case class RespondTrackSelect(replyTo: ActorRef[TrackSelect]) extends GsCommand
@@ -25,7 +23,6 @@ final case class InitPlaybackThread(replyTo: ActorRef[RespondInitPlaybackThread]
 final case class RespondInitPlaybackThread(replyTo: ActorRef[InitPlaybackThread]) extends GsCommand
 final case class StopPlaybackThread(replyTo: ActorRef[RespondStopPlaybackThread]) extends GsCommand
 final case class RespondStopPlaybackThread(replyTo: ActorRef[StopPlaybackThread]) extends GsCommand
-
 
 // GsPlayback
 final case class RespondPlayTrig(replyTo: ActorRef[PlayTrig | ReadPlaybackThreadState]) extends GsCommand
@@ -50,3 +47,8 @@ final case class HydrateStateToDisplay() extends GsCommand
 final case class HydrateState(appStateJson: String, replyTo: ActorRef[RespondHydrateState]) extends GsCommand
 final case class RespondHydrateState(replyTo: ActorRef[HydrateState]) extends GsCommand
 
+final case class AddTrackToPlaylist(track: Track, replyTo: ActorRef[RespondAddTrackToPlaylist]) extends GsCommand
+final case class RespondAddTrackToPlaylist(replyTo: ActorRef[AddTrackToPlaylist]) extends GsCommand
+
+final case class ClearPlaylist(replyTo: ActorRef[RespondClearPlaylist]) extends GsCommand
+final case class RespondClearPlaylist(replyTo: ActorRef[ClearPlaylist]) extends GsCommand
