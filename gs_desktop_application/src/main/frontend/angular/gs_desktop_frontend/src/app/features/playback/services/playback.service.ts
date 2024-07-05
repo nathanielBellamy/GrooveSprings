@@ -18,18 +18,10 @@ export class PlaybackService {
     store$.subscribe((state) => this.state = {...state.playback})
   }
 
-  setCurrFile(track: Track): Observable<any> {
+  setCurrTrack(track: Track): Observable<any> {
     const { path } = track
     return this.http.put(AppRoutesSrvr.trackSelect(), trackSrvrFromTrack(track), {responseType: 'text'})
   }
-
-  setCurrPlaylistTrackIdx(trackIdx: number): Observable<any> {
-    return this.http.put(AppRoutesSrvr.currPlaylistTrackIdx(trackIdx), {}, {responseType: 'text'})
-  }
-
-  // cacheState(): Observable<any> {
-  //   return this.http.put("api/v1/cacheState", playbackStateSrvrFromPlaybackState(this.state as PlaybackState), {responseType: 'text'})
-  // }
 
   fetchPlaylistTracks(playlist: PlaylistRepr): Observable<any> {
     return this.http.get("api/v1/playlists/" + playlist.id + "/tracks")
@@ -59,5 +51,9 @@ export class PlaybackService {
 
   clearPlaylist(): Observable<any> {
     return this.http.delete(AppRoutesSrvr.clearPlaylist(), {responseType: 'text'})
+  }
+
+  setCurrPlaylistTrackIdx(trackIdx: number): Observable<any> {
+    return this.http.put(AppRoutesSrvr.currPlaylistTrackIdx(trackIdx), {}, {responseType: 'text'})
   }
 }

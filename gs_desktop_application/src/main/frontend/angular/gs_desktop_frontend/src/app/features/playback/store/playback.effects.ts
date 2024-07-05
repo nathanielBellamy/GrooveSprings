@@ -31,7 +31,11 @@ export class PlaybackEffects {
   fetchAppState$ = createEffect(() =>
     this.actions$.pipe(
       ofType<FetchAppState>(PlaybackActionTypes.FetchAppState),
-      switchMap(() => this.playbackService.fetchAppState())
+      switchMap(() => this.playbackService.fetchAppState()
+        .pipe(
+          map(() => new Identity())
+        )
+      )
     )
   )
 
@@ -54,7 +58,7 @@ export class PlaybackEffects {
   setCurrTrack$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SetCurrTrack>(PlaybackActionTypes.SetCurrTrack),
-      switchMap((action) => this.playbackService.setCurrFile(action.getTrack())
+      switchMap((action) => this.playbackService.setCurrTrack(action.getTrack())
         .pipe(
           map(() => new SetCurrFileSuccess(action.initialLoad)),
           catchError((e, _) => of(new SetCurrFileFailure(e)))
@@ -66,7 +70,11 @@ export class PlaybackEffects {
   setCurrPlaylistTrackIdx$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SetCurrPlaylistTrackIdx>(PlaybackActionTypes.SetCurrPlaylistTrackIdx),
-      switchMap((action) => this.playbackService.setCurrPlaylistTrackIdx(action.trackIdx))
+      switchMap((action) => this.playbackService.setCurrPlaylistTrackIdx(action.trackIdx)
+        .pipe(
+          map(() => new Identity())
+        )
+      )
     )
   )
 
@@ -89,18 +97,6 @@ export class PlaybackEffects {
           catchError((e, _) => of(new Identity()))
         )
       )
-    )
-  )
-
-  playNextTrack$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType<NextTrack>(
-        PlaybackActionTypes.NextTrack
-      ),
-      map(() => {
-        const state = this.state as PlaybackState
-        return new SetCurrTrack(state.playlist.tracks[state.currPlaylistTrackIdx], false)
-      })
     )
   )
 
