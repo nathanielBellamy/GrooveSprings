@@ -5,6 +5,8 @@ import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
+
+import scala.util.{Failure, Success}
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.GsMusicLibraryScanner
@@ -17,7 +19,9 @@ import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist,
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
+import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.*
 
 object GsRestController {
 
@@ -56,8 +60,8 @@ class GsRestController(
                         gsDisplayRef: ActorRef[GsCommand])
   extends AbstractBehavior[GsCommand](context)
     with PlaylistJsonSupport
-    with TrackJsonSupport 
-    with PlaybackSpeedJsonSupport 
+    with TrackJsonSupport
+    with PlaybackSpeedJsonSupport
     with CacheStateJsonSupport {
 
   def routes(): Route = {
@@ -164,6 +168,47 @@ class GsRestController(
             gsAppStateManagerRef ! SetPlaylist(playlist, context.self)
             complete("Playlist Set")
           }}
+        }
+      },
+      pathPrefix("api" / "v1"/ "playlistCrud") {
+        // 1. client performs playlist crud
+        // 2. GsRestController (GsRC) proxies crud request to gs-track-service
+        // 3. GsRC receives response and triggers state update + hydrate
+        // 4. client receives state update through gs-display ws
+        extractUnmatchedPath { remaining =>
+          extractMethod { method =>
+            extractRequestEntity { requestEntity =>
+              implicit val classic = context.system.classicSystem
+              val timeout = 2000.milliseconds
+              val future = Http().singleRequest(HttpRequest(
+                method = method,
+                uri = s"http://localhost:5173/api/v1/playlists$remaining", // gs-track-service
+                entity = requestEntity
+              ))
+              val result = Await.result(
+                future
+                  .flatMap { resp => resp.entity.toStrict(timeout) }
+                  .map { strictEntity => strictEntity.data.utf8String },
+                timeout
+              )
+              // TODO:
+              //   - update gs-track-service#PlaylistController to return full Playlist here
+              //   - parse payload into Playlist
+              //   - update state (which triggers hydrateState)
+              println(result)
+
+              complete("Playlist CRUD")
+
+
+
+//              response.onComplete {
+//                case Success(res) => println(res.entity().toStrict(FiniteDuration(2, "seconds")).map(_.data.utf8String))
+//                case Failure(res) => println(res)
+//              }
+//              println(response)
+//              complete(response)
+            }
+          }
         }
       },
       pathPrefix("api" / "v1") {

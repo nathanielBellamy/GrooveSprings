@@ -4,17 +4,13 @@ import {TracksEffects} from "./effects/tracks.effects";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {Injectable} from "@angular/core";
 import {LibraryActionTypes} from "./library.actiontypes";
-import {FetchTracks} from "./actions/tracks.actions";
 import {catchError, switchMap, map, of} from "rxjs";
 import {
-  FetchAlbumsFailure,
-  FetchAlbumsSuccess,
   FetchAll,
   LibraryScanSuccess,
   LibraryScanFailure, ClearLibraryFailure, ClearLibrarySuccess
 } from "./library.actions";
 import {LibraryService} from "../services/library.service";
-import {AlbumsData} from "../../../models/albums/albums_data.model";
 import {PlaylistsEffects} from "./effects/playlists.effects";
 
 @Injectable()
