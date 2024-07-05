@@ -7,12 +7,7 @@ import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistCreateDto;
 import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistGetByAlbumIdsDto;
 import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistGetByArtistIdsDto;
 import dev.nateschieber.groovesprings.rest.dtos.playlist.PlaylistUpdateDto;
-import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistEntityResponse;
-import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistGetAllResponse;
-import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistGetByAlbumIdsResponse;
-import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistGetByArtistIdsResponse;
-import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistTracksResponse;
-import dev.nateschieber.groovesprings.rest.responses.playlist.PlaylistUpdateResponse;
+import dev.nateschieber.groovesprings.rest.responses.playlist.*;
 import dev.nateschieber.groovesprings.services.entities.PlaylistService;
 import java.net.URI;
 import java.util.List;
@@ -65,10 +60,10 @@ public class PlaylistController {
   }
 
   @PostMapping
-  public ResponseEntity<PlaylistEntityResponse> createPlaylist(@RequestBody PlaylistCreateDto dto) {
+  public ResponseEntity<PlaylistCreateSrvrResponse> createPlaylist(@RequestBody PlaylistCreateDto dto) {
     Playlist playlistSaved = playlistService.createFromDto(dto);
     URI uri = HttpHelper.uri("/api/v1/playlists/" + playlistSaved.getId());
-    return ResponseEntity.created(uri).body(new PlaylistEntityResponse(playlistSaved));
+    return ResponseEntity.created(uri).body(new PlaylistCreateSrvrResponse(playlistSaved));
   }
 
   @PutMapping(value = "/{id}")
