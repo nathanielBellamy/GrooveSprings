@@ -42,15 +42,20 @@ export class PlaybackEffects {
   getPlaylistTracks$ = createEffect(() =>
     this.actions$.pipe(
       ofType<SetPlaylistAsCurr>(PlaybackActionTypes.SetPlaylistAsCurr),
-      switchMap((action) => this.playbackService.fetchPlaylistTracks(action.payload)
-        .pipe(
-          map((res) => new SetPlaylistAsCurrSuccess({
-            id: res.data.playlist.id,
-            name: res.data.playlist.name,
-            tracks: res.data.tracks
-          })),
-          catchError((e, _) => of(new SetPlaylistAsCurrFailure()))
-        )
+      switchMap((action) =>
+        this.playbackService.fetchPlaylistTracks(action.payload)
+          .pipe(
+            switchMap((res => {
+              const playlist = {
+                id: res.data.playlist.id,
+                name: res.data.playlist.name,
+                tracks: [...res.data.tracks]
+              }
+              return this.playbackService.setPlaylist(playlist)
+            })),
+            map(() => new Identity()),
+            catchError((e, _) => of(new SetPlaylistAsCurrFailure()))
+          )
       )
     )
   )

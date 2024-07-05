@@ -10,6 +10,8 @@ import {PlaylistRepr} from "../../../models/playlist/playlist_repr.model";
 import {playbackStateSrvrFromPlaybackState} from "../../../models/srvr/playbackState.srvr.model";
 import {trackSrvrFromTrack} from "../../../models/srvr/tracks.srvr.model";
 import {AppRoutesSrvr} from "../../../app.routes.srvr";
+import {Playlist} from "../../../models/playlist/playlist.model";
+import {playlistSrvrFromPlaylist} from "../../../models/srvr/playlist.srvr.model";
 
 @Injectable()
 export class PlaybackService {
@@ -21,6 +23,10 @@ export class PlaybackService {
   setCurrTrack(track: Track): Observable<any> {
     const { path } = track
     return this.http.put(AppRoutesSrvr.trackSelect(), trackSrvrFromTrack(track), {responseType: 'text'})
+  }
+
+  setPlaylist(playlist: Playlist): Observable<any> {
+    return this.http.put(AppRoutesSrvr.setPlaylist(), playlistSrvrFromPlaylist(playlist), {responseType: 'text'})
   }
 
   fetchPlaylistTracks(playlist: PlaylistRepr): Observable<any> {

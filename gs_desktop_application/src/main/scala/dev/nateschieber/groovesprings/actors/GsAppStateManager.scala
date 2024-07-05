@@ -9,7 +9,7 @@ import akka.stream.impl
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.appState
 import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState, EmptyPlaylist, EmptyTrack, Playlist, Track}
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, PauseTrig, PlayTrig, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondTrackSelect, SetPlaybackSpeed, StopTrig, TrackSelect}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, PauseTrig, PlayTrig, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondSetPlaylist, RespondTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -87,6 +87,10 @@ class GsAppStateManager(
     )
   }
 
+  private def setPlaylist(appState: AppState, playlist: Playlist): AppState = {
+    AppState(appState.currTrack, 0, playlist)
+  }
+  
   private def clearPlaylist(appState: AppState): AppState = {
     AppState(appState.currTrack, appState.currPlaylistTrackIdx, EmptyPlaylist)
   }
@@ -127,6 +131,12 @@ class GsAppStateManager(
         appState = addTrackToPlaylist(appState, track)
         hydrateState()
         replyTo ! RespondAddTrackToPlaylist(context.self)
+        Behaviors.same
+
+      case SetPlaylist(playlist, replyTo) =>
+        appState = setPlaylist(appState, playlist)
+        hydrateState()
+        replyTo ! RespondSetPlaylist(context.self)
         Behaviors.same
 
       case ClearPlaylist(replyTo) =>

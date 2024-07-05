@@ -9,11 +9,11 @@ import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.GsMusicLibraryScanner
 import dev.nateschieber.groovesprings.actors.GsRestController.appStateCacheFile
-import dev.nateschieber.groovesprings.entities.{Track, TrackJsonSupport}
+import dev.nateschieber.groovesprings.entities.{Playlist, PlaylistJsonSupport, Track, TrackJsonSupport}
 import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, PauseTrig, PlayTrig, SetPlaybackSpeed, StopTrig, TrackSelect}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, PauseTrig, PlayTrig, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -55,7 +55,10 @@ class GsRestController(
                         gsPlaybackRef: ActorRef[GsCommand],
                         gsDisplayRef: ActorRef[GsCommand])
   extends AbstractBehavior[GsCommand](context)
-    with TrackJsonSupport with PlaybackSpeedJsonSupport with CacheStateJsonSupport {
+    with PlaylistJsonSupport
+    with TrackJsonSupport 
+    with PlaybackSpeedJsonSupport 
+    with CacheStateJsonSupport {
 
   def routes(): Route = {
     concat(
@@ -152,6 +155,14 @@ class GsRestController(
           parameters(Symbol("newIdx").as[Int]) { (newIdx: Int) => {
             gsAppStateManagerRef ! CurrPlaylistTrackIdx(newIdx, context.self)
             complete("Curr Playlist Track Idx")
+          }}
+        }
+      },
+      path("api" / "v1" / "setPlaylist") {
+        put {
+          entity(as[Playlist]) { playlist => {
+            gsAppStateManagerRef ! SetPlaylist(playlist, context.self)
+            complete("Playlist Set")
           }}
         }
       },
