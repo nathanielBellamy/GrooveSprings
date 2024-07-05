@@ -42,7 +42,7 @@ export class PlaylistsEffects {
       map(action => action.playlist),
       switchMap((playlist: Playlist) => this.playlistsService.create(playlist)
         .pipe(
-          map((payload) => new PlaylistCreateSuccess(payload)),
+          map((payload) => new PlaylistCreateSuccess()),
           catchError((e, _) => of(new PlaylistCreateFailure(e)))
         )
       )
@@ -55,7 +55,7 @@ export class PlaylistsEffects {
       map(action => action.dto),
       switchMap(dto => this.playlistsService.update(dto)
         .pipe(
-          map((payload) => new PlaylistUpdateSuccess(payload)),
+          map((payload) => new PlaylistUpdateSuccess()),
           catchError((e, _) => of(new PlaylistUpdateFailure(e)))
         )
       )

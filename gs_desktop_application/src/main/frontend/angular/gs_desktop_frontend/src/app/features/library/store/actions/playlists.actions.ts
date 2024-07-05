@@ -3,8 +3,6 @@ import {Action} from "@ngrx/store";
 import {GsLibraryActionResult} from "../library.actions";
 import {PlaylistsData} from "../../../../models/playlist/playlists_data.model";
 import {LibraryState} from "../library.state";
-import {PlaylistCreateRes} from "../../../../models/playlist/playlist_create_res.model";
-import {Playlist} from "../../../../models/playlist/playlist.model";
 
 
 export class FetchPlaylists implements Action {
@@ -31,7 +29,6 @@ export class FetchPlaylistsFailure implements Action, GsLibraryActionResult {
   constructor(public payload: any) { }
 
   handle(state: LibraryState): LibraryState {
-    console.error('GsLibraryActionFailure ## FetchPlaylistsFailure')
     console.error(this.payload)
     return {...state}
   }
@@ -39,8 +36,6 @@ export class FetchPlaylistsFailure implements Action, GsLibraryActionResult {
 
 export class PlaylistCreateSuccess implements Action {
   public readonly type = LibraryActionTypes.PlaylistCreate
-
-  constructor(public payload: Playlist) { }
 }
 
 export class PlaylistCreateFailure implements Action {
@@ -51,17 +46,10 @@ export class PlaylistCreateFailure implements Action {
 
 export class PlaylistUpdateSuccess implements Action {
   public readonly type = LibraryActionTypes.PlaylistUpdateSuccess
-
-  constructor(public payload: Playlist) { }
 }
 
-export class PlaylistUpdateFailure implements Action, GsLibraryActionResult {
+export class PlaylistUpdateFailure implements Action  {
   public readonly type = LibraryActionTypes.PlaylistUpdateFailure
 
   constructor(public payload: any) { }
-
-  handle(state: LibraryState): LibraryState {
-    // TODO?
-    return {...state}
-  }
 }

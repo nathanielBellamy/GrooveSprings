@@ -17,7 +17,8 @@ import {PlaylistUpdateRes} from "../../../models/playlist/playlist_update_res.mo
 
 @Injectable()
 export class PlaylistsService {
-  private url: string = "api/v1/playlists"
+  private fetchUrl: string = "api/v1/playlists"
+  private crudUrl: string = "api/v1/playlistCrud"
 
   constructor(private http: HttpClient) {
   }
@@ -38,7 +39,7 @@ export class PlaylistsService {
   }
 
   fetchAll(): Observable<PlaylistsData> {
-    return this.http.get(this.url)
+    return this.http.get(this.fetchUrl)
       .pipe(
         map(res => {
           const playlistsRes: PlaylistsGetAll = res as PlaylistsGetAll
@@ -49,7 +50,7 @@ export class PlaylistsService {
   }
 
   fetchByArtistIds(artistIds: number[]): Observable<PlaylistsByArtistIds> {
-    return this.http.post(this.url + "/byArtistIds", { artistIds })
+    return this.http.post(this.fetchUrl + "/byArtistIds", { artistIds })
       .pipe(
         map( res => {
           const playlistRes: PlaylistsGetByArtistIds = res as PlaylistsGetByArtistIds
@@ -60,7 +61,7 @@ export class PlaylistsService {
   }
 
   fetchByAlbumIds(albumIds: number[]): Observable<PlaylistsByAlbumIds> {
-    return this.http.post(this.url + "/byAlbumIds", { albumIds })
+    return this.http.post(this.fetchUrl + "/byAlbumIds", { albumIds })
       .pipe(
         map(res => {
           const playlistRes: PlaylistsGetByAlbumIds = res as PlaylistsGetByAlbumIds
@@ -71,7 +72,7 @@ export class PlaylistsService {
   }
 
   create(playlist: Playlist): Observable<Playlist> {
-    return this.http.post(this.url, {name: playlist.name, trackIds: playlist.tracks.map(t => t.id) })
+    return this.http.post(this.crudUrl, {name: playlist.name, trackIds: playlist.tracks.map(t => t.id) })
       .pipe(
         map(res => {
           const playlistCreate: PlaylistCreateRes = res as PlaylistCreateRes
@@ -81,7 +82,7 @@ export class PlaylistsService {
   }
 
   update(dto: PlaylistUpdateDto): Observable<Playlist> {
-    return this.http.put(this.url + `/${dto.id}`, dto)
+    return this.http.put(this.crudUrl + `/${dto.id}`, dto)
       .pipe(
         map(res => {
           const playlistUpdate: PlaylistUpdateRes = res as PlaylistUpdateRes

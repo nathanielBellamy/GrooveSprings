@@ -15,7 +15,6 @@ import {PlaybackService} from "../services/playback.service";
 import {Identity} from "../../library/store/library.actions";
 import {PlaybackState} from "./playback.state";
 import {Store} from "@ngrx/store";
-import {PlaylistCreateSuccess, PlaylistUpdateSuccess} from "../../library/store/actions/playlists.actions";
 
 @Injectable()
 export class PlaybackEffects {
@@ -132,21 +131,6 @@ export class PlaybackEffects {
           catchError((e, _) => of(new Identity()))
         )
       )
-    )
-  )
-
-  hydrateStateOnSuccessfulPlaylistCrud$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(
-        LibraryActionTypes.PlaylistCreateSuccess,
-        LibraryActionTypes.PlaylistUpdateSuccess
-      ),
-      map((action) => (action as PlaylistCreateSuccess).payload),
-      map(playlist => new SetPlaylistAsCurr({
-        id: playlist.id,
-        name: playlist.name,
-        trackIds: playlist.tracks.map(t => t.id)
-      }))
     )
   )
 }
