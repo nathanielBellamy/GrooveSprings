@@ -35,7 +35,7 @@ export class FetchPlaylistsFailure implements Action, GsLibraryActionResult {
 }
 
 export class PlaylistCreateSuccess implements Action {
-  public readonly type = LibraryActionTypes.PlaylistCreate
+  public readonly type = LibraryActionTypes.PlaylistCreateSuccess
 }
 
 export class PlaylistCreateFailure implements Action {
