@@ -6,19 +6,15 @@ import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCode}
 
-import scala.util.{Failure, Success}
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.GsMusicLibraryScanner
-import dev.nateschieber.groovesprings.actors.GsRestController.appStateCacheFile
 import dev.nateschieber.groovesprings.entities.{Playlist, PlaylistJsonSupport, Track, TrackJsonSupport}
 import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
-import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, GsTrackServiceResponse, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, PauseTrig, PlayTrig, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect}
+import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, GsTrackServiceResponse, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, NextTrack, PauseTrig, PlayTrig, PrevTrack, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect}
 
-import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Path, Paths}
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.*
@@ -122,6 +118,18 @@ class GsRestController(
         get {
           gsPlaybackRef ! StopTrig(gsDisplayRef)
           complete("stop")
+        }
+      },
+      path("api" / "v1" / "transport" / "prevTrack") {
+        get {
+          gsAppStateManagerRef ! PrevTrack()
+          complete("prevTrack")
+        }
+      },
+      path("api" / "v1" / "transport" / "nextTrack") {
+        get {
+          gsAppStateManagerRef ! NextTrack()
+          complete("nextTrack")
         }
       },
       path("api" / "v1" / "transport" / "playbackSpeed") {

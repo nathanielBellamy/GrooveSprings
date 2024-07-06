@@ -2,7 +2,14 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Track} from "../../../models/tracks/track.model";
-import {PauseTrig, PlaybackSpeedTrig, PlayTrig, StopTrig} from "../store/playback.actions";
+import {
+  NextTrackTrig,
+  PauseTrig,
+  PlaybackSpeedTrig,
+  PlayTrig,
+  PrevTrackTrig,
+  StopTrig
+} from "../store/playback.actions";
 import {PlaybackActionTypes} from "../store/playback.actiontypes";
 import {PlaybackState} from "../store/playback.state";
 import {Store} from "@ngrx/store";
@@ -37,12 +44,16 @@ export class PlaybackService {
     return this.http.get(AppRoutesSrvr.appState(), {responseType: 'text'})
   }
 
-  transportControlTrig(action: PlayTrig | PauseTrig | StopTrig | PlaybackSpeedTrig): Observable<any> {
+  transportControlTrig(action: PlayTrig | PauseTrig | StopTrig | PlaybackSpeedTrig | NextTrackTrig | PrevTrackTrig): Observable<any> {
     switch (action.type) {
       case PlaybackActionTypes.PlayTrig:
         return this.http.get(AppRoutesSrvr.play(), {responseType: 'text'})
       case PlaybackActionTypes.PauseTrig:
         return this.http.get(AppRoutesSrvr.pause(), {responseType: 'text'})
+      case PlaybackActionTypes.NextTrackTrig:
+        return this.http.get(AppRoutesSrvr.nextTrack(), {responseType: 'text'})
+      case PlaybackActionTypes.PrevTrackTrig:
+        return this.http.get(AppRoutesSrvr.prevTrack(), {responseType: 'text'})
       case PlaybackActionTypes.PlaybackSpeedTrig:
         const actionT = action as PlaybackSpeedTrig
         return this.http.post(AppRoutesSrvr.playbackSpeed(), { speed: actionT.speed }, {responseType: 'text'})

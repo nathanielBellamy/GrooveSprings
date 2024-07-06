@@ -4,10 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
 import {defaultTrack, Track} from "../../../../models/tracks/track.model";
-import {Observable, tap} from "rxjs";
+import {Observable} from "rxjs";
 import { webSocket } from "rxjs/webSocket";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
-import {FetchAppState, HydrateAppState, NextTrack} from "../../store/playback.actions";
+import {FetchAppState, HydrateAppState} from "../../store/playback.actions";
 import {playbackStateFromPlaybackStateSrvr, PlaybackStateSrvr} from "../../../../models/srvr/playbackState.srvr.model";
 
 @Component({

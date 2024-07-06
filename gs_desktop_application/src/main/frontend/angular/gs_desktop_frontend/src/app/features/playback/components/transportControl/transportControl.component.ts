@@ -1,13 +1,16 @@
 import { Component  } from '@angular/core'
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import {AsyncPipe} from "@angular/common";
-import {PlaybackDisplayModule} from "../playbackDisplay/playbackDisplay.module"
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { faPlay, faPause, faStop, faForwardFast, faBackward } from '@fortawesome/free-solid-svg-icons'
 import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
-import {PauseTrig, PlaybackSpeedTrig, PlayTrig, StopTrig} from "../../store/playback.actions";
+import {
+  NextTrackTrig,
+  PauseTrig,
+  PlaybackSpeedTrig,
+  PlayTrig,
+  PrevTrackTrig,
+  StopTrig
+} from "../../store/playback.actions";
 
 @Component({
   selector: 'gsTransportControl',
@@ -31,6 +34,14 @@ export class TransportControlComponent {
 
   pauseTrig() {
     this.store$.dispatch(new PauseTrig())
+  }
+
+  nextTrackTrig() {
+    this.store$.dispatch(new NextTrackTrig())
+  }
+
+  prevTrackTrig() {
+    this.store$.dispatch(new PrevTrackTrig())
   }
 
   stopTrig() {
