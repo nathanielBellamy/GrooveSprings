@@ -67,18 +67,13 @@ public class PlaylistController {
   }
 
   @PutMapping(value = "/{id}")
-  public ResponseEntity<PlaylistUpdateResponse> updatePlaylist(@PathVariable("id") Long id, @RequestBody PlaylistUpdateDto dto) {
+  public ResponseEntity<PlaylistUpdateSrvrResponse> updatePlaylist(@PathVariable("id") Long id, @RequestBody PlaylistUpdateDto dto) {
     Optional<Playlist> playlistOpt = playlistService.findById(id);
     if (playlistOpt.isEmpty()) {
       return ResponseEntity.notFound().build();
     } else {
       Playlist playlistUpdated = playlistService.updateFromDto(playlistOpt.get(), dto);
-
-      ResponseEntity<PlaylistUpdateResponse> resEnt = new ResponseEntity<>(
-              new PlaylistUpdateResponse(playlistUpdated),
-              HttpStatus.OK
-      );
-      return resEnt;
+      return ResponseEntity.accepted().body(new PlaylistUpdateSrvrResponse(playlistUpdated));
     }
   }
 

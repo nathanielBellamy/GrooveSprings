@@ -4,7 +4,6 @@ import {map, Observable} from 'rxjs';
 import {PlaylistsGetAll} from "../../../models/playlist/playlists_get_all.model";
 import {PlaylistsData} from "../../../models/playlist/playlists_data.model";
 import {Playlist} from "../../../models/playlist/playlist.model";
-import {PlaylistCreateRes} from "../../../models/playlist/playlist_create_res.model";
 import {Action} from "@ngrx/store";
 import {LibraryActionTypes} from "../store/library.actiontypes";
 import {SetAlbumsFilter, SetArtistsFilter} from "../store/library.actions";
@@ -13,7 +12,6 @@ import {PlaylistsGetByArtistIds} from "../../../models/playlist/playlists_get_by
 import {PlaylistsByAlbumIds} from "../../../models/playlist/playlists_by_album_ids.model";
 import {PlaylistsGetByAlbumIds} from "../../../models/playlist/playlists_get_by_album_ids.model";
 import {PlaylistUpdateDto} from "../../../models/playlist/playlist_update_dto.model";
-import {PlaylistUpdateRes} from "../../../models/playlist/playlist_update_res.model";
 
 @Injectable()
 export class PlaylistsService {
@@ -71,23 +69,11 @@ export class PlaylistsService {
       )
   }
 
-  create(playlist: Playlist): Observable<Playlist> {
+  create(playlist: Playlist): Observable<any> {
     return this.http.post(this.crudUrl, {name: playlist.name, trackIds: playlist.tracks.map(t => t.id) })
-      .pipe(
-        map(res => {
-          const playlistCreate: PlaylistCreateRes = res as PlaylistCreateRes
-          return playlistCreate.data.playlist
-        })
-      )
   }
 
-  update(dto: PlaylistUpdateDto): Observable<Playlist> {
+  update(dto: PlaylistUpdateDto): Observable<any> {
     return this.http.put(this.crudUrl + `/${dto.id}`, dto)
-      .pipe(
-        map(res => {
-          const playlistUpdate: PlaylistUpdateRes = res as PlaylistUpdateRes
-          return playlistUpdate.data.playlist
-        })
-      )
   }
 }

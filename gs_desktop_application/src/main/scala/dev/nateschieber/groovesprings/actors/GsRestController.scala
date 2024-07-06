@@ -4,7 +4,7 @@ import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCode}
 
 import scala.util.{Failure, Success}
 import akka.http.scaladsl.server.Directives.*
@@ -14,7 +14,7 @@ import dev.nateschieber.groovesprings.actors.GsRestController.appStateCacheFile
 import dev.nateschieber.groovesprings.entities.{Playlist, PlaylistJsonSupport, Track, TrackJsonSupport}
 import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
-import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
+import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, GsTrackServiceResponse, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
 import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, PauseTrig, PlayTrig, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect}
 
 import java.nio.charset.StandardCharsets
@@ -22,6 +22,8 @@ import java.nio.file.{Files, Path, Paths}
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.*
+import spray.json.*
+import dev.nateschieber.groovesprings.rest.GsTrackServiceResponseProtocol.gsTrackServiceResponseFormat
 
 object GsRestController {
 
@@ -187,28 +189,16 @@ class GsRestController(
                 uri = s"http://localhost:5173/api/v1/playlists$remaining", // gs-track-service
                 entity = requestEntity
               ))
-              val result = Await.result(
+              val resultJsonString = Await.result(
                 future
                   .flatMap { resp => resp.entity.toStrict(timeout) }
                   .map { strictEntity => strictEntity.data.utf8String },
                 timeout
               )
-              // TODO:
-              //   - update gs-track-service#PlaylistController to return full Playlist here
-              //   - parse payload into Playlist
-              //   - update state (which triggers hydrateState)
-              println(result)
+              val gsTrackServiceResponse = resultJsonString.parseJson.convertTo[GsTrackServiceResponse[Playlist]]
+              gsAppStateManagerRef ! SetPlaylist(gsTrackServiceResponse.data, context.self)
 
-              complete("Playlist CRUD")
-
-
-
-//              response.onComplete {
-//                case Success(res) => println(res.entity().toStrict(FiniteDuration(2, "seconds")).map(_.data.utf8String))
-//                case Failure(res) => println(res)
-//              }
-//              println(response)
-//              complete(response)
+              complete(HttpResponse(200))
             }
           }
         }
