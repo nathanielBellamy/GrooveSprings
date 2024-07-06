@@ -16,6 +16,14 @@ export class AppRoutesSrvr {
     return transportPrefix + "/pause"
   }
 
+  static nextTrack() {
+    return transportPrefix + "/nextTrack"
+  }
+
+  static prevTrack() {
+    return transportPrefix + "/prevTrack"
+  }
+
   static stop() {
     return transportPrefix + "/stop"
   }

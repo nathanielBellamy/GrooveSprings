@@ -58,3 +58,6 @@ final case class RespondCurrPlaylistTrackIdx(replyTo: ActorRef[CurrPlaylistTrack
 
 final case class SetPlaylist(playlist: Playlist, replyTo: ActorRef[RespondSetPlaylist]) extends GsCommand
 final case class RespondSetPlaylist(replyTo: ActorRef[SetPlaylist]) extends GsCommand
+
+final case class NextTrack() extends GsCommand
+final case class PrevTrack() extends GsCommand

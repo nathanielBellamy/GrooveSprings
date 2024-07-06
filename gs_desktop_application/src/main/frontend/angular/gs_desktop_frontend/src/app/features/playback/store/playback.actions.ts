@@ -121,16 +121,12 @@ export class CachePlaybackState implements Action {
   readonly type = PlaybackActionTypes.CachePlaybackState
 }
 
-export class NextTrack implements Action {
-  readonly type = PlaybackActionTypes.NextTrack
+export class NextTrackTrig implements Action {
+  readonly type = PlaybackActionTypes.NextTrackTrig
+}
 
-  public handle(state: PlaybackState): PlaybackState {
-    const newPlaylistCurrTrackIndex: number = (state.currPlaylistTrackIdx + 1) % (state.playlist.tracks.length)
-    return {
-      ...state,
-      currPlaylistTrackIdx: newPlaylistCurrTrackIndex,
-    }
-  }
+export class PrevTrackTrig implements Action {
+  readonly type = PlaybackActionTypes.PrevTrackTrig
 }
 
 export class HydrateAppState implements Action, GsPlaybackAction {

@@ -4,7 +4,7 @@ import {LibraryActionTypes} from "../../library/store/library.actiontypes";
 import {catchError, map, switchMap, of} from "rxjs";
 import {
   AddTrackToPlaylist,
-  ClearPlaylist, FetchAppState, NextTrack, PauseTrig, PlaybackSpeedTrig, PlayTrig,
+  ClearPlaylist, FetchAppState, NextTrackTrig, PauseTrig, PlaybackSpeedTrig, PlayTrig, PrevTrackTrig,
   SetCurrFileFailure,
   SetCurrFileSuccess,
   SetCurrPlaylistTrackIdx,
@@ -90,11 +90,13 @@ export class PlaybackEffects {
 
   transportControlTrig$ = createEffect(() =>
     this.actions$.pipe(
-      ofType<PlayTrig | PauseTrig | StopTrig | PlaybackSpeedTrig>(
+      ofType<PlayTrig | PauseTrig | StopTrig | PlaybackSpeedTrig | NextTrackTrig | PrevTrackTrig>(
         PlaybackActionTypes.PlayTrig,
         PlaybackActionTypes.PauseTrig,
         PlaybackActionTypes.StopTrig,
-        PlaybackActionTypes.PlaybackSpeedTrig
+        PlaybackActionTypes.PlaybackSpeedTrig,
+        PlaybackActionTypes.NextTrackTrig,
+        PlaybackActionTypes.PrevTrackTrig
       ),
       switchMap((action) => this.playbackService.transportControlTrig(action)
         .pipe(

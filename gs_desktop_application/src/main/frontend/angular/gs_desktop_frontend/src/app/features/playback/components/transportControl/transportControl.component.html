@@ -19,10 +19,15 @@
       (click)="stopTrig()">
       <fa-icon [icon]="faStop"></fa-icon>
     </button>
-    <button class="transport_control_button">
+    <button
+      class="transport_control_button"
+      (click)="prevTrackTrig()">
       <fa-icon [icon]="faBackward"></fa-icon>
     </button>
-    <button class="transport_control_button">
+    <button
+      class="transport_control_button"
+      (click)="nextTrackTrig()"
+    >
       <fa-icon [icon]="faForwardFast"></fa-icon>
     </button>
   </fieldset>

@@ -25,7 +25,8 @@ export enum PlaybackActionTypes {
   StopTrig = "[Playback] Stop Trig",
   PlaybackSpeedTrig = "[Playback] Playback Speed Trig",
 
-  NextTrack = "[Playback] Next Track",
+  NextTrackTrig = "[Playback] Next Track Trig",
+  PrevTrackTrig = "[Playback] Prev Track Trig",
 
   HydrateAppState = "[Playback] Hydrate App State",
 }
