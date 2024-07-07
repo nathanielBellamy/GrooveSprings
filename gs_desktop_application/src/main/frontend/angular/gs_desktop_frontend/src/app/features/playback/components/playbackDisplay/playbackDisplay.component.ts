@@ -71,8 +71,6 @@ export class PlaybackDisplayComponent {
           if (msgNum !== -1) {
             this.setCurrPercent(msgNum)
             return
-          } else {
-            this.setCurrPercent(0)
           }
         },
         error: (e: any) => console.error({playbackDisplaySocketError: e}),
