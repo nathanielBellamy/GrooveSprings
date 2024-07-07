@@ -18,12 +18,12 @@ public class JniMain {
 
   private native int addNative(int x, int y);
 
-  public static void initPlaybackLoop(String filePath, Long initialFrameId) {
+  public static void initPlaybackLoop(Long threadId, String filePath, Long initialFrameId) {
     long initFrameId = initialFrameId == null ? 0l : initialFrameId.longValue();
-    new JniMain().initPlaybackLoopNative(filePath, initialFrameId);
+    new JniMain().initPlaybackLoopNative(threadId, filePath, initialFrameId);
   }
 
-  private native void initPlaybackLoopNative(String filePath, long initialFrameId);
+  private native void initPlaybackLoopNative(long threadId, String filePath, long initialFrameId);
 
   public static SfInfo readSfInfo(String filePath) {
     SfInfo res = new JniMain().readSfInfoNative(filePath);

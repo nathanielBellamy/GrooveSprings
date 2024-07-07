@@ -26,10 +26,10 @@ JNIEXPORT jint JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_addNative
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
  * Method:    initPlaybackLoopNative
- * Signature: (Ljava/lang/String;J)V
+ * Signature: (JLjava/lang/String;J)V
  */
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
-  (JNIEnv *, jobject, jstring, jlong);
+  (JNIEnv *, jobject, jlong, jstring, jlong);
 
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
