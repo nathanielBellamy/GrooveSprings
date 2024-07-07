@@ -26,9 +26,9 @@ JNIEXPORT jint JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_addNative
 }
 
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
-  (JNIEnv* env, jobject _gsPlayback, jstring jfile, jlong initialFrameId) {
+  (JNIEnv* env, jobject _gsPlayback, jlong threadId, jstring jfile, jlong initialFrameId) {
   try {
-      Audio audio(env, jfile, initialFrameId);
+      Audio audio(env, threadId, jfile, initialFrameId);
       audio.run();
    }
    catch(std::exception const& e)

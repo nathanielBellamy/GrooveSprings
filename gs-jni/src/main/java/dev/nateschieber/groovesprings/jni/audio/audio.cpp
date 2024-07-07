@@ -13,8 +13,9 @@
 
 typedef float SAMPLE;
 
-Audio::Audio(JNIEnv* env, jstring jFileName, jlong initialFrameId) :
+Audio::Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameId) :
   jniEnv(env)
+  , threadId(threadId)
   , fileName(env->GetStringUTFChars(jFileName, 0))
   , initialFrameId(initialFrameId) {}
 
@@ -216,6 +217,7 @@ int Audio::run()
   err = Pa_StartStream( stream );
   if( err != paNoError ) goto error;
 
+  long threadId;
   while( audioData.playState != 0
             && audioData.playState != 2
             && audioData.index > -1
@@ -228,8 +230,17 @@ int Audio::run()
     // and
     // make it accessible to our running audio callback through the audioData obj
 
-    if (audioData.readComplete) {
+    if (audioData.readComplete) { // reached end of input file
         Audio::jSetPlayState(&jniData, 0); // stop
+        break;
+    }
+
+    // check if this is still the current audio thread
+    threadId = jniData.env->CallStaticLongMethod(
+        jniData.gsPlayback,
+        jniData.getThreadId
+    );
+    if (threadId != Audio::threadId) { // if not, break + cleanup
         break;
     }
 
@@ -243,21 +254,22 @@ int Audio::run()
         jniData.getPlayStateInt
     );
 
-//    std::cout << "\n =========== \n";
-//    std::cout << "\n audioData.playState: " << audioData.playState << "\n";
-//    std::cout << "\n audioData.index " << audioData.index << "\n";
-//    std::cout << "\n =========== \n";
+    //    std::cout << "\n =========== \n";
+    //    std::cout << "\n audioData.playState: " << audioData.playState << "\n";
+    //    std::cout << "\n audioData.index " << audioData.index << "\n";
+    //    std::cout << "\n =========== \n";
 
-   Audio::jSetCurrFrameId(&jniData, (int) audioData.index);
+    Audio::jSetCurrFrameId(&jniData, (int) audioData.index);
   }
 
-
-  if (audioData.playState == 1) {
-      Audio::jSetPlayState(&jniData, 0);
-  } else {
-      Audio::jSetPlayState(&jniData, audioData.playState);
+  if (threadId == Audio::threadId) { // current audio thread has reached natural end of file
+      if (audioData.playState == 1) {
+          Audio::jSetPlayState(&jniData, 0);
+      } else {
+          Audio::jSetPlayState(&jniData, audioData.playState);
+      }
+      Audio::jSetReadComplete(&jniData);
   }
-  Audio::jSetReadComplete(&jniData);
 
   err = Pa_StopStream( stream );
   if( err != paNoError ) goto error;

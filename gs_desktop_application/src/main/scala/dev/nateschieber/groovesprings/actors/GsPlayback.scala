@@ -37,9 +37,9 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case ReadPlaybackThreadState(replyTo) =>
-        replyTo ! RespondPlaybackThreadState(GsPlaybackThread.getCurrFrameId(), 
-                                             GsPlaybackThread.getPlayState(),
-                                             GsPlaybackThread.getReadComplete(),
+        replyTo ! RespondPlaybackThreadState(GsPlaybackThread.getCurrFrameId,
+                                             GsPlaybackThread.getPlayState,
+                                             GsPlaybackThread.getReadComplete,
                                              context.self)
         Behaviors.same
 
@@ -47,7 +47,10 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         GsPlaybackThread.stop()
         clearPlaybackThread()
         GsPlaybackThread.setFileName(track.path)
-        replyTo ! RespondTrackSelect(context.self)
+        GsPlaybackThread.play()
+        playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
+        playbackThreadRef ! InitPlaybackThread(context.self)
+//        replyTo ! RespondTrackSelect(context.self)
         Behaviors.same
 
       case InitialTrackSelect(track) =>
@@ -57,16 +60,16 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         Behaviors.same
 
       case PlayTrig(replyTo) =>
-        val playState = GsPlaybackThread.getPlayState()
+        val playState = GsPlaybackThread.getPlayState
         if (playState == GsPlayState.PLAY)
           return Behaviors.same
         if (playState == GsPlayState.STOP)
           GsPlaybackThread.stop() // clear currFrameId, may have been updated by native thread
           clearPlaybackThread()
         GsPlaybackThread.play()
-        if (GsPlaybackThread.getFilePath() != null)
+        if (GsPlaybackThread.getFilePath != null)
           if (playbackThreadRef == null)
-            playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
+            playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString)
           playbackThreadRef ! InitPlaybackThread(context.self)
         replyTo ! RespondPlayTrig(context.self)
         Behaviors.same
