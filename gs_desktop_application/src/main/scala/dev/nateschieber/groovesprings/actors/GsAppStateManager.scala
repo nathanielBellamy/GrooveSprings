@@ -101,7 +101,7 @@ class GsAppStateManager(
       return AppState(appState.currTrack, 0, EmptyPlaylist)
 
     val oldIdx = appState.currPlaylistTrackIdx
-    val newIdx = (oldIdx - 1) % playlistLength
+    val newIdx = (oldIdx + (playlistLength - 1)) % playlistLength
 
     AppState(appState.playlist.tracks(newIdx), newIdx, appState.playlist)
   }
