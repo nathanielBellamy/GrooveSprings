@@ -50,13 +50,11 @@ object GsPlaybackThread {
   }
 
   @static def stop(): Unit = {
-//    incrThreadId()
     currFrameId = 0
     playState = GsPlayState.STOP
   }
 
   @static def pause(): Unit = {
-//    incrThreadId()
     playState = GsPlayState.PAUSE
   }
 

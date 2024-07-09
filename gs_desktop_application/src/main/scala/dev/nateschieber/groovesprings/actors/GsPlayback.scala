@@ -47,10 +47,8 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         GsPlaybackThread.stop()
         clearPlaybackThread()
         GsPlaybackThread.setFileName(track.path)
-        GsPlaybackThread.play()
-        playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString())
-        playbackThreadRef ! InitPlaybackThread(context.self)
-//        replyTo ! RespondTrackSelect(context.self)
+        GsPlaybackThread.setCurrFrameId(0)
+        replyTo ! RespondTrackSelect(context.self)
         Behaviors.same
 
       case InitialTrackSelect(track) =>
