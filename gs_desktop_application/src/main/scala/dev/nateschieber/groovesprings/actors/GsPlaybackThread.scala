@@ -157,11 +157,8 @@ class GsPlaybackThread(context: ActorContext[GsCommand]) extends AbstractBehavio
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case InitPlaybackThread(replyTo) =>
-        val newThreadId = GsPlaybackThread.newThreadId
-        println(newThreadId)
         JniMain.initPlaybackLoop(
-          newThreadId,
-//          GsPlaybackThread.newThreadId(),
+          GsPlaybackThread.newThreadId,
           GsPlaybackThread.getFilePath,
           GsPlaybackThread.getCurrFrameId
         ) // blocking
