@@ -85,16 +85,6 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         clearPlaybackThread()
         replyTo ! RespondStopTrig(context.self)
         Behaviors.same
-        
-      case FastForwardTrig(replyTo) =>
-        GsPlaybackThread.setPlayState(GsPlayState.FF)
-        replyTo ! RespondFastForwardTrig(context.self)
-        Behaviors.same
-
-      case RewindTrig(replyTo) =>
-        GsPlaybackThread.setPlayState(GsPlayState.RW)
-        replyTo ! RespondRewindTrig(context.self)
-        Behaviors.same
 
       case SetPlaybackSpeed(speed, replyTo) =>
         GsPlaybackThread.setPlaybackSpeed(speed)

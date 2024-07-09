@@ -28,16 +28,12 @@ final case class RespondStopPlaybackThread(replyTo: ActorRef[StopPlaybackThread]
 final case class RespondPlayTrig(replyTo: ActorRef[PlayTrig | ReadPlaybackThreadState]) extends GsCommand
 final case class RespondPauseTrig(replyTo: ActorRef[PauseTrig]) extends GsCommand
 final case class RespondStopTrig(replyTo: ActorRef[StopTrig]) extends GsCommand
-final case class RespondFastForwardTrig(replyTo: ActorRef[FastForwardTrig]) extends GsCommand
-final case class RespondRewindTrig(replyTo: ActorRef[RewindTrig]) extends GsCommand
 final case class RespondSetPlaybackSpeed(replyTo: ActorRef[SetPlaybackSpeed]) extends GsCommand
 
 // GsTransportControl
 final case class PlayTrig(replyTo: ActorRef[RespondPlayTrig]) extends GsCommand
 final case class PauseTrig(replyTo: ActorRef[RespondPauseTrig]) extends GsCommand
 final case class StopTrig(replyTo: ActorRef[RespondStopTrig]) extends GsCommand
-final case class FastForwardTrig(replyTo: ActorRef[RespondFastForwardTrig]) extends GsCommand
-final case class RewindTrig(replyTo: ActorRef[RespondRewindTrig]) extends GsCommand
 final case class SetPlaybackSpeed(speed: GsPlaybackSpeed, replyTo: ActorRef[RespondSetPlaybackSpeed]) extends GsCommand
 
 // GsRestController
