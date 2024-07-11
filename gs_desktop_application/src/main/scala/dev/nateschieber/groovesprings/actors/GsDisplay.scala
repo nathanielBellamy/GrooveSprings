@@ -83,6 +83,10 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
         replyTo ! ReadPlaybackThreadState(context.self)
         Behaviors.same
 
+      case RespondPlayFromTrackSelectTrig(replyTo) =>
+        replyTo ! ReadPlaybackThreadState(context.self)
+        Behaviors.same
+
       case RespondPauseTrig(replyTo) =>
         Behaviors.same
 
@@ -106,6 +110,10 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
 
       case InitDisplay() =>
         playbackRef ! ReadPlaybackThreadState(context.self)
+        Behaviors.same
+
+      case default =>
+        println("GsDisplay::UnMatchedMethod")
         Behaviors.same
     }
   }

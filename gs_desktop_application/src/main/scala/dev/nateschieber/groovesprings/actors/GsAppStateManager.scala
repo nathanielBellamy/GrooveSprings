@@ -9,7 +9,7 @@ import akka.stream.impl
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.appState
 import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState, EmptyPlaylist, EmptyTrack, Playlist, Track}
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextTrack, PauseTrig, PlayTrig, PrevTrack, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondSetPlaylist, RespondTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextTrack, PauseTrig, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondSetPlaylist, RespondTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -137,12 +137,12 @@ class GsAppStateManager(
         // TODO: un-overload TrackSelect
         gsPlaybackRef ! TrackSelect(track, context.self)
         hydrateState()
-        replyTo ! RespondTrackSelect(context.self)
+        replyTo ! RespondTrackSelect(track.path, context.self)
         Behaviors.same
 
-      case RespondTrackSelect(_) =>
+      case RespondTrackSelect(path, _replyTo) =>
         // auto play on TrackSelect
-        gsPlaybackRef ! PlayTrig(gsDisplayRef)
+        gsPlaybackRef ! PlayFromTrackSelectTrig(path, gsDisplayRef)
         Behaviors.same
 
       case HydrateStateToDisplay() =>

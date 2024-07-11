@@ -122,7 +122,7 @@ object GsPlaybackThread {
     filePath
   }
   
-  @static def setFileName(value: java.lang.String): Unit = {
+  @static def setFilePath(value: java.lang.String): Unit = {
     filePath = value
   }
   
@@ -158,6 +158,15 @@ class GsPlaybackThread(context: ActorContext[GsCommand]) extends AbstractBehavio
         JniMain.initPlaybackLoop(
           GsPlaybackThread.newThreadId,
           GsPlaybackThread.getFilePath,
+          GsPlaybackThread.getCurrFrameId
+        ) // blocking
+        Behaviors.stopped
+
+      case InitPlaybackThreadFromTrackSelect(path, replyTo) =>
+        GsPlaybackThread.setFilePath(path)
+        JniMain.initPlaybackLoop(
+          GsPlaybackThread.newThreadId,
+          path,
           GsPlaybackThread.getCurrFrameId
         ) // blocking
         Behaviors.stopped
