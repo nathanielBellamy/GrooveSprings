@@ -46,15 +46,14 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
       case TrackSelect(track, replyTo) =>
         GsPlaybackThread.stop()
         clearPlaybackThread()
-        GsPlaybackThread.setFileName(track.path)
         GsPlaybackThread.setCurrFrameId(0)
-        replyTo ! RespondTrackSelect(context.self)
+        replyTo ! RespondTrackSelect(track.path, context.self)
         Behaviors.same
 
       case InitialTrackSelect(track) =>
         GsPlaybackThread.stop()
         clearPlaybackThread()
-        GsPlaybackThread.setFileName(track.path)
+        GsPlaybackThread.setFilePath(track.path)
         Behaviors.same
 
       case PlayTrig(replyTo) =>
@@ -71,7 +70,17 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
           playbackThreadRef ! InitPlaybackThread(context.self)
         replyTo ! RespondPlayTrig(context.self)
         Behaviors.same
-      
+
+      case PlayFromTrackSelectTrig(path, replyTo) =>
+        GsPlaybackThread.stop() // clear currFrameId, may have been updated by native thread
+        clearPlaybackThread()
+        GsPlaybackThread.play()
+        if (playbackThreadRef == null)
+          playbackThreadRef = context.spawn(GsPlaybackThread(), UUID.randomUUID().toString)
+        playbackThreadRef ! InitPlaybackThreadFromTrackSelect(path, context.self)
+        replyTo ! RespondPlayFromTrackSelectTrig(context.self)
+        Behaviors.same
+        
       case PauseTrig(replyTo) =>
         GsPlaybackThread.pause()
         clearPlaybackThread()

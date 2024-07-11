@@ -14,24 +14,28 @@ final case class ReadPlaybackThreadState(replyTo: ActorRef[RespondPlaybackThread
 final case class RespondPlaybackThreadState(frameId: Long, playState: GsPlayState, readComplete: Boolean, replyTo: ActorRef[ReadPlaybackThreadState]) extends GsCommand
 
 final case class TrackSelect(track: Track, replyTo: ActorRef[RespondTrackSelect]) extends GsCommand // auto-play
-final case class RespondTrackSelect(replyTo: ActorRef[TrackSelect]) extends GsCommand
+final case class RespondTrackSelect(path: String, replyTo: ActorRef[TrackSelect]) extends GsCommand
 
 final case class InitialTrackSelect(track: Track) extends GsCommand // no auto-play
 
 // GsPlaybackThread
 final case class InitPlaybackThread(replyTo: ActorRef[RespondInitPlaybackThread]) extends GsCommand
 final case class RespondInitPlaybackThread(replyTo: ActorRef[InitPlaybackThread]) extends GsCommand
+final case class InitPlaybackThreadFromTrackSelect(path: String, replyTo: ActorRef[RespondInitPlaybackThreadFromTrackSelect]) extends GsCommand
+final case class RespondInitPlaybackThreadFromTrackSelect(replyTo: ActorRef[InitPlaybackThreadFromTrackSelect]) extends GsCommand
 final case class StopPlaybackThread(replyTo: ActorRef[RespondStopPlaybackThread]) extends GsCommand
 final case class RespondStopPlaybackThread(replyTo: ActorRef[StopPlaybackThread]) extends GsCommand
 
 // GsPlayback
-final case class RespondPlayTrig(replyTo: ActorRef[PlayTrig | ReadPlaybackThreadState]) extends GsCommand
+final case class RespondPlayTrig(replyTo: ActorRef[PlayTrig | PlayFromTrackSelectTrig | ReadPlaybackThreadState]) extends GsCommand
+final case class RespondPlayFromTrackSelectTrig(replyTo: ActorRef[PlayFromTrackSelectTrig | ReadPlaybackThreadState]) extends GsCommand
 final case class RespondPauseTrig(replyTo: ActorRef[PauseTrig]) extends GsCommand
 final case class RespondStopTrig(replyTo: ActorRef[StopTrig]) extends GsCommand
 final case class RespondSetPlaybackSpeed(replyTo: ActorRef[SetPlaybackSpeed]) extends GsCommand
 
 // GsTransportControl
 final case class PlayTrig(replyTo: ActorRef[RespondPlayTrig]) extends GsCommand
+final case class PlayFromTrackSelectTrig(path: String, replyTo: ActorRef[RespondPlayFromTrackSelectTrig]) extends GsCommand
 final case class PauseTrig(replyTo: ActorRef[RespondPauseTrig]) extends GsCommand
 final case class StopTrig(replyTo: ActorRef[RespondStopTrig]) extends GsCommand
 final case class SetPlaybackSpeed(speed: GsPlaybackSpeed, replyTo: ActorRef[RespondSetPlaybackSpeed]) extends GsCommand
