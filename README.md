@@ -1,10 +1,12 @@
 # GrooveSprings
 ### Music Library + Player Built With
-- Spring Boot
 - Akka
 - portaudio
 - libsndfile
 - Angular
+- Spring Boot
+
+![GrooveSprings Use Example](./gs_demo_2.gif)
 
 ### Build
 - frontend
