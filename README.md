@@ -4,6 +4,7 @@
 - portaudio
 - libsndfile
 - Angular
+- ngrx
 - Spring Boot
 
 ![GrooveSprings Use Example](./gs_demo_2.gif)
