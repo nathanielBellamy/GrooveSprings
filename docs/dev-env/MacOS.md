@@ -65,6 +65,7 @@ make lib
 mkdir ~/GrooveSprings_MusicLibrary
 ```
 - add your own music files in
+
 #### XII. Start Docker Using Colima
 ```bash
 colima start
