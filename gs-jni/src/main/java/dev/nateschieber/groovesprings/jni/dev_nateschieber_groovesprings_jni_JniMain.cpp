@@ -37,7 +37,6 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlayb
    }
 }
 
-
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
  * Method:    readSfInfoNative
