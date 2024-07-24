@@ -25,7 +25,13 @@ public class MockTrackFactory {
                 null,
                 null,
                 null,
-                null),
+                null,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0),
         new Track(
             2l,
             List.of(MockArtistFactory.defaultArtists().get(1)),
@@ -40,7 +46,13 @@ public class MockTrackFactory {
                 null,
                 null,
                 null,
-                null),
+                null,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0),
         new Track(
             3l,
             List.of(MockArtistFactory.defaultArtists().get(2)),
@@ -55,7 +67,13 @@ public class MockTrackFactory {
                 null,
                 null,
                 null,
-                null)
+                null,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0)
     );
   }
 }

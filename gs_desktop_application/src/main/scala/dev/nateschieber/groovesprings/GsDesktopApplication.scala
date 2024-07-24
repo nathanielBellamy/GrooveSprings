@@ -6,8 +6,8 @@ import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.actors.GsSupervisor
 import dev.nateschieber.groovesprings.enums.GsHttpPort
-import dev.nateschieber.groovesprings.jni.JniMain
 
+import scala.annotation.static
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object GsDesktopApplication {
