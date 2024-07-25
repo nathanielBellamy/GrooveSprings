@@ -6,9 +6,6 @@
 - Browser of your choice/Firefox
 - IntelliJ IDEA
 - Homebrew
-```bash
-brew install brew
-```
 
 #### II. Homebrew it
 ```bash
@@ -17,7 +14,7 @@ brew install git npm node make gcc portaudio libsndfile openjdk scala@3.3 docker
 
 #### III. Clone repo
 ```bash
-git clone
+git clone git@github.com:nathanielBellamy/GrooveSprings.git
 ```
 
 #### IV. Open Repo in IntelliJ
@@ -57,8 +54,10 @@ make lib
 #### X. Define VM Option for Native Lib in Run Config
 - edit the `GsDesktopApplication` run configuration
 - `Modify Options` -> `Add VM Options`
-- copy in the command-line argument from the comment in the makefile, updating the absolute path the `GrooveSprings` repository
-
+- update and add the following VM option
+```
+-Djava.library.path="/absolute/path/to/repo/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni"
+```
 
 #### XI. Establish Library + Add Music
 - create library director
@@ -67,10 +66,11 @@ mkdir ~/GrooveSprings_MusicLibrary
 ```
 - add your own music files in
 
-
-#### XII. Run the app
-- make sure `docker` is running through `colima`
+#### XII. Start Docker Using Colima
 ```bash
 colima start
 ```
-- run the compound `GrooveSprings` configuration
+
+#### XIII. Run the App
+- run the compound `GrooveSprings` run configuration
+- bring music into the app by running a library scan: `Settings -> Scan Library`
