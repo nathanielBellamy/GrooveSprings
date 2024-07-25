@@ -189,7 +189,7 @@ int Audio::run()
       fprintf(stderr,"\nError: No default input device.");
       goto error;
   }
-  inputParameters.channelCount = audioData.sfinfo.channels;       /* stereo in from file */
+  inputParameters.channelCount = 1;
   inputParameters.sampleFormat = PA_SAMPLE_TYPE;
   inputParameters.hostApiSpecificStreamInfo = NULL;
 
