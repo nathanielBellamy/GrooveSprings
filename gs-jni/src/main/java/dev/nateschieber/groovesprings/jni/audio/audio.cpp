@@ -189,6 +189,7 @@ int Audio::run()
       fprintf(stderr,"\nError: No default input device.");
       goto error;
   }
+  // TODO: detect and set channelCount
   inputParameters.channelCount = 1;
   inputParameters.sampleFormat = PA_SAMPLE_TYPE;
   inputParameters.hostApiSpecificStreamInfo = NULL;

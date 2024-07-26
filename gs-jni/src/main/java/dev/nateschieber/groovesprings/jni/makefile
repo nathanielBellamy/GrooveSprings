@@ -28,7 +28,7 @@ os_lib_flag = -dynamicLib
 
 # TODO: detect OS and set
 # - for linux:
-# - for macOS: /opt/homebrew/opt # depending on homebrew version
+# - for macO_sonoma: /opt/homebrew/Cellar
 c_libs_home = /opt/homebrew/Cellar
 
 c_libs_include_flags = -I$(c_libs_home)/libsndfile/1.2.2/include -I$(c_libs_home)/portaudio/19.7.0/include -I$(c_libs_home)/openjdk/22.0.1/include
