@@ -9,23 +9,23 @@ export class AppRoutesSrvr {
   }
 
   static play() {
-    return transportPrefix + "/play"
+    return transportPrefix + "?cmd=play"
   }
 
   static pause() {
-    return transportPrefix + "/pause"
+    return transportPrefix + "?cmd=pause"
   }
 
   static nextTrack() {
-    return transportPrefix + "/nextTrack"
+    return transportPrefix + "?cmd=nextTrack"
   }
 
   static prevTrack() {
-    return transportPrefix + "/prevTrack"
+    return transportPrefix + "?cmd=prevTrack"
   }
 
   static stop() {
-    return transportPrefix + "/stop"
+    return transportPrefix + "?cmd=stop"
   }
 
   static playbackSpeed() {

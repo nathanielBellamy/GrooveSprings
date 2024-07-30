@@ -102,34 +102,23 @@ class GsRestController(
         }
       },
       // Transport Controls
-      path("api" / "v1" / "transport" / "play") {
+      path("api" / "v1" / "transport") {
         get {
-          gsPlaybackRef ! PlayTrig(gsDisplayRef)
-          complete("play")
-        }
-      },
-      path("api" / "v1" / "transport" / "pause") {
-        get {
-          gsPlaybackRef ! PauseTrig(gsDisplayRef)
-          complete("pause")
-        }
-      },
-      path("api" / "v1" / "transport" / "stop") {
-        get {
-          gsPlaybackRef ! StopTrig(gsDisplayRef)
-          complete("stop")
-        }
-      },
-      path("api" / "v1" / "transport" / "prevTrack") {
-        get {
-          gsAppStateManagerRef ! PrevTrack()
-          complete("prevTrack")
-        }
-      },
-      path("api" / "v1" / "transport" / "nextTrack") {
-        get {
-          gsAppStateManagerRef ! NextTrack()
-          complete("nextTrack")
+          parameters(Symbol("cmd").as[String]) { (cmd: String) => {
+            cmd match {
+              case "play" =>
+                gsPlaybackRef ! PlayTrig(gsDisplayRef)
+              case "pause" =>
+                gsPlaybackRef ! PauseTrig(gsDisplayRef)
+              case "stop" =>
+                gsPlaybackRef ! StopTrig(gsDisplayRef)
+              case "prevTrack" =>
+                gsAppStateManagerRef ! PrevTrack()
+              case "nextTrack" =>
+                gsAppStateManagerRef ! NextTrack()
+            }
+            complete(cmd)
+          }}
         }
       },
       path("api" / "v1" / "transport" / "playbackSpeed") {
