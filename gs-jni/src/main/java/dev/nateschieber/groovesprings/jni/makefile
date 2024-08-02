@@ -4,7 +4,7 @@
 ### In order to run this program within Intellij
 ### we need to tell the JVM where to find the the compiled .so/.dylib library.
 ### To do so, edit the Run Configuration for the `gs_desktop_application` by adding the following VM option
-### -Djava.library.path="/absolute/path/to/repo/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/dev_nateschieber_groovesprings_jni_JniMain"
+### -Djava.library.path="/absolute/path/to/repo/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni"
 
 cxx = g++
 audio_src = audio/audio.cpp
@@ -28,9 +28,13 @@ os_lib_flag = -dynamicLib
 
 # TODO: detect OS and set
 # - for linux:
-# - for macOS: /opt/homebrew/opt # depending on homebrew version
+# - for macO_sonoma: /opt/homebrew/Cellar
+# NOTE:
+#  - on MacOS it may be helpful to use `brew info portaudio` to view home directory
 c_libs_home = /opt/homebrew/Cellar
 
+# TODO:
+#   - version variables
 c_libs_include_flags = -I$(c_libs_home)/libsndfile/1.2.2/include -I$(c_libs_home)/portaudio/19.7.0/include -I$(c_libs_home)/openjdk/22.0.1/include
 
 include_flags = -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/$(os_java_include) ${c_libs_include_flags}
@@ -41,6 +45,10 @@ link_flags = -L$(c_libs_home)/libsndfile/1.2.2/lib -lsndfile -L$(c_libs_home)/po
 # - for linux: libnative.so
 # - for macOS: libnative.dynamicLib
 lib = libnative.dylib
+
+# TODO:
+#   - more phony targets
+#   - macOS_monterey, macOS_sonoma, linux
 
 lib:
 	javac -h . $(java_jni_main) SfInfo.java # produces jni_main_header
