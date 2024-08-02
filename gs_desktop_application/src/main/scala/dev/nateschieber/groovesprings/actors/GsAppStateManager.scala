@@ -68,19 +68,23 @@ class GsAppStateManager(
   }
 
   private def getAppState(): AppState = {
-    AppState(appState.currTrack, appState.currPlaylistTrackIdx, appState.playlist)
+    AppState(appState.playState, appState.playbackSpeed, appState.currTrack, appState.currPlaylistTrackIdx, appState.playlist)
   }
   
   private def setAppState(newState: AppState): Unit = {
-    appState = AppState(newState.currTrack, newState.currPlaylistTrackIdx, newState.playlist)
+    appState = AppState(newState.playState, newState.playbackSpeed, newState.currTrack, newState.currPlaylistTrackIdx, newState.playlist)
   }
 
   def setCurrTrack(appState: AppState, track: Track): AppState = {
-    AppState(track, appState.currPlaylistTrackIdx, appState.playlist)
+    // TODO:
+    //   - maybe update playState here
+    AppState(appState.playState, appState.playbackSpeed, track, appState.currPlaylistTrackIdx, appState.playlist)
   }
 
   def addTrackToPlaylist(appState: AppState, track: Track): AppState = {
     AppState(
+      appState.playState,
+      appState.playbackSpeed,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
       Playlist(appState.playlist.id, appState.playlist.name, appState.playlist.tracks ++ List(track))
@@ -88,41 +92,70 @@ class GsAppStateManager(
   }
 
   private def setPlaylist(appState: AppState, playlist: Playlist): AppState = {
-    AppState(appState.currTrack, 0, playlist)
+    AppState(appState.playState, appState.playbackSpeed, appState.currTrack, 0, playlist)
   }
   
   private def clearPlaylist(appState: AppState): AppState = {
-    AppState(appState.currTrack, appState.currPlaylistTrackIdx, EmptyPlaylist)
+    AppState(appState.playState, appState.playbackSpeed, appState.currTrack, appState.currPlaylistTrackIdx, EmptyPlaylist)
   }
 
   private def prevTrack(appState: AppState): AppState = {
     val playlistLength = appState.playlist.tracks.length
     if (playlistLength == 0)
-      return AppState(appState.currTrack, 0, EmptyPlaylist)
+      return AppState(appState.playState, appState.playbackSpeed, appState.currTrack, 0, EmptyPlaylist)
 
     val oldIdx = appState.currPlaylistTrackIdx
     val newIdx = (oldIdx + (playlistLength - 1)) % playlistLength
 
-    AppState(appState.playlist.tracks(newIdx), newIdx, appState.playlist)
+    AppState(
+      appState.playState,
+      appState.playbackSpeed,
+      appState.playlist.tracks(newIdx),
+      newIdx,
+      appState.playlist
+    )
   }
 
   private def nextTrack(appState: AppState): AppState = {
     val playlistLength = appState.playlist.tracks.length
     if (playlistLength == 0)
-      return AppState(appState.currTrack, 0, EmptyPlaylist)
+      return AppState(
+        appState.playState,
+        appState.playbackSpeed,
+        appState.currTrack,
+        0,
+        EmptyPlaylist
+      )
 
     val oldIdx = appState.currPlaylistTrackIdx
     val newIdx = (oldIdx + 1) % playlistLength
 
-    AppState(appState.playlist.tracks(newIdx), newIdx, appState.playlist)
+    AppState(
+      appState.playState,
+      appState.playbackSpeed,
+      appState.playlist.tracks(newIdx),
+      newIdx,
+      appState.playlist
+    )
   }
 
-  private def setCurrPlaylistTrackIdx(state: AppState, newIdx: Int): AppState = {
+  private def setCurrPlaylistTrackIdx(appState: AppState, newIdx: Int): AppState = {
     var optTrack = appState.playlist.tracks.lift(newIdx)
     if (optTrack.isDefined)
-      AppState(optTrack.get, newIdx, appState.playlist)
+      AppState(
+        appState.playState,
+        appState.playbackSpeed,
+        optTrack.get, 
+        newIdx, 
+        appState.playlist)
     else
-      AppState(EmptyTrack, 0, appState.playlist)
+      AppState(
+        appState.playState,
+        appState.playbackSpeed,
+        EmptyTrack,
+        0, 
+        appState.playlist
+      )
   }
 
   private def hydrateState(): Unit = {
