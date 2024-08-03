@@ -5,19 +5,17 @@ import akka.actor.CoordinatedShutdown
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
-import akka.stream.impl
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.appState
 import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState, EmptyPlaylist, EmptyTrack, Playlist, Track}
 import dev.nateschieber.groovesprings.enums.{GsPlayState, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.enums.GsPlayState.PLAY
-import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, FileSelectDto, FileSelectJsonSupport, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
+import dev.nateschieber.groovesprings.rest.FileSelectJsonSupport
 import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextTrack, PauseTrig, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondSetPlaylist, RespondTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect, TransportTrig}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
-import scala.:+
 import scala.annotation.static
-import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 // spray + protocol import needed to call .convertTo[AppState]
@@ -70,23 +68,45 @@ class GsAppStateManager(
   }
 
   private def getAppState(): AppState = {
-    AppState(appState.playState, appState.playbackSpeed, appState.currTrack, appState.currPlaylistTrackIdx, appState.playlist)
+    AppState(
+      appState.playState,
+      appState.playbackSpeed,
+      appState.currFrameId,
+      appState.currTrack,
+      appState.currPlaylistTrackIdx,
+      appState.playlist
+    )
   }
   
   private def setAppState(newState: AppState): Unit = {
-    appState = AppState(newState.playState, newState.playbackSpeed, newState.currTrack, newState.currPlaylistTrackIdx, newState.playlist)
+    appState = AppState(
+      newState.playState,
+      newState.playbackSpeed,
+      newState.currFrameId,
+      newState.currTrack,
+      newState.currPlaylistTrackIdx,
+      newState.playlist
+    )
   }
 
   def setCurrTrack(appState: AppState, track: Track): AppState = {
     // TODO:
     //   - maybe update playState here
-    AppState(appState.playState, appState.playbackSpeed, track, appState.currPlaylistTrackIdx, appState.playlist)
+    AppState(
+      appState.playState,
+      appState.playbackSpeed,
+      appState.currFrameId,
+      track,
+      appState.currPlaylistTrackIdx,
+      appState.playlist
+    )
   }
 
   def addTrackToPlaylist(appState: AppState, track: Track): AppState = {
     AppState(
       appState.playState,
       appState.playbackSpeed,
+      appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
       Playlist(appState.playlist.id, appState.playlist.name, appState.playlist.tracks ++ List(track))
@@ -94,17 +114,40 @@ class GsAppStateManager(
   }
 
   private def setPlaylist(appState: AppState, playlist: Playlist): AppState = {
-    AppState(appState.playState, appState.playbackSpeed, appState.currTrack, 0, playlist)
+    AppState(
+      appState.playState,
+      appState.playbackSpeed,
+      appState.currFrameId,
+      appState.currTrack,
+      0,
+      playlist
+    )
   }
   
   private def clearPlaylist(appState: AppState): AppState = {
-    AppState(appState.playState, appState.playbackSpeed, appState.currTrack, appState.currPlaylistTrackIdx, EmptyPlaylist)
+    AppState(
+      appState.playState,
+      appState.playbackSpeed,
+      appState.currFrameId,
+      appState.currTrack,
+      appState.currPlaylistTrackIdx,
+      EmptyPlaylist
+    )
   }
 
+  // TODO:
+  //   - set new currFrameId based on playbackSpeed when moving between tracks
   private def prevTrack(appState: AppState): AppState = {
     val playlistLength = appState.playlist.tracks.length
     if (playlistLength == 0)
-      return AppState(appState.playState, appState.playbackSpeed, appState.currTrack, 0, EmptyPlaylist)
+      return AppState(
+        appState.playState,
+        appState.playbackSpeed,
+        0,
+        appState.currTrack,
+        0,
+        EmptyPlaylist
+      )
 
     val oldIdx = appState.currPlaylistTrackIdx
     val newIdx = (oldIdx + (playlistLength - 1)) % playlistLength
@@ -112,6 +155,7 @@ class GsAppStateManager(
     AppState(
       appState.playState,
       appState.playbackSpeed,
+      0,
       appState.playlist.tracks(newIdx),
       newIdx,
       appState.playlist
@@ -124,6 +168,7 @@ class GsAppStateManager(
       return AppState(
         appState.playState,
         appState.playbackSpeed,
+        0,
         appState.currTrack,
         0,
         EmptyPlaylist
@@ -135,6 +180,7 @@ class GsAppStateManager(
     AppState(
       appState.playState,
       appState.playbackSpeed,
+      0,
       appState.playlist.tracks(newIdx),
       newIdx,
       appState.playlist
@@ -145,6 +191,7 @@ class GsAppStateManager(
     AppState(
       newPlayState,
       appState.playbackSpeed,
+      appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
       appState.playlist
@@ -155,6 +202,7 @@ class GsAppStateManager(
     AppState(
       appState.playState,
       newPlaybackSpeed,
+      appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
       appState.playlist
@@ -167,6 +215,7 @@ class GsAppStateManager(
       AppState(
         appState.playState,
         appState.playbackSpeed,
+        appState.currFrameId,
         optTrack.get, 
         newIdx, 
         appState.playlist)
@@ -174,6 +223,7 @@ class GsAppStateManager(
       AppState(
         appState.playState,
         appState.playbackSpeed,
+        appState.currFrameId,
         EmptyTrack,
         0, 
         appState.playlist
@@ -188,7 +238,6 @@ class GsAppStateManager(
     msg match {
       case TrackSelect(track, replyTo) =>
         appState = setCurrTrack(appState, track)
-
         // TODO: un-overload TrackSelect
         gsPlaybackRef ! TrackSelect(track, context.self)
         hydrateState()
