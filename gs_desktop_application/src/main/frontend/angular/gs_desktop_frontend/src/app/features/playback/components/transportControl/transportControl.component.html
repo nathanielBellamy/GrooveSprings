@@ -52,7 +52,7 @@
              min="0"
              max="{{gsPlaybackSpeedOptions.length - 1}}"
              step="1"
-             value="4"
+             value="{{gsPlaybackSpeedOptions.indexOf(playbackSpeed$ | async | gsPlaybackSpeedToNumber)}}"
              (input)="handlePlaybackSpeed(gs_playback_speed.value)"/>
     </div>
   </fieldset>
