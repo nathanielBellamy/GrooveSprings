@@ -26,6 +26,7 @@ object GsPlaybackSpeedProtocol extends DefaultJsonProtocol {
         case -2.0 => GsPlaybackSpeed._N2
         case -1.0 => GsPlaybackSpeed._N1
         case -0.5 => GsPlaybackSpeed._N05
+        case  0.5 => GsPlaybackSpeed._05
         case  2.0 => GsPlaybackSpeed._N2
         case default => GsPlaybackSpeed._1
       }

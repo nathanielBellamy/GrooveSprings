@@ -5,6 +5,7 @@ import {gsPipes} from "../../../../pipes/gsPipes.pipe";
 import {TransportControlComponent} from "./transportControl.component";
 import {PlaybackDisplayModule} from "../playbackDisplay/playbackDisplay.module";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {GsPlaybackSpeedToNumberPipe} from "../../../../pipes/gsPlaybackSpeedToNumber.pipe";
 
 @NgModule({
   declarations: [TransportControlComponent],
@@ -14,6 +15,7 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
     AsyncPipe,
     FontAwesomeModule,
     NgForOf,
+    GsPlaybackSpeedToNumberPipe,
   ],
   exports: [TransportControlComponent]
 })
