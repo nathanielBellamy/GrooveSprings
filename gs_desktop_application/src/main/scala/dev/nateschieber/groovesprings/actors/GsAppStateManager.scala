@@ -197,7 +197,8 @@ class GsAppStateManager(
 
       case RespondTrackSelect(path, _replyTo) =>
         // auto play on TrackSelect
-        gsPlaybackRef ! PlayFromTrackSelectTrig(path, gsDisplayRef)
+        if (appState.playState == GsPlayState.PLAY)
+          gsPlaybackRef ! PlayFromTrackSelectTrig(path, gsDisplayRef)
         Behaviors.same
 
       case HydrateStateToDisplay() =>
