@@ -61,3 +61,5 @@ final case class RespondSetPlaylist(replyTo: ActorRef[SetPlaylist]) extends GsCo
 
 final case class NextTrack() extends GsCommand
 final case class PrevTrack() extends GsCommand
+
+final case class TransportTrig(newPlayState: GsPlayState) extends GsCommand

@@ -6,16 +6,19 @@
     </legend>
     <button
       class="transport_control_button"
+      [class.selected]="(playState$ | async) === GsPlayState.PLAY"
       (click)="playTrig()">
       <fa-icon [icon]="faPlay"></fa-icon>
     </button>
     <button
       class="transport_control_button"
+      [class.selected]="(playState$ | async) === GsPlayState.PAUSE"
       (click)="pauseTrig()">
       <fa-icon [icon]="faPause"></fa-icon>
     </button>
     <button
       class="transport_control_button"
+      [class.selected]="(playState$ | async) === GsPlayState.STOP"
       (click)="stopTrig()">
       <fa-icon [icon]="faStop"></fa-icon>
     </button>

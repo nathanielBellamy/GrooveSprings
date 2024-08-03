@@ -11,6 +11,9 @@ import {
   PrevTrackTrig,
   StopTrig
 } from "../../store/playback.actions";
+import {GsPlaybackSpeed} from "../../../../enums/gsPlaybackSpeed.enum";
+import {Observable} from "rxjs";
+import {GsPlayState} from "../../../../enums/gsPlayState.enum";
 
 @Component({
   selector: 'gsTransportControl',
@@ -19,14 +22,20 @@ import {
 })
 @Injectable()
 export class TransportControlComponent {
-  protected gsPlaybackSpeedOptions: number[] = [-2.0, -1.0, -0.5, 0.5, 1.0, 2.0]
+  protected gsPlaybackSpeedOptions: number[] = [GsPlaybackSpeed._N2, GsPlaybackSpeed._N1, GsPlaybackSpeed._N05, GsPlaybackSpeed._05, GsPlaybackSpeed._1, GsPlaybackSpeed._2]
   protected faPlay = faPlay
   protected faPause = faPause
   protected faStop = faStop
   protected faForwardFast = faForwardFast
   protected faBackward = faBackward
 
-  constructor(private store$: Store<{playback: PlaybackState}>) { }
+  protected playState$: Observable<GsPlayState>
+  protected playbackSpeed$: Observable<GsPlaybackSpeed>
+
+  constructor(private store$: Store<{playback: PlaybackState}>) {
+    this.playState$ = store$.select(state => state.playback.playState)
+    this.playbackSpeed$ = store$.select(state => state.playback.playbackSpeed)
+  }
 
   playTrig() {
     this.store$.dispatch(new PlayTrig())
@@ -52,4 +61,7 @@ export class TransportControlComponent {
     const speed = this.gsPlaybackSpeedOptions[newIdx]
     this.store$.dispatch(new PlaybackSpeedTrig(speed))
   }
+
+  protected readonly GsPlaybackSpeed = GsPlaybackSpeed;
+  protected readonly GsPlayState = GsPlayState;
 }
