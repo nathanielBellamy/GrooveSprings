@@ -118,5 +118,3 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
     }
   }
 }
-
-
