@@ -149,6 +149,9 @@ class GsAppStateManager(
   // TODO:
   //   - set new currFrameId based on playbackSpeed when moving between tracks
   private def prevTrack(appState: AppState): AppState = {
+    if (!(appState.playlist.tracks.map(track => track.id) contains appState.currTrack.id))
+      return appState
+
     val playlistLength = appState.playlist.tracks.length
     if (playlistLength == 0)
       return AppState(
@@ -174,6 +177,9 @@ class GsAppStateManager(
   }
 
   private def nextTrack(appState: AppState): AppState = {
+    if (!(appState.playlist.tracks.map(track => track.id) contains appState.currTrack.id))
+      return appState
+
     val playlistLength = appState.playlist.tracks.length
     if (playlistLength == 0)
       return AppState(
