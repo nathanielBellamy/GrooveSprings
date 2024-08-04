@@ -47,6 +47,7 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
         GsPlaybackThread.stop()
         clearPlaybackThread()
         GsPlaybackThread.setCurrFrameId(0)
+        GsPlaybackThread.setFilePath(track.path)
         replyTo ! RespondTrackSelect(track.path, context.self)
         Behaviors.same
 
