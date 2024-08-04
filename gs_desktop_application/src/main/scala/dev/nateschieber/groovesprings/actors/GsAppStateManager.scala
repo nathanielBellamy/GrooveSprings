@@ -36,8 +36,14 @@ object GsAppStateManager {
       return EmptyAppState
     val appStateJson = Files.readString(appStatePath, StandardCharsets.UTF_8)
     val appState = appStateJson.parseJson.convertTo[AppState]
-    GsPlaybackThread.setCurrFrameId(appState.currFrameId.asInstanceOf[java.lang.Long])
-    appState
+    AppState(
+      GsPlayState.STOP,
+      appState.playbackSpeed,
+      0, // currFrameId
+      appState.currTrack,
+      appState.currPlaylistTrackIdx,
+      appState.playlist
+    )
   }
 
   @static private def cacheState(appState: AppState): Unit = {
