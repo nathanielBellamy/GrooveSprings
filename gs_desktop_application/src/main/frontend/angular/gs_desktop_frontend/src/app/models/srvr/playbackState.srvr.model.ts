@@ -5,8 +5,9 @@ import {GsPlayState} from "../../enums/gsPlayState.enum";
 import {GsPlaybackSpeed} from "../../enums/gsPlaybackSpeed.enum";
 
 export interface PlaybackStateSrvr {
-  playState: GsPlayState,
-  playbackSpeed: GsPlaybackSpeed,
+  playState: GsPlayState;
+  playbackSpeed: GsPlaybackSpeed;
+  currFrameId: number;
   currTrack: TrackSrvr;
   currPlaylistTrackIdx: number;
   playlist: PlaylistSrvr;
@@ -16,6 +17,7 @@ export function playbackStateSrvrFromPlaybackState(ps: PlaybackState): PlaybackS
   return {
     playState: ps.playState,
     playbackSpeed: ps.playbackSpeed,
+    currFrameId: ps.currFrameId,
     currTrack: trackSrvrFromTrack(ps.currTrack),
     currPlaylistTrackIdx: ps.currPlaylistTrackIdx,
     playlist: playlistSrvrFromPlaylist(ps.playlist)
@@ -26,6 +28,7 @@ export function playbackStateFromPlaybackStateSrvr(ps: PlaybackStateSrvr): Playb
   return {
     playState: ps.playState,
     playbackSpeed: ps.playbackSpeed,
+    currFrameId: ps.currFrameId,
     currTrack: trackFromTrackSrvr(ps.currTrack),
     currPlaylistTrackIdx: ps.currPlaylistTrackIdx,
     playlist: playlistFromPlaylistSrvr(ps.playlist)

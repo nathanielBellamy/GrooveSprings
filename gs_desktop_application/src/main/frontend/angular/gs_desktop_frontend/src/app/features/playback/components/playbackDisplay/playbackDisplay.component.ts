@@ -21,7 +21,8 @@ export class PlaybackDisplayComponent {
   protected currTrack$: Observable<Track>
   protected currTrack: Track = defaultTrack
   protected currTrackArtists: string = "-"
-  protected currPercent: number = 0
+  protected currPercent: number = 100
+
   // ping ws to keep alive
   private pingIntervalId: number = 0 // setInterval returns non-zero number
   private pingInterval: number = 30 * 1000 // every 30 seconds
@@ -32,6 +33,10 @@ export class PlaybackDisplayComponent {
       this.currTrackArtists = track.artists.length ? track.artists.map(a => a.name).join(', ') : "-"
       this.currTrack = {...track}
     })
+
+    store$
+      .select(state => state.playback.currFrameId)
+      .subscribe(val => this.currPercent = this.getCurrPercent(val))
   }
 
   ngOnInit() {
@@ -59,7 +64,6 @@ export class PlaybackDisplayComponent {
     subject
       .subscribe({
         next: (msg: unknown) => {
-          const msgNum: number = typeof msg === 'number' ? msg : 0
           if (typeof msg !== 'number') { // then it is state update
             try {
               const newAppState: PlaybackState = playbackStateFromPlaybackStateSrvr(msg as PlaybackStateSrvr)
@@ -68,8 +72,8 @@ export class PlaybackDisplayComponent {
               console.error(e)
             }
           }
-          if (msgNum !== -1) {
-            this.setCurrPercent(msgNum)
+          if (typeof msg === 'number' && msg > -1) {
+            this.setCurrPercent(msg)
             return
           }
         },

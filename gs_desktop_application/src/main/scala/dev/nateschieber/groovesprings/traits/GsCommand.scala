@@ -63,3 +63,6 @@ final case class NextTrack() extends GsCommand
 final case class PrevTrack() extends GsCommand
 
 final case class TransportTrig(newPlayState: GsPlayState) extends GsCommand
+
+final case class TimerStart(ms: Int, replyTo: ActorRef[RespondTimerStart]) extends GsCommand
+final case class RespondTimerStart(replyTo: ActorRef[TimerStart]) extends GsCommand
