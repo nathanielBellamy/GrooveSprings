@@ -1,14 +1,14 @@
-import { Component  } from '@angular/core'
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Component, Injectable} from '@angular/core'
+import {HttpClient} from '@angular/common/http';
 import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
 import {defaultTrack, Track} from "../../../../models/tracks/track.model";
 import {Observable} from "rxjs";
-import { webSocket } from "rxjs/webSocket";
+import {webSocket} from "rxjs/webSocket";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
 import {FetchAppState, HydrateAppState} from "../../store/playback.actions";
 import {playbackStateFromPlaybackStateSrvr, PlaybackStateSrvr} from "../../../../models/srvr/playbackState.srvr.model";
+import {GsPlayState} from "../../../../enums/gsPlayState.enum";
 
 @Component({
   selector: 'gsPlaybackDisplay',
@@ -21,7 +21,7 @@ export class PlaybackDisplayComponent {
   protected currTrack$: Observable<Track>
   protected currTrack: Track = defaultTrack
   protected currTrackArtists: string = "-"
-  protected currPercent: number = 100
+  protected currPercent: number = 0
 
   // ping ws to keep alive
   private pingIntervalId: number = 0 // setInterval returns non-zero number
@@ -64,9 +64,10 @@ export class PlaybackDisplayComponent {
     subject
       .subscribe({
         next: (msg: unknown) => {
+          let newAppState: PlaybackState | null = null
           if (typeof msg !== 'number') { // then it is state update
             try {
-              const newAppState: PlaybackState = playbackStateFromPlaybackStateSrvr(msg as PlaybackStateSrvr)
+              newAppState = playbackStateFromPlaybackStateSrvr(msg as PlaybackStateSrvr)
               this.store$.dispatch(new HydrateAppState(newAppState))
             } catch(e) {
               console.error(e)
@@ -74,6 +75,9 @@ export class PlaybackDisplayComponent {
           }
           if (typeof msg === 'number' && msg > -1) {
             this.setCurrPercent(msg)
+            return
+          } else if (newAppState && newAppState.playState === GsPlayState.STOP) {
+            this.setCurrPercent(0)
             return
           }
         },
