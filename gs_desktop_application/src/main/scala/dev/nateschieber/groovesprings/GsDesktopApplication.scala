@@ -7,6 +7,8 @@ import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.actors.GsSupervisor
 import dev.nateschieber.groovesprings.enums.GsHttpPort
 
+import java.awt.Desktop
+import java.net.URI
 import scala.annotation.static
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -20,6 +22,9 @@ object GsDesktopApplication {
     server.map(_ => {
       //
     })
+
+    if (Desktop.isDesktopSupported && Desktop.getDesktop.isSupported(Desktop.Action.BROWSE))
+      Desktop.getDesktop.browse(new URI("http://localhost:5678"))
   }
 
   private def routes(): Route = {
