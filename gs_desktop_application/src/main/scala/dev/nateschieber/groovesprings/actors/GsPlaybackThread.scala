@@ -18,12 +18,11 @@ object GsPlaybackThread {
   //  - GsPlayback cannot send messages either to deliver or to mutate these values
   //    because this thread will be blocked by native playback loop
 
-  @static private var playState: GsPlayState = GsPlayState.STOP
-  @static private var readComplete: Boolean = false
-  @static private var playbackSpeed: GsPlaybackSpeed = GsPlaybackSpeed._1
+  @static private var playState: GsPlayState = synchronized { GsPlayState.STOP }
+  @static private var readComplete: Boolean = synchronized { false }
+  @static private var playbackSpeed: GsPlaybackSpeed = synchronized { GsPlaybackSpeed._1 }
   @static private var currFrameId: java.lang.Long = 0
-  @static private var filePath: java.lang.String = null
-  @static private var audioCodec: java.lang.String = null
+  @static private var filePath: java.lang.String = synchronized { null }
 
   // NOTE:
   //   - scala code only cares about the "current" native thread with threadId equal to the result of getThreadId()
@@ -124,14 +123,6 @@ object GsPlaybackThread {
   
   @static def setFilePath(value: java.lang.String): Unit = {
     filePath = value
-  }
-  
-  @static def getAudioCodec: java.lang.String = {
-    audioCodec
-  }
-  
-  @static def setAudioCodec(value: java.lang.String): Unit = {
-    audioCodec = value
   }
 
   @static private def playStateFromInt(i: Int): GsPlayState = {
