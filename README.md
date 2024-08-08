@@ -19,3 +19,7 @@
   - `cd gs-jni/src/main/java/dev/nateschieber/groovesprings/jni`
   - `make clean`
   - `make lib`
+
+---
+
+##### [gofundme](https://www.gofundme.com/f/groovesprings?qid=6fbbc38e9d5ebc6537d73ddf4c3087dc)
