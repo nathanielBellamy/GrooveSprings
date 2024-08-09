@@ -77,6 +77,7 @@ class GsAppStateManager(
     GsTimer(GsAppStateManagerTimer.currFrameIdCache.id),
     UUID.randomUUID().toString
   )
+
   private var playbackThreadPollTimerRef: ActorRef[GsCommand] = context.spawn(
     GsTimer(GsAppStateManagerTimer.playbackThreadPoll.id),
     UUID.randomUUID().toString
