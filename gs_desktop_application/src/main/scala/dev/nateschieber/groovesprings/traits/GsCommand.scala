@@ -15,6 +15,8 @@ final case class RespondPlaybackThreadState(frameId: Long, playState: GsPlayStat
 
 final case class TrackSelect(track: Track, replyTo: ActorRef[RespondTrackSelect]) extends GsCommand // auto-play
 final case class RespondTrackSelect(path: String, replyTo: ActorRef[TrackSelect]) extends GsCommand
+final case class RestTrackSelect(track: Track, replyTo: ActorRef[RespondRestTrackSelect]) extends GsCommand // auto-play
+final case class RespondRestTrackSelect(path: String, replyTo: ActorRef[RestTrackSelect]) extends GsCommand // auto-play
 final case class NextOrPrevTrack(track: Track, replyTo: ActorRef[RespondNextOrPrevTrack]) extends GsCommand // auto-play
 final case class RespondNextOrPrevTrack(path: String, replyTo: ActorRef[NextOrPrevTrack]) extends GsCommand // auto-play
 
