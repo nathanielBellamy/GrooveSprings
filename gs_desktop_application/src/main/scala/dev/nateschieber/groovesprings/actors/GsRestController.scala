@@ -11,8 +11,8 @@ import dev.nateschieber.groovesprings.GsMusicLibraryScanner
 import dev.nateschieber.groovesprings.entities.{Playlist, PlaylistJsonSupport, Track, TrackJsonSupport}
 import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlayState, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
-import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, GsTrackServiceResponse, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, NextTrack, PauseTrig, PlayTrig, PrevTrack, RestTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect, TransportTrig}
+import dev.nateschieber.groovesprings.rest.{ GsTrackServiceResponse, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, NextTrack, PrevTrack, RestTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect, TransportTrig}
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -58,8 +58,7 @@ class GsRestController(
   extends AbstractBehavior[GsCommand](context)
     with PlaylistJsonSupport
     with TrackJsonSupport
-    with PlaybackSpeedJsonSupport
-    with CacheStateJsonSupport {
+    with PlaybackSpeedJsonSupport {
 
   def routes(): Route = {
     concat(
@@ -92,14 +91,6 @@ class GsRestController(
           complete("loading")
         }
       },
-      path("api" / "v1" / "cacheState") {
-        put {
-          entity(as[CacheStateDto]) { dto => {
-//            cacheLastState(dto.stateJson)
-            complete("cached")
-          }}
-        }
-      },
       // Transport Controls
       path("api" / "v1" / "transport") {
         get {
@@ -107,9 +98,9 @@ class GsRestController(
             // TODO: handle FF/RW while User holding button
             cmd match {
               case "play" =>
-                gsAppStateManagerRef ! TransportTrig(GsPlayState.PLAY) // PlayTrig(gsDisplayRef)
+                gsAppStateManagerRef ! TransportTrig(GsPlayState.PLAY)
               case "pause" =>
-                gsAppStateManagerRef ! TransportTrig(GsPlayState.PAUSE) // PauseTrig(gsDisplayRef)
+                gsAppStateManagerRef ! TransportTrig(GsPlayState.PAUSE)
               case "stop" =>
                 gsAppStateManagerRef ! TransportTrig(GsPlayState.STOP)
               case "prevTrack" =>
@@ -126,7 +117,6 @@ class GsRestController(
           entity(as[PlaybackSpeedDto]) { dto => {
             val speed = dto.speed
             val gsSpeed: GsPlaybackSpeed = gsPlaybackSpeedFromDouble(dto.speed)
-//            gsPlaybackRef ! SetPlaybackSpeed(gsSpeed, gsDisplayRef)
             gsAppStateManagerRef ! SetPlaybackSpeed(gsSpeed, gsDisplayRef)
             complete(s"playbackSpeed: $gsSpeed")
           }}
