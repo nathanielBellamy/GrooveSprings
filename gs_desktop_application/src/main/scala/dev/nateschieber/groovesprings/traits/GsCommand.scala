@@ -66,3 +66,6 @@ final case class TransportTrig(newPlayState: GsPlayState) extends GsCommand
 
 final case class TimerStart(ms: Int, replyTo: ActorRef[RespondTimerStart]) extends GsCommand
 final case class RespondTimerStart(replyTo: ActorRef[TimerStart]) extends GsCommand
+
+final case class SendReadComplete() extends GsCommand
+final case class SendLastFrameId(lastFrameId: Long) extends GsCommand
