@@ -10,7 +10,7 @@ import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, E
 import dev.nateschieber.groovesprings.enums.{GsPlayState, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.enums.GsPlayState.{PAUSE, PLAY, STOP}
 import dev.nateschieber.groovesprings.rest.FileSelectJsonSupport
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextTrack, PauseTrig, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondPauseTrig, RespondPlayTrig, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TimerStart, TrackSelect, TransportTrig}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextTrack, PauseTrig, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondPauseTrig, RespondPlayFromTrackSelectTrig, RespondPlayTrig, RespondPlaybackThreadState, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, SendLastFrameId, SendReadComplete, SetPlaybackSpeed, SetPlaylist, StopTrig, TimerStart, TrackSelect, TransportTrig}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -291,7 +291,11 @@ class GsAppStateManager(
       case RespondTrackSelect(path, _replyTo) =>
         // auto play on TrackSelect
         if (appState.playState == GsPlayState.PLAY)
-          gsPlaybackRef ! PlayFromTrackSelectTrig(path, gsDisplayRef)
+          gsPlaybackRef ! PlayFromTrackSelectTrig(path, context.self)
+        Behaviors.same
+
+      case RespondPlayFromTrackSelectTrig(replyTo) =>
+        replyTo ! ReadPlaybackThreadState(context.self)
         Behaviors.same
 
       case HydrateStateToDisplay() =>
@@ -336,8 +340,21 @@ class GsAppStateManager(
 
       case RespondPlayTrig(replyTo) =>
         appState = setPlayState(appState, GsPlayState.PLAY)
-        replyTo ! ReadPlaybackThreadState(gsDisplayRef)
+        replyTo ! ReadPlaybackThreadState(context.self)
         hydrateState()
+        Behaviors.same
+
+      case RespondPlaybackThreadState(lastFrameId, playState, readComplete, replyTo) =>
+        if (readComplete)
+          gsDisplayRef ! SendReadComplete()
+          return Behaviors.same
+        gsDisplayRef ! SendLastFrameId(lastFrameId)
+        if (playState == GsPlayState.PLAY)
+          // TODO:
+          //   - compare lastFrameId to currTrack.sf_info.frames
+          //   - allow user to set fade-out
+          Thread.sleep(100)
+          replyTo ! ReadPlaybackThreadState(context.self)
         Behaviors.same
 
       case RespondPauseTrig(replyTo) =>
@@ -380,6 +397,7 @@ class GsAppStateManager(
         Behaviors.same
 
       case default =>
+        println("GsAppStateManager :: Unmatched Message Received")
         Behaviors.same
     }
   }
