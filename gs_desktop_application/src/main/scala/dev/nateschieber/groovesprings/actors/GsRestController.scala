@@ -12,7 +12,7 @@ import dev.nateschieber.groovesprings.entities.{Playlist, PlaylistJsonSupport, T
 import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlayState, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
 import dev.nateschieber.groovesprings.rest.{CacheStateDto, CacheStateJsonSupport, GsTrackServiceResponse, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, NextTrack, PauseTrig, PlayTrig, PrevTrack, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect, TransportTrig}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, NextTrack, PauseTrig, PlayTrig, PrevTrack, RestTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect, TransportTrig}
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -135,7 +135,7 @@ class GsRestController(
       path("api" / "v1" / "trackSelect") {
         put { // update GsPlaybackThread.filePath
           entity(as[Track]) { track => {
-            gsAppStateManagerRef ! TrackSelect(track, context.self)
+            gsAppStateManagerRef ! RestTrackSelect(track, context.self)
             complete("Track Selected")
           }}
         }
