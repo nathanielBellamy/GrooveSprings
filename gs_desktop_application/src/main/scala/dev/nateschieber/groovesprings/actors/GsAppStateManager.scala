@@ -302,9 +302,9 @@ class GsAppStateManager(
         Behaviors.same
 
       case RespondTrackSelect(path, _replyTo) =>
-        // auto play on TrackSelect
-        if (appState.playState == GsPlayState.PLAY)
-          gsPlaybackRef ! PlayFromTrackSelectTrig(path, context.self)
+        appState = setPlayState(appState, GsPlayState.PLAY)
+        gsPlaybackRef ! PlayFromTrackSelectTrig(path, context.self)
+        hydrateState()
         Behaviors.same
 
       case RespondPlayFromTrackSelectTrig(replyTo) =>
@@ -360,7 +360,20 @@ class GsAppStateManager(
       case RespondPlaybackThreadState(lastFrameId, playState, readComplete, replyTo) =>
         if (readComplete)
           gsDisplayRef ! SendReadComplete()
+          // TODO:
+          //    - create playbackOption vars (loopAll | loopOne, shuffle)
+          //    - let user set those vars
+          //    - condition on those vars
+          if (appState.playState == GsPlayState.PLAY)
+            if (appState.playbackSpeed.value > 0)
+              appState = nextTrack(appState)
+            else if (appState.playbackSpeed.value < 0)
+              // TODO: start from end of track
+              appState = prevTrack(appState)
+
+            gsPlaybackRef ! TrackSelect(appState.currTrack, context.self)
           return Behaviors.same
+
         gsDisplayRef ! SendLastFrameId(lastFrameId)
         if (playState == GsPlayState.PLAY)
           // TODO:
