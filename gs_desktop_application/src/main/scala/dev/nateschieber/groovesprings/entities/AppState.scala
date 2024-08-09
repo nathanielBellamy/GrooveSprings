@@ -14,6 +14,7 @@ import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import dev.nateschieber.groovesprings.enums.GsPlayStateProtocol.GsPlayStateJsonFormat
 import dev.nateschieber.groovesprings.enums.GsPlaybackSpeedProtocol.GsPlaybackSpeedJsonFormat
+import dev.nateschieber.groovesprings.enums.GsLoopTypeProtocol.GsLoopTypeJsonFormat
 
 trait AppStateJsonSupport
   extends SprayJsonSupport
