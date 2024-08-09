@@ -8,9 +8,9 @@ import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.appState
 import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState, EmptyPlaylist, EmptyTrack, Playlist, Track}
 import dev.nateschieber.groovesprings.enums.{GsPlayState, GsPlaybackSpeed}
-import dev.nateschieber.groovesprings.enums.GsPlayState.{PLAY, STOP}
+import dev.nateschieber.groovesprings.enums.GsPlayState.{PAUSE, PLAY, STOP}
 import dev.nateschieber.groovesprings.rest.FileSelectJsonSupport
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, TimerStart, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextTrack, PauseTrig, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, RespondAddTrackToPlaylist, RespondTimerStart, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondSetPlaylist, RespondTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect, TransportTrig}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextTrack, PauseTrig, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondPauseTrig, RespondPlayTrig, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TimerStart, TrackSelect, TransportTrig}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -323,16 +323,30 @@ class GsAppStateManager(
         Behaviors.same
 
       case TransportTrig(newPlayState) =>
-        appState = setPlayState(appState, newPlayState)
         newPlayState match {
           case GsPlayState.PLAY =>
-            gsPlaybackRef ! PlayTrig(gsDisplayRef)
+            gsPlaybackRef ! PlayTrig(context.self)
             currFrameIdCacheTimerStart()
           case GsPlayState.PAUSE =>
-            gsPlaybackRef ! PauseTrig(gsDisplayRef)
+            gsPlaybackRef ! PauseTrig(context.self)
           case default =>
-            gsPlaybackRef ! StopTrig(gsDisplayRef)
+            gsPlaybackRef ! StopTrig(context.self)
         }
+        Behaviors.same
+
+      case RespondPlayTrig(replyTo) =>
+        appState = setPlayState(appState, GsPlayState.PLAY)
+        replyTo ! ReadPlaybackThreadState(gsDisplayRef)
+        hydrateState()
+        Behaviors.same
+
+      case RespondPauseTrig(replyTo) =>
+        appState = setPlayState(appState, GsPlayState.PAUSE)
+        hydrateState()
+        Behaviors.same
+
+      case RespondStopTrig(replyTo) =>
+        appState = setPlayState(appState, GsPlayState.STOP)
         hydrateState()
         Behaviors.same
 

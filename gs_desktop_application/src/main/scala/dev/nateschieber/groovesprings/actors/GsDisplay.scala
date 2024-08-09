@@ -79,18 +79,9 @@ class GsDisplay(context: ActorContext[GsCommand], gsPlaybackRef: ActorRef[GsComm
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
-      case RespondPlayTrig(replyTo) =>
-        replyTo ! ReadPlaybackThreadState(context.self)
-        Behaviors.same
 
       case RespondPlayFromTrackSelectTrig(replyTo) =>
         replyTo ! ReadPlaybackThreadState(context.self)
-        Behaviors.same
-
-      case RespondPauseTrig(replyTo) =>
-        Behaviors.same
-
-      case RespondStopTrig(replyTo) =>
         Behaviors.same
 
       case RespondPlaybackThreadState(lastFrameId, playState, readComplete, replyTo) =>
