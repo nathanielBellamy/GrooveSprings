@@ -15,6 +15,8 @@ final case class RespondPlaybackThreadState(frameId: Long, playState: GsPlayStat
 
 final case class TrackSelect(track: Track, replyTo: ActorRef[RespondTrackSelect]) extends GsCommand // auto-play
 final case class RespondTrackSelect(path: String, replyTo: ActorRef[TrackSelect]) extends GsCommand
+final case class NextOrPrevTrack(track: Track, replyTo: ActorRef[RespondNextOrPrevTrack]) extends GsCommand // auto-play
+final case class RespondNextOrPrevTrack(path: String, replyTo: ActorRef[NextOrPrevTrack]) extends GsCommand // auto-play
 
 final case class InitialTrackSelect(track: Track) extends GsCommand // no auto-play
 
@@ -29,6 +31,7 @@ final case class RespondStopPlaybackThread(replyTo: ActorRef[StopPlaybackThread]
 // GsPlayback
 final case class RespondPlayTrig(replyTo: ActorRef[PlayTrig | PlayFromTrackSelectTrig | ReadPlaybackThreadState]) extends GsCommand
 final case class RespondPlayFromTrackSelectTrig(replyTo: ActorRef[PlayFromTrackSelectTrig | ReadPlaybackThreadState]) extends GsCommand
+final case class RespondPlayFromNextOrPrevTrack(replyTo: ActorRef[PlayFromNextOrPrevTrack | ReadPlaybackThreadState]) extends GsCommand
 final case class RespondPauseTrig(replyTo: ActorRef[PauseTrig]) extends GsCommand
 final case class RespondStopTrig(replyTo: ActorRef[StopTrig]) extends GsCommand
 final case class RespondSetPlaybackSpeed(replyTo: ActorRef[SetPlaybackSpeed]) extends GsCommand
@@ -36,6 +39,7 @@ final case class RespondSetPlaybackSpeed(replyTo: ActorRef[SetPlaybackSpeed]) ex
 // GsTransportControl
 final case class PlayTrig(replyTo: ActorRef[RespondPlayTrig]) extends GsCommand
 final case class PlayFromTrackSelectTrig(path: String, replyTo: ActorRef[RespondPlayFromTrackSelectTrig]) extends GsCommand
+final case class PlayFromNextOrPrevTrack(path: String, replyTo: ActorRef[RespondPlayFromNextOrPrevTrack]) extends GsCommand
 final case class PauseTrig(replyTo: ActorRef[RespondPauseTrig]) extends GsCommand
 final case class StopTrig(replyTo: ActorRef[RespondStopTrig]) extends GsCommand
 final case class SetPlaybackSpeed(speed: GsPlaybackSpeed, replyTo: ActorRef[RespondSetPlaybackSpeed]) extends GsCommand
