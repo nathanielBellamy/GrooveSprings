@@ -11,7 +11,7 @@ import dev.nateschieber.groovesprings.enums.GsAppStateManagerTimer.currFrameIdCa
 import dev.nateschieber.groovesprings.enums.{GsAppStateManagerTimer, GsPlayState, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.enums.GsPlayState.{PAUSE, PLAY, STOP}
 import dev.nateschieber.groovesprings.rest.FileSelectJsonSupport
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextTrack, PauseTrig, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondPauseTrig, RespondPlayFromTrackSelectTrig, RespondPlayTrig, RespondPlaybackThreadState, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, SendLastFrameId, SendReadComplete, SetPlaybackSpeed, SetPlaylist, StopTrig, TimerStart, TrackSelect, TransportTrig}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextOrPrevTrack, NextTrack, PauseTrig, PlayFromNextOrPrevTrack, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondNextOrPrevTrack, RespondPauseTrig, RespondPlayFromNextOrPrevTrack, RespondPlayFromTrackSelectTrig, RespondPlayTrig, RespondPlaybackThreadState, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, SendLastFrameId, SendReadComplete, SetPlaybackSpeed, SetPlaylist, StopTrig, TimerStart, TrackSelect, TransportTrig}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -295,7 +295,6 @@ class GsAppStateManager(
     msg match {
       case TrackSelect(track, replyTo) =>
         appState = setCurrTrack(appState, track)
-        // TODO: un-overload TrackSelect
         gsPlaybackRef ! TrackSelect(track, context.self)
         hydrateState()
         replyTo ! RespondTrackSelect(track.path, context.self)
@@ -307,8 +306,19 @@ class GsAppStateManager(
         hydrateState()
         Behaviors.same
 
+      case RespondNextOrPrevTrack(path, _replyTo) =>
+        if (appState.playState == GsPlayState.PLAY)
+          gsPlaybackRef ! PlayFromNextOrPrevTrack(path, context.self)
+          hydrateState()
+        Behaviors.same
+
       case RespondPlayFromTrackSelectTrig(replyTo) =>
         replyTo ! ReadPlaybackThreadState(context.self)
+        Behaviors.same
+
+      case RespondPlayFromNextOrPrevTrack(replyTo) =>
+        if (appState.playState == GsPlayState.PLAY)
+          replyTo ! ReadPlaybackThreadState(context.self)
         Behaviors.same
 
       case HydrateStateToDisplay() =>
@@ -371,7 +381,7 @@ class GsAppStateManager(
               // TODO: start from end of track
               appState = prevTrack(appState)
 
-            gsPlaybackRef ! TrackSelect(appState.currTrack, context.self)
+            gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
           return Behaviors.same
 
         gsDisplayRef ! SendLastFrameId(lastFrameId)
@@ -400,13 +410,13 @@ class GsAppStateManager(
 
       case PrevTrack() =>
         appState = prevTrack(appState)
-        gsPlaybackRef ! TrackSelect(appState.currTrack, context.self)
+        gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
         hydrateState()
         Behaviors.same
 
       case NextTrack() =>
         appState = nextTrack(appState)
-        gsPlaybackRef ! TrackSelect(appState.currTrack, context.self)
+        gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
         hydrateState()
         Behaviors.same
 
