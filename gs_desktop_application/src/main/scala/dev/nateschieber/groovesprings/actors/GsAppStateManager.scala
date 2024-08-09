@@ -7,10 +7,11 @@ import akka.actor.typed.receptionist.ServiceKey
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.appState
 import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState, EmptyPlaylist, EmptyTrack, Playlist, Track}
-import dev.nateschieber.groovesprings.enums.{GsPlayState, GsPlaybackSpeed}
-import dev.nateschieber.groovesprings.enums.GsPlayState.{PLAY, STOP}
+import dev.nateschieber.groovesprings.enums.GsAppStateManagerTimer.currFrameIdCache
+import dev.nateschieber.groovesprings.enums.{GsAppStateManagerTimer, GsPlayState, GsPlaybackSpeed}
+import dev.nateschieber.groovesprings.enums.GsPlayState.{PAUSE, PLAY, STOP}
 import dev.nateschieber.groovesprings.rest.FileSelectJsonSupport
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, TimerStart, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextTrack, PauseTrig, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, RespondAddTrackToPlaylist, RespondTimerStart, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondSetPlaylist, RespondTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect, TransportTrig}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextTrack, PauseTrig, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondPauseTrig, RespondPlayFromTrackSelectTrig, RespondPlayTrig, RespondPlaybackThreadState, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, SendLastFrameId, SendReadComplete, SetPlaybackSpeed, SetPlaylist, StopTrig, TimerStart, TrackSelect, TransportTrig}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -72,7 +73,15 @@ class GsAppStateManager(
   extends AbstractBehavior[GsCommand](context)
     with FileSelectJsonSupport with AppStateJsonSupport {
 
-  private var currFrameIdCacheTimerRef: ActorRef[GsCommand] = context.spawn(GsTimer(), UUID.randomUUID().toString)
+  private var currFrameIdCacheTimerRef: ActorRef[GsCommand] = context.spawn(
+    GsTimer(GsAppStateManagerTimer.currFrameIdCache.id),
+    UUID.randomUUID().toString
+  )
+
+  private var playbackThreadPollTimerRef: ActorRef[GsCommand] = context.spawn(
+    GsTimer(GsAppStateManagerTimer.playbackThreadPoll.id),
+    UUID.randomUUID().toString
+  )
 
   def printState(): Unit = {
     println(appState.toJson.prettyPrint)
@@ -88,7 +97,7 @@ class GsAppStateManager(
       appState.playlist
     )
   }
-  
+
   private def setAppState(newState: AppState): Unit = {
     appState = AppState(
       newState.playState,
@@ -134,7 +143,7 @@ class GsAppStateManager(
       playlist
     )
   }
-  
+
   private def clearPlaylist(appState: AppState): AppState = {
     AppState(
       appState.playState,
@@ -233,8 +242,8 @@ class GsAppStateManager(
         appState.playState,
         appState.playbackSpeed,
         appState.currFrameId,
-        optTrack.get, 
-        newIdx, 
+        optTrack.get,
+        newIdx,
         appState.playlist)
     else
       AppState(
@@ -242,7 +251,7 @@ class GsAppStateManager(
         appState.playbackSpeed,
         appState.currFrameId,
         EmptyTrack,
-        0, 
+        0,
         appState.playlist
       )
   }
@@ -278,6 +287,10 @@ class GsAppStateManager(
     currFrameIdCacheTimerRef ! TimerStart(500, context.self)
   }
 
+  private def playbackThreadPollTimerStart(): Unit = {
+    playbackThreadPollTimerRef ! TimerStart(50, context.self)
+  }
+
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case TrackSelect(track, replyTo) =>
@@ -291,7 +304,11 @@ class GsAppStateManager(
       case RespondTrackSelect(path, _replyTo) =>
         // auto play on TrackSelect
         if (appState.playState == GsPlayState.PLAY)
-          gsPlaybackRef ! PlayFromTrackSelectTrig(path, gsDisplayRef)
+          gsPlaybackRef ! PlayFromTrackSelectTrig(path, context.self)
+        Behaviors.same
+
+      case RespondPlayFromTrackSelectTrig(replyTo) =>
+        replyTo ! ReadPlaybackThreadState(context.self)
         Behaviors.same
 
       case HydrateStateToDisplay() =>
@@ -323,16 +340,42 @@ class GsAppStateManager(
         Behaviors.same
 
       case TransportTrig(newPlayState) =>
-        appState = setPlayState(appState, newPlayState)
         newPlayState match {
           case GsPlayState.PLAY =>
-            gsPlaybackRef ! PlayTrig(gsDisplayRef)
+            gsPlaybackRef ! PlayTrig(context.self)
             currFrameIdCacheTimerStart()
           case GsPlayState.PAUSE =>
-            gsPlaybackRef ! PauseTrig(gsDisplayRef)
+            gsPlaybackRef ! PauseTrig(context.self)
           case default =>
-            gsPlaybackRef ! StopTrig(gsDisplayRef)
+            gsPlaybackRef ! StopTrig(context.self)
         }
+        Behaviors.same
+
+      case RespondPlayTrig(replyTo) =>
+        appState = setPlayState(appState, GsPlayState.PLAY)
+        replyTo ! ReadPlaybackThreadState(context.self)
+        hydrateState()
+        Behaviors.same
+
+      case RespondPlaybackThreadState(lastFrameId, playState, readComplete, replyTo) =>
+        if (readComplete)
+          gsDisplayRef ! SendReadComplete()
+          return Behaviors.same
+        gsDisplayRef ! SendLastFrameId(lastFrameId)
+        if (playState == GsPlayState.PLAY)
+          // TODO:
+          //   - compare lastFrameId to currTrack.sf_info.frames
+          //   - allow user to set fade-out
+          playbackThreadPollTimerStart()
+        Behaviors.same
+
+      case RespondPauseTrig(replyTo) =>
+        appState = setPlayState(appState, GsPlayState.PAUSE)
+        hydrateState()
+        Behaviors.same
+
+      case RespondStopTrig(replyTo) =>
+        appState = setPlayState(appState, GsPlayState.STOP)
         hydrateState()
         Behaviors.same
 
@@ -354,18 +397,29 @@ class GsAppStateManager(
         hydrateState()
         Behaviors.same
 
-      case RespondTimerStart(replyTo) =>
-        cacheCurrFrameId()
-        if (appState.playState == GsPlayState.PLAY)
-          currFrameIdCacheTimerStart()
-        else if (appState.playState == GsPlayState.STOP)
-          setCurrFrameId(0)
+      case RespondTimerStart(timerId, replyTo) =>
+        val timer: GsAppStateManagerTimer = GsAppStateManagerTimer.fromId(timerId)
+        timer match {
+          case GsAppStateManagerTimer.currFrameIdCache =>
+            cacheCurrFrameId()
+            if (appState.playState == GsPlayState.PLAY)
+              currFrameIdCacheTimerStart()
+            else if (appState.playState == GsPlayState.STOP)
+            setCurrFrameId(0)
+
+          case GsAppStateManagerTimer.playbackThreadPoll =>
+            gsPlaybackRef ! ReadPlaybackThreadState(context.self)
+
+          case default =>
+            println("GsAppStateManager :: Unrecognized Timer")
+        }
         Behaviors.same
 
       case RespondHydrateState(replyTo) =>
         Behaviors.same
 
       case default =>
+        println("GsAppStateManager :: Unmatched Message Received")
         Behaviors.same
     }
   }

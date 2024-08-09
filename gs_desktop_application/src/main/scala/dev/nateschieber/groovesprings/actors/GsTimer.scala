@@ -6,22 +6,22 @@ import dev.nateschieber.groovesprings.traits.{TimerStart, GsCommand, RespondTime
 
 object GsTimer {
 
-  def apply(): Behavior[GsCommand] = Behaviors.setup {
+  def apply(id: String): Behavior[GsCommand] = Behaviors.setup {
     context =>
       given system: ActorSystem[Nothing] = context.system
 
-      new GsTimer(context)
+      new GsTimer(id, context)
   }
 }
 
-class GsTimer(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCommand](context) {
+class GsTimer(id: String, context: ActorContext[GsCommand]) extends AbstractBehavior[GsCommand](context) {
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
 
       case TimerStart(ms, replyTo) =>
         Thread.sleep(ms)
-        replyTo ! RespondTimerStart(context.self)
+        replyTo ! RespondTimerStart(id, context.self)
         Behaviors.same
 
       case default =>
