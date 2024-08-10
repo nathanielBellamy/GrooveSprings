@@ -12,21 +12,18 @@
           />
         </label>
       </form>
-      -
       <button type="submit"
               (click)="handleSaveAsPlaylistClick()"
               [disabled]="!playlistForm.valid"
       >
         Save As
       </button>
-      -
       <button type="submit"
               (click)="handleSavePlaylistClick()"
               [disabled]="!playlistForm.valid || playlistId === 0"
       >
         Save
       </button>
-      -
       <button (click)="handleClearPlaylistClick()">
         Clear
       </button>
