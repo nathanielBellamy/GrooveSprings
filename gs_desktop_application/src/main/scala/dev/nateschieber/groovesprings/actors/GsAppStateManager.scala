@@ -272,27 +272,31 @@ class GsAppStateManager(
   }
 
   private def setCurrFrameId(newCurrFrameId: Long): Unit = {
-    appState = AppState(
-      appState.playState,
-      appState.playbackSpeed,
-      appState.loopType,
-      newCurrFrameId,
-      appState.currTrack,
-      appState.currPlaylistTrackIdx,
-      appState.playlist
+    setAppState(
+      AppState(
+        appState.playState,
+        appState.playbackSpeed,
+        appState.loopType,
+        newCurrFrameId,
+        appState.currTrack,
+        appState.currPlaylistTrackIdx,
+        appState.playlist
+      )
     )
   }
 
   private def cacheCurrFrameId(): Unit = {
     val currFrameId = if (appState.playState == GsPlayState.STOP) 0L else GsPlaybackThread.getCurrFrameId.asInstanceOf[Long]
-    appState = AppState(
-      appState.playState,
-      appState.playbackSpeed,
-      appState.loopType,
-      currFrameId,
-      appState.currTrack,
-      appState.currPlaylistTrackIdx,
-      appState.playlist
+    setAppState(
+      AppState(
+        appState.playState,
+        appState.playbackSpeed,
+        appState.loopType,
+        currFrameId,
+        appState.currTrack,
+        appState.currPlaylistTrackIdx,
+        appState.playlist
+      )
     )
   }
 
@@ -311,14 +315,18 @@ class GsAppStateManager(
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case RestTrackSelect(track, replyTo) =>
-        appState = setCurrTrack(appState, track)
+        setAppState(
+          setCurrTrack(appState, track)
+        )
         gsPlaybackRef ! TrackSelect(track, context.self)
         hydrateState()
         replyTo ! RespondRestTrackSelect(track.path, context.self)
         Behaviors.same
 
       case RespondTrackSelect(path, _replyTo) =>
-        appState = setPlayState(appState, GsPlayState.PLAY)
+        setAppState(
+          setPlayState(appState, GsPlayState.PLAY)
+        )
         gsPlaybackRef ! PlayFromTrackSelectTrig(path, context.self)
         hydrateState()
         Behaviors.same
@@ -343,24 +351,32 @@ class GsAppStateManager(
         Behaviors.same
 
       case AddTrackToPlaylist(track, replyTo) =>
-        appState = addTrackToPlaylist(appState, track)
+        setAppState(
+          addTrackToPlaylist(appState, track)
+        )
         hydrateState()
         replyTo ! RespondAddTrackToPlaylist(context.self)
         Behaviors.same
 
       case SetPlaylist(playlist, replyTo) =>
-        appState = setPlaylist(appState, playlist)
+        setAppState(
+          setPlaylist(appState, playlist)
+        )
         hydrateState()
         replyTo ! RespondSetPlaylist(context.self)
         Behaviors.same
 
       case ClearPlaylist(replyTo) =>
-        appState = clearPlaylist(appState)
+        setAppState(
+          clearPlaylist(appState)
+        )
         hydrateState()
         Behaviors.same
 
       case CurrPlaylistTrackIdx(newIdx, replyTo) =>
-        appState = setCurrPlaylistTrackIdx(appState, newIdx)
+        setAppState(
+          setCurrPlaylistTrackIdx(appState, newIdx)
+        )
         gsPlaybackRef ! TrackSelect(appState.currTrack, context.self)
         hydrateState()
         replyTo ! RespondCurrPlaylistTrackIdx(context.self)
@@ -379,7 +395,9 @@ class GsAppStateManager(
         Behaviors.same
 
       case RespondPlayTrig(replyTo) =>
-        appState = setPlayState(appState, GsPlayState.PLAY)
+        setAppState(
+          setPlayState(appState, GsPlayState.PLAY)
+        )
         replyTo ! ReadPlaybackThreadState(context.self)
         hydrateState()
         Behaviors.same
@@ -393,10 +411,14 @@ class GsAppStateManager(
           //    - condition on those vars
           if (appState.playState == GsPlayState.PLAY)
             if (appState.playbackSpeed.value > 0)
-              appState = nextTrack(appState)
+              setAppState(
+                nextTrack(appState)
+              )
             else if (appState.playbackSpeed.value < 0)
               // TODO: start from end of track
-              appState = prevTrack(appState)
+              setAppState(
+                prevTrack(appState)
+              )
 
             gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
           return Behaviors.same
@@ -410,29 +432,39 @@ class GsAppStateManager(
         Behaviors.same
 
       case RespondPauseTrig(replyTo) =>
-        appState = setPlayState(appState, GsPlayState.PAUSE)
+        setAppState(
+          setPlayState(appState, GsPlayState.PAUSE)
+        )
         hydrateState()
         Behaviors.same
 
       case RespondStopTrig(replyTo) =>
-        appState = setPlayState(appState, GsPlayState.STOP)
+        setAppState(
+          setPlayState(appState, GsPlayState.STOP)
+        )
         hydrateState()
         Behaviors.same
 
       case SetPlaybackSpeed(newPlaybackSpeed, _) =>
-        appState = setPlaybackSpeed(appState, newPlaybackSpeed)
+        setAppState(
+          setPlaybackSpeed(appState, newPlaybackSpeed)
+        )
         gsPlaybackRef ! SetPlaybackSpeed(newPlaybackSpeed, gsDisplayRef)
         hydrateState()
         Behaviors.same
 
       case PrevTrack() =>
-        appState = prevTrack(appState)
+        setAppState(
+          prevTrack(appState)
+        )
         gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
         hydrateState()
         Behaviors.same
 
       case NextTrack() =>
-        appState = nextTrack(appState)
+        setAppState(
+          nextTrack(appState)
+        )
         gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
         hydrateState()
         Behaviors.same
