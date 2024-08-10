@@ -40,6 +40,7 @@ object GsAppStateManager {
     AppState(
       GsPlayState.STOP,
       appState.playbackSpeed,
+      appState.loopType,
       0, // currFrameId
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -91,6 +92,7 @@ class GsAppStateManager(
     AppState(
       appState.playState,
       appState.playbackSpeed,
+      appState.loopType,
       appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -102,6 +104,7 @@ class GsAppStateManager(
     appState = AppState(
       newState.playState,
       newState.playbackSpeed,
+      newState.loopType,
       newState.currFrameId,
       newState.currTrack,
       newState.currPlaylistTrackIdx,
@@ -115,6 +118,7 @@ class GsAppStateManager(
     AppState(
       appState.playState,
       appState.playbackSpeed,
+      appState.loopType,
       appState.currFrameId,
       track,
       appState.currPlaylistTrackIdx,
@@ -126,6 +130,7 @@ class GsAppStateManager(
     AppState(
       appState.playState,
       appState.playbackSpeed,
+      appState.loopType,
       appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -137,6 +142,7 @@ class GsAppStateManager(
     AppState(
       appState.playState,
       appState.playbackSpeed,
+      appState.loopType,
       appState.currFrameId,
       appState.currTrack,
       0,
@@ -148,6 +154,7 @@ class GsAppStateManager(
     AppState(
       appState.playState,
       appState.playbackSpeed,
+      appState.loopType,
       appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -166,6 +173,7 @@ class GsAppStateManager(
       return AppState(
         appState.playState,
         appState.playbackSpeed,
+        appState.loopType,
         0,
         appState.currTrack,
         0,
@@ -178,6 +186,7 @@ class GsAppStateManager(
     AppState(
       appState.playState,
       appState.playbackSpeed,
+      appState.loopType,
       0,
       appState.playlist.tracks(newIdx),
       newIdx,
@@ -194,6 +203,7 @@ class GsAppStateManager(
       return AppState(
         appState.playState,
         appState.playbackSpeed,
+        appState.loopType,
         0,
         appState.currTrack,
         0,
@@ -206,6 +216,7 @@ class GsAppStateManager(
     AppState(
       appState.playState,
       appState.playbackSpeed,
+      appState.loopType,
       0,
       appState.playlist.tracks(newIdx),
       newIdx,
@@ -217,6 +228,7 @@ class GsAppStateManager(
     AppState(
       newPlayState,
       appState.playbackSpeed,
+      appState.loopType,
       appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -228,6 +240,7 @@ class GsAppStateManager(
     AppState(
       appState.playState,
       newPlaybackSpeed,
+      appState.loopType,
       appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -241,6 +254,7 @@ class GsAppStateManager(
       AppState(
         appState.playState,
         appState.playbackSpeed,
+        appState.loopType,
         appState.currFrameId,
         optTrack.get,
         newIdx,
@@ -249,6 +263,7 @@ class GsAppStateManager(
       AppState(
         appState.playState,
         appState.playbackSpeed,
+        appState.loopType,
         appState.currFrameId,
         EmptyTrack,
         0,
@@ -260,6 +275,7 @@ class GsAppStateManager(
     appState = AppState(
       appState.playState,
       appState.playbackSpeed,
+      appState.loopType,
       newCurrFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -272,6 +288,7 @@ class GsAppStateManager(
     appState = AppState(
       appState.playState,
       appState.playbackSpeed,
+      appState.loopType,
       currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
