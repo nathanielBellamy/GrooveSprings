@@ -123,12 +123,16 @@ class GsRestController(
         }
       },
       path("api" / "v1" / "loop") {
-        get {
-          parameters(Symbol("type").as[String]) { (_type: String) => {
-            val lt = GsLoopType(_type)
-            gsAppStateManagerRef ! SetLoopType(lt, context.self)
-            complete("loop: " + lt)
-          }}
+        put {
+          gsAppStateManagerRef ! SetLoopType(context.self)
+          complete("loop")
+        }
+      },
+      path("api" / "v1" / "shuffle") {
+        put {
+          // TODO: gsAppStateManagerRef ! SetShuffle(context.self)
+          println("shuffle")
+          complete("shuffle")
         }
       },
       path("api" / "v1" / "trackSelect") {
