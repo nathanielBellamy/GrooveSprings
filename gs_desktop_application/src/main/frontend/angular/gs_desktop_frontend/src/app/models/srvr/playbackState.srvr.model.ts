@@ -9,6 +9,7 @@ export interface PlaybackStateSrvr {
   playState: GsPlayState;
   playbackSpeed: GsPlaybackSpeed;
   loopType: GsLoopType;
+  shuffle: boolean;
   currFrameId: number;
   currTrack: TrackSrvr;
   currPlaylistTrackIdx: number;
@@ -20,6 +21,7 @@ export function playbackStateSrvrFromPlaybackState(ps: PlaybackState): PlaybackS
     playState: ps.playState,
     playbackSpeed: ps.playbackSpeed,
     loopType: ps.loopType,
+    shuffle: ps.shuffle,
     currFrameId: ps.currFrameId,
     currTrack: trackSrvrFromTrack(ps.currTrack),
     currPlaylistTrackIdx: ps.currPlaylistTrackIdx,
@@ -32,6 +34,7 @@ export function playbackStateFromPlaybackStateSrvr(ps: PlaybackStateSrvr): Playb
     playState: ps.playState,
     playbackSpeed: ps.playbackSpeed,
     loopType: ps.loopType,
+    shuffle: ps.shuffle,
     currFrameId: ps.currFrameId,
     currTrack: trackFromTrackSrvr(ps.currTrack),
     currPlaylistTrackIdx: ps.currPlaylistTrackIdx,

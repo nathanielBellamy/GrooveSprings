@@ -8,6 +8,7 @@
       <span class="gs_current_track_legend_buttons">
         <button
           class="gs_playback_display_button"
+          [class.selected]="shuffle"
           (click)="handleShuffleClick()">
           <fa-icon [icon]="faShuffle"></fa-icon>
         </button>

@@ -24,8 +24,11 @@ export class PlaybackDisplayComponent {
   protected currTrack: Track = defaultTrack
   protected currTrackArtists: string = "-"
   protected currPercent: number = 0
+
   protected loopType: GsLoopType = GsLoopType.NONE
   protected faRotate = faRotate
+
+  protected shuffle: boolean = false
   protected faShuffle = faShuffle
 
   // ping ws to keep alive
@@ -46,6 +49,10 @@ export class PlaybackDisplayComponent {
     store$
       .select(state => state.playback.currFrameId)
       .subscribe(val => this.currPercent = this.getCurrPercent(val))
+
+    store$
+      .select(state => state.playback.shuffle)
+      .subscribe(val => this.shuffle = val)
   }
 
   ngOnInit() {

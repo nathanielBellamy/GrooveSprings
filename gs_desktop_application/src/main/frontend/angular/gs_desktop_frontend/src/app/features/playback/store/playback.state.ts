@@ -8,6 +8,7 @@ export const initialPlaybackState: PlaybackState = {
   playState: GsPlayState.STOP,
   playbackSpeed: GsPlaybackSpeed._1,
   loopType: GsLoopType.NONE,
+  shuffle: false,
   currFrameId: 0,
   currPlaylistTrackIdx: 0,
   currTrack: defaultTrack,
@@ -18,6 +19,7 @@ export interface PlaybackState {
   playState: GsPlayState;
   playbackSpeed: GsPlaybackSpeed;
   loopType: GsLoopType;
+  shuffle: boolean;
   currFrameId: number;
   currPlaylistTrackIdx: number;
   currTrack: Track;
