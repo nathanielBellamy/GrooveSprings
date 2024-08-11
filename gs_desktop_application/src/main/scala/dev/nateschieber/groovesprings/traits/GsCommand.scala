@@ -46,6 +46,9 @@ final case class SetPlaybackSpeed(speed: GsPlaybackSpeed, replyTo: ActorRef[Resp
 final case class SetLoopType(replyTo: ActorRef[RespondSetLoopType]) extends GsCommand
 final case class RespondSetLoopType(replyTo: ActorRef[SetLoopType]) extends GsCommand
 
+final case class SetShuffle(replyTo: ActorRef[RespondSetShuffle]) extends GsCommand
+final case class RespondSetShuffle(replyTo: ActorRef[SetShuffle]) extends GsCommand
+
 final case class HydrateStateToDisplay() extends GsCommand
 
 final case class HydrateState(appStateJson: String, replyTo: ActorRef[RespondHydrateState]) extends GsCommand
