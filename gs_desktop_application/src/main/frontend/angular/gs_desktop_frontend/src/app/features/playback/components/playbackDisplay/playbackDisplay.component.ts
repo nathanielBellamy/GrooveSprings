@@ -3,12 +3,14 @@ import {HttpClient} from '@angular/common/http';
 import {Store} from "@ngrx/store";
 import {PlaybackState} from "../../store/playback.state";
 import {defaultTrack, Track} from "../../../../models/tracks/track.model";
+import {faRotate, faShuffle} from '@fortawesome/free-solid-svg-icons'
 import {Observable} from "rxjs";
 import {webSocket} from "rxjs/webSocket";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
 import {FetchAppState, HydrateAppState} from "../../store/playback.actions";
 import {playbackStateFromPlaybackStateSrvr, PlaybackStateSrvr} from "../../../../models/srvr/playbackState.srvr.model";
 import {GsPlayState} from "../../../../enums/gsPlayState.enum";
+import {GsLoopType} from "../../../../enums/gsLoopType.enum";
 
 @Component({
   selector: 'gsPlaybackDisplay',
@@ -22,6 +24,9 @@ export class PlaybackDisplayComponent {
   protected currTrack: Track = defaultTrack
   protected currTrackArtists: string = "-"
   protected currPercent: number = 0
+  protected loopType: GsLoopType = GsLoopType.NONE
+  protected faRotate = faRotate
+  protected faShuffle = faShuffle
 
   // ping ws to keep alive
   private pingIntervalId: number = 0 // setInterval returns non-zero number
@@ -33,6 +38,10 @@ export class PlaybackDisplayComponent {
       this.currTrackArtists = track.artists.length ? track.artists.map(a => a.name).join(', ') : "-"
       this.currTrack = {...track}
     })
+
+    store$
+      .select(state => state.playback.loopType)
+      .subscribe(val => this.loopType = val)
 
     store$
       .select(state => state.playback.currFrameId)
@@ -88,15 +97,21 @@ export class PlaybackDisplayComponent {
     return subject
   }
 
-  getCurrPercent(lastFrameId: number) {
+  getCurrPercent(lastFrameId: number): number {
     const denominator = this.currTrack.sf_frames * this.currTrack.sf_channels
     const validDenominator = typeof denominator === 'number' && denominator != 0 && !isNaN(denominator) ? denominator : 1
     return Math.round(100 * lastFrameId / validDenominator)
   }
 
-  setCurrPercent(lastFrameId: number) {
+  setCurrPercent(lastFrameId: number): void {
     this.currPercent = this.getCurrPercent(lastFrameId)
   }
 
-  protected readonly JSON = JSON;
+  handleLoopTypeClick(): void {
+    console.log('loopType click')
+  }
+
+  handleShuffleClick(): void {
+    console.log('shuffle click')
+  }
 }
