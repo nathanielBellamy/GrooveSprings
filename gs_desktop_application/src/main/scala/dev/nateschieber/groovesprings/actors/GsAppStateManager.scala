@@ -8,10 +8,10 @@ import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.appState
 import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState, EmptyPlaylist, EmptyTrack, Playlist, Track}
 import dev.nateschieber.groovesprings.enums.GsAppStateManagerTimer.currFrameIdCache
-import dev.nateschieber.groovesprings.enums.{GsAppStateManagerTimer, GsPlayState, GsPlaybackSpeed}
+import dev.nateschieber.groovesprings.enums.{GsAppStateManagerTimer, GsLoopType, GsPlayState, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.enums.GsPlayState.{PAUSE, PLAY, STOP}
 import dev.nateschieber.groovesprings.rest.FileSelectJsonSupport
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextOrPrevTrack, NextTrack, PauseTrig, PlayFromNextOrPrevTrack, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondNextOrPrevTrack, RespondPauseTrig, RespondPlayFromNextOrPrevTrack, RespondPlayFromTrackSelectTrig, RespondPlayTrig, RespondPlaybackThreadState, RespondRestTrackSelect, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, RestTrackSelect, SendLastFrameId, SendReadComplete, SetPlaybackSpeed, SetPlaylist, StopTrig, TimerStart, TrackSelect, TransportTrig}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextOrPrevTrack, NextTrack, PauseTrig, PlayFromNextOrPrevTrack, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondNextOrPrevTrack, RespondPauseTrig, RespondPlayFromNextOrPrevTrack, RespondPlayFromTrackSelectTrig, RespondPlayTrig, RespondPlaybackThreadState, RespondRestTrackSelect, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, RestTrackSelect, SendLastFrameId, SendReadComplete, SetLoopType, SetPlaybackSpeed, SetPlaylist, StopTrig, TimerStart, TrackSelect, TransportTrig}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -247,6 +247,18 @@ class GsAppStateManager(
       appState.playlist
     )
   }
+  
+  private def setLoopType(state: AppState, newLoopType: GsLoopType): AppState = {
+    AppState(
+      appState.playState,
+      appState.playbackSpeed,
+      newLoopType,
+      appState.currFrameId,
+      appState.currTrack,
+      appState.currPlaylistTrackIdx,
+      appState.playlist
+    )
+  }
 
   private def setCurrPlaylistTrackIdx(appState: AppState, newIdx: Int): AppState = {
     var optTrack = appState.playlist.tracks.lift(newIdx)
@@ -450,6 +462,13 @@ class GsAppStateManager(
           setPlaybackSpeed(appState, newPlaybackSpeed)
         )
         gsPlaybackRef ! SetPlaybackSpeed(newPlaybackSpeed, gsDisplayRef)
+        hydrateState()
+        Behaviors.same
+
+      case SetLoopType(newLoopType, replyTo) =>
+        setAppState(
+          setLoopType(appState, newLoopType)
+        )
         hydrateState()
         Behaviors.same
 

@@ -2,14 +2,14 @@ package dev.nateschieber.groovesprings.traits
 
 import akka.actor.typed.ActorRef
 import dev.nateschieber.groovesprings.entities.{Playlist, Track}
-import dev.nateschieber.groovesprings.enums.{GsPlayState, GsPlaybackSpeed}
+import dev.nateschieber.groovesprings.enums.{GsLoopType, GsPlayState, GsPlaybackSpeed}
 
 sealed trait GsCommand
 
-// GsDisplay
+// TODO: organize
+
 final case class InitDisplay() extends GsCommand
 
-// GsPlayback
 final case class ReadPlaybackThreadState(replyTo: ActorRef[RespondPlaybackThreadState]) extends GsCommand
 final case class RespondPlaybackThreadState(frameId: Long, playState: GsPlayState, readComplete: Boolean, replyTo: ActorRef[ReadPlaybackThreadState]) extends GsCommand
 
@@ -22,7 +22,6 @@ final case class RespondNextOrPrevTrack(path: String, replyTo: ActorRef[NextOrPr
 
 final case class InitialTrackSelect(track: Track) extends GsCommand // no auto-play
 
-// GsPlaybackThread
 final case class InitPlaybackThread(replyTo: ActorRef[RespondInitPlaybackThread]) extends GsCommand
 final case class RespondInitPlaybackThread(replyTo: ActorRef[InitPlaybackThread]) extends GsCommand
 final case class InitPlaybackThreadFromTrackSelect(path: String, replyTo: ActorRef[RespondInitPlaybackThreadFromTrackSelect]) extends GsCommand
@@ -30,7 +29,6 @@ final case class RespondInitPlaybackThreadFromTrackSelect(replyTo: ActorRef[Init
 final case class StopPlaybackThread(replyTo: ActorRef[RespondStopPlaybackThread]) extends GsCommand
 final case class RespondStopPlaybackThread(replyTo: ActorRef[StopPlaybackThread]) extends GsCommand
 
-// GsPlayback
 final case class RespondPlayTrig(replyTo: ActorRef[PlayTrig | PlayFromTrackSelectTrig | ReadPlaybackThreadState]) extends GsCommand
 final case class RespondPlayFromTrackSelectTrig(replyTo: ActorRef[PlayFromTrackSelectTrig | ReadPlaybackThreadState]) extends GsCommand
 final case class RespondPlayFromNextOrPrevTrack(replyTo: ActorRef[PlayFromNextOrPrevTrack | ReadPlaybackThreadState]) extends GsCommand
@@ -38,7 +36,6 @@ final case class RespondPauseTrig(replyTo: ActorRef[PauseTrig]) extends GsComman
 final case class RespondStopTrig(replyTo: ActorRef[StopTrig]) extends GsCommand
 final case class RespondSetPlaybackSpeed(replyTo: ActorRef[SetPlaybackSpeed]) extends GsCommand
 
-// GsTransportControl
 final case class PlayTrig(replyTo: ActorRef[RespondPlayTrig]) extends GsCommand
 final case class PlayFromTrackSelectTrig(path: String, replyTo: ActorRef[RespondPlayFromTrackSelectTrig]) extends GsCommand
 final case class PlayFromNextOrPrevTrack(path: String, replyTo: ActorRef[RespondPlayFromNextOrPrevTrack]) extends GsCommand
@@ -46,10 +43,11 @@ final case class PauseTrig(replyTo: ActorRef[RespondPauseTrig]) extends GsComman
 final case class StopTrig(replyTo: ActorRef[RespondStopTrig]) extends GsCommand
 final case class SetPlaybackSpeed(speed: GsPlaybackSpeed, replyTo: ActorRef[RespondSetPlaybackSpeed]) extends GsCommand
 
-// GsRestController
+final case class SetLoopType(loopType: GsLoopType, replyTo: ActorRef[RespondSetLoopType]) extends GsCommand
+final case class RespondSetLoopType(replyTo: ActorRef[SetLoopType]) extends GsCommand
+
 final case class HydrateStateToDisplay() extends GsCommand
 
-// GsAppStateManager
 final case class HydrateState(appStateJson: String, replyTo: ActorRef[RespondHydrateState]) extends GsCommand
 final case class RespondHydrateState(replyTo: ActorRef[HydrateState]) extends GsCommand
 
