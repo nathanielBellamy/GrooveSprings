@@ -2,7 +2,22 @@
 <div class="gs_playback_display">
   <fieldset class="gs_current_track">
     <legend class="gs_current_track_legend">
-      Currently Playing
+      <span class="gs_current_track_legend_title">
+        Currently Playing
+      </span>
+      <span class="gs_current_track_legend_buttons">
+        <button
+          class="gs_playback_display_button"
+          (click)="handleShuffleClick()">
+          <fa-icon [icon]="faShuffle"></fa-icon>
+        </button>
+        <button
+          class="gs_playback_display_button gs_loop_type_display"
+          (click)="handleLoopTypeClick()">
+          <fa-icon [icon]="faRotate"></fa-icon>
+          {{loopType}}
+        </button>
+      </span>
     </legend>
     <table class="gs_playback_display_table">
       <tbody>

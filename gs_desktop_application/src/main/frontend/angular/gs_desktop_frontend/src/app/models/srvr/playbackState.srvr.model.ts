@@ -3,10 +3,12 @@ import {playlistFromPlaylistSrvr, PlaylistSrvr, playlistSrvrFromPlaylist} from "
 import {PlaybackState} from "../../features/playback/store/playback.state";
 import {GsPlayState} from "../../enums/gsPlayState.enum";
 import {GsPlaybackSpeed} from "../../enums/gsPlaybackSpeed.enum";
+import {GsLoopType} from "../../enums/gsLoopType.enum";
 
 export interface PlaybackStateSrvr {
   playState: GsPlayState;
   playbackSpeed: GsPlaybackSpeed;
+  loopType: GsLoopType;
   currFrameId: number;
   currTrack: TrackSrvr;
   currPlaylistTrackIdx: number;
@@ -17,6 +19,7 @@ export function playbackStateSrvrFromPlaybackState(ps: PlaybackState): PlaybackS
   return {
     playState: ps.playState,
     playbackSpeed: ps.playbackSpeed,
+    loopType: ps.loopType,
     currFrameId: ps.currFrameId,
     currTrack: trackSrvrFromTrack(ps.currTrack),
     currPlaylistTrackIdx: ps.currPlaylistTrackIdx,
@@ -28,6 +31,7 @@ export function playbackStateFromPlaybackStateSrvr(ps: PlaybackStateSrvr): Playb
   return {
     playState: ps.playState,
     playbackSpeed: ps.playbackSpeed,
+    loopType: ps.loopType,
     currFrameId: ps.currFrameId,
     currTrack: trackFromTrackSrvr(ps.currTrack),
     currPlaylistTrackIdx: ps.currPlaylistTrackIdx,
