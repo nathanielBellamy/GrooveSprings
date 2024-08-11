@@ -70,6 +70,14 @@ export class PlaybackService {
     return this.http.delete(AppRoutesSrvr.clearPlaylist(), {responseType: 'text'})
   }
 
+  setLoopType(): Observable<any> {
+    return this.http.put(AppRoutesSrvr.setLoopType(), {responseType: 'text'})
+  }
+
+  toggleShuffle(): Observable<any> {
+    return this.http.put(AppRoutesSrvr.toggleShuffle(), {responseType: 'text'})
+  }
+
   setCurrPlaylistTrackIdx(trackIdx: number): Observable<any> {
     return this.http.put(AppRoutesSrvr.currPlaylistTrackIdx(trackIdx), {}, {responseType: 'text'})
   }

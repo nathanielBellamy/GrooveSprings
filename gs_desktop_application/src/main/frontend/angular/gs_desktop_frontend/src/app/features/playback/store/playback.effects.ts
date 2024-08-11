@@ -8,7 +8,7 @@ import {
   SetCurrFileFailure,
   SetCurrFileSuccess,
   SetCurrPlaylistTrackIdx,
-  SetCurrTrack, SetPlaylistAsCurr, SetPlaylistAsCurrFailure, StopTrig
+  SetCurrTrack, SetLoopType, SetPlaylistAsCurr, SetPlaylistAsCurrFailure, StopTrig
 } from "./playback.actions";
 import {PlaybackActionTypes} from "./playback.actiontypes";
 import {PlaybackService} from "../services/playback.service";
@@ -128,6 +128,30 @@ export class PlaybackEffects {
         PlaybackActionTypes.ClearPlaylist
       ),
       switchMap(track => this.playbackService.clearPlaylist()
+        .pipe(
+          map(() => new Identity()),
+          catchError((e, _) => of(new Identity()))
+        )
+      )
+    )
+  )
+
+  setLoopType$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PlaybackActionTypes.SetLoopType),
+      switchMap(_ => this.playbackService.setLoopType()
+        .pipe(
+          map(() => new Identity()),
+          catchError((e, _) => of(new Identity()))
+        )
+      )
+    )
+  )
+
+  toggleShuffle$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PlaybackActionTypes.ToggleShuffle),
+      switchMap(_ => this.playbackService.toggleShuffle()
         .pipe(
           map(() => new Identity()),
           catchError((e, _) => of(new Identity()))
