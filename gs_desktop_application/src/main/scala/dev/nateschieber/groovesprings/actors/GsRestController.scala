@@ -9,10 +9,10 @@ import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.GsMusicLibraryScanner
 import dev.nateschieber.groovesprings.entities.{Playlist, PlaylistJsonSupport, Track, TrackJsonSupport}
-import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsPlayState, GsPlaybackSpeed}
+import dev.nateschieber.groovesprings.enums.{GsHttpPort, GsLoopType, GsPlayState, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.jni.JniMain
-import dev.nateschieber.groovesprings.rest.{ GsTrackServiceResponse, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, NextTrack, PrevTrack, RestTrackSelect, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect, TransportTrig}
+import dev.nateschieber.groovesprings.rest.{GsTrackServiceResponse, PlaybackSpeedDto, PlaybackSpeedJsonSupport}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateStateToDisplay, NextTrack, PrevTrack, RestTrackSelect, SetLoopType, SetPlaybackSpeed, SetPlaylist, StopTrig, TrackSelect, TransportTrig}
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -119,6 +119,15 @@ class GsRestController(
             val gsSpeed: GsPlaybackSpeed = gsPlaybackSpeedFromDouble(dto.speed)
             gsAppStateManagerRef ! SetPlaybackSpeed(gsSpeed, gsDisplayRef)
             complete(s"playbackSpeed: $gsSpeed")
+          }}
+        }
+      },
+      path("api" / "v1" / "loop") {
+        get {
+          parameters(Symbol("type").as[String]) { (_type: String) => {
+            val lt = GsLoopType(_type)
+            gsAppStateManagerRef ! SetLoopType(lt, context.self)
+            complete("loop: " + lt)
           }}
         }
       },
