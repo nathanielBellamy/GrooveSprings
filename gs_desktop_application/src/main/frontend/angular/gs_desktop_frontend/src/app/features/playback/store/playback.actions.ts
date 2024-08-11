@@ -4,6 +4,7 @@ import {PlaybackActionTypes} from "./playback.actiontypes";
 import {initialPlaybackState, PlaybackState} from "./playback.state";
 import {Playlist} from "../../../models/playlist/playlist.model";
 import {PlaylistRepr} from "../../../models/playlist/playlist_repr.model";
+import {GsLoopType} from "../../../enums/gsLoopType.enum";
 
 export abstract class GsPlaybackAction {
   handle(state: PlaybackState): PlaybackState {
@@ -127,6 +128,14 @@ export class NextTrackTrig implements Action {
 
 export class PrevTrackTrig implements Action {
   readonly type = PlaybackActionTypes.PrevTrackTrig
+}
+
+export class SetLoopType implements Action {
+  readonly type = PlaybackActionTypes.SetLoopType
+}
+
+export class ToggleShuffle implements Action {
+  readonly type = PlaybackActionTypes.ToggleShuffle
 }
 
 export class HydrateAppState implements Action, GsPlaybackAction {

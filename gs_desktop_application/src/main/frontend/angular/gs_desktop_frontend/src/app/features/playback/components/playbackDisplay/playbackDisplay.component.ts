@@ -7,7 +7,7 @@ import {faRotate, faShuffle} from '@fortawesome/free-solid-svg-icons'
 import {Observable} from "rxjs";
 import {webSocket} from "rxjs/webSocket";
 import {WebSocketSubject} from "rxjs/internal/observable/dom/WebSocketSubject";
-import {FetchAppState, HydrateAppState} from "../../store/playback.actions";
+import {FetchAppState, HydrateAppState, SetLoopType, ToggleShuffle} from "../../store/playback.actions";
 import {playbackStateFromPlaybackStateSrvr, PlaybackStateSrvr} from "../../../../models/srvr/playbackState.srvr.model";
 import {GsPlayState} from "../../../../enums/gsPlayState.enum";
 import {GsLoopType} from "../../../../enums/gsLoopType.enum";
@@ -108,10 +108,10 @@ export class PlaybackDisplayComponent {
   }
 
   handleLoopTypeClick(): void {
-    console.log('loopType click')
+    this.store$.dispatch(new SetLoopType())
   }
 
   handleShuffleClick(): void {
-    console.log('shuffle click')
+    this.store$.dispatch(new ToggleShuffle())
   }
 }

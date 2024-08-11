@@ -32,6 +32,14 @@ export class AppRoutesSrvr {
     return transportPrefix + "/playbackSpeed"
   }
 
+  static setLoopType() {
+    return apiVersionPrefix + "/loop"
+  }
+
+  static toggleShuffle() {
+    return apiVersionPrefix + "/shuffle"
+  }
+
   static appState() {
     return apiVersionPrefix + "/appState"
   }
