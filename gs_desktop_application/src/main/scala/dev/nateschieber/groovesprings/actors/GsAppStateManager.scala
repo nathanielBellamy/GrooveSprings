@@ -8,6 +8,7 @@ import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import dev.nateschieber.groovesprings.actors.GsAppStateManager.appState
 import dev.nateschieber.groovesprings.entities.{AppState, AppStateJsonSupport, EmptyAppState, EmptyPlaylist, EmptyTrack, Playlist, Track}
 import dev.nateschieber.groovesprings.enums.GsAppStateManagerTimer.currFrameIdCache
+import dev.nateschieber.groovesprings.enums.GsLoopType.{ALL, ONE}
 import dev.nateschieber.groovesprings.enums.{GsAppStateManagerTimer, GsLoopType, GsPlayState, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.enums.GsPlayState.{PAUSE, PLAY, STOP}
 import dev.nateschieber.groovesprings.rest.FileSelectJsonSupport
@@ -247,8 +248,14 @@ class GsAppStateManager(
       appState.playlist
     )
   }
-  
-  private def setLoopType(state: AppState, newLoopType: GsLoopType): AppState = {
+
+  private def setLoopType(state: AppState): AppState = {
+    val newLoopType = appState.loopType match {
+      case GsLoopType.ONE  => GsLoopType.NONE
+      case GsLoopType.ALL  => GsLoopType.ONE
+      case GsLoopType.NONE => GsLoopType.ALL
+    }
+
     AppState(
       appState.playState,
       appState.playbackSpeed,
@@ -465,9 +472,9 @@ class GsAppStateManager(
         hydrateState()
         Behaviors.same
 
-      case SetLoopType(newLoopType, replyTo) =>
+      case SetLoopType(replyTo) =>
         setAppState(
-          setLoopType(appState, newLoopType)
+          setLoopType(appState)
         )
         hydrateState()
         Behaviors.same

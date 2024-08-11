@@ -43,7 +43,7 @@ final case class PauseTrig(replyTo: ActorRef[RespondPauseTrig]) extends GsComman
 final case class StopTrig(replyTo: ActorRef[RespondStopTrig]) extends GsCommand
 final case class SetPlaybackSpeed(speed: GsPlaybackSpeed, replyTo: ActorRef[RespondSetPlaybackSpeed]) extends GsCommand
 
-final case class SetLoopType(loopType: GsLoopType, replyTo: ActorRef[RespondSetLoopType]) extends GsCommand
+final case class SetLoopType(replyTo: ActorRef[RespondSetLoopType]) extends GsCommand
 final case class RespondSetLoopType(replyTo: ActorRef[SetLoopType]) extends GsCommand
 
 final case class HydrateStateToDisplay() extends GsCommand
