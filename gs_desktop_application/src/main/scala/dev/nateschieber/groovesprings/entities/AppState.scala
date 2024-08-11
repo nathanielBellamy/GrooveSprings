@@ -4,12 +4,13 @@ import dev.nateschieber.groovesprings.enums.{GsLoopType, GsPlayState, GsPlayback
 case class AppState(playState: GsPlayState,
                     playbackSpeed: GsPlaybackSpeed,
                     loopType: GsLoopType,
+                    shuffle: Boolean,
                     currFrameId: Long,
                     currTrack: Track,
                     currPlaylistTrackIdx: Int,
                     playlist: Playlist)
 
-val EmptyAppState = AppState(GsPlayState.STOP, GsPlaybackSpeed._1, GsLoopType.NONE, 0, EmptyTrack, 0, EmptyPlaylist)
+val EmptyAppState = AppState(GsPlayState.STOP, GsPlaybackSpeed._1, GsLoopType.NONE, false, 0, EmptyTrack, 0, EmptyPlaylist)
 
 import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
@@ -22,10 +23,10 @@ trait AppStateJsonSupport
     with DefaultJsonProtocol
     with TrackJsonSupport
     with PlaylistJsonSupport {
-  implicit val appStateFormat: RootJsonFormat[AppState] = jsonFormat7(AppState.apply)
+  implicit val appStateFormat: RootJsonFormat[AppState] = jsonFormat8(AppState.apply)
 }
 
 object AppStateJsonProtocol extends DefaultJsonProtocol with TrackJsonSupport with PlaylistJsonSupport {
-  implicit val appStateFormat: RootJsonFormat[AppState] = jsonFormat7(AppState.apply)
+  implicit val appStateFormat: RootJsonFormat[AppState] = jsonFormat8(AppState.apply)
 }
 

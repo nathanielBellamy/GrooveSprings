@@ -12,7 +12,7 @@ import dev.nateschieber.groovesprings.enums.GsLoopType.{ALL, ONE}
 import dev.nateschieber.groovesprings.enums.{GsAppStateManagerTimer, GsLoopType, GsPlayState, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.enums.GsPlayState.{PAUSE, PLAY, STOP}
 import dev.nateschieber.groovesprings.rest.FileSelectJsonSupport
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextOrPrevTrack, NextTrack, PauseTrig, PlayFromNextOrPrevTrack, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondNextOrPrevTrack, RespondPauseTrig, RespondPlayFromNextOrPrevTrack, RespondPlayFromTrackSelectTrig, RespondPlayTrig, RespondPlaybackThreadState, RespondRestTrackSelect, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, RestTrackSelect, SendLastFrameId, SendReadComplete, SetLoopType, SetPlaybackSpeed, SetPlaylist, StopTrig, TimerStart, TrackSelect, TransportTrig}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextOrPrevTrack, NextTrack, PauseTrig, PlayFromNextOrPrevTrack, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondNextOrPrevTrack, RespondPauseTrig, RespondPlayFromNextOrPrevTrack, RespondPlayFromTrackSelectTrig, RespondPlayTrig, RespondPlaybackThreadState, RespondRestTrackSelect, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, RestTrackSelect, SendLastFrameId, SendReadComplete, SetLoopType, SetPlaybackSpeed, SetPlaylist, SetShuffle, StopTrig, TimerStart, TrackSelect, TransportTrig}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -42,6 +42,7 @@ object GsAppStateManager {
       GsPlayState.STOP,
       appState.playbackSpeed,
       appState.loopType,
+      appState.shuffle,
       0, // currFrameId
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -94,6 +95,7 @@ class GsAppStateManager(
       appState.playState,
       appState.playbackSpeed,
       appState.loopType,
+      appState.shuffle,
       appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -106,6 +108,7 @@ class GsAppStateManager(
       newState.playState,
       newState.playbackSpeed,
       newState.loopType,
+      newState.shuffle,
       newState.currFrameId,
       newState.currTrack,
       newState.currPlaylistTrackIdx,
@@ -114,12 +117,11 @@ class GsAppStateManager(
   }
 
   def setCurrTrack(appState: AppState, track: Track): AppState = {
-    // TODO:
-    //   - maybe update playState here
     AppState(
       appState.playState,
       appState.playbackSpeed,
       appState.loopType,
+      appState.shuffle,
       appState.currFrameId,
       track,
       appState.currPlaylistTrackIdx,
@@ -132,6 +134,7 @@ class GsAppStateManager(
       appState.playState,
       appState.playbackSpeed,
       appState.loopType,
+      appState.shuffle,
       appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -144,6 +147,7 @@ class GsAppStateManager(
       appState.playState,
       appState.playbackSpeed,
       appState.loopType,
+      appState.shuffle,
       appState.currFrameId,
       appState.currTrack,
       0,
@@ -156,6 +160,7 @@ class GsAppStateManager(
       appState.playState,
       appState.playbackSpeed,
       appState.loopType,
+      appState.shuffle,
       appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -175,6 +180,7 @@ class GsAppStateManager(
         appState.playState,
         appState.playbackSpeed,
         appState.loopType,
+        appState.shuffle,
         0,
         appState.currTrack,
         0,
@@ -188,6 +194,7 @@ class GsAppStateManager(
       appState.playState,
       appState.playbackSpeed,
       appState.loopType,
+      appState.shuffle,
       0,
       appState.playlist.tracks(newIdx),
       newIdx,
@@ -205,6 +212,7 @@ class GsAppStateManager(
         appState.playState,
         appState.playbackSpeed,
         appState.loopType,
+        appState.shuffle,
         0,
         appState.currTrack,
         0,
@@ -218,6 +226,7 @@ class GsAppStateManager(
       appState.playState,
       appState.playbackSpeed,
       appState.loopType,
+      appState.shuffle,
       0,
       appState.playlist.tracks(newIdx),
       newIdx,
@@ -230,6 +239,7 @@ class GsAppStateManager(
       newPlayState,
       appState.playbackSpeed,
       appState.loopType,
+      appState.shuffle,
       appState.currFrameId,
       appState.currTrack,
       appState.currPlaylistTrackIdx,
@@ -239,13 +249,27 @@ class GsAppStateManager(
 
   private def setPlaybackSpeed(state: AppState, newPlaybackSpeed: GsPlaybackSpeed): AppState = {
     AppState(
-      appState.playState,
+      state.playState,
       newPlaybackSpeed,
-      appState.loopType,
-      appState.currFrameId,
-      appState.currTrack,
-      appState.currPlaylistTrackIdx,
-      appState.playlist
+      state.loopType,
+      state.shuffle,
+      state.currFrameId,
+      state.currTrack,
+      state.currPlaylistTrackIdx,
+      state.playlist
+    )
+  }
+
+  private def setShuffle(state: AppState): AppState = {
+    AppState(
+      state.playState,
+      state.playbackSpeed,
+      state.loopType,
+      !state.shuffle,
+      state.currFrameId,
+      state.currTrack,
+      state.currPlaylistTrackIdx,
+      state.playlist
     )
   }
 
@@ -257,13 +281,14 @@ class GsAppStateManager(
     }
 
     AppState(
-      appState.playState,
-      appState.playbackSpeed,
+      state.playState,
+      state.playbackSpeed,
       newLoopType,
-      appState.currFrameId,
-      appState.currTrack,
-      appState.currPlaylistTrackIdx,
-      appState.playlist
+      state.shuffle,
+      state.currFrameId,
+      state.currTrack,
+      state.currPlaylistTrackIdx,
+      state.playlist
     )
   }
 
@@ -274,6 +299,7 @@ class GsAppStateManager(
         appState.playState,
         appState.playbackSpeed,
         appState.loopType,
+        appState.shuffle,
         appState.currFrameId,
         optTrack.get,
         newIdx,
@@ -283,6 +309,7 @@ class GsAppStateManager(
         appState.playState,
         appState.playbackSpeed,
         appState.loopType,
+        appState.shuffle,
         appState.currFrameId,
         EmptyTrack,
         0,
@@ -296,6 +323,7 @@ class GsAppStateManager(
         appState.playState,
         appState.playbackSpeed,
         appState.loopType,
+        appState.shuffle,
         newCurrFrameId,
         appState.currTrack,
         appState.currPlaylistTrackIdx,
@@ -311,6 +339,7 @@ class GsAppStateManager(
         appState.playState,
         appState.playbackSpeed,
         appState.loopType,
+        appState.shuffle,
         currFrameId,
         appState.currTrack,
         appState.currPlaylistTrackIdx,
@@ -475,6 +504,13 @@ class GsAppStateManager(
       case SetLoopType(replyTo) =>
         setAppState(
           setLoopType(appState)
+        )
+        hydrateState()
+        Behaviors.same
+
+      case SetShuffle(replyTo) =>
+        setAppState(
+          setShuffle(appState)
         )
         hydrateState()
         Behaviors.same
