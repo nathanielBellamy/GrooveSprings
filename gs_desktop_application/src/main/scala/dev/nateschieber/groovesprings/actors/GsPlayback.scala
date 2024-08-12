@@ -115,6 +115,10 @@ class GsPlayback(context: ActorContext[GsCommand]) extends AbstractBehavior[GsCo
       case SetPlaybackSpeed(speed, replyTo) =>
         GsPlaybackThread.setPlaybackSpeed(speed)
         Behaviors.same
+
+      case SetFilePath(path, replyTo) =>
+        GsPlaybackThread.setFilePath(path)
+        Behaviors.same
     }
   }
 
