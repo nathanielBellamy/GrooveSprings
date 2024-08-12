@@ -12,7 +12,7 @@ import dev.nateschieber.groovesprings.enums.GsLoopType.{ALL, ONE}
 import dev.nateschieber.groovesprings.enums.{GsAppStateManagerTimer, GsLoopType, GsPlayState, GsPlaybackSpeed}
 import dev.nateschieber.groovesprings.enums.GsPlayState.{PAUSE, PLAY, STOP}
 import dev.nateschieber.groovesprings.rest.FileSelectJsonSupport
-import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextOrPrevTrack, NextTrack, PauseTrig, PlayFromNextOrPrevTrack, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondNextOrPrevTrack, RespondPauseTrig, RespondPlayFromNextOrPrevTrack, RespondPlayFromTrackSelectTrig, RespondPlayTrig, RespondPlaybackThreadState, RespondRestTrackSelect, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, RestTrackSelect, SendLastFrameId, SendReadComplete, SetLoopType, SetPlaybackSpeed, SetPlaylist, SetShuffle, StopTrig, TimerStart, TrackSelect, TransportTrig}
+import dev.nateschieber.groovesprings.traits.{AddTrackToPlaylist, ClearPlaylist, CurrPlaylistTrackIdx, GsCommand, HydrateState, HydrateStateToDisplay, InitialTrackSelect, NextOrPrevTrack, NextTrack, PauseTrig, PlayFromNextOrPrevTrack, PlayFromTrackSelectTrig, PlayTrig, PrevTrack, ReadPlaybackThreadState, RespondAddTrackToPlaylist, RespondCurrPlaylistTrackIdx, RespondHydrateState, RespondNextOrPrevTrack, RespondPauseTrig, RespondPlayFromNextOrPrevTrack, RespondPlayFromTrackSelectTrig, RespondPlayTrig, RespondPlaybackThreadState, RespondRestTrackSelect, RespondSetPlaylist, RespondStopTrig, RespondTimerStart, RespondTrackSelect, RestTrackSelect, SendLastFrameId, SendReadComplete, SetFilePath, SetLoopType, SetPlaybackSpeed, SetPlaylist, SetShuffle, StopTrig, TimerStart, TrackSelect, TransportTrig}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
@@ -203,6 +203,8 @@ class GsAppStateManager(
   }
 
   private def nextTrack(appState: AppState): AppState = {
+    // TODO:
+    //   - debug: playState = PLAY, loopType = NONE, user clicks next track past end of playlist
     if (!(appState.playlist.tracks.map(track => track.id) contains appState.currTrack.id))
       return appState
 
@@ -220,7 +222,25 @@ class GsAppStateManager(
       )
 
     val oldIdx = appState.currPlaylistTrackIdx
-    val newIdx = (oldIdx + 1) % playlistLength
+    // loop behavior
+    if (appState.playlist.tracks.nonEmpty
+          && appState.loopType == GsLoopType.NONE
+          && oldIdx == appState.playlist.tracks.length - 1)
+      return AppState(
+        GsPlayState.STOP,
+        appState.playbackSpeed,
+        appState.loopType,
+        appState.shuffle,
+        0,
+        appState.playlist.tracks.head,
+        0,
+        appState.playlist
+      )
+
+    val newIdx = if (appState.loopType == GsLoopType.ONE)
+                   oldIdx
+                 else
+                   (oldIdx + 1) % playlistLength
 
     AppState(
       appState.playState,
@@ -468,7 +488,12 @@ class GsAppStateManager(
                 prevTrack(appState)
               )
 
-            gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
+            if (appState.playState == GsPlayState.PLAY)
+              gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
+            else if (appState.playState == GsPlayState.STOP)
+              gsPlaybackRef ! SetFilePath(appState.currTrack.path, context.self)
+              gsPlaybackRef ! StopTrig(context.self)
+              hydrateState()
           return Behaviors.same
 
         gsDisplayRef ! SendLastFrameId(lastFrameId)
@@ -527,7 +552,8 @@ class GsAppStateManager(
         setAppState(
           nextTrack(appState)
         )
-        gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
+        if (appState.playState == GsPlayState.PLAY)
+          gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
         hydrateState()
         Behaviors.same
 
