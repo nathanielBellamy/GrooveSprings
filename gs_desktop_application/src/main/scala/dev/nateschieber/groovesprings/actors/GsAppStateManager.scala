@@ -20,6 +20,7 @@ import java.util.UUID
 import scala.annotation.static
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.Random
 
 // spray + protocol import needed to call .convertTo[AppState]
 import spray.json._
@@ -168,6 +169,14 @@ class GsAppStateManager(
     )
   }
 
+  private def newRandomIdx(playlistLength: Int, oldIdx: Int): Int = {
+    var randomIdx: Int = Random.between(0, playlistLength)
+    while
+      randomIdx == oldIdx
+    do randomIdx = newRandomIdx(playlistLength, oldIdx)
+    randomIdx
+  }
+
   // TODO:
   //   - set new currFrameId based on playbackSpeed when moving between tracks
   private def prevTrack(appState: AppState): AppState = {
@@ -188,7 +197,13 @@ class GsAppStateManager(
       )
 
     val oldIdx = appState.currPlaylistTrackIdx
-    val newIdx = (oldIdx + (playlistLength - 1)) % playlistLength
+    val newIdx = if (appState.loopType == GsLoopType.ONE)
+                   oldIdx
+                 else if (appState.shuffle)
+                   newRandomIdx(appState.playlist.tracks.length, oldIdx)
+                 else
+                   (oldIdx + (playlistLength - 1)) % playlistLength
+
 
     AppState(
       appState.playState,
@@ -235,6 +250,8 @@ class GsAppStateManager(
 
     val newIdx = if (appState.loopType == GsLoopType.ONE)
                    oldIdx
+                 else if (appState.shuffle)
+                   newRandomIdx(appState.playlist.tracks.length, oldIdx)
                  else
                    (oldIdx + 1) % appState.playlist.tracks.length
 
@@ -379,7 +396,7 @@ class GsAppStateManager(
   private def postNextOrPrevTrackStateUpdate(): Unit = {
     if (appState.playState == GsPlayState.PLAY)
       gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
-    else if (appState.playState == GsPlayState.STOP)
+    else if (appState.playState == GsPlayState.STOP || appState.playState == GsPlayState.PAUSE)
       gsPlaybackRef ! StopTrig(context.self)
       gsPlaybackRef ! SetFilePath(appState.currTrack.path, context.self)
       hydrateState()
