@@ -141,6 +141,8 @@ class GsAppStateManager(
       hydrateState()
   }
 
+  // TODO: debug loop when currently playing track is not in playlist
+
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case RestTrackSelect(track, replyTo) =>
