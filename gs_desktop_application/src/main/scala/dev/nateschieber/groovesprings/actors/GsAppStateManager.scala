@@ -203,13 +203,10 @@ class GsAppStateManager(
   }
 
   private def nextTrack(appState: AppState): AppState = {
-    // TODO:
-    //   - debug: playState = PLAY, loopType = NONE, user clicks next track past end of playlist
     if (!(appState.playlist.tracks.map(track => track.id) contains appState.currTrack.id))
       return appState
 
-    val playlistLength = appState.playlist.tracks.length
-    if (playlistLength == 0)
+    if (appState.playlist.tracks.isEmpty)
       return AppState(
         appState.playState,
         appState.playbackSpeed,
@@ -223,8 +220,7 @@ class GsAppStateManager(
 
     val oldIdx = appState.currPlaylistTrackIdx
     // loop behavior
-    if (appState.playlist.tracks.nonEmpty
-          && appState.loopType == GsLoopType.NONE
+    if (appState.loopType == GsLoopType.NONE
           && oldIdx == appState.playlist.tracks.length - 1)
       return AppState(
         GsPlayState.STOP,
@@ -240,7 +236,7 @@ class GsAppStateManager(
     val newIdx = if (appState.loopType == GsLoopType.ONE)
                    oldIdx
                  else
-                   (oldIdx + 1) % playlistLength
+                   (oldIdx + 1) % appState.playlist.tracks.length
 
     AppState(
       appState.playState,
@@ -380,6 +376,15 @@ class GsAppStateManager(
     playbackThreadPollTimerRef ! TimerStart(50, context.self)
   }
 
+  private def postNextOrPrevTrackStateUpdate(): Unit = {
+    if (appState.playState == GsPlayState.PLAY)
+      gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
+    else if (appState.playState == GsPlayState.STOP)
+      gsPlaybackRef ! StopTrig(context.self)
+      gsPlaybackRef ! SetFilePath(appState.currTrack.path, context.self)
+      hydrateState()
+  }
+
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
       case RestTrackSelect(track, replyTo) =>
@@ -474,9 +479,9 @@ class GsAppStateManager(
         if (readComplete)
           gsDisplayRef ! SendReadComplete()
           // TODO:
-          //    - create playbackOption vars (loopAll | loopOne, shuffle)
-          //    - let user set those vars
-          //    - condition on those vars
+          //    - [x] create playbackOption vars (loopAll | loopOne, shuffle)
+          //    - [x] let user set those vars
+          //    - [~] condition on those vars
           if (appState.playState == GsPlayState.PLAY)
             if (appState.playbackSpeed.value > 0)
               setAppState(
@@ -488,12 +493,7 @@ class GsAppStateManager(
                 prevTrack(appState)
               )
 
-            if (appState.playState == GsPlayState.PLAY)
-              gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
-            else if (appState.playState == GsPlayState.STOP)
-              gsPlaybackRef ! SetFilePath(appState.currTrack.path, context.self)
-              gsPlaybackRef ! StopTrig(context.self)
-              hydrateState()
+          postNextOrPrevTrackStateUpdate()
           return Behaviors.same
 
         gsDisplayRef ! SendLastFrameId(lastFrameId)
@@ -544,17 +544,14 @@ class GsAppStateManager(
         setAppState(
           prevTrack(appState)
         )
-        gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
-        hydrateState()
+        postNextOrPrevTrackStateUpdate()
         Behaviors.same
 
       case NextTrack() =>
         setAppState(
           nextTrack(appState)
         )
-        if (appState.playState == GsPlayState.PLAY)
-          gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
-        hydrateState()
+        postNextOrPrevTrackStateUpdate()
         Behaviors.same
 
       case RespondTimerStart(timerId, replyTo) =>
