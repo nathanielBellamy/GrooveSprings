@@ -112,7 +112,6 @@ class GsAppStateMutations {
     else
       (oldIdx + (playlistLength - 1)) % playlistLength
 
-
     AppState(
       appState.playState,
       appState.playbackSpeed,
