@@ -3,7 +3,7 @@ package dev.nateschieber.groovesprings.enums
 import scala.annotation.static
 
 object GsAppStateManagerTimer {
-  @static def fromId(timerId: String): GsAppStateManagerTimer = {
+  def apply(timerId: String): GsAppStateManagerTimer = {
     timerId match {
       case "currFrameIdCache"   => GsAppStateManagerTimer.currFrameIdCache
       case "playbackThreadPoll" => GsAppStateManagerTimer.playbackThreadPoll

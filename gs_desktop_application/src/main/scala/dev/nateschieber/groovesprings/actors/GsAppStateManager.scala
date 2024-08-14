@@ -21,7 +21,6 @@ import java.util.UUID
 import scala.annotation.static
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Random
 
 // spray + protocol import needed to call .convertTo[AppState]
 import spray.json._
@@ -32,7 +31,7 @@ object GsAppStateManager {
   private val stateCacheFile: String = "__GROOVE_SPRINGS__STATE_CACHE__.json"
   private var appState: AppState = GsAppStateManager.loadAppState()
 
-  val GsAppStateManagerServiceKey = ServiceKey[GsCommand]("gs_rest_controller")
+  val GsAppStateManagerServiceKey: ServiceKey[GsCommand] = ServiceKey[GsCommand]("gs_rest_controller")
 
   @static private def loadAppState(): AppState = {
     val appStatePath = Path.of(stateCacheFile)
@@ -140,8 +139,6 @@ class GsAppStateManager(
       gsPlaybackRef ! SetFilePath(appState.currTrack.path, context.self)
       hydrateState()
   }
-
-  // TODO: debug loop when currently playing track is not in playlist
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
     msg match {
@@ -313,8 +310,7 @@ class GsAppStateManager(
         Behaviors.same
 
       case RespondTimerStart(timerId, replyTo) =>
-        val timer: GsAppStateManagerTimer = GsAppStateManagerTimer.fromId(timerId)
-        timer match {
+        GsAppStateManagerTimer(timerId) match {
           case GsAppStateManagerTimer.currFrameIdCache =>
             val currFrameId = if (appState.playState == GsPlayState.STOP) 0L else GsPlaybackThread.getCurrFrameId.asInstanceOf[Long]
             setAppState(
