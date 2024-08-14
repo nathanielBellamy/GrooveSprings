@@ -99,7 +99,7 @@ class GsAppStateMutations {
           appState.shuffle,
           0,
           appState.currTrack,
-          0,
+          appState.currPlaylistTrackIdx,
           appState.playlist
         )
 
@@ -148,7 +148,7 @@ class GsAppStateMutations {
           appState.shuffle,
           0,
           appState.currTrack,
-          0,
+          appState.currPlaylistTrackIdx,
           appState.playlist
         )
 
