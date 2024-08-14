@@ -131,13 +131,19 @@ class GsAppStateManager(
     playbackThreadPollTimerRef ! TimerStart(50, context.self)
   }
 
-  private def postNextOrPrevTrackStateUpdate(): Unit = {
-    if (appState.playState == GsPlayState.PLAY)
-      gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
-    else if (appState.playState == GsPlayState.STOP || appState.playState == GsPlayState.PAUSE)
-      gsPlaybackRef ! StopTrig(context.self)
-      gsPlaybackRef ! SetFilePath(appState.currTrack.path, context.self)
-      hydrateState()
+  private def postNextOrPrevTrackStateUpdate(appState: AppState): Unit = {
+    appState.playState match {
+      case GsPlayState.PLAY =>
+        gsPlaybackRef ! NextOrPrevTrack(appState.currTrack, context.self)
+      case GsPlayState.PAUSE =>
+        gsPlaybackRef ! PauseTrig(context.self)
+        gsPlaybackRef ! SetFilePath(appState.currTrack.path, context.self)
+        hydrateState()
+      case default =>
+        gsPlaybackRef ! StopTrig(context.self)
+        gsPlaybackRef ! SetFilePath(appState.currTrack.path, context.self)
+        hydrateState()
+    }
   }
 
   override def onMessage(msg: GsCommand): Behavior[GsCommand] = {
@@ -248,7 +254,7 @@ class GsAppStateManager(
                 stateMutation.prevTrack(appState)
               )
 
-          postNextOrPrevTrackStateUpdate()
+          postNextOrPrevTrackStateUpdate(appState)
           return Behaviors.same
 
         gsDisplayRef ! SendLastFrameId(lastFrameId)
@@ -299,14 +305,14 @@ class GsAppStateManager(
         setAppState(
           stateMutation.prevTrack(appState)
         )
-        postNextOrPrevTrackStateUpdate()
+        postNextOrPrevTrackStateUpdate(appState)
         Behaviors.same
 
       case NextTrack() =>
         setAppState(
           stateMutation.nextTrack(appState)
         )
-        postNextOrPrevTrackStateUpdate()
+        postNextOrPrevTrackStateUpdate(appState)
         Behaviors.same
 
       case RespondTimerStart(timerId, replyTo) =>
