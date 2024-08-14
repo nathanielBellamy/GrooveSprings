@@ -89,7 +89,19 @@ class GsAppStateMutations {
   //   - set new currFrameId based on playbackSpeed when moving between tracks
   def prevTrack(appState: AppState): AppState = {
     if (!(appState.playlist.tracks.map(track => track.id) contains appState.currTrack.id))
-      return appState
+      if (appState.loopType != GsLoopType.NONE)
+        return appState
+      else
+        return AppState(
+          GsPlayState.STOP,
+          appState.playbackSpeed,
+          appState.loopType,
+          appState.shuffle,
+          0,
+          appState.currTrack,
+          0,
+          appState.playlist
+        )
 
     val playlistLength = appState.playlist.tracks.length
     if (playlistLength == 0)
@@ -126,7 +138,19 @@ class GsAppStateMutations {
 
   def nextTrack(appState: AppState): AppState = {
     if (!(appState.playlist.tracks.map(track => track.id) contains appState.currTrack.id))
-      return appState
+      if (appState.loopType != GsLoopType.NONE)
+        return appState
+      else
+        return AppState(
+          GsPlayState.STOP,
+          appState.playbackSpeed,
+          appState.loopType,
+          appState.shuffle,
+          0,
+          appState.currTrack,
+          0,
+          appState.playlist
+        )
 
     if (appState.playlist.tracks.isEmpty)
       return AppState(
