@@ -68,7 +68,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   else if (audioData->playbackSpeed == -1.0) // reverse
   {
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
-        *out++ = audioData->buffer[audioData->index - i];
+        *out++ = audioData->buffer[audioData->index - i] * audioData->volume;
     }
 
     audioData->index -= framesPerBuffer * audioData->sfinfo.channels;
@@ -78,8 +78,8 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   {
     int halfFramesPerBuffer = framesPerBuffer / 2; // framesPerBuffer is a power of 2
     for (i = 0; i < halfFramesPerBuffer * audioData->sfinfo.channels; i++) {
-      *out++ = audioData->buffer[audioData->index + i];
-      *out++ = audioData->buffer[audioData->index + i];
+      *out++ = audioData->buffer[audioData->index + i] * audioData->volume;
+      *out++ = audioData->buffer[audioData->index + i] * audioData->volume;
     }
 
     audioData->index += halfFramesPerBuffer * audioData->sfinfo.channels;
@@ -89,8 +89,8 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   {
     int halfFramesPerBuffer = framesPerBuffer / 2; // framesPerBuffer is a power of 2
     for (i = 0; i < halfFramesPerBuffer * audioData->sfinfo.channels; i++) {
-      *out++ = audioData->buffer[audioData->index - i];
-      *out++ = audioData->buffer[audioData->index - i];
+      *out++ = audioData->buffer[audioData->index - i] * audioData->volume;
+      *out++ = audioData->buffer[audioData->index - i] * audioData->volume;
     }
 
     audioData->index -= halfFramesPerBuffer * audioData->sfinfo.channels;
@@ -99,7 +99,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   else if (audioData->playbackSpeed == 2.0) // double speed
   {
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
-      *out++ = audioData->buffer[audioData->index + (i * 2)];
+      *out++ = audioData->buffer[audioData->index + (i * 2)] * audioData->volume;
     }
 
     audioData->index += (2 * framesPerBuffer) * audioData->sfinfo.channels;
@@ -108,7 +108,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   else if (audioData->playbackSpeed == -2.0) // double speed reverse
   {
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
-      *out++ = audioData->buffer[audioData->index - (2 * i)];
+      *out++ = audioData->buffer[audioData->index - (2 * i)] * audioData->volume;
     }
 
     audioData->index -= (2 * framesPerBuffer) * audioData->sfinfo.channels;
@@ -118,7 +118,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   {
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
         if (audioData->index + i < audioData->sfinfo.frames * audioData->sfinfo.channels) {
-          *out++ = audioData->buffer[audioData->index + i];
+          *out++ = audioData->buffer[audioData->index + i] * audioData->volume;
         } else {
           audioData->index = 0;
           audioData->readComplete = true;
@@ -241,26 +241,37 @@ int Audio::run()
         jniData.gsPlayback,
         jniData.getThreadId
     );
-    if (threadId != Audio::threadId) { // if not, break + cleanup
-        break;
+
+    if (audioData.fadeIn > 0.001) {
+        audioData.fadeIn -= 0.001;
+        audioData.volume += 0.001;
     }
 
-    audioData.playbackSpeed = jniData.env->CallStaticFloatMethod(
-        jniData.gsPlayback,
-        jniData.getPlaybackSpeedFloat
-    );
+    if (threadId != Audio::threadId) { // fadeout, break + cleanup
+        if (audioData.fadeOut < 0.001) { // break + cleanup
+            break;
+        } else { // continue fading out
+            audioData.volume -= 0.0001;
+            audioData.fadeOut -= 0.0001;
+        }
+    } else {
+        audioData.playbackSpeed = jniData.env->CallStaticFloatMethod(
+            jniData.gsPlayback,
+            jniData.getPlaybackSpeedFloat
+        );
 
-    audioData.playState = jniData.env->CallStaticIntMethod(
-        jniData.gsPlayback,
-        jniData.getPlayStateInt
-    );
+        audioData.playState = jniData.env->CallStaticIntMethod(
+            jniData.gsPlayback,
+            jniData.getPlayStateInt
+        );
 
-    //    std::cout << "\n =========== \n";
-    //    std::cout << "\n audioData.playState: " << audioData.playState << "\n";
-    //    std::cout << "\n audioData.index " << audioData.index << "\n";
-    //    std::cout << "\n =========== \n";
+        //    std::cout << "\n =========== \n";
+        //    std::cout << "\n audioData.playState: " << audioData.playState << "\n";
+        //    std::cout << "\n audioData.index " << audioData.index << "\n";
+        //    std::cout << "\n =========== \n";
 
-    Audio::jSetCurrFrameId(&jniData, (int) audioData.index);
+        Audio::jSetCurrFrameId(&jniData, (int) audioData.index);
+    }
   }
 
   if (threadId == Audio::threadId) { // current audio thread has reached natural end of file

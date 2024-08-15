@@ -12,6 +12,9 @@ struct AUDIO_DATA {
     int         playState;
     float       playbackSpeed;
     bool        readComplete;
+    float       volume;
+    float       fadeIn;
+    float       fadeOut;
 
     AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, int playState) :
           buffer(buffer)
@@ -20,7 +23,10 @@ struct AUDIO_DATA {
         , index(index)
         , readcount(readcount)
         , playState(playState)
-        , readComplete(false) {}
+        , readComplete(false)
+        , volume(0.0)
+        , fadeIn(1.0)
+        , fadeOut(1.0) {}
 };
 
 #endif
