@@ -21,6 +21,7 @@ Audio::Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameI
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
   free(audioData->buffer);
+  free(audioData->effects.bufferOut);
   free(audioData->effects.mVerbBufferIns);
   free(audioData->effects.mVerbBufferOuts);
   sf_close(audioData->file);
@@ -44,9 +45,17 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   AUDIO_DATA *audioData = (AUDIO_DATA *) userData;
 
   if ( !audioData->effects.mVerbBypass ) {
-    // TODO:
-    //   - unzip channels into flat **mVerbInputs
-    //   - audioData->effects.mVerb.process(mVerbInputs, audioData->Eff
+    for (i = 0; i < AUDIO_BUFFER_FRAMES * audioData->sfinfo.channels - 1; i++) {
+        audioData->effects.mVerbBufferIns[0][i] = audioData->buffer[audioData->index + i];
+        audioData->effects.mVerbBufferIns[1][i] = audioData->buffer[audioData->index + i + 1];
+    }
+
+    audioData->effects.mVerb.process(audioData->effects.mVerbBufferIns, audioData->effects.mVerbBufferOuts, AUDIO_BUFFER_FRAMES);
+
+    for (i = 0; i < AUDIO_BUFFER_FRAMES * audioData->sfinfo.channels - 1; i++) {
+        audioData->effects.bufferOut[i] = audioData->effects.mVerbBufferOuts[0][i];
+        audioData->effects.bufferOut[i + i] = audioData->effects.mVerbBufferOuts[1][i];
+    }
   }
 
   if( audioData->buffer == NULL )
@@ -126,7 +135,8 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   {
     for (i = 0; i < framesPerBuffer * audioData->sfinfo.channels; i++) {
         if (audioData->index + i < audioData->sfinfo.frames * audioData->sfinfo.channels) {
-          *out++ = audioData->buffer[audioData->index + i] * audioData->volume;
+//          *out++ = audioData->buffer[audioData->index + i] * audioData->volume;
+          *out++ = audioData->effects.bufferOut[i] * audioData->volume;
         } else {
           audioData->index = 0;
           audioData->readComplete = true;
@@ -171,10 +181,13 @@ int Audio::run()
       return 1;
   }
 
+  float *effectsBufferOut;
+  effectsBufferOut = (float *) malloc(AUDIO_BUFFER_FRAMES * sfinfo.channels * sizeof(float));
+
   // Allocate memory for effects buffers
   float **mVerbBufferIns;
-  mVerbBufferIns[0] = (float *) malloc(sfinfo.frames * sizeof(float));
-  mVerbBufferIns[1] = (float *) malloc(sfinfo.frames * sizeof(float));
+  mVerbBufferIns[0] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
+  mVerbBufferIns[1] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
   if (!mVerbBufferIns) {
       printf("\nCannot allocate memory for mVerbBufferIns");
       return 1;
@@ -196,7 +209,7 @@ int Audio::run()
   }
 
   sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
-  AUDIO_DATA audioData(buffer, mVerbBufferIns, mVerbBufferOuts, file, sfinfo, initialFrameId, readcount, 1);
+  AUDIO_DATA audioData(buffer, effectsBufferOut, mVerbBufferIns, mVerbBufferOuts, file, sfinfo, initialFrameId, readcount, 1);
 
   // init jniData
   JNI_DATA jniData(Audio::jniEnv);

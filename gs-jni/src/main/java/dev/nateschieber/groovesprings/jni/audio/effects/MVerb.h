@@ -36,29 +36,29 @@ private:
     StaticDelayLine<T, 96000> predelay = {};
     StaticDelayLineFourTap<T, 96000> staticDelayLine[4] = {};
     StaticDelayLineEightTap<T, 96000> earlyReflectionsDelayLine[2] = {};
-    T SampleRate = {};
-    T DampingFreq = {};
-    T Density1 = {};
-    T Density2 = {};
-    T BandwidthFreq = {};
-    T PreDelayTime = {};
-    T Decay = {};
-    T Gain = {};
-    T Mix = {};
-    T EarlyMix = {};
-    T Size = {};
+    T SampleRate = { 0.0f };
+    T DampingFreq = { 0.0f };
+    T Density1 = { 0.0f };
+    T Density2 = { 0.0f };
+    T BandwidthFreq = { 0.0f };
+    T PreDelayTime = { 0.0f };
+    T Decay = { 0.0f };
+    T Gain = { 0.0f };
+    T Mix = { 0.0f };
+    T EarlyMix = { 0.0f };
+    T Size = { 0.0f };
 
-    T MixSmooth = {};
-    T EarlyLateSmooth = {};
-    T BandwidthSmooth = {};
-    T DampingSmooth = {};
-    T PredelaySmooth = {};
-    T SizeSmooth = {};
-    T DensitySmooth = {};
-    T DecaySmooth = {};
+    T MixSmooth = { 0.0f };
+    T EarlyLateSmooth = { 0.0f };
+    T BandwidthSmooth = { 0.0f };
+    T DampingSmooth = { 0.0f };
+    T PredelaySmooth = { 0.0f };
+    T SizeSmooth = { 0.0f };
+    T DensitySmooth = { 0.0f };
+    T DecaySmooth = { 0.0f };
 
-    T PreviousLeftTank = {};
-    T PreviousRightTank = {};
+    T PreviousLeftTank = { 0.0f };
+    T PreviousRightTank = { 0.0f };
 
     int ControlRate = 0;
     int ControlRateCounter = 0;
@@ -361,7 +361,7 @@ private:
     T buffer[maxLength] = {};
     int index = 0;
     int Length = 0;
-    T Feedback = {};
+    T Feedback = { 0.0f };
 
 public:
     Allpass()
@@ -421,7 +421,7 @@ private:
     int index3 = 0;
     int index4 = 0;
     int Length = 0;
-    T Feedback = {};
+    T Feedback = { 0.0f };
 
 public:
     StaticAllpassFourTap()
@@ -571,7 +571,7 @@ private:
     int index3 = 0;
     int index4 = 0;
     int Length = 0;
-    T Feedback = {};
+    T Feedback = { 0.0f };
 
 public:
     StaticDelayLineFourTap()
@@ -667,7 +667,7 @@ private:
     int index7 = 0;
     int index8 = 0;
     int Length = 0;
-    T Feedback = {};
+    T Feedback = { 0.0f };
 
 public:
     StaticDelayLineEightTap()
@@ -789,15 +789,15 @@ template<typename T, int OverSampleCount>
 
     private:
 
-        T sampleRate = {};
-        T frequency = {};
-        T q = {};
-        T f = {};
+        T sampleRate = { 44100.0f };
+        T frequency = { 0.0f };
+        T q = { 0.0f };
+        T f = { 0.0f };
 
-        T low = {};
-        T high = {};
-        T band = {};
-        T notch = {};
+        T low = { 0.0f };
+        T high = { 0.0f };
+        T band = { 0.0f };
+        T notch = { 0.0f };
 
         T *out = nullptr;
 

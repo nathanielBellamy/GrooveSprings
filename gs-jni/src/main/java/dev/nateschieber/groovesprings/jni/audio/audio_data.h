@@ -18,14 +18,14 @@ struct AUDIO_DATA {
     float       fadeOut;
     EFFECTS     effects;
 
-    AUDIO_DATA(float* buffer, float** mVerbBufferIns, float** mVerbBufferOuts, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, int playState) :
+    AUDIO_DATA(float* buffer, float* effectsBufferOut, float** mVerbBufferIns, float** mVerbBufferOuts, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, int playState) :
           buffer(buffer)
         , file(file)
         , sfinfo(sfinfo)
         , index(index)
         , readcount(readcount)
         , playState(playState)
-        , effects(EFFECTS(mVerbBufferIns, mVerbBufferOuts))
+        , effects(EFFECTS(effectsBufferOut, mVerbBufferIns, mVerbBufferOuts))
         , readComplete(false)
         , volume(0.0)
         , fadeIn(1.0)

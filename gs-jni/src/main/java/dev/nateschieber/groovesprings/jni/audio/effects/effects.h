@@ -3,16 +3,19 @@
 #include "./MVerb.h"
 
 struct EFFECTS {
+    float           *bufferOut;
     MVerb<float>    mVerb;
     bool            mVerbBypass;
     float           **mVerbBufferIns;
     float           **mVerbBufferOuts;
 
-    EFFECTS(float **mVerbBufferIns, float **mVerbBufferOuts) :
-          mVerbBufferIns(mVerbBufferIns)
+    EFFECTS(float *bufferOut, float **mVerbBufferIns, float **mVerbBufferOuts) :
+          bufferOut(bufferOut)
+        , mVerbBufferIns(mVerbBufferIns)
         , mVerbBufferOuts(mVerbBufferOuts)
-        , file(MVerb<float>())
-        , mVerbBypass(true) {}
+        , mVerb(MVerb<float>())
+//        , mVerbBypass(true) {}
+        , mVerbBypass(false) {}
 };
 
 #endif
