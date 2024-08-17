@@ -21,6 +21,8 @@ Audio::Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameI
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
   free(audioData->buffer);
+  free(audioData->effects.mVerbBufferIns);
+  free(audioData->effects.mVerbBufferOuts);
   sf_close(audioData->file);
   std::cout << "\nDone freeing resources for file: " << Audio::fileName;
 };
@@ -40,6 +42,12 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   (void) timeInfo; /* Prevent unused variable warnings. */
   (void) statusFlags;
   AUDIO_DATA *audioData = (AUDIO_DATA *) userData;
+
+  if ( !audioData->effects.mVerbBypass ) {
+    // TODO:
+    //   - unzip channels into flat **mVerbInputs
+    //   - audioData->effects.mVerb.process(mVerbInputs, audioData->Eff
+  }
 
   if( audioData->buffer == NULL )
   {
@@ -163,6 +171,23 @@ int Audio::run()
       return 1;
   }
 
+  // Allocate memory for effects buffers
+  float **mVerbBufferIns;
+  mVerbBufferIns[0] = (float *) malloc(sfinfo.frames * sizeof(float));
+  mVerbBufferIns[1] = (float *) malloc(sfinfo.frames * sizeof(float));
+  if (!mVerbBufferIns) {
+      printf("\nCannot allocate memory for mVerbBufferIns");
+      return 1;
+  }
+
+  float **mVerbBufferOuts;
+  mVerbBufferOuts[0] = (float *) malloc(sfinfo.frames * sizeof(float));
+  mVerbBufferOuts[1] = (float *) malloc(sfinfo.frames * sizeof(float));
+  if (!mVerbBufferOuts) {
+      printf("\nCannot allocate memory for mVerbBufferOuts");
+      return 1;
+  }
+
   // Read the audio data into buffer
   long readcount = sf_read_float(file, buffer, sfinfo.frames * sfinfo.channels);
   if (readcount == 0) {
@@ -171,7 +196,7 @@ int Audio::run()
   }
 
   sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
-  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1);
+  AUDIO_DATA audioData(buffer, mVerbBufferIns, mVerbBufferOuts, file, sfinfo, initialFrameId, readcount, 1);
 
   // init jniData
   JNI_DATA jniData(Audio::jniEnv);
