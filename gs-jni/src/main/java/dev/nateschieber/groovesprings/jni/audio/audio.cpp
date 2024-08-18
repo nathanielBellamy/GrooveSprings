@@ -8,7 +8,7 @@
 #include "./audio_data.h"
 #include "./constants.h"
 #include "./jni_data.h"
-#include "./effects/gs_effect_reverb.h"
+#include "./effects/gs_effects.h"
 
 #define PA_SAMPLE_TYPE      paFloat32
 
@@ -168,7 +168,7 @@ int Audio::run()
   float (*mVerbBufferOuts)[2] = (float(*)[2]) malloc(sizeof(float[2][AUDIO_BUFFER_FRAMES]));
 
   std::cout << "\n ---- pre reverb init";
-  GS_EFFECT_REVERB reverb((float **) mVerbBufferIns, (float **)mVerbBufferOuts);
+  GS_EFFECTS effects((float **) mVerbBufferIns, (float **)mVerbBufferOuts);
   std::cout << "\n ---- post reverb init";
 
   // Read the audio data into buffer
