@@ -17,6 +17,9 @@
 #ifndef EMVERB_H
 #define EMVERB_H
 
+#include <string.h>
+#include <cmath>
+
 //forward declaration
 template<typename T, int maxLength> class Allpass;
 template<typename T, int maxLength> class StaticAllpassFourTap;
@@ -79,7 +82,6 @@ public:
 		};
 
     MVerb(){
-        std::cout << "foooey";
         DampingFreq = 0.9;
         BandwidthFreq = 0.9;
         SampleRate = 44100.;

@@ -9,6 +9,8 @@
 cxx = g++ -std=c++20
 audio_src = audio/audio.cpp
 audio_obj = audio/audio.o
+effects_src = audio/effects/gs_effect_reverb.cpp
+effects_obj = audio/effects/gs_effect_reverb.o
 java_jni_main = JniMain.java
 jni_main_header = dev_nateschieber_groovesprings_jni_JniMain.h
 jni_src = dev_nateschieber_groovesprings_jni_JniMain.cpp
@@ -52,9 +54,10 @@ lib = libnative.dylib
 
 lib:
 	javac -h . $(java_jni_main) SfInfo.java # produces jni_main_header
+	$(cxx) -c -fPIC $(effects_src) -o $(effects_obj)
 	$(cxx) -c -fPIC $(include_flags) $(audio_src) -o $(audio_obj)
 	$(cxx) -c -fPIC $(include_flags) $(jni_src) -o $(jni_obj)
-	$(cxx) $(os_lib_flag) -fPIC -o $(lib) $(audio_obj) $(jni_obj) $(link_flags)
+	$(cxx) $(os_lib_flag) -fPIC -o $(lib) $(effects_obj) $(audio_obj) $(jni_obj) $(link_flags)
 
 clean:
 	rm $(jni_main_header)

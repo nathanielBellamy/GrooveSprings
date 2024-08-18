@@ -164,16 +164,12 @@ int Audio::run()
       return 1;
   }
 
-  float **mVerbBufferIns;
-  mVerbBufferIns[0] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
-  mVerbBufferIns[1] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
+  float (*mVerbBufferIns)[2] = (float(*)[2]) malloc(sizeof(float[2][AUDIO_BUFFER_FRAMES]));
+  float (*mVerbBufferOuts)[2] = (float(*)[2]) malloc(sizeof(float[2][AUDIO_BUFFER_FRAMES]));
 
-  float **mVerbBufferOuts;
-  mVerbBufferOuts[0] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
-  mVerbBufferOuts[1] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
-
-  GS_EFFECT_REVERB reverb = GS_EFFECT_REVERB(mVerbBufferIns, mVerbBufferOuts);
-  std::cout << "\n ---- reverb init";
+  std::cout << "\n ---- pre reverb init";
+  GS_EFFECT_REVERB reverb((float **) mVerbBufferIns, (float **)mVerbBufferOuts);
+  std::cout << "\n ---- post reverb init";
 
   // Read the audio data into buffer
   long readcount = sf_read_float(file, buffer, sfinfo.frames * sfinfo.channels);
