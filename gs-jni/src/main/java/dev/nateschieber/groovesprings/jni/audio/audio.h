@@ -6,6 +6,7 @@
 #include "jni.h"
 #include "./audio_data.h"
 #include "./jni_data.h"
+#include "./effects/gs_effect_reverb.h"
 
 class Audio
 {

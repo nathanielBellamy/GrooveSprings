@@ -8,6 +8,7 @@
 #include "./audio_data.h"
 #include "./constants.h"
 #include "./jni_data.h"
+#include "./effects/gs_effect_reverb.h"
 
 #define PA_SAMPLE_TYPE      paFloat32
 
@@ -163,6 +164,17 @@ int Audio::run()
       return 1;
   }
 
+  float **mVerbBufferIns;
+  mVerbBufferIns[0] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
+  mVerbBufferIns[1] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
+
+  float **mVerbBufferOuts;
+  mVerbBufferOuts[0] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
+  mVerbBufferOuts[1] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
+
+  GS_EFFECT_REVERB reverb = GS_EFFECT_REVERB(mVerbBufferIns, mVerbBufferOuts);
+  std::cout << "\n ---- reverb init";
+
   // Read the audio data into buffer
   long readcount = sf_read_float(file, buffer, sfinfo.frames * sfinfo.channels);
   if (readcount == 0) {
@@ -171,6 +183,9 @@ int Audio::run()
   }
 
   sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
+
+  std::cout << "foooooo";
+
   AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1);
 
   // init jniData
