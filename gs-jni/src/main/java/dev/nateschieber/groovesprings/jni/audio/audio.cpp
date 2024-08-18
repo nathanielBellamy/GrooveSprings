@@ -194,8 +194,8 @@ int Audio::run()
   }
 
   float **mVerbBufferOuts;
-  mVerbBufferOuts[0] = (float *) malloc(sfinfo.frames * sizeof(float));
-  mVerbBufferOuts[1] = (float *) malloc(sfinfo.frames * sizeof(float));
+  mVerbBufferOuts[0] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
+  mVerbBufferOuts[1] = (float *) malloc(AUDIO_BUFFER_FRAMES * sizeof(float));
   if (!mVerbBufferOuts) {
       printf("\nCannot allocate memory for mVerbBufferOuts");
       return 1;
