@@ -6,7 +6,7 @@
 ### To do so, edit the Run Configuration for the `gs_desktop_application` by adding the following VM option
 ### -Djava.library.path="/absolute/path/to/repo/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni"
 
-cxx = g++
+cxx = g++ -std=c++20
 audio_src = audio/audio.cpp
 audio_obj = audio/audio.o
 java_jni_main = JniMain.java
