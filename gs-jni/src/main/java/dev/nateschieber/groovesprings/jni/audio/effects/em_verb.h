@@ -17,14 +17,8 @@
 #ifndef EM_VERB_H
 #define EM_VERB_H
 
-//#include <string.h>
-//#include <cmath>
-
-//template<typename T>
-//class MVerb {
-//    public:
-//        MVerb(){};
-//};
+#include <string.h>
+#include <cmath>
 
 ////forward declaration
 template<typename T, int maxLength> class Allpass;
@@ -38,10 +32,10 @@ template<typename T>
 class MVerb
 {
 private:
-//    Allpass<T, 96000> allpass[4] = {};
+    Allpass<T, 96000> allpass[4] = {};
 //    StaticAllpassFourTap<T, 96000> allpassFourTap[4] = {};
-//    StateVariable<T,4> bandwidthFilter[2] = {};
-//    StateVariable<T,4> damping[2] = {};
+    StateVariable<T,4> bandwidthFilter[2] = {};
+    StateVariable<T,4> damping[2] = {};
 //    StaticDelayLine<T, 96000> predelay = {};
 //    StaticDelayLineFourTap<T, 96000> staticDelayLine[4] = {};
 //    StaticDelayLineEightTap<T, 96000> earlyReflectionsDelayLine[2] = {};
@@ -102,15 +96,14 @@ public:
         MixSmooth = EarlyLateSmooth = BandwidthSmooth = DampingSmooth = PredelaySmooth = SizeSmooth = DecaySmooth = DensitySmooth = 0.;
         ControlRate = static_cast<int>(SampleRate / 1000);
         ControlRateCounter = 0;
-//        reset();
+        reset();
     }
-};
 //
-//    ~MVerb(){
-//        //nowt to do here
-//    }
+    ~MVerb(){
+        //nowt to do here
+    }
 //
-//    void process(T **inputs, T **outputs, int sampleFrames){
+    void process(T **inputs, T **outputs, int sampleFrames){
 //        T OneOverSampleFrames = static_cast<T>(1. / sampleFrames);
 //        T MixDelta	= (Mix - MixSmooth) * OneOverSampleFrames;
 //        T EarlyLateDelta = (EarlyMix - EarlyLateSmooth) * OneOverSampleFrames;
@@ -204,9 +197,9 @@ public:
 //            outputs[0][i] = left;
 //            outputs[1][i] = right;
 //        }
-//    }
+    }
 //
-//    void reset(){
+    void reset(){
 //        ControlRateCounter = 0;
 //        bandwidthFilter[0].SetSampleRate(SampleRate);
 //        bandwidthFilter[1].SetSampleRate(SampleRate);
@@ -264,7 +257,8 @@ public:
 //        earlyReflectionsDelayLine[0].SetIndex(0, static_cast<int>(0.0199 * SampleRate), static_cast<int>(0.0219 * SampleRate), static_cast<int>(0.0354 * SampleRate), static_cast<int>(0.0389 * SampleRate), static_cast<int>(0.0414 * SampleRate), static_cast<int>(0.0692 * SampleRate), 0);
 //        earlyReflectionsDelayLine[1].SetLength(static_cast<int>(0.069 * SampleRate));
 //        earlyReflectionsDelayLine[1].SetIndex(0, static_cast<int>(0.0099 * SampleRate), static_cast<int>(0.011 * SampleRate), static_cast<int>(0.0182 * SampleRate), static_cast<int>(0.0189 * SampleRate), static_cast<int>(0.0213 * SampleRate), static_cast<int>(0.0431 * SampleRate), 0);
-//    }
+    }
+};
 //
 //    void setParameter(int index, T value){
 //        switch(index){
@@ -364,62 +358,62 @@ public:
 //
 //
 //
-//template<typename T, int maxLength>
-//class Allpass
-//{
-//private:
-//    T buffer[maxLength] = {};
-//    int index = 0;
-//    int Length = 0;
-//    T Feedback = {};
-//
-//public:
-//    Allpass()
-//    {
-//		SetLength ( maxLength - 1 );
-//		Clear();
-//		Feedback = 0.5;
-//    }
-//
-//	T operator()(T input)
-//    {
-//		T output;
-//		T bufout;
-//		bufout = buffer[index];
-//		T temp = input * -Feedback;
-//		output = bufout + temp;
-//		buffer[index] = input + ((bufout+temp)*Feedback);
-//		if(++index>=Length) index = 0;
-//		return output;
-//
-//    }
-//
-//	void SetLength (int Length)
-//    {
-//       if( Length >= maxLength )
-//			Length = maxLength;
-//	   if( Length < 0 )
-//			Length = 0;
-//
-//        this->Length = Length;
-//    }
-//
-//	void SetFeedback(T feedback)
-//    {
-//        Feedback = feedback;
-//    }
-//
-//    void Clear()
-//    {
-//        memset(buffer, 0, sizeof(buffer));
-//		index = 0;
-//    }
-//
-//    int GetLength() const
-//    {
-//        return Length;
-//    }
-//};
+template<typename T, int maxLength>
+class Allpass
+{
+private:
+    T buffer[maxLength] = {};
+    int index = 0;
+    int Length = 0;
+    T Feedback = {};
+
+public:
+    Allpass()
+    {
+		SetLength ( maxLength - 1 );
+		Clear();
+		Feedback = 0.5;
+    }
+
+	T operator()(T input)
+    {
+		T output;
+		T bufout;
+		bufout = buffer[index];
+		T temp = input * -Feedback;
+		output = bufout + temp;
+		buffer[index] = input + ((bufout+temp)*Feedback);
+		if(++index>=Length) index = 0;
+		return output;
+
+    }
+
+	void SetLength (int Length)
+    {
+       if( Length >= maxLength )
+			Length = maxLength;
+	   if( Length < 0 )
+			Length = 0;
+
+        this->Length = Length;
+    }
+
+	void SetFeedback(T feedback)
+    {
+        Feedback = feedback;
+    }
+
+    void Clear()
+    {
+        memset(buffer, 0, sizeof(buffer));
+		index = 0;
+    }
+
+    int GetLength() const
+    {
+        return Length;
+    }
+};
 //
 //template<typename T, int maxLength>
 //class StaticAllpassFourTap
@@ -783,108 +777,108 @@ public:
 //    }
 //};
 //
-//template<typename T, int OverSampleCount>
-//    class StateVariable
-//    {
-//    public:
-//
-//        enum FilterType
-//        {
-//            LOWPASS,
-//            HIGHPASS,
-//            BANDPASS,
-//            NOTCH,
-//            FilterTypeCount
-//        };
-//
-//    private:
-//
-//        T sampleRate = {};
-//        T frequency = {};
-//        T q = {};
-//        T f = {};
-//
-//        T low = {};
-//        T high = {};
-//        T band = {};
-//        T notch = {};
-//
-//        T *out = nullptr;
-//
-//    public:
-//        StateVariable()
-//        {
-//            SetSampleRate(44100.);
-//            Frequency(1000.);
-//            Resonance(0);
-//            Type(LOWPASS);
-//            Reset();
-//        }
-//
-//        T operator()(T input)
-//        {
-//            for(unsigned int i = 0; i < OverSampleCount; i++)
-//            {
-//                low += static_cast<T>(f * band + 1e-25);
-//                high = input - low - q * band;
-//                band += f * high;
-//                notch = low + high;
-//            }
-//			return *out;
-//        }
-//
-//        void Reset()
-//        {
-//            low = high = band = notch = 0;
-//        }
-//
-//        void SetSampleRate(T sampleRate)
-//        {
-//            this->sampleRate = sampleRate * OverSampleCount;
-//            UpdateCoefficient();
-//        }
-//
-//        void Frequency(T frequency)
-//        {
-//            this->frequency = frequency;
-//            UpdateCoefficient();
-//        }
-//
-//        void Resonance(T resonance)
-//        {
-//            this->q = 2 - 2 * resonance;
-//        }
-//
-//        void Type(int type)
-//        {
-//            switch(type)
-//            {
-//            case LOWPASS:
-//                out = &low;
-//                break;
-//
-//            case HIGHPASS:
-//                out = &high;
-//                break;
-//
-//            case BANDPASS:
-//                out = &band;
-//                break;
-//
-//            case NOTCH:
-//                out = &notch;
-//                break;
-//
-//            default:
-//                out = &low;
-//                break;
-//            }
-//        }
-//
-//    private:
-//        void UpdateCoefficient()
-//        {
-//            f = static_cast<T>(2. * sinf(3.141592654 * frequency / sampleRate));
-//        }
-//	};
+template<typename T, int OverSampleCount>
+    class StateVariable
+    {
+    public:
+
+        enum FilterType
+        {
+            LOWPASS,
+            HIGHPASS,
+            BANDPASS,
+            NOTCH,
+            FilterTypeCount
+        };
+
+    private:
+
+        T sampleRate = {};
+        T frequency = {};
+        T q = {};
+        T f = {};
+
+        T low = {};
+        T high = {};
+        T band = {};
+        T notch = {};
+
+        T *out = nullptr;
+
+    public:
+        StateVariable()
+        {
+            SetSampleRate(44100.);
+            Frequency(1000.);
+            Resonance(0);
+            Type(LOWPASS);
+            Reset();
+        }
+
+        T operator()(T input)
+        {
+            for(unsigned int i = 0; i < OverSampleCount; i++)
+            {
+                low += static_cast<T>(f * band + 1e-25);
+                high = input - low - q * band;
+                band += f * high;
+                notch = low + high;
+            }
+			return *out;
+        }
+
+        void Reset()
+        {
+            low = high = band = notch = 0;
+        }
+
+        void SetSampleRate(T sampleRate)
+        {
+            this->sampleRate = sampleRate * OverSampleCount;
+            UpdateCoefficient();
+        }
+
+        void Frequency(T frequency)
+        {
+            this->frequency = frequency;
+            UpdateCoefficient();
+        }
+
+        void Resonance(T resonance)
+        {
+            this->q = 2 - 2 * resonance;
+        }
+
+        void Type(int type)
+        {
+            switch(type)
+            {
+            case LOWPASS:
+                out = &low;
+                break;
+
+            case HIGHPASS:
+                out = &high;
+                break;
+
+            case BANDPASS:
+                out = &band;
+                break;
+
+            case NOTCH:
+                out = &notch;
+                break;
+
+            default:
+                out = &low;
+                break;
+            }
+        }
+
+    private:
+        void UpdateCoefficient()
+        {
+            f = static_cast<T>(2. * sinf(3.141592654 * frequency / sampleRate));
+        }
+	};
 #endif
