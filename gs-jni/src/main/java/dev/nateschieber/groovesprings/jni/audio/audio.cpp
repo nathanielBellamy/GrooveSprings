@@ -179,8 +179,6 @@ int Audio::run()
 
   sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
 
-  std::cout << "foooooo";
-
   AUDIO_DATA audioData(
     buffer,
     (float **) mVerbBufferIns,

@@ -1,17 +1,15 @@
 #include "./gs_effect_reverb.h"
-#include "./MVerb.h"
+#include "./em_verb.h"
 #include "../constants.h"
 
-#include <iostream>
-#include<cmath>
 #include <string.h>
 
 using namespace std;
 
 GS_EFFECT_REVERB::GS_EFFECT_REVERB (float** bufferIns, float** bufferOuts) :
       bufferIns(bufferIns)
-    , bufferOuts(bufferOuts) {
-    std::cout << "\n made it";
+    , bufferOuts(bufferOuts)
+    , mVerb(MVerb<float>()){
 //        setParameter(MVerb<float>::DAMPINGFREQ, 0.);
 //        setParameter(MVerb<float>::DENSITY, 0.5);
 //        setParameter(MVerb<float>::BANDWIDTHFREQ, 1.);

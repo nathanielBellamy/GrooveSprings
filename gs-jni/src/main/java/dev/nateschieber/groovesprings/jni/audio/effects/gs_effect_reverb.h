@@ -1,13 +1,11 @@
 #ifndef GS_EFFECT_REVERB_H
 #define GS_EFFECT_REVERB_H
-#include "./MVerb.h"
+#include "./em_verb.h"
 #include "../constants.h"
 #include<cmath>
 #include <string.h>
 
 class GS_EFFECT_REVERB {
-//    MVerb<float>   mVerb;
-
     public:
         float**        bufferIns;
         float**        bufferOuts;
@@ -15,6 +13,9 @@ class GS_EFFECT_REVERB {
         GS_EFFECT_REVERB(float** bufferIns, float** bufferOUts);
         void setParameter(int index, float value);
         void process();
+
+    private:
+        MVerb<float>   mVerb;
 };
 
 #endif
