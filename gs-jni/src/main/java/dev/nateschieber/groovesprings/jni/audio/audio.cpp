@@ -22,6 +22,8 @@ Audio::Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameI
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
   free(audioData->buffer);
+  free(audioData->effects.reverb.bufferIns);
+  free(audioData->effects.reverb.bufferOuts);
   sf_close(audioData->file);
   std::cout << "\nDone freeing resources for file: " << Audio::fileName;
 };
@@ -164,12 +166,9 @@ int Audio::run()
       return 1;
   }
 
+  // allocate effects buffers
   float (*mVerbBufferIns)[2] = (float(*)[2]) malloc(sizeof(float[2][AUDIO_BUFFER_FRAMES]));
   float (*mVerbBufferOuts)[2] = (float(*)[2]) malloc(sizeof(float[2][AUDIO_BUFFER_FRAMES]));
-
-  std::cout << "\n ---- pre reverb init";
-  GS_EFFECTS effects((float **) mVerbBufferIns, (float **)mVerbBufferOuts);
-  std::cout << "\n ---- post reverb init";
 
   // Read the audio data into buffer
   long readcount = sf_read_float(file, buffer, sfinfo.frames * sfinfo.channels);
@@ -182,7 +181,16 @@ int Audio::run()
 
   std::cout << "foooooo";
 
-  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1);
+  AUDIO_DATA audioData(
+    buffer,
+    (float **) mVerbBufferIns,
+    (float **) mVerbBufferOuts,
+    file,
+    sfinfo,
+    initialFrameId,
+    readcount,
+    1
+  );
 
   // init jniData
   JNI_DATA jniData(Audio::jniEnv);
