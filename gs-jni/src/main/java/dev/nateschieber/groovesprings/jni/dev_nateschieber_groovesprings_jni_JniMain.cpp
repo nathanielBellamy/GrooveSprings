@@ -50,3 +50,15 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_readSf
 
     return sfInfoReader.jWrap(sf_info);
 }
+
+
+/*
+ * Class:     dev_nateschieber_groovesprings_jni_JniMain
+ * Method:    initVst3HostNative
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
+  (JNIEnv *, jobject)
+{
+    std::cout << "hello initVst3HostNative";
+}

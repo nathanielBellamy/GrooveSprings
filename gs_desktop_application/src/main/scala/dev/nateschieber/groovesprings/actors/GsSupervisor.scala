@@ -9,6 +9,7 @@ import dev.nateschieber.groovesprings.traits.InitDisplay
 object GsSupervisor {
   def apply(): Behavior[Nothing] = Behaviors.setup {
     context =>
+      val vst3HostRef = context.spawn(GsVst3Host(), "gs_vst3_hst")
       val playbackRef = context.spawn(GsPlayback(), "gs_playback")
       val displayRef = context.spawn(GsDisplay(playbackRef), "gs_display")
       val appStateManagerRef = context.spawn(GsAppStateManager(playbackRef, displayRef), "gs_state_manager")

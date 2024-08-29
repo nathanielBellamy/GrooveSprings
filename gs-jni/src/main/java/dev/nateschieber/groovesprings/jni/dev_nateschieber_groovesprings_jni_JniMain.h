@@ -39,6 +39,14 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlayb
 JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_readSfInfoNative
   (JNIEnv *, jobject, jstring);
 
+/*
+ * Class:     dev_nateschieber_groovesprings_jni_JniMain
+ * Method:    initVst3HostNative
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
+  (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif

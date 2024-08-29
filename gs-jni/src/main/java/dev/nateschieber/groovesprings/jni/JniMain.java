@@ -32,4 +32,12 @@ public class JniMain {
 
   private native SfInfo readSfInfoNative(String filePath);
 
+  public static void initVst3Host() {
+    System.out.println("initVst3HostStart");
+    new JniMain().initVst3HostNative();
+    System.out.println("initVst3HostEnd");
+  };
+
+  private native void initVst3HostNative();
+
 }
