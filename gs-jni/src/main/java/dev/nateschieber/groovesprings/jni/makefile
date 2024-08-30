@@ -54,10 +54,10 @@ lib = libnative.dylib
 
 lib:
 	javac -h . $(java_jni_main) SfInfo.java # produces jni_main_header
-	$(cxx) -c -fPIC $(include_flags) $(vst3host_audiohost_src) -o $(vst3host_audiohost_obj)
+# 	$(cxx) -c -fPIC $(include_flags) $(vst3host_audiohost_src) -o $(vst3host_audiohost_obj)
 	$(cxx) -c -fPIC $(include_flags) $(audio_src) -o $(audio_obj)
 	$(cxx) -c -fPIC $(include_flags) $(jni_src) -o $(jni_obj)
-	$(cxx) $(os_lib_flag) -fPIC -o $(lib) $(vst3host_audiohost_obj) $(audio_obj) $(jni_obj) $(link_flags)
+	$(cxx) $(os_lib_flag) -fPIC -o $(lib) $(audio_obj) $(jni_obj) $(link_flags)
 
 clean:
 	rm $(jni_main_header)

@@ -190,7 +190,7 @@ int Audio::run()
       goto error;
   }
   // TODO: handle live input audio
-  inputParameters.channelCount = 0;
+  inputParameters.channelCount = 1;
   inputParameters.sampleFormat = PA_SAMPLE_TYPE;
   inputParameters.hostApiSpecificStreamInfo = NULL;
 

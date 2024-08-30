@@ -37,11 +37,6 @@
 
 #pragma once
 
-//#include "public.sdk/source/vst/hosting/module_linux.cpp"
-#ifdef __OBJC__
-#include "public.sdk/source/vst/hosting/module_mac.mm"
-#endif
-//#include "public.sdk/source/vst/hosting/module_win32.cpp"
 #include "public.sdk/samples/vst-hosting/editorhost/source/platform/iapplication.h"
 #include "public.sdk/samples/vst-hosting/audiohost/source/media/audioclient.h"
 #include "public.sdk/source/vst/hosting/module.h"
