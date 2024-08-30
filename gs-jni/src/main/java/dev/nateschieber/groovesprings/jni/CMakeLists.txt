@@ -7,7 +7,7 @@
 cmake_minimum_required(VERSION 3.30.2)
 project(native VERSION 0.0.0)
 
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 17)
 set (JAVA_HOME "/opt/homebrew/opt/openjdk/bin")
 set (GS_JNI_WD "/Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/")
 set (AUDIO_SRC "audio/audio.cpp")
@@ -63,9 +63,8 @@ set (LINK_FLAGS
         -L${C_LIBS_HOME}/portaudio/19.7.0/lib
         -lportaudio
         -L${VST3SDK_HOME}/build/lib/Release
-        -lbase
         -lsdk
-        -lsdk_common
+        -L${VST3SDK_HOME}/build/lib/Release
         -lsdk_hosting
 )
 
