@@ -1,6 +1,11 @@
 
+### In order to run this program within Intellij
+### we need to tell the JVM where to find the the compiled .so/.dylib library.
+### To do so, edit the Run Configuration for the `gs_desktop_application` by adding the following VM option
+### -Djava.library.path="/absolute/path/to/repo/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/build"
+
 cmake_minimum_required(VERSION 3.30.2)
-project(gs-jni VERSION 0.0.0)
+project(native VERSION 0.0.0)
 
 set (CMAKE_CXX_STANDARD 11)
 set (JAVA_HOME "/opt/homebrew/opt/openjdk/bin")
@@ -8,7 +13,7 @@ set (GS_JNI_WD "/Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieb
 set (AUDIO_SRC "audio/audio.cpp")
 set (AUDIO_OBJ "build/audio/audio.cpp")
 set (VST3HOST_AUDIOHOST_SRC "audio/effects/vst3/host/audiohost/source/audiohost.cpp")
-set (VST3HOST_AUDIOHOST_OBJ "build/audio/effects/vst3/host/audiohost/source/audiohost.o")
+set (VST3HOST_AUDIOHOST_OBJ "build/audiohost.o")
 set (JAVA_JNI_MAIN "JniMain.java")
 set (JAVA_SFINFO_MAIN "SfInfo.java")
 set (JNI_MAIN_HEADER "dev_nateschieber_groovesprings_jni_JniMain.h")
@@ -59,16 +64,18 @@ set (LINK_FLAGS
         -lportaudio
 )
 
-set (CXX "g++ -std=11")
+add_library(audio_main OBJECT ${AUDIO_SRC})
+target_compile_options(audio_main PRIVATE ${INCLUDE_FLAGS})
+add_library(jni_main OBJECT ${JNI_SRC})
+target_compile_options(jni_main PRIVATE ${INCLUDE_FLAGS})
 
-# TODO: detect OS and set
-# - for linux: libnative.so
-# - for macOS: libnative.dynamicLib
-set (LIB libnative.dylib)
+add_library(vst3host_audiohost OBJECT ${VST3HOST_AUDIOHOST_SRC})
+target_compile_options(vst3host_audiohost PRIVATE ${CXX_LIBS_INCLUDE_FLAGS})
 
-execute_process(
-    COMMAND javac -h . ${JAVA_JNI_MAIN} ${JAVA_SFINFO_MAIN}
-    COMMAND ${CXX} -c -fPIC ${INCLUDE_FLAGS} ${VST3HOST_AUDIOHOST_SRC} -o ${VST3HOST_AUDIOHOST_OBJ}
-    WORKING_DIRECTORY ${GS_JNI_WD}
-    COMMAND_ECHO STDOUT
- )
+add_library(native SHARED)
+target_link_libraries(native PUBLIC
+    audio_main
+    jni_main
+    # vst3host_audiohost
+    ${LINK_FLAGS}
+)

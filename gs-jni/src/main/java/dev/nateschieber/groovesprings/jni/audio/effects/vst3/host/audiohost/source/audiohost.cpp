@@ -37,11 +37,6 @@
 #include "./audiohost.h"
 #include "./platform/appinit.h"
 #include "public.sdk/source/vst/hosting/hostclasses.h"
-//#include "public.sdk/source/vst/hosting/module_linux.cpp"
-#ifdef __OBJC__
-#include "public.sdk/source/vst/hosting/module_mac.mm"
-#endif
-//#include "public.sdk/source/vst/hosting/module_win32.cpp"
 #include "public.sdk/source/vst/utility/stringconvert.h"
 #include "base/source/fcommandline.h"
 #include "pluginterfaces/base/funknown.h"

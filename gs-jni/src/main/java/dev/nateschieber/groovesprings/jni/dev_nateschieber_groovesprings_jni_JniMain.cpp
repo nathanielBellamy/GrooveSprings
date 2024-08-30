@@ -8,7 +8,7 @@
 #include "dev_nateschieber_groovesprings_jni_JniMain.h"
 #include "./audio/audio.h"
 #include "./audio/sf_info_reader.h"
-#include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
+//#include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
 
 // NOTE:
 //   - on macOs, .dylib compilation requires main method
@@ -62,7 +62,7 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3H
   (JNIEnv *, jobject)
 {
     std::cout << "hello initVst3HostNative";
-    Steinberg::Vst::AudioHost::App vst3AudioHostApp {};
+//    Steinberg::Vst::AudioHost::App vst3AudioHostApp {};
     const std::vector<std::string> cmdArgs = { "foo" };
 //    vst3AudioHostApp.init(cmdArgs);
 }
