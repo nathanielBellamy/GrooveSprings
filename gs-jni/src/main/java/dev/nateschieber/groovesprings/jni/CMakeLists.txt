@@ -62,6 +62,11 @@ set (LINK_FLAGS
         -lsndfile
         -L${C_LIBS_HOME}/portaudio/19.7.0/lib
         -lportaudio
+        -L${VST3SDK_HOME}/build/lib/Release
+        -lbase
+        -lsdk
+        -lsdk_common
+        -lsdk_hosting
 )
 
 add_library(audio_main OBJECT ${AUDIO_SRC})
@@ -69,6 +74,8 @@ target_compile_options(audio_main PRIVATE ${INCLUDE_FLAGS})
 add_library(jni_main OBJECT ${JNI_SRC})
 target_compile_options(jni_main PRIVATE ${INCLUDE_FLAGS})
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VST3SDK_HOME}/cmake/modules)
+add_subdirectory(audio/effects/vst3/host/audiohost)
 add_library(vst3host_audiohost OBJECT ${VST3HOST_AUDIOHOST_SRC})
 target_compile_options(vst3host_audiohost PRIVATE ${CXX_LIBS_INCLUDE_FLAGS})
 
