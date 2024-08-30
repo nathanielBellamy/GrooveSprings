@@ -1,10 +1,13 @@
 
 include(SMTG_FindJack)
+set (SDK_ROOT "/Users/ns/code/vst3sdk")
+
 if(${LIBJACK_FOUND})
     set(audiohost_sources
         "${SDK_ROOT}/public.sdk/samples/vst-hosting/editorhost/source/platform/iapplication.h"
-        "${SDK_ROOT}/public.sdk/source/vst/hosting/plugprovider.cpp"
+        "${SDK_ROOT}/public.sdk/source/vst/hosting/module.h"
         "${SDK_ROOT}/public.sdk/source/vst/hosting/plugprovider.h"
+        "${SDK_ROOT}/public.sdk/source/vst/hosting/plugprovider.cpp"
         source/audiohost.cpp
         source/audiohost.h
         source/media/audioclient.cpp
@@ -56,17 +59,20 @@ if(${LIBJACK_FOUND})
     set(target audiohost)
 
     add_executable(${target} ${audiohost_sources})
-    set_target_properties(${target}
-        PROPERTIES
-            ${SDK_IDE_HOSTING_EXAMPLES_FOLDER}
-    )
+    # set_target_properties(${target} PROPERTIES ${SDK_IDE_HOSTING_EXAMPLES_FOLDER} )
+    target_include_directories(${target} PRIVATE ${SDK_ROOT})
     target_compile_features(${target}
         PUBLIC
             cxx_std_17
     )
     target_link_libraries(${target}
         PRIVATE
-            sdk_hosting
+            -L${SDK_ROOT}/build/lib/Release
+            -lsdk_hosting
+            -L${SDK_ROOT}/build/lib/Release
+            -lbase
+            -L${SDK_ROOT}/build/lib/Release
+            -lpluginterfaces
             ${audiohost_PLATFORM_LIBS}
             ${LIBJACK_LIBRARY}
     )

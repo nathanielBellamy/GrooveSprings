@@ -72,7 +72,7 @@ void App::startAudioClient (const std::string& path, VST3::Optional<VST3::UID> e
                             uint32 flags)
 {
 	std::string error;
-	module = VST3::Hosting::Module::create (path, error);
+//	module = VST3::Hosting::Module::create (path, error);
 	if (!module)
 	{
 		std::string reason = "Could not create Module for file:";

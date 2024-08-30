@@ -9,7 +9,7 @@
 
 #### II. Homebrew it
 ```bash
-brew install git npm node make gcc cmake portaudio libsndfile openjdk scala@3.3 docker docker-compose colima
+brew install git npm node make gcc cmake portaudio jack libsndfile openjdk scala@3.3 docker docker-compose colima
 ```
 
 #### III. Clone repo
