@@ -15,8 +15,6 @@ java_jni_main = JniMain.java
 jni_main_header = dev_nateschieber_groovesprings_jni_JniMain.h
 jni_src = dev_nateschieber_groovesprings_jni_JniMain.cpp
 jni_obj = dev_nateschieber_groovesprings_jni_JniMain.o
-audio_deps = audio/audio.cpp audio/audio.h audio/audio_data.h audio/constants.h
-jni_deps = dev_nateschieber_groovesprings_jni_JniMain.cpp dev_nateschieber_groovesprings_jni_JniMain.h
 
 # TODO: detect OS and set
 # - for linux: linux
