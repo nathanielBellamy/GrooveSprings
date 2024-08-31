@@ -61,7 +61,7 @@ if(${LIBJACK_FOUND})
 
     set(target audiohost)
 
-    add_executable(${target} ${audiohost_sources})
+    add_library(${target} ${audiohost_sources})
     # set_target_properties(${target} PROPERTIES ${SDK_IDE_HOSTING_EXAMPLES_FOLDER} "${SDK_ROOT}/build/public.sdk/CMakeFiles/sdk_hosting.dir")
     target_include_directories(${target}
         PRIVATE

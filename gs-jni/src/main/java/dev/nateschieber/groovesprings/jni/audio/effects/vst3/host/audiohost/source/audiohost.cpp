@@ -71,6 +71,7 @@ App::~App () noexcept
 void App::startAudioClient (const std::string& path, VST3::Optional<VST3::UID> effectID,
                             uint32 flags)
 {
+    std::cout << "\n starAudioClient!";
 	std::string error;
 //	module = VST3::Hosting::Module::create (path, error);
 	if (!module)
@@ -120,19 +121,19 @@ void App::startAudioClient (const std::string& path, VST3::Optional<VST3::UID> e
 //------------------------------------------------------------------------
 void App::init (const std::vector<std::string>& cmdArgs)
 {
-//	if (cmdArgs.empty ())
-//	{
-//		/*auto helpText = R"(
-//		usage: AudioHost pluginPath
-//		)";
-//		*/
-//		return;
-//	}
-//
-//	VST3::Optional<VST3::UID> uid;
-//	uint32 flags {};
-//
-//	startAudioClient (cmdArgs.back (), std::move (uid), flags);
+	if (cmdArgs.empty ())
+	{
+		/*auto helpText = R"(
+		usage: AudioHost pluginPath
+		)";
+		*/
+		return;
+	}
+
+	VST3::Optional<VST3::UID> uid;
+	uint32 flags {};
+
+	startAudioClient (cmdArgs.back (), std::move (uid), flags);
 }
 
 //------------------------------------------------------------------------
@@ -161,18 +162,18 @@ void App::terminate ()
 //	return 0;
 //}
 //#else
-int main (int argc, char* argv[])
-
-{
-	std::vector<std::string> cmdArgs;
-	for (int i = 1; i < argc; ++i)
-		cmdArgs.push_back (argv[i]);
-
-	Steinberg::Vst::AudioHost::gInit.app->init (cmdArgs);
-
-	std::cout << "Press <enter> to continue . . .";
-	std::getchar ();
-
-	return 0;
-}
+//int main (int argc, char* argv[])
+//
+//{
+//	std::vector<std::string> cmdArgs;
+//	for (int i = 1; i < argc; ++i)
+//		cmdArgs.push_back (argv[i]);
+//
+//	Steinberg::Vst::AudioHost::gInit.app->init (cmdArgs);
+//
+//	std::cout << "Press <enter> to continue . . .";
+//	std::getchar ();
+//
+//	return 0;
+//}
 //#endif

@@ -9,16 +9,17 @@ project(native VERSION 0.0.0)
 
 set (CMAKE_CXX_STANDARD 17)
 set (JAVA_HOME "/opt/homebrew/opt/openjdk/bin")
+set (VST3SDK_HOME "/Users/ns/code/vst3sdk")
 set (GS_JNI_WD "/Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/")
 set (AUDIO_SRC "audio/audio.cpp")
 set (AUDIO_OBJ "build/audio/audio.cpp")
-set (VST3HOST_AUDIOHOST_SRC "audio/effects/vst3/host/audiohost/source/audiohost.cpp")
-set (VST3HOST_AUDIOHOST_OBJ "build/audiohost.o")
 set (JAVA_JNI_MAIN "JniMain.java")
 set (JAVA_SFINFO_MAIN "SfInfo.java")
 set (JNI_MAIN_HEADER "dev_nateschieber_groovesprings_jni_JniMain.h")
 set (JNI_SRC "dev_nateschieber_groovesprings_jni_JniMain.cpp")
 set (JNI_OBJ "dev_nateschieber_groovesprings_jni_JniMain.o")
+
+
 
 # TODO: detect OS and set
 # - for linux: linux
@@ -38,7 +39,6 @@ set (OS_LIB_FLAG "-dynamicLib")
 #  - on MacOS it may be helpful to use `brew info portaudio` to view home directory
 set (C_LIBS_HOME "/opt/homebrew/Cellar")
 
-set (VST3SDK_HOME "/Users/ns/code/vst3sdk")
 
 set (C_LIBS_INCLUDE_FLAGS
         -I${C_LIBS_HOME}/libsndfile/1.2.2/include
@@ -79,13 +79,14 @@ target_compile_options(jni_main PRIVATE ${INCLUDE_FLAGS})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VST3SDK_HOME}/cmake/modules)
 add_subdirectory(audio/effects/vst3/host/audiohost)
 
-add_library(vst3host_audiohost OBJECT ${VST3HOST_AUDIOHOST_SRC})
-target_compile_options(vst3host_audiohost PRIVATE ${CXX_LIBS_INCLUDE_FLAGS})
-
 add_library(native SHARED)
 target_link_libraries(native PUBLIC
     audio_main
     jni_main
-    # vst3host_audiohost
+    audiohost
+    -L${VST3SDK_HOME}/build/lib/Release
+    -lsdk_common
+    "-framework CoreFoundation" # macOS
+    "-framework Foundation"     #  and Objective C
     ${LINK_FLAGS}
 )
