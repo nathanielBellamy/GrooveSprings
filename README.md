@@ -16,10 +16,21 @@
     - outputs to folder matching current server configuration
   
 - native lib
-  - `cd gs-jni/src/main/java/dev/nateschieber/groovesprings/jni`
-  - `make clean`
-  - `make lib`
+```bash
+cd gs-jni/src/main/java/dev/nateschieber/groovesprings/jni
+```
+1. using makefile/gnu make or
+```bash
+make clean
+make lib
+```
+2. using cmake
+
+```bash
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ../
+cmake --build .
+```
 
 ---
-
-##### [gofundme](https://www.gofundme.com/f/groovesprings?qid=6fbbc38e9d5ebc6537d73ddf4c3087dc)
