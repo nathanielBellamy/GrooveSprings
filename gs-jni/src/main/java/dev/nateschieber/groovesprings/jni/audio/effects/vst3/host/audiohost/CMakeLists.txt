@@ -1,6 +1,9 @@
 
-include(SMTG_FindJack)
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VST3SDK_HOME}/cmake/modules)
 set (SDK_ROOT "/Users/ns/code/vst3sdk")
+
+include(SMTG_DetectPlatform)
+include(SMTG_FindJack)
 
 if(${LIBJACK_FOUND})
     set(audiohost_sources
@@ -59,8 +62,11 @@ if(${LIBJACK_FOUND})
     set(target audiohost)
 
     add_executable(${target} ${audiohost_sources})
-    # set_target_properties(${target} PROPERTIES ${SDK_IDE_HOSTING_EXAMPLES_FOLDER} )
-    target_include_directories(${target} PRIVATE ${SDK_ROOT})
+    # set_target_properties(${target} PROPERTIES ${SDK_IDE_HOSTING_EXAMPLES_FOLDER} "${SDK_ROOT}/build/public.sdk/CMakeFiles/sdk_hosting.dir")
+    target_include_directories(${target}
+        PRIVATE
+            ${SDK_ROOT}
+            -I${SDK_ROOT}/public.sdk/source/vst/utility)
     target_compile_features(${target}
         PUBLIC
             cxx_std_17
@@ -68,12 +74,15 @@ if(${LIBJACK_FOUND})
     target_link_libraries(${target}
         PRIVATE
             -L${SDK_ROOT}/build/lib/Release
+            -lsdk
+            -L${SDK_ROOT}/build/lib/Release
+            -lsdk_common
+            -L${SDK_ROOT}/build/lib/Release
             -lsdk_hosting
             -L${SDK_ROOT}/build/lib/Release
-            -lbase
-            -L${SDK_ROOT}/build/lib/Release
             -lpluginterfaces
-            ${audiohost_PLATFORM_LIBS}
+            "-framework CoreFoundation" # macOS
+            "-framework Foundation"     #  and Objective C
             ${LIBJACK_LIBRARY}
     )
     target_include_directories(${target}

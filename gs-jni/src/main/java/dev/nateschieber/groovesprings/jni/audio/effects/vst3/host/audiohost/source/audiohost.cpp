@@ -60,7 +60,7 @@ FUnknown* gStandardPluginContext = new Vst::HostApplication ();
 
 namespace Vst {
 namespace AudioHost {
-//static AudioHost::AppInit gInit (std::make_unique<App> ());
+static AudioHost::AppInit gInit (std::make_unique<App> ());
 
 //------------------------------------------------------------------------
 App::~App () noexcept
@@ -161,18 +161,18 @@ void App::terminate ()
 //	return 0;
 //}
 //#else
-//int main (int argc, char* argv[])
-//
-//{
-//	std::vector<std::string> cmd
-//	for (int i = 1; i < argc; ++i)
-//		cmdArgs.push_back (argv[i]);
-//
-//	Steinberg::Vst::AudioHost::gInit.app->init (cmdArgs);
-//
-//	std::cout << "Press <enter> to continue . . .";
-//	std::getchar ();
-//
-//	return 0;
-//}
+int main (int argc, char* argv[])
+
+{
+	std::vector<std::string> cmdArgs;
+	for (int i = 1; i < argc; ++i)
+		cmdArgs.push_back (argv[i]);
+
+	Steinberg::Vst::AudioHost::gInit.app->init (cmdArgs);
+
+	std::cout << "Press <enter> to continue . . .";
+	std::getchar ();
+
+	return 0;
+}
 //#endif
