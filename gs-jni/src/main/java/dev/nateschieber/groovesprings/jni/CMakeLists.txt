@@ -10,6 +10,11 @@ project(native VERSION 0.0.0)
 set (CMAKE_CXX_STANDARD 17)
 set (JAVA_HOME "/opt/homebrew/opt/openjdk/bin")
 set (VST3SDK_HOME "/Users/ns/code/vst3sdk")
+# utilize vst3sdk cmake modules
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VST3SDK_HOME}/cmake/modules)
+include(SMTG_DetectPlatform) # to detect platform
+
+
 set (GS_JNI_WD "/Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/")
 set (AUDIO_SRC "audio/audio.cpp")
 set (AUDIO_OBJ "build/audio/audio.cpp")
@@ -80,13 +85,20 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VST3SDK_HOME}/cmake/modules)
 add_subdirectory(audio/effects/vst3/host/audiohost)
 
 add_library(native SHARED)
-target_link_libraries(native PUBLIC
+set(LINK_LIBRARIES
     audio_main
     jni_main
     audiohost
     -L${VST3SDK_HOME}/build/lib/Release
     -lsdk_common
-    "-framework CoreFoundation" # macOS
-    "-framework Foundation"     #  and Objective C
     ${LINK_FLAGS}
 )
+
+if (SMTG_MAC)
+set (LINK_LIBRARIES "${LINK_LIBRARIES}
+    -framework CoreFoundation
+    -framework Foundation"
+)
+endif (SMTG_MAC)
+
+target_link_libraries(native PUBLIC ${LINK_LIBRARIES})

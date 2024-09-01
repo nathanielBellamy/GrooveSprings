@@ -71,6 +71,7 @@ if(${LIBJACK_FOUND})
         PUBLIC
             cxx_std_17
     )
+
     target_link_libraries(${target}
         PRIVATE
             -L${SDK_ROOT}/build/lib/Release
