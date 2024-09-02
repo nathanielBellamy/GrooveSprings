@@ -24,8 +24,6 @@ set (JNI_MAIN_HEADER "dev_nateschieber_groovesprings_jni_JniMain.h")
 set (JNI_SRC "dev_nateschieber_groovesprings_jni_JniMain.cpp")
 set (JNI_OBJ "dev_nateschieber_groovesprings_jni_JniMain.o")
 
-
-
 # TODO: detect OS and set
 # - for linux: linux
 # - for macOS: darwin
@@ -81,9 +79,17 @@ add_library(jni_main OBJECT ${JNI_SRC})
 target_compile_options(jni_main PRIVATE ${INCLUDE_FLAGS})
 
 
+# compile vst3 audiohost
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VST3SDK_HOME}/cmake/modules)
 add_subdirectory(audio/effects/vst3/host/audiohost)
 
+# generate jni header
+execute_process(
+    COMMAND javac -h . ${JAVA_JNI_MAIN} ${JAVA_SFINFO_MAIN} # produces jni_main_header
+    WORKING_DIRECTORY ${GS_JNI_WD}
+)
+
+# compile library
 add_library(native SHARED)
 set(LINK_LIBRARIES
     audio_main
@@ -100,5 +106,4 @@ set (LINK_LIBRARIES "${LINK_LIBRARIES}
     -framework Foundation"
 )
 endif (SMTG_MAC)
-
 target_link_libraries(native PUBLIC ${LINK_LIBRARIES})
