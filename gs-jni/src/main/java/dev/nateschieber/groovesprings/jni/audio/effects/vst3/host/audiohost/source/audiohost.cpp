@@ -71,11 +71,11 @@ App::~App () noexcept
 void App::startAudioClient (const std::string& path, VST3::Optional<VST3::UID> effectID,
                             uint32 flags)
 {
-    std::cout << "\n starAudioClient!";
 	std::string error;
-//	module = VST3::Hosting::Module::create (path, error);
+	module = VST3::Hosting::Module::create (path, error);
 	if (!module)
 	{
+        std::cout << "\n !module starAudioClient!";
 		std::string reason = "Could not create Module for file:";
 		reason += path;
 		reason += "\nError: ";
@@ -97,8 +97,10 @@ void App::startAudioClient (const std::string& path, VST3::Optional<VST3::UID> e
 			break;
 		}
 	}
+    std::cout << "\n plugProviders init starAudioClient!";
 	if (!plugProvider)
 	{
+        std::cout << "\n !plugProvider starAudioClient!";
 		std::string error;
 		if (effectID)
 			error =
