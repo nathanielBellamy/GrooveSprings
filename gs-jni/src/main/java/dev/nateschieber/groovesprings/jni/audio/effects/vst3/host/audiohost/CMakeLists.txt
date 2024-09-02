@@ -23,7 +23,8 @@ if(${LIBJACK_FOUND})
         source/usediids.cpp
     )
 
-    if(SMTG_MAC)
+    # TODO: debug detect platform
+    # if(SMTG_MAC)
         set(audiohost_sources
             ${audiohost_sources}
             "${SDK_ROOT}/public.sdk/source/vst/hosting/module_mac.mm"
@@ -38,26 +39,26 @@ if(${LIBJACK_FOUND})
             MACOSX_BUNDLE TRUE
             MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile}
         )
-    elseif(SMTG_LINUX)
-        set(audiohost_sources
-            ${audiohost_sources}
-            "${SDK_ROOT}/public.sdk/source/vst/hosting/module_linux.cpp"
-        )
-        set(audiohost_PLATFORM_LIBS)
-        set(APP_PROPERTIES)
-    elseif(SMTG_WIN)
-        set(audiohost_sources
-            ${audiohost_sources}
-            "${SDK_ROOT}/public.sdk/source/vst/hosting/module_win32.cpp"
-        )
-        set(audiohost_PLATFORM_LIBS)
-        if(MSVC)
-            set(APP_PROPERTIES
-                LINK_FLAGS
-                    "/SUBSYSTEM:console"
-            )
-        endif(MSVC)
-    endif(SMTG_MAC)
+    # elseif(SMTG_LINUX)
+    #    set(audiohost_sources
+    #        ${audiohost_sources}
+    #        "${SDK_ROOT}/public.sdk/source/vst/hosting/module_linux.cpp"
+    #    )
+    #    set(audiohost_PLATFORM_LIBS)
+    #    set(APP_PROPERTIES)
+    # elseif(SMTG_WIN)
+    #     set(audiohost_sources
+    #        ${audiohost_sources}
+    #        "${SDK_ROOT}/public.sdk/source/vst/hosting/module_win32.cpp"
+    #    )
+    #    set(audiohost_PLATFORM_LIBS)
+    #    if(MSVC)
+    #        set(APP_PROPERTIES
+    #            LINK_FLAGS
+    #                "/SUBSYSTEM:console"
+    #        )
+    #    endif(MSVC)
+    #endif(SMTG_MAC)
 
     set(target audiohost)
 
