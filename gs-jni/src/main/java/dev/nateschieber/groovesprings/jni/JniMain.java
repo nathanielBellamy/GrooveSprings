@@ -34,10 +34,11 @@ public class JniMain {
 
   public static void initVst3Host() {
     System.out.println("initVst3HostStart");
-    new JniMain().initVst3HostNative();
+    var vst3HostApp = new JniMain().initVst3HostNative();
+    System.out.println("vst3HostApp addr: " + vst3HostApp);
     System.out.println("initVst3HostEnd");
   };
 
-  private native void initVst3HostNative();
+  private native long[] initVst3HostNative();
 
 }

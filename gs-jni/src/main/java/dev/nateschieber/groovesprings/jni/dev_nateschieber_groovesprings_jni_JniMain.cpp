@@ -56,14 +56,26 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_readSf
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
  * Method:    initVst3HostNative
- * Signature: ()V
+ * Signature: ()L
  */
-JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
-  (JNIEnv *, jobject)
+JNIEXPORT jlongArray JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
+  (JNIEnv *env, jobject)
 {
     std::cout << "\n hello initVst3HostNative";
     Steinberg::Vst::AudioHost::App vst3AudioHostApp {};
-    const std::vector<std::string> cmdArgs = { "foo" };
+    const std::vector<std::string> cmdArgs = {
+        "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
+    };
     vst3AudioHostApp.init(cmdArgs);
-    std::cout << "\n goodbye initVst3HostNative";
+
+    jlongArray result;
+    int size;
+    size = 1; // TODO: for now
+    result = env->NewLongArray(size);
+    jlong vst3AudioHostAppPtrs[size];
+    for (int i = 0; i < 1; i ++) {
+        vst3AudioHostAppPtrs[i] = vst3AudioHostApp;
+    }
+    (*env)->SetLongArrayRegion(env, result, 0, size, vst3AudioHostAppPtrs);
+    return result;
 }

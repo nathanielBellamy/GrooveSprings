@@ -42,9 +42,9 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_readSf
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
  * Method:    initVst3HostNative
- * Signature: ()V
+ * Signature: ()[J
  */
-JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
+JNIEXPORT jlongArray JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus
