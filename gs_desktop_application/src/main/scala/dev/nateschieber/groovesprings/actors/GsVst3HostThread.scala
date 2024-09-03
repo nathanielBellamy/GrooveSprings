@@ -21,7 +21,8 @@ class GsVst3HostThread (context: ActorContext[GsCommand]) extends AbstractBehavi
     msg match {
 
       case InitVst3Host(replyTo) =>
-        JniMain.initVst3Host()
+        // TODO: static Vst3AudioHostAppPtr
+        JniMain.initVst3Host(null)
         Behaviors.same
 
       case default => 
