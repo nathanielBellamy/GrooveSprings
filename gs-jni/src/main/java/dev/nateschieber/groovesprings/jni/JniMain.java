@@ -32,13 +32,21 @@ public class JniMain {
 
   private native SfInfo readSfInfoNative(String filePath);
 
-  public static void initVst3Host() {
+  public static void initVst3Host(Vst3AudioHostAppPtr appAddr) {
     System.out.println("initVst3HostStart");
-    var vst3HostApp = new JniMain().initVst3HostNative();
-    System.out.println("vst3HostApp addr: " + vst3HostApp);
+    Object vst3HostAppObj = new JniMain().initVst3HostNative(appAddr);
+
+    System.out.println("\n HERERERERE HERER ERHERHERERE RERE RERERRE RERERERER ERERE");
+    System.out.println("vst3HostApp addr: " + ((Vst3AudioHostAppPtr) vst3HostAppObj).getAddress());
+
+//    List<Vst3AudioHostAppPtr> vst3AudioHostAppPtrs = new ArrayList<Vst3AudioHostAppPtr>();
+//    Arrays.stream(vst3HostAppObjs).forEach(obj -> vst3AudioHostAppPtrs.add((Vst3AudioHostAppPtr) obj));
+
+//    System.out.println("vst3HostAppPtrs ptrs: " + vst3AudioHostAppPtrs);
+
     System.out.println("initVst3HostEnd");
   };
 
-  private native long[] initVst3HostNative();
+  private native Object initVst3HostNative(Object appAddr);
 
 }
