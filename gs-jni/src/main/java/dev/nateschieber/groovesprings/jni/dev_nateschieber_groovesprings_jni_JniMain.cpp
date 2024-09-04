@@ -61,7 +61,11 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocV
   (JNIEnv *env, jobject)
 {
     // alloc vst3AudioHostApp
-    Steinberg::Vst::AudioHost::App vst3AudioHostApp {};
+    Steinberg::Vst::AudioHost::App *vst3AudioHostAppPtr = new Steinberg::Vst::AudioHost::App;
+    const std::vector<std::string> cmdArgs = {
+        "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
+    };
+//    vst3AudioHostAppPtr->init(cmdArgs);
 
     // construct pointer wrapper to return to JNI
     jclass jVst3AudioHostAppPtrClass = env->FindClass("dev/nateschieber/groovesprings/jni/Vst3AudioHostAppPtr");
@@ -69,7 +73,7 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocV
     jobject jVst3AudioHostAppPtr = env->NewObject(
         jVst3AudioHostAppPtrClass,
         jVst3AudioHostAppPtrConstr,
-        std::addressof(vst3AudioHostApp)
+        vst3AudioHostAppPtr
     );
 
     return jVst3AudioHostAppPtr;
@@ -89,7 +93,7 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3H
         "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
     };
     try {
-//        app->init(cmdArgs);
+        app->init(cmdArgs);
     } catch (...) {
         std::cout << "\n Could not retrieve Vst3HostApp from pointer";
     }
