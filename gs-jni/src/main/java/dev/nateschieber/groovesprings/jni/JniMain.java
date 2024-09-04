@@ -23,7 +23,7 @@ public class JniMain {
     new JniMain().initPlaybackLoopNative(threadId, filePath, initialFrameId);
   }
 
-  private native void initPlaybackLoopNative(long threadId, String filePath, long initialFrameId);
+  private native void initPlaybackLoopNative(long threadId, String filePath, long initialFrameId); // blocking
 
   public static SfInfo readSfInfo(String filePath) {
     SfInfo res = new JniMain().readSfInfoNative(filePath);
@@ -32,21 +32,15 @@ public class JniMain {
 
   private native SfInfo readSfInfoNative(String filePath);
 
-  public static void initVst3Host(Vst3AudioHostAppPtr appAddr) {
-    System.out.println("initVst3HostStart");
-    Object vst3HostAppObj = new JniMain().initVst3HostNative(appAddr);
-
-    System.out.println("\n HERERERERE HERER ERHERHERERE RERE RERERRE RERERERER ERERE");
-    System.out.println("vst3HostApp addr: " + ((Vst3AudioHostAppPtr) vst3HostAppObj).getAddress());
-
-//    List<Vst3AudioHostAppPtr> vst3AudioHostAppPtrs = new ArrayList<Vst3AudioHostAppPtr>();
-//    Arrays.stream(vst3HostAppObjs).forEach(obj -> vst3AudioHostAppPtrs.add((Vst3AudioHostAppPtr) obj));
-
-//    System.out.println("vst3HostAppPtrs ptrs: " + vst3AudioHostAppPtrs);
-
-    System.out.println("initVst3HostEnd");
+  public static Vst3AudioHostAppPtr allocVst3Host() {
+    return (Vst3AudioHostAppPtr) new JniMain().allocVst3HostNative();
   };
 
-  private native Object initVst3HostNative(Object appAddr);
+  private native Object allocVst3HostNative();
 
+  public static void initVst3Host(Vst3AudioHostAppPtr hostPtr) {
+    new JniMain().initVst3HostNative(hostPtr.getAddress());
+  }
+
+  private native void initVst3HostNative(int hostAddress); // blocking
 }

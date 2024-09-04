@@ -52,47 +52,45 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_readSf
     return sfInfoReader.jWrap(sf_info);
 }
 
+/*
+ * Class:     dev_nateschieber_groovesprings_jni_JniMain
+ * Method:    allocVst3HostNative
+ * Signature: ()Ljava/lang/Object;
+ */
+JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocVst3HostNative
+  (JNIEnv *env, jobject)
+{
+    // alloc vst3AudioHostApp
+    Steinberg::Vst::AudioHost::App vst3AudioHostApp {};
+
+    // construct pointer wrapper to return to JNI
+    jclass jVst3AudioHostAppPtrClass = env->FindClass("dev/nateschieber/groovesprings/jni/Vst3AudioHostAppPtr");
+    jmethodID jVst3AudioHostAppPtrConstr = env->GetMethodID(jVst3AudioHostAppPtrClass, "<init>", "(I)V");
+    jobject jVst3AudioHostAppPtr = env->NewObject(
+        jVst3AudioHostAppPtrClass,
+        jVst3AudioHostAppPtrConstr,
+        std::addressof(vst3AudioHostApp)
+    );
+
+    return jVst3AudioHostAppPtr;
+}
 
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
  * Method:    initVst3HostNative
- * Signature: ()L
+ * Signature: (I)V
  */
-JNIEXPORT jobjectArray JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
-  (JNIEnv *env, jobject)
+JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
+  (JNIEnv *, jobject, jint vst3AudioHostAppAddress)
 {
-    Steinberg::Vst::AudioHost::App vst3AudioHostApp {};
+    std::cout << "\n Addrr recevied: " << vst3AudioHostAppAddress;
+    Steinberg::Vst::AudioHost::App *app = reinterpret_cast<Steinberg::Vst::AudioHost::App*>(vst3AudioHostAppAddress);
     const std::vector<std::string> cmdArgs = {
         "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
     };
-//    vst3AudioHostApp.init(cmdArgs);
-
-
-    jclass jVst3AudioHostAppPtrClass = env->FindClass("dev/nateschieber/groovesprings/jni/Vst3AudioHostAppPtr");
-    jmethodID jVst3AudioHostAppPtrConstr = env->GetMethodID(jVst3AudioHostAppPtrClass, "<init>", "(I)V");
-
-    std::cout << "\n AW FOOOOOOOOOEY 1";
-    int size;
-    size = 1; // TODO: for now
-    jobjectArray result;
-    result = env->NewObjectArray(
-        size,
-        jVst3AudioHostAppPtrClass,
-        0
-     );
-
-    jobject jVst3AudioHostAppPtrs[size];
-    for (int i = 0; i < 1; i ++) {
-        jobject jVst3AudioHostAppPtr = env->NewObject(
-            jVst3AudioHostAppPtrClass,
-            jVst3AudioHostAppPtrConstr,
-            std::addressof(vst3AudioHostApp)
-        );
-        env->SetObjectArrayElement(
-            result,
-            i,
-            jVst3AudioHostAppPtr
-        );
+    try {
+//        app->init(cmdArgs);
+    } catch (...) {
+        std::cout << "\n Could not retrieve Vst3HostApp from pointer";
     }
-    return result;
 }

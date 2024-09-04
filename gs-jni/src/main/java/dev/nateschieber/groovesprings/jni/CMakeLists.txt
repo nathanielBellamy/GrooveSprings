@@ -14,22 +14,22 @@ set (VST3SDK_HOME "/Users/ns/code/vst3sdk")
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VST3SDK_HOME}/cmake/modules)
 include(SMTG_DetectPlatform) # to detect platform
 
-
 set (GS_JNI_WD "/Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/")
-set (AUDIO_SRC "audio/audio.cpp")
-set (AUDIO_OBJ "build/audio/audio.cpp")
 set (JAVA_JNI_MAIN "JniMain.java")
 set (JAVA_SFINFO_MAIN "SfInfo.java")
 set (JAVA_VST3AUDIOHOST_APP_PTR "Vst3AudioHostAppPtr.java")
-set (JNI_MAIN_HEADER "dev_nateschieber_groovesprings_jni_JniMain.h")
-set (JNI_SRC "dev_nateschieber_groovesprings_jni_JniMain.cpp")
-set (JNI_OBJ "dev_nateschieber_groovesprings_jni_JniMain.o")
-
 # generate jni header
 execute_process(
     COMMAND javac -h . ${JAVA_JNI_MAIN} ${JAVA_SFINFO_MAIN} ${JAVA_VST3AUDIOHOST_APP_PTR}# produces jni_main_header
     WORKING_DIRECTORY ${GS_JNI_WD}
 )
+
+set (AUDIO_SRC "audio/audio.cpp")
+set (AUDIO_OBJ "build/audio/audio.cpp")
+set (JNI_MAIN_HEADER "dev_nateschieber_groovesprings_jni_JniMain.h")
+set (JNI_SRC "dev_nateschieber_groovesprings_jni_JniMain.cpp")
+set (JNI_OBJ "dev_nateschieber_groovesprings_jni_JniMain.o")
+
 
 # TODO: detect OS and set
 # - for linux: linux
