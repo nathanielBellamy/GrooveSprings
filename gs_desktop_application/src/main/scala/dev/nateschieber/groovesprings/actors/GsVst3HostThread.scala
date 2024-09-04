@@ -2,10 +2,16 @@ package dev.nateschieber.groovesprings.actors
 
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import akka.actor.typed.{ActorSystem, Behavior}
-import dev.nateschieber.groovesprings.jni.JniMain
+import dev.nateschieber.groovesprings.actors.GsVst3HostThread.vst3HostAppPtr
+import dev.nateschieber.groovesprings.jni
+import dev.nateschieber.groovesprings.jni.{JniMain, Vst3AudioHostAppPtr}
 import dev.nateschieber.groovesprings.traits.{GsCommand, InitVst3Host}
 
+import scala.annotation.static
+
 object GsVst3HostThread {
+
+  @static private var vst3HostAppPtr: Vst3AudioHostAppPtr = synchronized { null }
 
   def apply(): Behavior[GsCommand] = Behaviors.setup {
     context =>
@@ -22,7 +28,11 @@ class GsVst3HostThread (context: ActorContext[GsCommand]) extends AbstractBehavi
 
       case InitVst3Host(replyTo) =>
         // TODO: static Vst3AudioHostAppPtr
-        JniMain.initVst3Host(null)
+        println("GsVst3HostThread alloc")
+        vst3HostAppPtr = JniMain.allocVst3Host()
+        println("FOOO FOOO FOO: " + vst3HostAppPtr.getAddress) 
+        println("GsVst3HostThread init")
+        JniMain.initVst3Host(vst3HostAppPtr)
         Behaviors.same
 
       case default => 

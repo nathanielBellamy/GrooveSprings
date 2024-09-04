@@ -41,11 +41,19 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_readSf
 
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
- * Method:    initVst3HostNative
- * Signature: ()[Ljava/lang/Object;
+ * Method:    allocVst3HostNative
+ * Signature: ()Ljava/lang/Object;
  */
-JNIEXPORT jobjectArray JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
+JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocVst3HostNative
   (JNIEnv *, jobject);
+
+/*
+ * Class:     dev_nateschieber_groovesprings_jni_JniMain
+ * Method:    initVst3HostNative
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
+  (JNIEnv *, jobject, jint);
 
 #ifdef __cplusplus
 }
