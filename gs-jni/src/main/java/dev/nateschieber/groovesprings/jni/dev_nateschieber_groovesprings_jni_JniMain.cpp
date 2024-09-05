@@ -61,11 +61,13 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocV
   (JNIEnv *env, jobject)
 {
     // alloc vst3AudioHostApp
-    Steinberg::Vst::AudioHost::App *vst3AudioHostAppPtr = new Steinberg::Vst::AudioHost::App;
+    Steinberg::Vst::AudioHost::App *app = new Steinberg::Vst::AudioHost::App;
     const std::vector<std::string> cmdArgs = {
         "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
     };
-//    vst3AudioHostAppPtr->init(cmdArgs);
+    app->init(cmdArgs);
+    auto ioInfo = app->vst3Processor->getIOSetup();
+    std::cout << "\n ioInfo  " << ioInfo.inputs[0];
 
     // construct pointer wrapper to return to JNI
     jclass jVst3AudioHostAppPtrClass = env->FindClass("dev/nateschieber/groovesprings/jni/Vst3AudioHostAppPtr");
@@ -73,7 +75,7 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocV
     jobject jVst3AudioHostAppPtr = env->NewObject(
         jVst3AudioHostAppPtrClass,
         jVst3AudioHostAppPtrConstr,
-        vst3AudioHostAppPtr
+        std::addressof(*app)
     );
 
     return jVst3AudioHostAppPtr;
@@ -88,12 +90,15 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3H
   (JNIEnv *, jobject, jint vst3AudioHostAppAddress)
 {
     std::cout << "\n Addrr recevied: " << vst3AudioHostAppAddress;
-    Steinberg::Vst::AudioHost::App *app = reinterpret_cast<Steinberg::Vst::AudioHost::App*>(vst3AudioHostAppAddress);
+    Steinberg::Vst::AudioHost::App *app = reinterpret_cast<Steinberg::Vst::AudioHost::App*>((int) vst3AudioHostAppAddress);
     const std::vector<std::string> cmdArgs = {
         "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
     };
     try {
-        app->init(cmdArgs);
+        std::cout << "\n before =====";
+        app->terminate();
+        std::cout << "\n after =====";
+
     } catch (...) {
         std::cout << "\n Could not retrieve Vst3HostApp from pointer";
     }
