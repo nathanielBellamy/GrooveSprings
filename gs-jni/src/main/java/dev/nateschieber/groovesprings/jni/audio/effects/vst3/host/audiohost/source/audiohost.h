@@ -56,6 +56,7 @@ public:
 	void init (const std::vector<std::string>& cmdArgs) override;
 	void terminate () override;
 	AudioClientPtr vst3Processor;
+	IPtr<PlugProvider> plugProvider {nullptr};
 
 private:
 	enum OpenFlags
@@ -65,7 +66,6 @@ private:
 	                       uint32 flags);
 
 	VST3::Hosting::Module::Ptr module {nullptr};
-	IPtr<PlugProvider> plugProvider {nullptr};
 };
 
 //------------------------------------------------------------------------

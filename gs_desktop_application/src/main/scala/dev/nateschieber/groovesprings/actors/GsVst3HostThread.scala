@@ -27,8 +27,10 @@ class GsVst3HostThread (context: ActorContext[GsCommand]) extends AbstractBehavi
     msg match {
 
       case InitVst3Host(replyTo) =>
-        vst3HostAppPtr = JniMain.allocVst3Host()
-        println("vst3HostAddr" + vst3HostAppPtr.getAddress)
+//        JniMain.allocVst3Host(vst3HostAppPtr)
+//        println("vst3HostAddr" + vst3HostAppPtr.getAddress)
+//        JniMain.initVst3Host(vst3HostAppPtr)
+        println("after after after")
         Behaviors.same
 
       case default => 

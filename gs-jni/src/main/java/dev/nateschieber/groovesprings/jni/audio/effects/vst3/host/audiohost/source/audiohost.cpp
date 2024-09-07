@@ -65,6 +65,7 @@ static AudioHost::AppInit gInit (std::make_unique<App> ());
 //------------------------------------------------------------------------
 App::~App () noexcept
 {
+    delete this;
 }
 
 //------------------------------------------------------------------------
@@ -116,8 +117,9 @@ void App::startAudioClient (const std::string& path, VST3::Optional<VST3::UID> e
 	OPtr<IEditController> controller = plugProvider->getController ();
 	auto midiMapping = U::cast<IMidiMapping> (controller);
 
-	//! TODO: Query the plugProvider for a proper name which gets displayed in JACK.
-	vst3Processor = AudioClient::create ("VST 3 SDK", component, midiMapping);
+	std::string name;
+	name = plugProvider->getClassInfo().name();
+	vst3Processor = AudioClient::create (name, component, midiMapping);
 }
 
 //------------------------------------------------------------------------
@@ -140,8 +142,7 @@ void App::init (const std::vector<std::string>& cmdArgs)
 
 //------------------------------------------------------------------------
 void App::terminate ()
-{
-}
+{}
 
 //------------------------------------------------------------------------
 } // EditorHost

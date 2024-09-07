@@ -32,15 +32,15 @@ public class JniMain {
 
   private native SfInfo readSfInfoNative(String filePath);
 
-  public static Vst3AudioHostAppPtr allocVst3Host() {
-    return (Vst3AudioHostAppPtr) new JniMain().allocVst3HostNative();
+  public static Vst3AudioHostAppPtr allocVst3Host(Vst3AudioHostAppPtr ptr) {
+    return (Vst3AudioHostAppPtr) new JniMain().allocVst3HostNative((Object) ptr);
   };
 
-  private native Object allocVst3HostNative();
+  private native Object allocVst3HostNative(Object ptr);
 
-  public static void initVst3Host(Vst3AudioHostAppPtr hostPtr) {
-    new JniMain().initVst3HostNative(hostPtr.getAddress());
+  public static void initVst3Host(Vst3AudioHostAppPtr ptr) {
+    new JniMain().initVst3HostNative(ptr.getAddress());
   }
 
-  private native void initVst3HostNative(int hostAddress); // blocking
+  private native void initVst3HostNative(int addr); // blocking
 }
