@@ -170,8 +170,15 @@ int Audio::run()
       return 1;
   }
 
+  // alloc vst3AudioHostApp
+  Steinberg::Vst::AudioHost::App vst3App = {};
+  const std::vector<std::string> cmdArgs = {
+      "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
+  };
+  vst3App.init(cmdArgs);
+
   sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
-  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1);
+  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1, vst3App.vst3Processor);
 
   // init jniData
   JNI_DATA jniData(Audio::jniEnv);
@@ -282,6 +289,8 @@ int Audio::run()
       }
       Audio::jSetReadComplete(&jniData);
   }
+
+  vst3App.terminate();
 
   err = Pa_StopStream( stream );
   if( err != paNoError ) goto error;

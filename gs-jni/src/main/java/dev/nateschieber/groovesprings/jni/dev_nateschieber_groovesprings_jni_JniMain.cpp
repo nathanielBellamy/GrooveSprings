@@ -55,18 +55,19 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_readSf
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
  * Method:    allocVst3HostNative
- * Signature: ()Ljava/lang/Object;
+ * Signature: (Ljava/lang/Object;)Ljava/lang/Object;
  */
 JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocVst3HostNative
-  (JNIEnv *env, jobject)
+  (JNIEnv *env, jobject, jobject appPtr)
 {
     // alloc vst3AudioHostApp
-    Steinberg::Vst::AudioHost::App *app = new Steinberg::Vst::AudioHost::App;
+    Steinberg::Vst::AudioHost::App* vst3App;
+    vst3App = new Steinberg::Vst::AudioHost::App;
     const std::vector<std::string> cmdArgs = {
         "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
     };
-    app->init(cmdArgs);
-    auto ioInfo = app->vst3Processor->getIOSetup();
+    vst3App->init(cmdArgs);
+    auto ioInfo = vst3App->vst3Processor->getIOSetup();
     std::cout << "\n ioInfo  " << ioInfo.inputs[0];
 
     // construct pointer wrapper to return to JNI
@@ -75,9 +76,11 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocV
     jobject jVst3AudioHostAppPtr = env->NewObject(
         jVst3AudioHostAppPtrClass,
         jVst3AudioHostAppPtrConstr,
-        std::addressof(*app)
+        std::addressof(*vst3App)
     );
 
+    appPtr = jVst3AudioHostAppPtr;
+    delete vst3App;
     return jVst3AudioHostAppPtr;
 }
 
@@ -87,10 +90,9 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocV
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
-  (JNIEnv *, jobject, jint vst3AudioHostAppAddress)
+  (JNIEnv *env, jobject, jint addr)
 {
-    std::cout << "\n Addrr recevied: " << vst3AudioHostAppAddress;
-    Steinberg::Vst::AudioHost::App *app = reinterpret_cast<Steinberg::Vst::AudioHost::App*>((int) vst3AudioHostAppAddress);
+    Steinberg::Vst::AudioHost::App *app = reinterpret_cast<Steinberg::Vst::AudioHost::App*>((int) addr);
     const std::vector<std::string> cmdArgs = {
         "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
     };

@@ -5,20 +5,20 @@
 #include "./effects/vst3/host/audiohost/source/audiohost.h"
 
 struct AUDIO_DATA {
-    sf_count_t      index;
-    float           *buffer;
-    SNDFILE         *file;
-    SF_INFO         sfinfo;
-    long            readcount;
-    int             playState;
-    float           playbackSpeed;
-    bool            readComplete;
-    float           volume;
-    float           fadeIn;
-    float           fadeOut;
-//    AudioClientPtr  vst3AudioClient;
+    sf_count_t                      index;
+    float                           *buffer;
+    SNDFILE                         *file;
+    SF_INFO                         sfinfo;
+    long                            readcount;
+    int                             playState;
+    float                           playbackSpeed;
+    bool                            readComplete;
+    float                           volume;
+    float                           fadeIn;
+    float                           fadeOut;
+    Steinberg::Vst::AudioClientPtr  vst3Processor;
 
-    AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, int playState) : //, AudioClientPtr vst3AudioClientPtr) :
+    AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, int playState, Steinberg::Vst::AudioClientPtr vst3Processor) :
           buffer(buffer)
         , file(file)
         , sfinfo(sfinfo)
@@ -29,7 +29,7 @@ struct AUDIO_DATA {
         , volume(0.0)
         , fadeIn(1.0)
         , fadeOut(1.0)
-//        , vst3AudioClientPtr(vst3AudioClientPtr)
+        , vst3Processor(vst3Processor)
         {}
 };
 
