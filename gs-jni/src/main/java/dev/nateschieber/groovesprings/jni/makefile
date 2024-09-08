@@ -52,10 +52,10 @@ lib = libnative.dylib
 #   - more phony targets
 #   - macOS_monterey, macOS_sonoma, linux
 jni_header:
-	javac -h . $(java_jni_main) SfInfo.java Vst3AudioHostAppPtr.java # produces jni_main_header
+	javac -h . $(java_jni_main) SfInfo.java # produces jni_main_header
 
 lib:
-	javac -h . $(java_jni_main) SfInfo.java Vst3AudioHostAppPtr.java # produces jni_main_header
+	javac -h . $(java_jni_main) SfInfo.java # produces jni_main_header
 # 	$(cxx) -c -fPIC $(include_flags) $(vst3host_audiohost_src) -o $(vst3host_audiohost_obj)
 	$(cxx) -c -fPIC $(include_flags) $(audio_src) -o $(audio_obj)
 	$(cxx) -c -fPIC $(include_flags) $(jni_src) -o $(jni_obj)
