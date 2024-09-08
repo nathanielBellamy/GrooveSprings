@@ -16,9 +16,9 @@ struct AUDIO_DATA {
     float                           volume;
     float                           fadeIn;
     float                           fadeOut;
-    Steinberg::Vst::AudioClientPtr  vst3Processor;
+    long*                           vst3HostPtr;
 
-    AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, int playState, Steinberg::Vst::AudioClientPtr vst3Processor) :
+    AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, int playState, long* vst3HostPtr) :
           buffer(buffer)
         , file(file)
         , sfinfo(sfinfo)
@@ -29,7 +29,7 @@ struct AUDIO_DATA {
         , volume(0.0)
         , fadeIn(1.0)
         , fadeOut(1.0)
-        , vst3Processor(vst3Processor)
+        , vst3HostPtr(vst3HostPtr)
         {}
 };
 

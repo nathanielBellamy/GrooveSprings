@@ -26,10 +26,10 @@ JNIEXPORT jint JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_addNative
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
  * Method:    initPlaybackLoopNative
- * Signature: (JLjava/lang/String;J)V
+ * Signature: (JLjava/lang/String;JJ)V
  */
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initPlaybackLoopNative
-  (JNIEnv *, jobject, jlong, jstring, jlong);
+  (JNIEnv *, jobject, jlong, jstring, jlong, jlong);
 
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
@@ -42,18 +42,26 @@ JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_readSf
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
  * Method:    allocVst3HostNative
- * Signature: (Ljava/lang/Object;)Ljava/lang/Object;
+ * Signature: ()J
  */
-JNIEXPORT jobject JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocVst3HostNative
-  (JNIEnv *, jobject, jobject);
+JNIEXPORT jlong JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocVst3HostNative
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     dev_nateschieber_groovesprings_jni_JniMain
+ * Method:    deleteVst3HostNative
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_deleteVst3HostNative
+  (JNIEnv *, jobject, jlong);
 
 /*
  * Class:     dev_nateschieber_groovesprings_jni_JniMain
  * Method:    initVst3HostNative
- * Signature: (I)V
+ * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3HostNative
-  (JNIEnv *, jobject, jint);
+  (JNIEnv *, jobject, jlong);
 
 #ifdef __cplusplus
 }

@@ -8,16 +8,20 @@
 #include "./audio_data.h"
 #include "./constants.h"
 #include "./jni_data.h"
+#include "./effects/vst3/host/audiohost/source/audiohost.h"
 
 #define PA_SAMPLE_TYPE      paFloat32
 
 typedef float SAMPLE;
 
-Audio::Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameId) :
+Audio::Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameId, jlong vst3HostPtr) :
   jniEnv(env)
   , threadId(threadId)
   , fileName(env->GetStringUTFChars(jFileName, 0))
-  , initialFrameId(initialFrameId) {}
+  , initialFrameId(initialFrameId)
+{
+  vst3Host = reinterpret_cast<Steinberg::Vst::AudioHost::App*>(vst3HostPtr);
+}
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
   free(audioData->buffer);
@@ -170,15 +174,8 @@ int Audio::run()
       return 1;
   }
 
-  // alloc vst3AudioHostApp
-  Steinberg::Vst::AudioHost::App vst3App = {};
-  const std::vector<std::string> cmdArgs = {
-      "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
-  };
-  vst3App.init(cmdArgs);
-
   sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
-  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1, vst3App.vst3Processor);
+  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1, (long*) vst3Host);
 
   // init jniData
   JNI_DATA jniData(Audio::jniEnv);
@@ -289,8 +286,6 @@ int Audio::run()
       }
       Audio::jSetReadComplete(&jniData);
   }
-
-  vst3App.terminate();
 
   err = Pa_StopStream( stream );
   if( err != paNoError ) goto error;

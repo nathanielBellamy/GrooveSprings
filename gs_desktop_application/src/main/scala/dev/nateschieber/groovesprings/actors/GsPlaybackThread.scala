@@ -149,7 +149,8 @@ class GsPlaybackThread(context: ActorContext[GsCommand]) extends AbstractBehavio
         JniMain.initPlaybackLoop(
           GsPlaybackThread.newThreadId,
           GsPlaybackThread.getFilePath,
-          GsPlaybackThread.getCurrFrameId
+          GsPlaybackThread.getCurrFrameId,
+          GsVst3HostThread.getVst3HostPtr
         ) // blocking
         Behaviors.stopped
 
@@ -158,7 +159,8 @@ class GsPlaybackThread(context: ActorContext[GsCommand]) extends AbstractBehavio
         JniMain.initPlaybackLoop(
           GsPlaybackThread.newThreadId,
           path,
-          GsPlaybackThread.getCurrFrameId
+          GsPlaybackThread.getCurrFrameId,
+          GsVst3HostThread.getVst3HostPtr
         ) // blocking
         Behaviors.stopped
     }
