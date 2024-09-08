@@ -45,6 +45,10 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   (void) statusFlags;
   AUDIO_DATA *audioData = (AUDIO_DATA *) userData;
 
+  Steinberg::Vst::AudioHost::App* vst3Host;
+  vst3Host = reinterpret_cast<Steinberg::Vst::AudioHost::App*>(audioData->vst3HostPtr);
+  vst3Host->plugProvider->getClassInfo();
+
   if( audioData->buffer == NULL )
   {
 //      for( i=0; i < framesPerBuffer; i++ )
