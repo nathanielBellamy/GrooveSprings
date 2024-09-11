@@ -14,7 +14,7 @@ class Audio
         jlong threadId;
         char const* fileName;
         jlong initialFrameId;
-        Steinberg::Vst::AudioHost::App* vst3Host;
+        jlong vst3HostPtr;
 
       public:
         Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameId, jlong vst3HostPtr);

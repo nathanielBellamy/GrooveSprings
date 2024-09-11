@@ -80,7 +80,7 @@ JNIEXPORT jlong JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocVst
 JNIEXPORT jlong JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_deleteVst3HostNative
   (JNIEnv *, jobject, jlong appPtr)
 {
-    Steinberg::Vst::AudioHost::App* app = reinterpret_cast<Steinberg::Vst::AudioHost::App*>((long) appPtr);
+    Steinberg::Vst::AudioHost::App* app = reinterpret_cast<Steinberg::Vst::AudioHost::App*>(appPtr);
     app->terminate();
     std::cout << "\n Vst3HostApp Termianted";
     return 0l;

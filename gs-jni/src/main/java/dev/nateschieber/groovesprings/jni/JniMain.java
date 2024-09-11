@@ -20,7 +20,7 @@ public class JniMain {
 
   public static void initPlaybackLoop(Long threadId, String filePath, Long initialFrameId, Long vst3HostAppPtr) {
     long initFrameId = initialFrameId == null ? 0l : initialFrameId.longValue();
-    long vst3Ptr = vst3HostAppPtr == null ? 0l : initialFrameId.longValue();
+    long vst3Ptr = vst3HostAppPtr == null ? 0l : vst3HostAppPtr.longValue();
     new JniMain().initPlaybackLoopNative(threadId, filePath, initFrameId, vst3Ptr);
   }
 

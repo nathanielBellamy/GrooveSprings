@@ -19,9 +19,8 @@ Audio::Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameI
   , threadId(threadId)
   , fileName(env->GetStringUTFChars(jFileName, 0))
   , initialFrameId(initialFrameId)
-{
-  vst3Host = reinterpret_cast<Steinberg::Vst::AudioHost::App*>(vst3HostPtr);
-}
+  , vst3HostPtr(vst3HostPtr)
+  {}
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
   free(audioData->buffer);
@@ -47,8 +46,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
 
   Steinberg::Vst::AudioHost::App* vst3Host;
   vst3Host = reinterpret_cast<Steinberg::Vst::AudioHost::App*>(audioData->vst3HostPtr);
-  Steinberg::Vst::AudioClientPtr vst3Processor = vst3Host->vst3Processor;
-
+  vst3Host->vst3Processor->getIOSetup();
 
   if( audioData->buffer == NULL )
   {
@@ -180,7 +178,7 @@ int Audio::run()
   }
 
   sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
-  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1, (long*) vst3Host);
+  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1, vst3HostPtr);
 
   // init jniData
   JNI_DATA jniData(Audio::jniEnv);
