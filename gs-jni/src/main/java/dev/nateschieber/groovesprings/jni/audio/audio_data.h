@@ -16,9 +16,9 @@ struct AUDIO_DATA {
     float                           volume;
     float                           fadeIn;
     float                           fadeOut;
-    long*                           vst3HostPtr;
+    long                            vst3HostPtr;
 
-    AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, int playState, long* vst3HostPtr) :
+    AUDIO_DATA(float* buffer, SNDFILE* file, SF_INFO sfinfo, sf_count_t index, long readcount, int playState, long vst3HostPtr) :
           buffer(buffer)
         , file(file)
         , sfinfo(sfinfo)
