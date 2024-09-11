@@ -42,6 +42,7 @@
 #include "public.sdk/source/vst/hosting/module.h"
 #include "public.sdk/source/vst/hosting/plugprovider.h"
 #include "public.sdk/source/vst/utility/optional.h"
+#include "../../../../../constants.h"
 
 //------------------------------------------------------------------------
 namespace Steinberg {
@@ -62,10 +63,14 @@ private:
 	enum OpenFlags
 	{
 	};
+	void allocateBuffers ();
+
 	void startAudioClient (const std::string& path, VST3::Optional<VST3::UID> effectID,
 	                       uint32 flags);
 
 	VST3::Hosting::Module::Ptr module {nullptr};
+
+	Steinberg::Vst::IAudioClient::Buffers chowTapeModelBuffers;
 };
 
 //------------------------------------------------------------------------
