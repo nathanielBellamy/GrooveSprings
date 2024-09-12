@@ -58,6 +58,7 @@ public:
 	void terminate () override;
 	AudioClientPtr vst3Processor;
 	IPtr<PlugProvider> plugProvider {nullptr};
+	Steinberg::Vst::IAudioClient::Buffers chowTapeModelBuffers;
 
 private:
 	enum OpenFlags
@@ -70,7 +71,6 @@ private:
 
 	VST3::Hosting::Module::Ptr module {nullptr};
 
-	Steinberg::Vst::IAudioClient::Buffers chowTapeModelBuffers;
 };
 
 //------------------------------------------------------------------------
