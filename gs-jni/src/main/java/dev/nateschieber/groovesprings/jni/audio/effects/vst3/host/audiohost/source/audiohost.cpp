@@ -169,8 +169,8 @@ void App::init (const std::vector<std::string>& cmdArgs)
 
 void App::allocateBuffers()
 {
-    float** chowTapeModelInputs = (float**) new float[2][AUDIO_BUFFER_FRAMES / 2];
-    float** chowTapeModelOutputs = (float**) new float[2][AUDIO_BUFFER_FRAMES / 2];
+    float** chowTapeModelInputs = (float**) new float[2][AUDIO_BUFFER_FRAMES];
+    float** chowTapeModelOutputs = (float**) new float[2][AUDIO_BUFFER_FRAMES];
 
     chowTapeModelBuffers = { // Steinberg::Vst::IAudioClient::Buffers
         chowTapeModelInputs,

@@ -37,16 +37,39 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
                     PaStreamCallbackFlags statusFlags,
                     void *userData )
 {
-  SAMPLE *out = (SAMPLE*)outputBuffer;
+  SAMPLE *out = (SAMPLE*) outputBuffer;
   unsigned int i;
+  unsigned int c;
   (void) inputBuffer;
   (void) timeInfo; /* Prevent unused variable warnings. */
   (void) statusFlags;
-  AUDIO_DATA *audioData = (AUDIO_DATA *) userData;
+  AUDIO_DATA *audioData = (AUDIO_DATA*) userData;
 
+  // >> VST PROCESSING
   Steinberg::Vst::AudioHost::App* vst3Host;
   vst3Host = reinterpret_cast<Steinberg::Vst::AudioHost::App*>(audioData->vst3HostPtr);
-  vst3Host->vst3Processor->getIOSetup();
+
+  // populate input buffers
+  for (c = 0; c < audioData->sfinfo.channels; c++) {
+      for (i = 0; i < framesPerBuffer; i++) {
+        vst3Host->chowTapeModelBuffers.inputs[c][i] = 0.0; //(i + 0.5) * (i + 0.5) * 0.0001;// audioData->buffer[audioData->index + i + (framesPerBuffer * c)] * audioData->volume;
+      }
+  }
+
+  // process
+//  vst3Host->vst3Processor->process(vst3Host->chowTapeModelBuffers, (int64_t) framesPerBuffer);
+
+  // write output buffers to output
+//  for (i = 0; i < framesPerBuffer ; i++) {
+//      for (c = 0; c < audioData->sfinfo.channels; c++) {
+//          *out++ = vst3Host->chowTapeModelBuffers.inputs[c][i] * audioData->volume;
+//      }
+//  }
+
+  // TODO: early return here for testing
+  audioData->index += framesPerBuffer * audioData->sfinfo.channels;
+  return paContinue;
+  // << VST PROCESSING
 
   if( audioData->buffer == NULL )
   {
