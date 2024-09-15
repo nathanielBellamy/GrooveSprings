@@ -4,7 +4,7 @@
 ### To do so, edit the Run Configuration for the `gs_desktop_application` by adding the following VM option
 ### -Djava.library.path="/absolute/path/to/repo/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/build"
 
-cmake_minimum_required(VERSION 3.30.2)
+cmake_minimum_required(VERSION 3.29.6)
 project(native VERSION 0.0.0)
 
 set (CMAKE_CXX_STANDARD 17)
@@ -17,10 +17,10 @@ include(SMTG_DetectPlatform) # to detect platform
 set (GS_JNI_WD "/Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/")
 set (JAVA_JNI_MAIN "JniMain.java")
 set (JAVA_SFINFO_MAIN "SfInfo.java")
-set (JAVA_VST3AUDIOHOST_APP_PTR "Vst3AudioHostAppPtr.java")
+
 # generate jni header
 execute_process(
-    COMMAND javac -h . ${JAVA_JNI_MAIN} ${JAVA_SFINFO_MAIN} ${JAVA_VST3AUDIOHOST_APP_PTR}# produces jni_main_header
+    COMMAND javac -h . ${JAVA_JNI_MAIN} ${JAVA_SFINFO_MAIN} # produces jni_main_header
     WORKING_DIRECTORY ${GS_JNI_WD}
 )
 

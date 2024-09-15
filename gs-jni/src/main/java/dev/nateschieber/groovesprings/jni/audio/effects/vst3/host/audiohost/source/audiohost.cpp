@@ -146,6 +146,7 @@ void App::startAudioClient (const std::string& path, VST3::Optional<VST3::UID> e
     vst3Processor->setParameter(22, 0.0, 0); // "wow_depth"
     vst3Processor->setParameter(23, 0.25, 0); // "wow_rate"
     vst3Processor->setParameter(24, 3, 0); // "preset"
+    std::cout << "\n Finished setting parameters - which may or may not be id-ed correctly :shrug:" << std::endl;
 }
 
 //------------------------------------------------------------------------
@@ -169,11 +170,27 @@ void App::init (const std::vector<std::string>& cmdArgs)
 
 void App::allocateBuffers()
 {
-    float** chowTapeModelInputs = (float**) new float[2][AUDIO_BUFFER_FRAMES];
-    float** chowTapeModelOutputs = (float**) new float[2][AUDIO_BUFFER_FRAMES];
+	int channelCount = 2; // TODO: access info from libsndfile
+	// std::cout << "\n HERE \n";
+	auto chowTapeModelInputs = static_cast<float**>(
+		malloc(2 * AUDIO_BUFFER_FRAMES * sizeof(float*))
+	);
+    auto chowTapeModelOutputs = static_cast<float**>(
+		malloc(2 * AUDIO_BUFFER_FRAMES * sizeof(float*))
+	);
+
+	if (chowTapeModelInputs == NULL || chowTapeModelOutputs == NULL) {
+		std::cout << "Unable to allocate memory for chowTapeModelInputs or chowTapeModelOutputs." << std::endl;
+		throw std::runtime_error ("Unable to allocate memory for chowTapeModelInputs.");
+	}
+
+	for (int c = 0; c < channelCount; c++) {
+		chowTapeModelInputs[c] = new float[AUDIO_BUFFER_FRAMES];
+		chowTapeModelOutputs[c] = new float[AUDIO_BUFFER_FRAMES];
+	}
 
     chowTapeModelBuffers = { // Steinberg::Vst::IAudioClient::Buffers
-        chowTapeModelInputs,
+         chowTapeModelInputs,
         2,
         chowTapeModelOutputs,
         2,

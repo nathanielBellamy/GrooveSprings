@@ -100,7 +100,9 @@ JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_initVst3H
         "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
     };
     try {
+        std::cout << "app init before" << std::endl;
         app->init(cmdArgs);
+        std::cout << "app init after" << std::endl;
     } catch (...) {
         std::cout << "\n Could not Initialize Vst3HostApp.";
     }

@@ -52,19 +52,19 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
   // populate input buffers
   for (c = 0; c < audioData->sfinfo.channels; c++) {
       for (i = 0; i < framesPerBuffer; i++) {
-        vst3Host->chowTapeModelBuffers.inputs[c][i] = 0.0; //(i + 0.5) * (i + 0.5) * 0.0001;// audioData->buffer[audioData->index + i + (framesPerBuffer * c)] * audioData->volume;
+        vst3Host->chowTapeModelBuffers.inputs[c][i] = audioData->buffer[audioData->index + i + (framesPerBuffer * c)] * audioData->volume;
       }
   }
 
   // process
-//  vst3Host->vst3Processor->process(vst3Host->chowTapeModelBuffers, (int64_t) framesPerBuffer);
+  vst3Host->vst3Processor->process(vst3Host->chowTapeModelBuffers, (int64_t) framesPerBuffer);
 
   // write output buffers to output
-//  for (i = 0; i < framesPerBuffer ; i++) {
-//      for (c = 0; c < audioData->sfinfo.channels; c++) {
-//          *out++ = vst3Host->chowTapeModelBuffers.inputs[c][i] * audioData->volume;
-//      }
-//  }
+  for (i = 0; i < framesPerBuffer ; i++) {
+      for (c = 0; c < audioData->sfinfo.channels; c++) {
+          *out++ = vst3Host->chowTapeModelBuffers.outputs[c][i] * audioData->volume;
+      }
+  }
 
   // TODO: early return here for testing
   audioData->index += framesPerBuffer * audioData->sfinfo.channels;
