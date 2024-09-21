@@ -91,6 +91,8 @@ public:
 	// IParameterClient
 	void setParameter (ParamID id, ParamValue value, int32 sampleOffset) override;
 
+	MidiCCMapping getMidiCCMapping ();
+
 	bool initialize (const Name& name, IComponent* component, IMidiMapping* midiMapping);
 
 //--------------------------------------------------------------------

@@ -455,6 +455,10 @@ void AudioClient::setParameter (ParamID id, ParamValue value, int32 sampleOffset
 	paramTransferrer.addChange (id, value, sampleOffset);
 }
 
+MidiCCMapping AudioClient::getMidiCCMapping ()
+{
+	return midiCCMapping;
+}
 //------------------------------------------------------------------------
 } // Vst
 } // Steinberg

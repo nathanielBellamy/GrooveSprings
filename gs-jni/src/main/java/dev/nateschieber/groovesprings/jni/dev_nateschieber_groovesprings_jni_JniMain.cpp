@@ -9,6 +9,7 @@
 #include "./audio/audio.h"
 #include "./audio/sf_info_reader.h"
 #include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
+#include "./audio/effects/vst3/host/hostclasses.hpp"
 
 // NOTE:
 //   - on macOs, .dylib compilation requires main method
@@ -68,6 +69,14 @@ JNIEXPORT jlong JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocVst
     // alloc vst3AudioHostApp
     Steinberg::Vst::AudioHost::App* vst3App;
     vst3App = new Steinberg::Vst::AudioHost::App;
+
+    Steinberg::Vst::HostApplication vst3HostApp;
+
+    char *uuid1 = (char*) "0123456789ABCDEF";
+    char *uuid2 = (char*) "0123456789GHIJKL";
+    auto obj = (void*) malloc( 1000 * sizeof( Steinberg::Vst::HostMessage) );
+    vst3HostApp.createInstance(uuid1, uuid2, &obj);
+
 
     return (jlong) vst3App;
 }

@@ -26,7 +26,16 @@ execute_process(
 
 set (AUDIO_SRC "audio/audio.cpp")
 set (AUDIO_OBJ "build/audio/audio.cpp")
-set (VST3HOST_SRC "audio/effects/vst3/host/audiohost/source/audiohost.cpp")
+#set (VST3HOST_SRC "audio/effects/vst3/host/audiohost/source/audiohost.cpp")
+set (VST3HOST_APP_SRC
+        "audio/effects/vst3/host/hostclasses.hpp"
+        "audio/effects/vst3/host/hostclasses.cpp")
+set (VST3HOST_EDITOR_SRC
+        "audio/effects/vst3/host/editorhost/source/editorhost.hpp"
+        "audio/effects/vst3/host/editorhost/source/editorhost.cpp")
+set (VST3HOST_AUDIO_SRC
+        "audio/effects/vst3/host/audiohost/source/audiohost.hpp"
+        "audio/effects/vst3/host/audiohost/source/audiohost.cpp")
 set (JNI_MAIN_HEADER "dev_nateschieber_groovesprings_jni_JniMain.h")
 set (JNI_SRC "dev_nateschieber_groovesprings_jni_JniMain.cpp")
 set (JNI_OBJ "dev_nateschieber_groovesprings_jni_JniMain.o")
@@ -89,8 +98,8 @@ target_compile_options(jni_main PRIVATE ${INCLUDE_FLAGS})
 
 # compile vst3 audiohost
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VST3SDK_HOME}/cmake/modules)
-add_subdirectory(audio/effects/vst3/host/audiohost)
-target_link_libraries(audio_main PUBLIC audiohost)
+add_subdirectory(audio/effects/vst3/host)
+target_link_libraries(audio_main PUBLIC vst3host)
 
 # compile library
 add_library(native SHARED)
