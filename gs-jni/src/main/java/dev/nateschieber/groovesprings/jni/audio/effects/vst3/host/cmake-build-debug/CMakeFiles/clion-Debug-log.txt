@@ -1,0 +1,34 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/audio/effects/vst3/host -B /Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/audio/effects/vst3/host/cmake-build-debug
+CMake Warning (dev) in CMakeLists.txt:
+  No project() command is present.  The top-level CMakeLists.txt file must
+  contain a literal, direct call to the project() command.  Add a line of
+  code such as
+
+    project(ProjectName)
+
+  near the top of the file, but after cmake_minimum_required().
+
+  CMake is pretending there is a "project(Project)" command on the first
+  line.
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) in CMakeLists.txt:
+  cmake_minimum_required() should be called prior to this top-level project()
+  call.  Please see the cmake-commands(7) manual for usage documentation of
+  both commands.
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Error at audiohost/CMakeLists.txt:5 (include):
+  include could not find requested file:
+
+    SMTG_DetectPlatform
+
+
+CMake Error at audiohost/CMakeLists.txt:6 (include):
+  include could not find requested file:
+
+    SMTG_FindJack
+
+
+-- [SMTG] LIBJACK_FOUND is not set.
+-- Configuring incomplete, errors occurred!
