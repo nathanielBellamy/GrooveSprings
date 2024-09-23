@@ -10,12 +10,13 @@
 #include "./audio/sf_info_reader.h"
 #include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
 #include "./audio/effects/vst3/host/hostclasses.hpp"
+#include "./audio/effects/vst3/host/editorhost/source/editorhost.h"
 
 // NOTE:
 //   - on macOs, .dylib compilation requires main method
-int main() {
-    return 0;
-}
+//int main() {
+//    return 0;
+//}
 
 JNIEXPORT void JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_helloWorld
   (JNIEnv* env, jobject thisObject) {
@@ -76,6 +77,10 @@ JNIEXPORT jlong JNICALL Java_dev_nateschieber_groovesprings_jni_JniMain_allocVst
     char *uuid2 = (char*) "0123456789GHIJKL";
     auto obj = (void*) malloc( 1000 * sizeof( Steinberg::Vst::HostMessage) );
     vst3HostApp.createInstance(uuid1, uuid2, &obj);
+
+    Steinberg::Vst::EditorHost::App editorApp;
+    const auto& cmdArgs = std::vector<std::string> {""};
+    editorApp.init (cmdArgs);
 
 
     return (jlong) vst3App;

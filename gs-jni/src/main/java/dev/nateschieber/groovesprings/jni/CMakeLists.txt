@@ -11,7 +11,7 @@ set (CMAKE_CXX_STANDARD 17)
 set (JAVA_HOME "/opt/homebrew/opt/openjdk/bin")
 set (VST3SDK_HOME "/Users/ns/code/vst3sdk")
 # utilize vst3sdk cmake modules
-set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VST3SDK_HOME}/cmake/modules)
+list (APPEND CMAKE_MODULE_PATH "${VST3SDK_HOME}/cmake/modules")
 include(SMTG_DetectPlatform) # to detect platform
 
 set (GS_JNI_WD "/Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/")
@@ -92,21 +92,25 @@ set (LINK_FLAGS
 
 add_library(audio_main OBJECT ${AUDIO_SRC})
 target_compile_options(audio_main PRIVATE ${INCLUDE_FLAGS})
-add_library(jni_main OBJECT ${JNI_SRC})
+add_library(jni_main OBJECT
+        # explicit reference helps CLion
+        "dev_nateschieber_groovesprings_jni_JniMain.h"
+        "dev_nateschieber_groovesprings_jni_JniMain.cpp"
+#        ${JNI_SRC}
+)
 target_compile_options(jni_main PRIVATE ${INCLUDE_FLAGS})
 
 
 # compile vst3 audiohost
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VST3SDK_HOME}/cmake/modules)
 add_subdirectory(audio/effects/vst3/host)
-target_link_libraries(audio_main PUBLIC vst3host)
+target_link_libraries(audio_main PUBLIC audiohost editorhost)
 
 # compile library
 add_library(native SHARED)
 set(LINK_LIBRARIES
     audio_main
     jni_main
-    audiohost
     -L${VST3SDK_HOME}/build/lib/Release
     -lsdk_common
     ${LINK_FLAGS}
