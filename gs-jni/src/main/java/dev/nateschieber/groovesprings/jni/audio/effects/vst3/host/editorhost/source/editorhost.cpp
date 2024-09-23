@@ -35,7 +35,6 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "public.sdk/samples/vst-hosting/editorhost/source/editorhost.h"
 #include "public.sdk/samples/vst-hosting/editorhost/source/platform/appinit.h"
 #include "base/source/fcommandline.h"
 #include "base/source/fdebug.h"
@@ -47,6 +46,7 @@
 #include "pluginterfaces/vst/vsttypes.h"
 #include <cstdio>
 #include <iostream>
+#include "editorhost.h"
 
 //------------------------------------------------------------------------
 namespace Steinberg {

@@ -1,16 +1,14 @@
 
-set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${VST3SDK_HOME}/cmake/modules)
-set (SDK_ROOT "/Users/ns/code/vst3sdk")
-
+list (APPEND CMAKE_MODULE_PATH "${VST3SDK_HOME}/cmake/modules")
 include(SMTG_DetectPlatform)
 include(SMTG_FindJack)
 
 if(${LIBJACK_FOUND})
     set(audiohost_sources
-        "${SDK_ROOT}/public.sdk/samples/vst-hosting/editorhost/source/platform/iapplication.h"
-        "${SDK_ROOT}/public.sdk/source/vst/hosting/module.h"
-        "${SDK_ROOT}/public.sdk/source/vst/hosting/plugprovider.h"
-        "${SDK_ROOT}/public.sdk/source/vst/hosting/plugprovider.cpp"
+        "${VST3SDK_HOME}/public.sdk/samples/vst-hosting/editorhost/source/platform/iapplication.h"
+        "${VST3SDK_HOME}/public.sdk/source/vst/hosting/module.h"
+        "${VST3SDK_HOME}/public.sdk/source/vst/hosting/plugprovider.h"
+        "${VST3SDK_HOME}/public.sdk/source/vst/hosting/plugprovider.cpp"
         source/audiohost.cpp
         source/audiohost.h
         source/media/audioclient.cpp
@@ -27,10 +25,10 @@ if(${LIBJACK_FOUND})
     # if(SMTG_MAC)
         set(audiohost_sources
             ${audiohost_sources}
-            "${SDK_ROOT}/public.sdk/source/vst/hosting/module_mac.mm"
+            "${VST3SDK_HOME}/public.sdk/source/vst/hosting/module_mac.mm"
         )
          set_source_files_properties(
-            "${SDK_ROOT}/public.sdk/source/vst/hosting/module_mac.mm" PROPERTIES
+            "${VST3SDK_HOME}/public.sdk/source/vst/hosting/module_mac.mm" PROPERTIES
             COMPILE_FLAGS "-fobjc-arc"
         )
        set(audiohost_PLATFORM_LIBS "-framework CoreFoundation")
@@ -42,14 +40,14 @@ if(${LIBJACK_FOUND})
     # elseif(SMTG_LINUX)
     #    set(audiohost_sources
     #        ${audiohost_sources}
-    #        "${SDK_ROOT}/public.sdk/source/vst/hosting/module_linux.cpp"
+    #        "${VST3SDK_HOME}/public.sdk/source/vst/hosting/module_linux.cpp"
     #    )
     #    set(audiohost_PLATFORM_LIBS)
     #    set(APP_PROPERTIES)
     # elseif(SMTG_WIN)
     #     set(audiohost_sources
     #        ${audiohost_sources}
-    #        "${SDK_ROOT}/public.sdk/source/vst/hosting/module_win32.cpp"
+    #        "${VST3SDK_HOME}/public.sdk/source/vst/hosting/module_win32.cpp"
     #    )
     #    set(audiohost_PLATFORM_LIBS)
     #    if(MSVC)
@@ -62,12 +60,12 @@ if(${LIBJACK_FOUND})
 
     set(target audiohost)
 
-    add_library(${target} ${audiohost_sources})
-    # set_target_properties(${target} PROPERTIES ${SDK_IDE_HOSTING_EXAMPLES_FOLDER} "${SDK_ROOT}/build/public.sdk/CMakeFiles/sdk_hosting.dir")
+    add_library(${target} SHARED ${audiohost_sources})
+#     set_target_properties(${target} PROPERTIES ${SDK_IDE_HOSTING_EXAMPLES_FOLDER} "${VST3SDK_HOME}/build/public.sdk/CMakeFiles/sdk_hosting.dir")
     target_include_directories(${target}
         PRIVATE
-            ${SDK_ROOT}
-            -I${SDK_ROOT}/public.sdk/source/vst/utility)
+            ${VST3SDK_HOME}
+            -I${VST3SDK_HOME}/public.sdk/source/vst/utility)
     target_compile_features(${target}
         PUBLIC
             cxx_std_17
@@ -75,13 +73,13 @@ if(${LIBJACK_FOUND})
 
     target_link_libraries(${target}
         PRIVATE
-            -L${SDK_ROOT}/build/lib/Release
+            -L${VST3SDK_HOME}/build/lib/Release
             -lsdk
-            -L${SDK_ROOT}/build/lib/Release
+            -L${VST3SDK_HOME}/build/lib/Release
             -lsdk_common
-            -L${SDK_ROOT}/build/lib/Release
+            -L${VST3SDK_HOME}/build/lib/Release
             -lsdk_hosting
-            -L${SDK_ROOT}/build/lib/Release
+            -L${VST3SDK_HOME}/build/lib/Release
             -lpluginterfaces
             "-framework CoreFoundation" # macOS
             "-framework Foundation"     #  and Objective C
