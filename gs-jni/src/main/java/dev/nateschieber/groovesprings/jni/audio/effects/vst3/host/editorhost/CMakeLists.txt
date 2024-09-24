@@ -91,6 +91,7 @@
     target_link_libraries(${target}
         PRIVATE
 #            sdk_hosting
+            sdk_common
             ${editorhost_PLATFORM_LIBS}
     )
     target_link_libraries(${target}
