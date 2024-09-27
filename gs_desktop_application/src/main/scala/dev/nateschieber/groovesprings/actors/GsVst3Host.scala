@@ -2,16 +2,16 @@ package dev.nateschieber.groovesprings.actors
 
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
-import dev.nateschieber.groovesprings.enums.GsPlayState
 import dev.nateschieber.groovesprings.traits.{GsCommand, InitVst3Host}
 
-import scala.annotation.static
 
 object GsVst3Host {
 
-  def apply(): Behavior[GsCommand] = Behaviors.setup {
+  def apply(vst3HostAppPtr: Long): Behavior[GsCommand] = Behaviors.setup {
     context =>
       given system: ActorSystem[Nothing] = context.system
+
+      GsVst3HostThread.setVst3HostPtr(vst3HostAppPtr)
 
       val gsVst3Host = new GsVst3Host(context)
       val gsVst3HostThread = context.spawn(GsVst3HostThread(), "gsVst3HostThread")
