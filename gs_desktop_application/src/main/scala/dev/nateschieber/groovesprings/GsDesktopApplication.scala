@@ -6,6 +6,7 @@ import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.actors.GsSupervisor
 import dev.nateschieber.groovesprings.enums.GsHttpPort
+import dev.nateschieber.groovesprings.jni.JniMain
 
 import java.awt.Desktop
 import java.net.URI
@@ -14,7 +15,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object GsDesktopApplication {
 
   @main def main(): Unit = {
-    given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(), "gs_desktop_application")
+    val vst3HostAppPtr: Long = JniMain.allocVst3Host()
+    JniMain.initVst3Host(vst3HostAppPtr)
+
+    given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(vst3HostAppPtr), "gs_desktop_application")
 
     lazy val server = Http().newServerAt("localhost", GsHttpPort.GsDesktopApplication.port).bind(routes())
 

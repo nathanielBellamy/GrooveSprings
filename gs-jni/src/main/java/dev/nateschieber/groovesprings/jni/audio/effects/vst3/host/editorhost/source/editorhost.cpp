@@ -224,6 +224,7 @@ void App::openEditor (const std::string& path, VST3::Optional<VST3::UID> effectI
 //------------------------------------------------------------------------
 void App::createViewAndShow (IEditController* controller)
 {
+	std::cout << "HERE createViewAndShow" << std::endl;
 	auto view = owned (controller->createView (ViewType::kEditor));
 	if (!view)
 	{

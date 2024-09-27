@@ -17,6 +17,10 @@ object GsVst3HostThread {
 
   @static private var vst3HostAppPtr: Long = synchronized { 0l }
 
+  @static def setVst3HostPtr(ptr: Long): Unit = {
+    vst3HostAppPtr = ptr
+  }
+
   @static def getVst3HostPtr: Long = {
     vst3HostAppPtr
   }
@@ -35,8 +39,8 @@ class GsVst3HostThread (context: ActorContext[GsCommand]) extends AbstractBehavi
     msg match {
 
       case InitVst3Host(replyTo) =>
-        vst3HostAppPtr = JniMain.allocVst3Host()
-        JniMain.initVst3Host(vst3HostAppPtr)
+//        vst3HostAppPtr = JniMain.allocVst3Host()
+//        JniMain.initVst3Host(vst3HostAppPtr)
         Behaviors.same
 
       case default => 
