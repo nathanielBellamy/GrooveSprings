@@ -13,15 +13,10 @@ import java.net.URI
 import scala.annotation.static
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object GsDesktopApplication {
 
-  def apply(): GsDesktopApplication = {
-    new GsDesktopApplication
-  }
-
-  def main(args: Array[String]): Unit = {
-//    val vst3HostAppPtr: Long = JniMain.allocVst3Host()
-//    JniMain.initVst3Host(vst3HostAppPtr)
+  @main def GsDesktopApplication(): Unit = {
+    val vst3HostAppPtr: Long = JniMain.allocVst3Host()
+    JniMain.initVst3Host(vst3HostAppPtr)
 
     given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(1l), "gs_desktop_application")
 
@@ -35,7 +30,7 @@ object GsDesktopApplication {
       Desktop.getDesktop.browse(new URI("http://localhost:" + GsHttpPort.GsRestController.port))
   }
 
-  private def routes(): Route = {
+  def routes(): Route = {
     concat(
       path("api" / "v1" / "hello") {
         get {
@@ -44,8 +39,3 @@ object GsDesktopApplication {
       }
     )
   }
-}
-
-class GsDesktopApplication {
-
-}
