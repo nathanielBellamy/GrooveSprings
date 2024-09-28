@@ -10,15 +10,20 @@ import dev.nateschieber.groovesprings.jni.JniMain
 
 import java.awt.Desktop
 import java.net.URI
+import scala.annotation.static
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object GsDesktopApplication {
 
-  @main def main(): Unit = {
-    val vst3HostAppPtr: Long = JniMain.allocVst3Host()
-    JniMain.initVst3Host(vst3HostAppPtr)
+  def apply(): GsDesktopApplication = {
+    new GsDesktopApplication
+  }
 
-    given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(vst3HostAppPtr), "gs_desktop_application")
+  def main(args: Array[String]): Unit = {
+//    val vst3HostAppPtr: Long = JniMain.allocVst3Host()
+//    JniMain.initVst3Host(vst3HostAppPtr)
+
+    given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(1l), "gs_desktop_application")
 
     lazy val server = Http().newServerAt("localhost", GsHttpPort.GsDesktopApplication.port).bind(routes())
 
@@ -39,4 +44,8 @@ object GsDesktopApplication {
       }
     )
   }
+}
+
+class GsDesktopApplication {
+
 }
