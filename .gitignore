@@ -51,6 +51,6 @@ gs_music_library/**
 
 __GROOVE_SPRINGS__STATE_CACHE__.json
 
-gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/build
-gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/cmake-build-debug
-gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/audio/effects/vst3/host/cmake-build-debug
+**/build/**
+**/build-dist/**
+**/cmake-build-debug/**
