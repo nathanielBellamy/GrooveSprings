@@ -2,33 +2,49 @@
 // Created by ns on 9/30/24.
 //
 
-#include "jni.h"
 #include <iostream>
+#include <string>
 #include "main.h"
 
-extern "C" {
-    int main() {
-        std::cout << "Welcome to GrooveSprings." << std::endl;
-        JavaVM *jvm;       /* denotes a Java VM */
-        JNIEnv *env;       /* pointer to native method interface */
-        JavaVMInitArgs vm_args; /* JDK/JRE 6 VM initialization arguments */
-        JavaVMOption* options = new JavaVMOption[2];
-        options[0].optionString = "-Djava.class.path=/Users/ns/code/GrooveSprings/gs_desktop_application/src/main/java/dev/nateschieber/groovesprings";
-        options[1].optionString = "-Djava.library.path=/Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/jni/build-dist";
-        vm_args.version = JNI_VERSION_1_6;
-        vm_args.nOptions = 2;
-        vm_args.options = options;
-        vm_args.ignoreUnrecognized = false;
-        /* load and initialize a Java VM, return a JNI interface
-         * pointer in env */
-        // TODO: debug linking JNI_CreateJavaVM
-        jint res = JNI_CreateJavaVM(&jvm, (void**)&env, &vm_args);
-        delete options;
-        /* invoke the Main.test method using the JNI */
-        jclass cls = env->FindClass("GsDesktopApplication");
-        jmethodID mid = env->GetStaticMethodID(cls, "main", "()V");
-        env->CallStaticVoidMethod(cls, mid);
-        /* We are done. */
-        jvm->DestroyJavaVM();
-    }
+#include "caf/actor_ostream.hpp"
+#include "caf/actor_system.hpp"
+#include "caf/caf_main.hpp"
+#include "caf/event_based_actor.hpp"
+
+namespace GrooveSprings {
+
+using namespace caf;
+using namespace std::literals;
+
+// Hello, CAF!
+// https://www.actor-framework.org//static/doxygen/1.0.0/hello_world_8cpp-example.html
+
+behavior mirror(event_based_actor* self) {
+    return {
+        [self](const std::string& what) -> std::string {
+            self->println("{}", what);
+            return std::string{what.rbegin(), what.rend()};
+        }
+    };
 }
+
+void hello_world(event_based_actor* self, const actor& buddy) {
+  self->mail("Hello World!")
+    .request(buddy, 10s)
+    .then(
+        [self](const std::string& what) {
+            self->println("{}", what);
+        });
+}
+
+void caf_main(actor_system& sys) {
+  auto mirror_actor = sys.spawn(mirror);
+  sys.spawn(hello_world, mirror_actor);
+}
+
+extern "C" {
+
+    CAF_MAIN();
+}
+
+} // GrooveSprings
