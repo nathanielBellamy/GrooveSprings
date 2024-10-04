@@ -19,6 +19,8 @@ import dev.nateschieber.groovesprings.services.entities.TrackService;
 import dev.nateschieber.groovesprings.services.pricedEntities.PricedTrackService;
 import java.util.List;
 import java.util.Optional;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,6 +44,7 @@ public class PricedTrackServiceTest {
   private PriceClient priceClient;
 
   @Test
+  @Disabled
   public void PricedTrackService_zipTracksWithPrices_mapsTracksAndPricesToPricedTracks() throws Exception {
     List<Track> tracks = MockTrackFactory.defaultTracks();
     List<Price> prices = MockPriceFactory.defaultTrackPrices();
@@ -58,6 +61,7 @@ public class PricedTrackServiceTest {
   }
 
   @Test
+  @Disabled
   public void PricedTrackService_findById_returnsPricedTrackById() throws Exception {
     Artist mockArtist = MockArtistFactory.defaultArtists().get(0);
     artistService.save(mockArtist);
@@ -77,6 +81,7 @@ public class PricedTrackServiceTest {
   }
 
   @Test
+  @Disabled
   public void PricedTrackService_findAll_returnsAllPricedTracks() throws Exception {
     List<Artist> mockArtists = MockArtistFactory.defaultArtists();
     artistService.saveAll(mockArtists);

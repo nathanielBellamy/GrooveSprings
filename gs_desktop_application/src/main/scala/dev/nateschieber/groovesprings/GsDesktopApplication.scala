@@ -6,33 +6,34 @@ import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import dev.nateschieber.groovesprings.actors.GsSupervisor
 import dev.nateschieber.groovesprings.enums.GsHttpPort
+import dev.nateschieber.groovesprings.jni.JniMain
 
 import java.awt.Desktop
 import java.net.URI
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object GsDesktopApplication {
+@main def GsDesktopApplication(): Unit = {
+  val vst3HostAppPtr: Long = JniMain.allocVst3Host()
+  JniMain.initVst3Host(vst3HostAppPtr)
 
-  @main def main(): Unit = {
-    given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(), "gs_desktop_application")
+  given system: ActorSystem[Nothing] = ActorSystem(GsSupervisor(1l), "gs_desktop_application")
 
-    lazy val server = Http().newServerAt("localhost", GsHttpPort.GsDesktopApplication.port).bind(routes())
+  lazy val server = Http().newServerAt("localhost", GsHttpPort.GsDesktopApplication.port).bind(routes())
 
-    server.map(_ => {
-      //
-    })
+  server.map(_ => {
+    //
+  })
 
-    if (Desktop.isDesktopSupported && Desktop.getDesktop.isSupported(Desktop.Action.BROWSE))
-      Desktop.getDesktop.browse(new URI("http://localhost:" + GsHttpPort.GsRestController.port))
-  }
+  if (Desktop.isDesktopSupported && Desktop.getDesktop.isSupported(Desktop.Action.BROWSE))
+    Desktop.getDesktop.browse(new URI("http://localhost:" + GsHttpPort.GsRestController.port))
+}
 
-  private def routes(): Route = {
-    concat(
-      path("api" / "v1" / "hello") {
-        get {
-          complete("Welcome to Groove Springs.")
-        }
+def routes(): Route = {
+  concat(
+    path("api" / "v1" / "hello") {
+      get {
+        complete("Welcome to Groove Springs.")
       }
-    )
-  }
+    }
+  )
 }
