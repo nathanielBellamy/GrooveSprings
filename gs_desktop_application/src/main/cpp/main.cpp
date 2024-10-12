@@ -2,6 +2,15 @@
 // Created by ns on 9/30/24.
 //
 
+
+#include <chrono>
+#include <string>
+#include <thread>
+#include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
+#include "./audio/effects/vst3/host/hostclasses.hpp"
+#include "./audio/effects/vst3/host/editorhost/source/editorhost.h"
+
+
 #include <iostream>
 #include <string>
 #include "main.h"
@@ -47,6 +56,24 @@ extern "C" {
 //    CAF_MAIN();
 
     int main() {
+        // vst3host needs to be instantiated on the main thread
+
+        // alloc vst3AudioHostApp
+        Steinberg::Vst::AudioHost::App* vst3App;
+        vst3App = new Steinberg::Vst::AudioHost::App;
+
+        Steinberg::Vst::HostApplication vst3HostApp;
+
+        char *uuid1 = (char*) "0123456789ABCDEF";
+        char *uuid2 = (char*) "0123456789GHIJKL";
+        auto obj = (void*) malloc( 1000 * sizeof( Steinberg::Vst::HostMessage) );
+        vst3HostApp.createInstance(uuid1, uuid2, &obj);
+
+        Steinberg::Vst::EditorHost::App editorApp;
+        const auto& cmdArgs = std::vector<std::string> {""};
+        editorApp.init (cmdArgs);
+
+
         // Initialize the global type information before anything else.
         core::init_global_meta_objects();
         // Create the config.
