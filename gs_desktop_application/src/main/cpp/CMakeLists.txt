@@ -20,10 +20,9 @@ set (CAF_ROOT
 find_package (CAF
         REQUIRED)
 
-#add_subdirectory(
-#    /Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni
-#    /Users/ns/code/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/build-dist
-#)
+add_subdirectory(
+    /Users/ns/code/GrooveSprings/gs_desktop_application/src/main/cpp/audio
+)
 
 add_executable(groovesprings
         main.h
@@ -31,7 +30,7 @@ add_executable(groovesprings
 target_link_libraries(groovesprings
         PUBLIC
         CAF::core
-#        native
+        gsAudio
 )
 target_compile_options(groovesprings PRIVATE ${INCLUDE_FLAGS})
 set_target_properties(groovesprings PROPERTIES LINKER_LANGUAGE CXX)
