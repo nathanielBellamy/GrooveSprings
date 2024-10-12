@@ -50,3 +50,7 @@ build/
 gs_music_library/**
 
 __GROOVE_SPRINGS__STATE_CACHE__.json
+
+**/build/**
+**/build-dist/**
+**/cmake-build-debug/**

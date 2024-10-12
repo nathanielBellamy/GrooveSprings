@@ -9,7 +9,7 @@
 
 #### II. Homebrew it
 ```bash
-brew install git npm node make gcc portaudio libsndfile openjdk scala@3.3 docker docker-compose colima
+brew install git npm node make gcc cmake portaudio jack libsndfile openjdk scala@3.3 docker docker-compose colima
 ```
 
 #### III. Clone repo
@@ -37,9 +37,18 @@ npm run build-dist
 ```
 
 #### VIII. Build Native Library
+- using makefile (VST3 not supported)
 ```bash
 cd gs-jni/src/main/java/dev/nateschieber/groovesprings/jni
 make lib
+```
+- using cmake
+```bash
+cd gs-jni/src/main/java/dev/nateschieber/groovesprings/jni
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_CONFIG=Release ../
+cmake --build .
 ```
 
 #### IX. Create Run Configurations
@@ -55,9 +64,24 @@ make lib
 - edit the `GsDesktopApplication` run configuration
 - `Modify Options` -> `Add VM Options`
 - update and add the following VM option
+  - if built using makefile (no VST3)
 ```
 -Djava.library.path="/absolute/path/to/repo/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni"
 ```
+  - if built using cmake
+```
+-Djava.library.path="/absolute/path/to/repo/GrooveSprings/gs-jni/src/main/java/dev/nateschieber/groovesprings/jni/build"
+```
+
+#### XI. Setup VST3SDK
+
+- follow build instructions here: https://github.com/steinbergmedia/vst3sdk
+  - you may need to install xcode (😔) even when building "without xcode"
+  - after installing xcode from the AppStore, if cmake has trouble finding xcode, try
+```bash
+sudo xcode-select --reset
+```
+  - update the makefile with the location of your vst3sdk build
 
 #### XI. Establish Library + Add Music
 - create library director
