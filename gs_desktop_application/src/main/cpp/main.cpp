@@ -44,7 +44,20 @@ void caf_main(actor_system& sys) {
 
 extern "C" {
 
-    CAF_MAIN();
+//    CAF_MAIN();
+
+    int main() {
+        // Initialize the global type information before anything else.
+        core::init_global_meta_objects();
+        // Create the config.
+        actor_system_config cfg;
+        // Create the actor system.
+        actor_system sys{cfg};
+        // Run user-defined code.
+        caf_main(sys);
+
+        return 0;
+    }
 }
 
 } // GrooveSprings

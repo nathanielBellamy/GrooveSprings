@@ -12,6 +12,7 @@
 namespace GrooveSprings {
 
 extern "C" {
+    int main();
 }
 
 } // GrooveSprings
