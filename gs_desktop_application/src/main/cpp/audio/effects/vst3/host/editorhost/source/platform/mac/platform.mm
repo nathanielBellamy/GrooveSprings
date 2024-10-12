@@ -230,13 +230,13 @@ IPlatform& IPlatform::instance ()
 @end
 
 //------------------------------------------------------------------------
-int main (int argc, const char* argv[])
-{
-	auto delegate = [VSTSDK_AppDelegate new];
-	std::vector<std::string> cmdArgs;
-	for (int i = 1; i < argc; ++i)
-		cmdArgs.push_back (argv[i]);
-	[delegate setCmdArgs:std::move (cmdArgs)];
-	[NSApplication sharedApplication].delegate = delegate;
-	return NSApplicationMain (argc, argv);
-}
+//int main (int argc, const char* argv[])
+//{
+//	auto delegate = [VSTSDK_AppDelegate new];
+//	std::vector<std::string> cmdArgs;
+//	for (int i = 1; i < argc; ++i)
+//		cmdArgs.push_back (argv[i]);
+//	[delegate setCmdArgs:std::move (cmdArgs)];
+//	[NSApplication sharedApplication].delegate = delegate;
+//	return NSApplicationMain (argc, argv);
+//}
