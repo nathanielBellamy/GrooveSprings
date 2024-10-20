@@ -213,6 +213,7 @@ void App::openEditor (const std::string& path, VST3::Optional<VST3::UID> effectI
 
 	SMTG_DBPRT1 ("Open Editor for %s...\n", path.c_str ());
 	createViewAndShow (editController);
+                std::cout << "createViewAndShowed" << std::endl;
 
 	if (flags & kSecondWindow)
 	{
@@ -224,7 +225,6 @@ void App::openEditor (const std::string& path, VST3::Optional<VST3::UID> effectI
 //------------------------------------------------------------------------
 void App::createViewAndShow (IEditController* controller)
 {
-	std::cout << "HERE createViewAndShow" << std::endl;
 	auto view = owned (controller->createView (ViewType::kEditor));
 	if (!view)
 	{
@@ -241,13 +241,17 @@ void App::createViewAndShow (IEditController* controller)
 	auto viewRect = ViewRectToRect (plugViewSize);
 
 	windowController = std::make_shared<WindowController> (view);
+        std::cout << "Created WindowController" << std::endl;
 	window = IPlatform::instance ().createWindow (
-	    "Editor", viewRect.size, view->canResize () == kResultTrue, windowController);
+	    "GS Editor", viewRect.size, view->canResize () == kResultTrue, windowController);
+        std::cout << "Created Window" << std::endl;
 	if (!window)
 	{
+        std::cout << "lol, jk" << std::endl;
 		IPlatform::instance ().kill (-1, "Could not create window");
 	}
 
+        std::cout << "ok actually Created Window" << std::endl;
 	window->show ();
 }
 
@@ -322,21 +326,28 @@ void WindowController::onShow (IWindow& w)
 {
 	SMTG_DBPRT1 ("onShow called (%p)\n", (void*)&w);
 
+    std::cout << "onShow called" << std::endl;
+
 	window = &w;
-	if (!plugView)
+	if (!plugView) {
+    	std::cout << "no plug view" << std::endl;
 		return;
+    }
 
 	auto platformWindow = window->getNativePlatformWindow ();
 	if (plugView->isPlatformTypeSupported (platformWindow.type) != kResultTrue)
 	{
+    	std::cout << "plugview dns platform type" << std::endl;
 		IPlatform::instance ().kill (-1, std::string ("PlugView does not support platform type:") +
 		                                     platformWindow.type);
 	}
 
 	plugView->setFrame (this);
 
+    	std::cout << "set frame called" << std::endl;
 	if (plugView->attached (platformWindow.ptr, platformWindow.type) != kResultTrue)
 	{
+    	std::cout << "attaching plugin failed" << std::endl;
 		IPlatform::instance ().kill (-1, "Attaching PlugView failed");
 	}
 }

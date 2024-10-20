@@ -75,9 +75,13 @@ struct Window::Impl
 WindowPtr Window::make (const std::string& name, Size size, bool resizeable,
                         const WindowControllerPtr& controller)
 {
+    std::cout << "Window make" << std::endl;
 	auto window = std::make_shared<Window> ();
-	if (window->init (name, size, resizeable, controller))
+	if (window->init (name, size, resizeable, controller)) {
+          std::cout << "Window created" << std::endl;
 		return window;
+    }
+    std::cout << "Window creation failed" << std::endl;
 	return nullptr;
 }
 
@@ -117,6 +121,7 @@ Window::~Window () noexcept
 //------------------------------------------------------------------------
 void Window::show ()
 {
+  NSLog(@"Window::show");
 	auto nsWindow = impl->nsWindowDelegate.nsWindow;
 	impl->controller->onShow (*this);
 	[nsWindow makeKeyAndOrderFront:nil];

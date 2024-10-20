@@ -89,6 +89,7 @@ void Platform::setApplication (ApplicationPtr&& app)
 WindowPtr Platform::createWindow (const std::string& title, Size size, bool resizeable,
                                   const WindowControllerPtr& controller)
 {
+  puts("Platform::createWindow");
 	return Window::make (title, size, resizeable, controller);
 }
 
@@ -136,6 +137,7 @@ FUnknown* Platform::getPluginFactoryContext ()
 //------------------------------------------------------------------------
 IPlatform& IPlatform::instance ()
 {
+  std::cout << "IPlatform::instance()\n";
 	return Platform::instance ();
 }
 
@@ -230,13 +232,13 @@ IPlatform& IPlatform::instance ()
 @end
 
 //------------------------------------------------------------------------
-//int main (int argc, const char* argv[])
-//{
-//	auto delegate = [VSTSDK_AppDelegate new];
-//	std::vector<std::string> cmdArgs;
-//	for (int i = 1; i < argc; ++i)
-//		cmdArgs.push_back (argv[i]);
-//	[delegate setCmdArgs:std::move (cmdArgs)];
-//	[NSApplication sharedApplication].delegate = delegate;
-//	return NSApplicationMain (argc, argv);
-//}
+int main_ (int argc, const char* argv[])
+{
+	auto delegate = [VSTSDK_AppDelegate new];
+	std::vector<std::string> cmdArgs;
+	for (int i = 1; i < argc; ++i)
+		cmdArgs.push_back (argv[i]);
+	[delegate setCmdArgs:std::move (cmdArgs)];
+	[NSApplication sharedApplication].delegate = delegate;
+	return NSApplicationMain (argc, argv);
+}
