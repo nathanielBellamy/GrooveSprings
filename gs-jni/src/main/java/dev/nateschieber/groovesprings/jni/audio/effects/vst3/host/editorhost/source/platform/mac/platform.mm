@@ -89,6 +89,9 @@ void Platform::setApplication (ApplicationPtr&& app)
 WindowPtr Platform::createWindow (const std::string& title, Size size, bool resizeable,
                                   const WindowControllerPtr& controller)
 {
+  NSLog(@"platform createWindow");
+  std::cout << "creaetWindow" << title << std::endl;
+  std::cout.flush();
 	return Window::make (title, size, resizeable, controller);
 }
 

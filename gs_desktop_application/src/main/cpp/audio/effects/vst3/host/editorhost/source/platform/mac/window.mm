@@ -76,8 +76,10 @@ WindowPtr Window::make (const std::string& name, Size size, bool resizeable,
                         const WindowControllerPtr& controller)
 {
 	auto window = std::make_shared<Window> ();
-	if (window->init (name, size, resizeable, controller))
+	if (window->init (name, size, resizeable, controller)) {
+          puts("Window::make");
 		return window;
+    }
 	return nullptr;
 }
 
@@ -106,6 +108,7 @@ bool Window::init (const std::string& name, Size size, bool resizeable,
 	nsWindow.releasedWhenClosed = NO;
 	impl->nsWindowDelegate.nsWindow = nsWindow;
 	[nsWindow center];
+        puts("Window::init success");
 	return true;
 }
 

@@ -70,9 +70,11 @@ extern "C" {
         vst3HostApp.createInstance(uuid1, uuid2, &obj);
 
         Steinberg::Vst::EditorHost::App editorApp;
-        const auto& cmdArgs = std::vector<std::string> {""};
+        const auto& cmdArgs = std::vector<std::string> {
+            "/Library/Audio/Plug-Ins/VST3/ValhallaSupermassive.vst3"
+//            "/Users/ns/code/AnalogTapeModel/Plugin/build/CHOWTapeModel_artefacts/Release/VST3/CHOWTapeModel.vst3"
+        };
         editorApp.init (cmdArgs);
-
 
         // Initialize the global type information before anything else.
         core::init_global_meta_objects();
@@ -82,6 +84,9 @@ extern "C" {
         actor_system sys{cfg};
         // Run user-defined code.
         caf_main(sys);
+
+        // TODO: loop to check for exit
+        std::this_thread::sleep_for(std::chrono::seconds(10));
 
         return 0;
     }
