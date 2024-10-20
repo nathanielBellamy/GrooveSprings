@@ -8,16 +8,24 @@
 #include "./caf_data.h"
 #include "./effects/vst3/host/audiohost/source/audiohost.h"
 
+using namespace caf;
+
 class Audio
 {
-        caf::actor_system* cafEnv;
+        actor_system& actorSystem;
         long threadId;
         char const* fileName;
         long initialFrameId;
-        long vst3HostPtr;
+        Steinberg::Vst::AudioHost::App* vst3Host;
 
       public:
-        Audio(caf::actor_system* env, long threadId, const char* fileName, long initialFrameId, long vst3HostPtr);
+        Audio(
+            actor_system& actorSystem,
+            long threadId,
+            const char* fileName,
+            long initialFrameId,
+            Steinberg::Vst::AudioHost::App* vst3HostPtr
+        );
 
         int run();
 
