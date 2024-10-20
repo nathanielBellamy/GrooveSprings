@@ -6,6 +6,7 @@
 #include <chrono>
 #include <string>
 #include <thread>
+#include "./audio/audio.h"
 #include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
 #include "./audio/effects/vst3/host/hostclasses.hpp"
 #include "./audio/effects/vst3/host/editorhost/source/editorhost.h"
@@ -46,9 +47,19 @@ void hello_world(event_based_actor* self, const actor& buddy) {
         });
 }
 
-void caf_main(actor_system& sys) {
+void caf_main(actor_system& sys, Steinberg::Vst::AudioHost::App* vst3AudioHost) {
   auto mirror_actor = sys.spawn(mirror);
   sys.spawn(hello_world, mirror_actor);
+
+  Audio audio(
+      sys,
+      1l,
+      "/Users/ns/GrooveSprings_MusicLibrary/Amy Winehouse/Back to Black/Amy Winehouse - Back to Black (2006) [FLAC]/06 Love Is A Losing Game.flac",
+      0l,
+      vst3AudioHost
+  );
+
+  audio.run();
 }
 
 extern "C" {
@@ -59,8 +70,8 @@ extern "C" {
         // vst3host needs to be instantiated on the main thread
 
         // alloc vst3AudioHostApp
-        Steinberg::Vst::AudioHost::App* vst3App;
-        vst3App = new Steinberg::Vst::AudioHost::App;
+        Steinberg::Vst::AudioHost::App* vst3AudioHost;
+        vst3AudioHost = new Steinberg::Vst::AudioHost::App;
 
         Steinberg::Vst::HostApplication vst3HostApp;
 
@@ -83,7 +94,7 @@ extern "C" {
         // Create the actor system.
         actor_system sys{cfg};
         // Run user-defined code.
-        caf_main(sys);
+        caf_main(sys, vst3AudioHost);
 
         // TODO: loop to check for exit
         std::this_thread::sleep_for(std::chrono::seconds(10));

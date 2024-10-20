@@ -14,12 +14,14 @@
 
 typedef float SAMPLE;
 
-Audio::Audio(caf::actor_system* env, long threadId, const char* fileName, long initialFrameId, long vst3HostPtr) :
-  cafEnv(env)
+using namespace caf;
+
+Audio::Audio(actor_system& actorSystem, long threadId, const char* fileName, long initialFrameId, Steinberg::Vst::AudioHost::App* vst3Host) :
+  actorSystem(actorSystem)
   , threadId(threadId)
   , fileName(fileName)
   , initialFrameId(initialFrameId)
-  , vst3HostPtr(vst3HostPtr)
+  , vst3Host(vst3Host)
   {}
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
@@ -47,7 +49,7 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
 
   // >> VST PROCESSING
   Steinberg::Vst::AudioHost::App* vst3Host;
-  vst3Host = reinterpret_cast<Steinberg::Vst::AudioHost::App*>(audioData->vst3HostPtr);
+  vst3Host = reinterpret_cast<Steinberg::Vst::AudioHost::App*>(audioData->vst3AudioHost);
 
   // populate input buffers
   for (c = 0; c < audioData->sfinfo.channels; c++) {
@@ -201,10 +203,10 @@ int Audio::run()
   }
 
   sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
-  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1, vst3HostPtr);
+  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1, vst3Host);
 
   // init cafData
-  CAF_DATA cafData(Audio::cafEnv);
+  CAF_DATA cafData(Audio::actorSystem);
 
   // Init PA
   PaStreamParameters inputParameters, outputParameters;
