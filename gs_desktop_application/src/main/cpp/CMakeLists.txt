@@ -30,7 +30,8 @@ add_subdirectory(
 
 add_executable(groovesprings
         main.h
-        main.cpp)
+        main.cpp
+        actors/GsSupervisor.h)
 target_link_libraries(groovesprings
         PUBLIC
         CAF::core
