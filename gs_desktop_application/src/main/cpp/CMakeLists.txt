@@ -31,6 +31,7 @@ add_subdirectory(
 add_executable(groovesprings
         main.h
         main.cpp
+        atoms.h
         actors/GsSupervisor.h)
 target_link_libraries(groovesprings
         PUBLIC

@@ -3,23 +3,26 @@
 //
 
 
+#include "main.h"
+
 #include <chrono>
 #include <string>
 #include <thread>
-#include "./audio/audio.h"
-#include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
-#include "./audio/effects/vst3/host/hostclasses.hpp"
-#include "./audio/effects/vst3/host/editorhost/source/editorhost.h"
-
-
 #include <iostream>
 #include <string>
-#include "main.h"
 
+#include "caf/actor_from_state.hpp"
 #include "caf/actor_ostream.hpp"
 #include "caf/actor_system.hpp"
 #include "caf/caf_main.hpp"
 #include "caf/event_based_actor.hpp"
+
+#include "./actors/GsSupervisor.h"
+
+#include "./audio/audio.h"
+#include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
+#include "./audio/effects/vst3/host/hostclasses.hpp"
+#include "./audio/effects/vst3/host/editorhost/source/editorhost.h"
 
 namespace GrooveSprings {
 
@@ -29,27 +32,37 @@ using namespace std::literals;
 // Hello, CAF!
 // https://www.actor-framework.org//static/doxygen/1.0.0/hello_world_8cpp-example.html
 
-behavior mirror(event_based_actor* self) {
-    return {
-        [self](const std::string& what) -> std::string {
-            self->println("{}", what);
-            return std::string{what.rbegin(), what.rend()};
-        }
-    };
-}
 
-void hello_world(event_based_actor* self, const actor& buddy) {
-  self->mail("Hello World!")
-    .request(buddy, 10s)
+//CAF_BEGIN_TYPE_ID_BLOCK(groovesprings, first_custom_type_id)
+//
+//  CAF_ADD_ATOM(groovesprings, add_a)
+//  CAF_ADD_ATOM(groovesprings, multiply_a)
+//
+//CAF_END_TYPE_ID_BLOCK(groovesprings)
+
+//behavior mirror(event_based_actor* self) {
+//    return {
+//        [self](const std::string& what) -> std::string {
+//            self->println("{}", what);
+//            return std::string{what.rbegin(), what.rend()};
+//        }
+//    };
+//}
+
+void hello_world(event_based_actor* self, const gs_supervisor& buddy) {
+  self->mail(add_a{}, 1, 2)
+    .request(buddy, infinite)
     .then(
-        [self](const std::string& what) {
-            self->println("{}", what);
+        [self](int32_t result) {
+
+            std::cout << "gs_supervisor result: " << result << std::endl;
         });
 }
 
 void caf_main(actor_system& sys, Steinberg::Vst::AudioHost::App* vst3AudioHost) {
-  auto mirror_actor = sys.spawn(mirror);
-  sys.spawn(hello_world, mirror_actor);
+  auto gs_supervisor = sys.spawn(actor_from_state<gs_supervisor_state>, 5);
+
+  sys.spawn(hello_world, gs_supervisor);
 
   Audio audio(
       sys,
@@ -59,7 +72,7 @@ void caf_main(actor_system& sys, Steinberg::Vst::AudioHost::App* vst3AudioHost) 
       vst3AudioHost
   );
 
-  audio.run();
+//  audio.run();
 }
 
 extern "C" {

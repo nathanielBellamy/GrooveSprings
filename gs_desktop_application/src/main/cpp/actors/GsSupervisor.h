@@ -10,33 +10,38 @@
 #include "caf/caf_main.hpp"
 #include "caf/event_based_actor.hpp"
 
-CAF_BEGIN_TYPE_ID_BLOCK(groovesprings, caf::first_custom_type_id)
+#include "../atoms.h"
 
-  CAF_ADD_ATOM(my_project, add_atom)
-  CAF_ADD_ATOM(my_project, multiply_atom)
-
-CAF_END_TYPE_ID_BLOCK(groovesprings)
+using namespace caf;
 
 struct gs_supervisor_trait {
 
-    using signatures = type_list<result<int32_t>(add_atom, int32_t, int32_t),
-                                 result<int32_t>(multiply_atom, int32_t, int32_t)>;
+    using signatures = type_list<result<int32_t>(add_a, int32_t, int32_t),
+                                 result<int32_t>(multiply_a, int32_t, int32_t)>;
 
 };
 
-using gs_supervisor_actor = typed_actor<gs_supervisor_trait>;
+using gs_supervisor = typed_actor<gs_supervisor_trait>;
 
 struct gs_supervisor_state {
-     int32_t c = 3;
+     int32_t c;
 
-     gs_supervisor_actor::behavior_type make_behavior() {
+     gs_supervisor::pointer self;
+
+     gs_supervisor_state(gs_supervisor::pointer self, int32_t c) :
+             self(self)
+           , c(c)
+             {}
+
+     gs_supervisor::behavior_type make_behavior() {
        return {
-           [](add_atom, int32_t a, int32_t b) { return a + b + c; },
-           [](multiply_atom, int32_t a, int32_t b) { return a * b; }
-       }
+           [this](add_a, int32_t a, int32_t b) {
+             std::cout << "wowza a: " << a << " b: " << b << std::endl;
+             return a + b + c;
+           },
+           [this](multiply_a, int32_t a, int32_t b) { return a * b * c; }
+       };
      };
-}
-
-
+};
 
 #endif //GSSUPERVISOR_H
