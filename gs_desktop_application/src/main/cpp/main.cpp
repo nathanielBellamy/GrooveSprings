@@ -32,35 +32,17 @@ using namespace std::literals;
 // Hello, CAF!
 // https://www.actor-framework.org//static/doxygen/1.0.0/hello_world_8cpp-example.html
 
-
-//CAF_BEGIN_TYPE_ID_BLOCK(groovesprings, first_custom_type_id)
-//
-//  CAF_ADD_ATOM(groovesprings, add_a)
-//  CAF_ADD_ATOM(groovesprings, multiply_a)
-//
-//CAF_END_TYPE_ID_BLOCK(groovesprings)
-
-//behavior mirror(event_based_actor* self) {
-//    return {
-//        [self](const std::string& what) -> std::string {
-//            self->println("{}", what);
-//            return std::string{what.rbegin(), what.rend()};
-//        }
-//    };
-//}
-
 void hello_world(event_based_actor* self, const gs_supervisor& buddy) {
   self->mail(add_a{}, 1, 2)
     .request(buddy, infinite)
     .then(
         [self](int32_t result) {
-
             std::cout << "gs_supervisor result: " << result << std::endl;
         });
 }
 
 void caf_main(actor_system& sys, Steinberg::Vst::AudioHost::App* vst3AudioHost) {
-  auto gs_supervisor = sys.spawn(actor_from_state<gs_supervisor_state>, 5);
+  auto gs_supervisor = sys.spawn(actor_from_state<gs_supervisor_state>, sys, 5);
 
   sys.spawn(hello_world, gs_supervisor);
 
