@@ -32,7 +32,8 @@ add_executable(groovesprings
         main.h
         main.cpp
         atoms.h
-        actors/GsSupervisor.h)
+        actors/GsSupervisor.h
+        actors/GsDisplay.h)
 target_link_libraries(groovesprings
         PUBLIC
         CAF::core
