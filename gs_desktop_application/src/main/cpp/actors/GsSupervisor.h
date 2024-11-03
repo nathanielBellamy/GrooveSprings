@@ -25,13 +25,21 @@ using gs_supervisor = typed_actor<gs_supervisor_trait>;
 
 struct gs_supervisor_state {
      int32_t c;
+     actor_system& sys;
 
      gs_supervisor::pointer self;
 
-     gs_supervisor_state(gs_supervisor::pointer self, int32_t c) :
-             self(self)
-           , c(c)
-             {}
+     gs_supervisor_state(gs_supervisor::pointer self, actor_system& sys, int32_t c) :
+         self(self)
+       , sys(sys)
+       , c(c)
+         {
+//           auto gs_playback = sys.spawn(actor_from_state<gs_playback_state>);
+//           auto gs_display = sys.spawn(actor_from_state<gs_display_state>);
+//           auto gs_app_state_manager = sys.spawn(actor_from_state<gs_app_state_manager_state>);
+//           auto gs_controller = sys.spawn(actor_from_state<gs_controller_state
+
+         }
 
      gs_supervisor::behavior_type make_behavior() {
        return {
