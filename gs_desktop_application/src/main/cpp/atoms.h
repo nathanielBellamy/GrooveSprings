@@ -14,6 +14,9 @@ CAF_BEGIN_TYPE_ID_BLOCK(groovesprings, first_custom_type_id)
   CAF_ADD_ATOM(groovesprings, add_a)
   CAF_ADD_ATOM(groovesprings, multiply_a)
 
+  // GsDisplay
+  CAF_ADD_ATOM(groovesprings, init_display_a)
+
 CAF_END_TYPE_ID_BLOCK(groovesprings)
 
 #endif //MAIN_H
