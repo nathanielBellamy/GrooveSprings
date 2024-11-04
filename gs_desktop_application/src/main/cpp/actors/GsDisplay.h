@@ -23,16 +23,22 @@ struct gs_display_trait {
 using gs_display = typed_actor<gs_display_trait>;
 
 struct gs_display_state {
+     strong_actor_ptr supervisor;
+
      gs_display::pointer self;
 
-     gs_display_state(gs_display::pointer self) :
-          self(self)
+     gs_display_state(gs_display::pointer self, strong_actor_ptr supervisor) :
+          self(self),
+          supervisor(supervisor)
         {}
 
      gs_display::behavior_type make_behavior() {
        return {
            [this](init_display_a) {
              std::cout << "gs_display : init_display_a" << std::endl;
+             actor supervisor_actor = actor_cast<actor>(supervisor);
+             this->self->anon_send(supervisor_actor, init_check_a{});
+
              return true;
            },
        };
