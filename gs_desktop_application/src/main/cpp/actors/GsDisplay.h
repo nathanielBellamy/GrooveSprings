@@ -25,7 +25,6 @@ using gs_display = typed_actor<gs_display_trait>;
 struct gs_display_state {
      gs_display::pointer self;
 
-
      gs_display_state(gs_display::pointer self) :
           self(self)
         {}
