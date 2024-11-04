@@ -32,7 +32,6 @@ using namespace std::literals;
 
 void caf_main(actor_system& sys, Steinberg::Vst::AudioHost::App* vst3AudioHost) {
   auto gs_supervisor = sys.spawn(actor_from_state<gs_supervisor_state>, sys);
-        std::this_thread::sleep_for(std::chrono::seconds(10));
 
 //  Audio audio(
 //      sys,
@@ -80,7 +79,7 @@ extern "C" {
         caf_main(sys, nullptr);// vst3AudioHost);
 
         // TODO: loop to check for exit
-//        std::this_thread::sleep_for(std::chrono::seconds(10));
+        std::this_thread::sleep_for(std::chrono::seconds(10));
 
         return 0;
     }

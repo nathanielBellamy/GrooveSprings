@@ -37,7 +37,7 @@ struct gs_supervisor_state {
        , display(false)
          {
 //           auto gs_playback = sys.spawn(actor_from_state<gs_playback_state>);
-           auto gs_display = sys.spawn(actor_from_state<gs_display_state>);
+           auto gs_display = sys.spawn(actor_from_state<gs_display_state>, actor_cast<strong_actor_ptr>(self));
            self->mail(init_display_a{})
                .request(gs_display, infinite)
                .then([&](bool success) {
