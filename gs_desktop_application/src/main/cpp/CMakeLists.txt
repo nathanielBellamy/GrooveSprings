@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.29.6)
 project(GrooveSprings VERSION 0.0.0)
 
 set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
 #set (JAVA_HOME "/usr/local/Cellar/openjdk/23")
 set (VST3SDK_HOME "/Users/ns/code/vst3sdk")
 set (C_LIBS_HOME "/opt/homebrew/Cellar")
