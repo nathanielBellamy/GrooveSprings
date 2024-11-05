@@ -11,9 +11,14 @@ using namespace caf;
 
 CAF_BEGIN_TYPE_ID_BLOCK(groovesprings, first_custom_type_id)
 
-  // GsSupervisor
-  // GsDisplay
+  // Actor pairs (GsActorA, GsActorB) form a directed graph (oriented 1d CW complex) wherein
+  //   - actors represent nodes
+  //   - atoms name directed edges connecting nodes
+
+  // (GsSupervisor, GsDisplay)
   CAF_ADD_ATOM(groovesprings, init_display_a)
+
+  // (GsDisplay, GsSupervisor)
   CAF_ADD_ATOM(groovesprings, init_display_ar)
 
 

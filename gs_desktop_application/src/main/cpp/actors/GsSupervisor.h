@@ -37,18 +37,22 @@ struct gs_supervisor_state {
        , display(false)
          {
 //           auto gs_playback = sys.spawn(actor_from_state<gs_playback_state>);
-           auto gs_display = sys.spawn(actor_from_state<gs_display_state>, actor_cast<strong_actor_ptr>(self));
-           self->anon_send(gs_display, actor_cast<strong_actor_ptr>(self), init_display_a{});
-
 //           auto gs_app_state_manager = sys.spawn(actor_from_state<gs_app_state_manager_state>);
 //           auto gs_controller = sys.spawn(actor_from_state<gs_controller_state
+           auto gs_display = sys.spawn(actor_from_state<gs_display_state>, actor_cast<strong_actor_ptr>(self));
+           self->anon_send(
+               gs_display,
+               actor_cast<strong_actor_ptr>(self),
+               init_display_a{}
+           );
          }
 
      gs_supervisor::behavior_type make_behavior() {
        return {
            [this](strong_actor_ptr, init_display_ar, bool success) {
              this->display = success;
-             this->running = this->display;
+             if (init_success())
+                 this->running = true;
              std::cout << "gs_supervisor display : " << this->display << std::endl;
              std::cout << "gs_supervisor running : " << this->running << std::endl;
            },
