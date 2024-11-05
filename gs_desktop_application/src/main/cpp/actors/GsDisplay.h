@@ -16,7 +16,7 @@ using namespace caf;
 
 struct gs_display_trait {
 
-    using signatures = type_list<result<bool>(init_display_a)>;
+    using signatures = type_list<result<void>(strong_actor_ptr, init_display_a)>;
 
 };
 
@@ -34,12 +34,15 @@ struct gs_display_state {
 
      gs_display::behavior_type make_behavior() {
        return {
-           [this](init_display_a) {
+           [this](strong_actor_ptr reply_to, init_display_a) {
              std::cout << "gs_display : init_display_a" << std::endl;
-             actor supervisor_actor = actor_cast<actor>(supervisor);
-             this->self->anon_send(supervisor_actor, init_check_a{});
-
-             return true;
+             actor supervisor_actor = actor_cast<actor>(reply_to);
+             this->self->anon_send(
+                 supervisor_actor,
+                 actor_cast<strong_actor_ptr>(self),
+                 init_display_ar{},
+                 true
+             );
            },
        };
      };

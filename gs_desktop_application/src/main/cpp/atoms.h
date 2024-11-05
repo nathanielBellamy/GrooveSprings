@@ -12,10 +12,10 @@ using namespace caf;
 CAF_BEGIN_TYPE_ID_BLOCK(groovesprings, first_custom_type_id)
 
   // GsSupervisor
-  CAF_ADD_ATOM(groovesprings, init_check_a)
-
   // GsDisplay
   CAF_ADD_ATOM(groovesprings, init_display_a)
+  CAF_ADD_ATOM(groovesprings, init_display_ar)
+
 
 CAF_END_TYPE_ID_BLOCK(groovesprings)
 
