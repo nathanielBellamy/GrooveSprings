@@ -33,13 +33,13 @@ using namespace std::literals;
 void caf_main(actor_system& sys, Steinberg::Vst::AudioHost::App* vst3AudioHost) {
   auto gs_supervisor = sys.spawn(actor_from_state<gs_supervisor_state>, sys);
 
-//  Audio audio(
-//      sys,
-//      1l,
-//      "/Users/ns/GrooveSprings_MusicLibrary/Amy Winehouse/Back to Black/Amy Winehouse - Back to Black (2006) [FLAC]/06 Love Is A Losing Game.flac",
-//      0l,
-//      vst3AudioHost
-//  );
+  Audio audio(
+      sys,
+      1l,
+      "/Users/ns/GrooveSprings_MusicLibrary/Amy Winehouse/Back to Black/Amy Winehouse - Back to Black (2006) [FLAC]/06 Love Is A Losing Game.flac",
+      0l,
+      vst3AudioHost
+  );
 
 //  audio.run();
 }
@@ -52,21 +52,21 @@ extern "C" {
         // vst3host needs to be instantiated on the main thread
 
         // alloc vst3AudioHostApp
-//        Steinberg::Vst::AudioHost::App* vst3AudioHost;
-//        vst3AudioHost = new Steinberg::Vst::AudioHost::App;
-//
-//        Steinberg::Vst::HostApplication vst3HostApp;
-//
-//        char *uuid1 = (char*) "0123456789ABCDEF";
-//        char *uuid2 = (char*) "0123456789GHIJKL";
-//        auto obj = (void*) malloc( 1000 * sizeof( Steinberg::Vst::HostMessage) );
-//        vst3HostApp.createInstance(uuid1, uuid2, &obj);
-//
-//        Steinberg::Vst::EditorHost::App editorApp;
-//        const auto& cmdArgs = std::vector<std::string> {
-//            "/Library/Audio/Plug-Ins/VST3/ValhallaSupermassive.vst3"
-//        };
-//        editorApp.init (cmdArgs);
+        Steinberg::Vst::AudioHost::App* vst3AudioHost;
+        vst3AudioHost = new Steinberg::Vst::AudioHost::App;
+
+        Steinberg::Vst::HostApplication vst3HostApp;
+
+        char *uuid1 = (char*) "0123456789ABCDEF";
+        char *uuid2 = (char*) "0123456789GHIJKL";
+        auto obj = (void*) malloc( 1000 * sizeof( Steinberg::Vst::HostMessage) );
+        vst3HostApp.createInstance(uuid1, uuid2, &obj);
+
+        Steinberg::Vst::EditorHost::App editorApp;
+        const auto& cmdArgs = std::vector<std::string> {
+            "/Library/Audio/Plug-Ins/VST3/ValhallaSupermassive.vst3"
+        };
+        editorApp.init (cmdArgs);
 
         // Initialize the global type information before anything else.
         init_global_meta_objects<id_block::groovesprings>();
