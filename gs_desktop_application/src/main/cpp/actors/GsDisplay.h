@@ -36,6 +36,7 @@ struct gs_display_state {
        return {
            [this](strong_actor_ptr reply_to, init_display_a) {
              std::cout << "gs_display : init_display_a" << std::endl;
+
              actor reply_to_actor = actor_cast<actor>(reply_to);
              this->self->anon_send(
                  reply_to_actor,

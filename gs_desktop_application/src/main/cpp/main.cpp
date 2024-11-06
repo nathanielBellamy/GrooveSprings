@@ -20,6 +20,9 @@
 #include "./actors/GsSupervisor.h"
 #include "./atoms.h"
 
+#include <QApplication>
+#include "./qt/display.h"
+
 #include "./audio/audio.h"
 #include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
 #include "./audio/effects/vst3/host/hostclasses.hpp"
@@ -45,10 +48,7 @@ void caf_main(actor_system& sys, Steinberg::Vst::AudioHost::App* vst3AudioHost) 
 }
 
 extern "C" {
-
-//    CAF_MAIN();
-
-    int main() {
+    int main(int argc, char *argv[]) {
         // vst3host needs to be instantiated on the main thread
 
         // alloc vst3AudioHostApp
@@ -67,6 +67,13 @@ extern "C" {
             "/Library/Audio/Plug-Ins/VST3/ValhallaSupermassive.vst3"
         };
         editorApp.init (cmdArgs);
+
+        // init Qt App
+        auto qtApp = QApplication {argc, argv};
+        auto disp = display {};
+        disp.show();
+        qtApp.exec();
+
 
         // Initialize the global type information before anything else.
         init_global_meta_objects<id_block::groovesprings>();
