@@ -8,6 +8,8 @@ set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (VST3SDK_HOME "/Users/ns/code/vst3sdk")
 set (C_LIBS_HOME "/opt/homebrew/Cellar")
 
+#set(QT_NO_STANDARD_PROJECT_SETUP TRUE)
+
 set (INCLUDE_FLAGS
         -I/Users/ns/code/actor-framework/libcaf_core
         -I/Users/ns/code/actor-framework/libcaf_io
@@ -28,17 +30,22 @@ find_package (CAF
 add_subdirectory(
     /Users/ns/code/GrooveSprings/gs_desktop_application/src/main/cpp/audio
 )
+add_subdirectory(
+        /Users/ns/code/GrooveSprings/gs_desktop_application/src/main/cpp/qt
+)
 
 add_executable(groovesprings
         main.h
         main.cpp
         atoms.h
         actors/GsSupervisor.h
-        actors/GsDisplay.h)
+        actors/GsDisplay.h
+        qt/display.h)
 target_link_libraries(groovesprings
         PUBLIC
         CAF::core
         gsAudio
+        gsDisplay
 )
 target_compile_options(groovesprings PRIVATE ${INCLUDE_FLAGS})
 set_target_properties(groovesprings PROPERTIES LINKER_LANGUAGE CXX)
