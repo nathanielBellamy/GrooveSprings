@@ -10,6 +10,12 @@ set (C_LIBS_HOME "/opt/homebrew/Cellar")
 
 #set(QT_NO_STANDARD_PROJECT_SETUP TRUE)
 
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+if (Qt6_FOUND)
+    message(INFO "--Qt6--FOUND--Top--Level--")
+endif()
+
+qt_standard_project_setup()
 set (INCLUDE_FLAGS
         -I/Users/ns/code/actor-framework/libcaf_core
         -I/Users/ns/code/actor-framework/libcaf_io
@@ -46,6 +52,7 @@ target_link_libraries(groovesprings
         CAF::core
         gsAudio
         gsDisplay
+        Qt6::Widgets
 )
 target_compile_options(groovesprings PRIVATE ${INCLUDE_FLAGS})
 set_target_properties(groovesprings PROPERTIES LINKER_LANGUAGE CXX)
