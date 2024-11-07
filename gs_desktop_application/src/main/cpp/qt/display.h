@@ -5,7 +5,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include <QApplication>
+//#include <QApplication>
 #include <QFrame>
 #include <QMainWindow>
 #include <QLabel>
