@@ -52,12 +52,13 @@ struct SupervisorState {
 
      Supervisor::behavior_type make_behavior() {
        return {
-           [this](strong_actor_ptr, init_display_ar, bool success) {
+           [this](strong_actor_ptr replyToPtr, init_display_ar, bool success) {
              this->display = success;
              if (init_success())
                  this->running = true;
              std::cout << "Supervisor display : " << this->display << std::endl;
              std::cout << "Supervisor running : " << this->running << std::endl;
+             actor replyTo = actor_cast<actor>(replyToPtr);
            },
        };
      };
