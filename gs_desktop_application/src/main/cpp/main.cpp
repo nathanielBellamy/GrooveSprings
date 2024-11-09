@@ -17,24 +17,24 @@
 #include "caf/caf_main.hpp"
 #include "caf/event_based_actor.hpp"
 
-#include "./actors/GsSupervisor.h"
+#include "./actors/Supervisor.h"
 #include "./atoms.h"
 
 #include <QApplication>
-#include "./qt/display.h"
+#include "./gui/MainWindow.h"
 
 #include "./audio/audio.h"
 #include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
 #include "./audio/effects/vst3/host/hostclasses.hpp"
 #include "./audio/effects/vst3/host/editorhost/source/editorhost.h"
 
-namespace GrooveSprings {
-
 using namespace caf;
 using namespace std::literals;
 
+namespace Gs {
+
 void caf_main(actor_system& sys, Steinberg::Vst::AudioHost::App* vst3AudioHost) {
-  auto gs_supervisor = sys.spawn(actor_from_state<gs_supervisor_state>, sys);
+  auto gs_supervisor = sys.spawn(actor_from_state<Act::SupervisorState>, sys);
 
   Audio audio(
       sys,
@@ -70,8 +70,8 @@ extern "C" {
 
         // init Qt App
         auto qtApp = QApplication {argc, argv};
-        auto disp = display {};
-        disp.show();
+        auto mainWindow = Gui::MainWindow {};
+        mainWindow.show();
         qtApp.exec();
 
 
@@ -92,4 +92,4 @@ extern "C" {
     }
 }
 
-} // GrooveSprings
+} // Gs
