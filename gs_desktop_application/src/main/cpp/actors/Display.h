@@ -14,28 +14,31 @@
 
 using namespace caf;
 
-struct gs_display_trait {
+namespace Gs {
+namespace Act {
+
+struct DisplayTrait {
 
     using signatures = type_list<result<void>(strong_actor_ptr, init_display_a)>;
 
 };
 
-using gs_display = typed_actor<gs_display_trait>;
+using Display = typed_actor<DisplayTrait>;
 
-struct gs_display_state {
+struct DisplayState {
 
-     gs_display::pointer self;
+     Display::pointer self;
 
-     gs_display_state(gs_display::pointer self, strong_actor_ptr supervisor) :
+     DisplayState(Display::pointer self, strong_actor_ptr supervisor) :
           self(self)
         {
            self->link_to(supervisor);
         }
 
-     gs_display::behavior_type make_behavior() {
+     Display::behavior_type make_behavior() {
        return {
            [this](strong_actor_ptr reply_to, init_display_a) {
-             std::cout << "gs_display : init_display_a" << std::endl;
+             std::cout << "Display : init_display_a" << std::endl;
 
              actor reply_to_actor = actor_cast<actor>(reply_to);
              this->self->anon_send(
@@ -48,6 +51,9 @@ struct gs_display_state {
        };
      };
 };
+
+} // Act
+} // Gs
 
 
 #endif //GSDISPLAY_H

@@ -14,19 +14,19 @@
 #include "caf/event_based_actor.hpp"
 
 #include "./atoms.h"
-#include "./actors/GsSupervisor.h"
-#include "./qt/display.h"
+#include "./actors/Supervisor.h"
+#include "./gui/MainWindow.h"
 
 #include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
 #include "./audio/effects/vst3/host/hostclasses.hpp"
 #include "./audio/effects/vst3/host/editorhost/source/editorhost.h"
 
-namespace GrooveSprings {
+namespace Gs {
 
 extern "C" {
     int main(int argc, char *argv[]);
 }
 
-} // GrooveSprings
+} // Gs
 
 #endif //MAIN_H

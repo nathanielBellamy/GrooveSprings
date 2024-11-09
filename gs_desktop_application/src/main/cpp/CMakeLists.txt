@@ -12,7 +12,7 @@ set (C_LIBS_HOME "/opt/homebrew/Cellar")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 if (Qt6_FOUND)
-    message(INFO "--Qt6--FOUND--Top--Level--")
+    message(INFO " --Qt6--FOUND--")
 endif()
 
 qt_standard_project_setup()
@@ -37,21 +37,20 @@ add_subdirectory(
     /Users/ns/code/GrooveSprings/gs_desktop_application/src/main/cpp/audio
 )
 add_subdirectory(
-        /Users/ns/code/GrooveSprings/gs_desktop_application/src/main/cpp/qt
+        /Users/ns/code/GrooveSprings/gs_desktop_application/src/main/cpp/gui
 )
 
 add_executable(groovesprings
         main.h
         main.cpp
         atoms.h
-        actors/GsSupervisor.h
-        actors/GsDisplay.h
-        qt/display.h)
+        actors/Supervisor.h
+        actors/Display.h)
 target_link_libraries(groovesprings
         PUBLIC
         CAF::core
         gsAudio
-        gsDisplay
+        gsGui
         Qt6::Widgets
 )
 target_compile_options(groovesprings PRIVATE ${INCLUDE_FLAGS})
