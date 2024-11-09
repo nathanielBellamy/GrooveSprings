@@ -68,13 +68,6 @@ extern "C" {
         };
         editorApp.init (cmdArgs);
 
-        // init Qt App
-        auto qtApp = QApplication {argc, argv};
-        auto mainWindow = Gui::MainWindow {};
-        mainWindow.show();
-        qtApp.exec();
-
-
         // Initialize the global type information before anything else.
         init_global_meta_objects<id_block::groovesprings>();
         core::init_global_meta_objects();
@@ -84,6 +77,14 @@ extern "C" {
         actor_system sys{cfg};
         // Run user-defined code.
         caf_main(sys, nullptr);// vst3AudioHost);
+
+        // init Qt App
+        auto qtApp = QApplication {argc, argv};
+        auto mainWindow = Gui::MainWindow {sys};
+        mainWindow.show();
+        qtApp.exec();
+
+
 
         // TODO: loop to check for exit
         std::this_thread::sleep_for(std::chrono::seconds(10));
