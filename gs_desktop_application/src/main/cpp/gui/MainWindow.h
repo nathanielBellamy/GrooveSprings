@@ -13,11 +13,14 @@
 #include "caf/caf_main.hpp"
 #include "caf/event_based_actor.hpp"
 
-//#include <QApplication>
 #include <QFrame>
 #include <QMainWindow>
 #include <QLabel>
 #include <QScreen>
+#include <QToolbar>
+#include <QToolButton>
+#include <QAction>
+#include <QStyle>
 
 using namespace caf;
 
@@ -33,6 +36,8 @@ class MainWindow : public QMainWindow {
   private:
     QFrame frame;
     QLabel label {&frame};
+    QToolBar transportControl {&frame};
+    QAction playTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_FileIcon), "&PlayTrig", &transportControl};
 };
 
 } // Gui

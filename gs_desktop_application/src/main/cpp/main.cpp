@@ -2,31 +2,7 @@
 // Created by ns on 9/30/24.
 //
 
-
 #include "main.h"
-
-#include <chrono>
-#include <string>
-#include <thread>
-#include <iostream>
-#include <string>
-
-#include "caf/actor_from_state.hpp"
-#include "caf/actor_ostream.hpp"
-#include "caf/actor_system.hpp"
-#include "caf/caf_main.hpp"
-#include "caf/event_based_actor.hpp"
-
-#include "./actors/Supervisor.h"
-#include "./atoms.h"
-
-#include <QApplication>
-#include "./gui/MainWindow.h"
-
-#include "./audio/audio.h"
-#include "./audio/effects/vst3/host/audiohost/source/audiohost.h"
-#include "./audio/effects/vst3/host/hostclasses.hpp"
-#include "./audio/effects/vst3/host/editorhost/source/editorhost.h"
 
 using namespace caf;
 using namespace std::literals;

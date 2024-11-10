@@ -10,7 +10,7 @@ set (C_LIBS_HOME "/opt/homebrew/Cellar")
 
 #set(QT_NO_STANDARD_PROJECT_SETUP TRUE)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui)
 if (Qt6_FOUND)
     message(INFO " --Qt6--FOUND--")
 endif()
@@ -51,7 +51,9 @@ target_link_libraries(groovesprings
         CAF::core
         gsAudio
         gsGui
+        Qt6::Core
         Qt6::Widgets
+        Qt6::Gui
 )
 target_compile_options(groovesprings PRIVATE ${INCLUDE_FLAGS})
 set_target_properties(groovesprings PROPERTIES LINKER_LANGUAGE CXX)
