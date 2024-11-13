@@ -9,8 +9,14 @@ using namespace std::literals;
 
 namespace Gs {
 
-void caf_main(actor_system& sys, Steinberg::Vst::AudioHost::App* vst3AudioHost) {
-  auto gs_supervisor = sys.spawn(actor_from_state<Act::SupervisorState>, sys);
+void caf_main(int argc, char *argv[], actor_system& sys, Steinberg::Vst::AudioHost::App* vst3AudioHost) {
+  auto supervisor = sys.spawn(actor_from_state<Act::SupervisorState>, sys);
+
+  // init Qt App
+  auto qtApp = QApplication {argc, argv};
+  auto mainWindow = Gui::MainWindow { sys };
+  mainWindow.show();
+  qtApp.exec();
 
   Audio audio(
       sys,
@@ -52,18 +58,7 @@ extern "C" {
         // Create the actor system.
         actor_system sys{cfg};
         // Run user-defined code.
-        caf_main(sys, nullptr);// vst3AudioHost);
-
-        // init Qt App
-        auto qtApp = QApplication {argc, argv};
-        auto mainWindow = Gui::MainWindow {sys};
-        mainWindow.show();
-        qtApp.exec();
-
-
-
-        // TODO: loop to check for exit
-        std::this_thread::sleep_for(std::chrono::seconds(10));
+        caf_main(argc, argv, sys, vst3AudioHost);
 
         return 0;
     }
