@@ -6,12 +6,15 @@
 #define GSSUPERVISOR_H
 
 #include "caf/actor_ostream.hpp"
+#include "caf/actor_registry.hpp"
 #include "caf/actor_system.hpp"
 #include "caf/caf_main.hpp"
 #include "caf/event_based_actor.hpp"
 
+#include "./ActorIds.h"
 #include "../atoms.h"
 #include "./Display.h"
+#include "./Playback.h"
 
 using namespace caf;
 
@@ -29,6 +32,8 @@ using Supervisor = typed_actor<SupervisorTrait>;
 struct SupervisorState {
      bool running;
      bool display;
+     strong_actor_ptr displayActorPtr;
+     strong_actor_ptr playbackActorPtr;
      actor_system& sys;
 
      Supervisor::pointer self;
@@ -39,14 +44,19 @@ struct SupervisorState {
        , running(false)
        , display(false)
          {
-//           auto gs_playback = sys.spawn(actor_from_state<gs_playback_state>);
+           self->system().registry().put(ActorIds::SUPERVISOR, actor_cast<strong_actor_ptr>(self));
 //           auto gs_app_state_manager = sys.spawn(actor_from_state<gs_app_state_manager_state>);
 //           auto gs_controller = sys.spawn(actor_from_state<gs_controller_state
            auto display = sys.spawn(actor_from_state<DisplayState>, actor_cast<strong_actor_ptr>(self));
+           displayActorPtr = actor_cast<strong_actor_ptr>(display);
+
+           auto playback = sys.spawn(actor_from_state<PlaybackState>, actor_cast<strong_actor_ptr>(self));
+           playbackActorPtr = actor_cast<strong_actor_ptr>(playback);
+
            self->anon_send(
                display,
                actor_cast<strong_actor_ptr>(self),
-               init_display_a{}
+               init_display_a_v
            );
          }
 

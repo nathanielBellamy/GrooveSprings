@@ -9,9 +9,14 @@
 
 #include "caf/actor_from_state.hpp"
 #include "caf/actor_ostream.hpp"
+#include "caf/actor_registry.hpp"
 #include "caf/actor_system.hpp"
 #include "caf/caf_main.hpp"
 #include "caf/event_based_actor.hpp"
+#include "caf/scoped_actor.hpp"
+
+#include "../actors/ActorIds.h"
+#include "../atoms.h"
 
 #include <QFrame>
 #include <QMainWindow>
@@ -29,8 +34,6 @@ namespace Gui {
 
 class MainWindow : public QMainWindow {
   public:
-    int init(int argc, char *argv[]);
-
     MainWindow(actor_system& sys);
 
   private:
@@ -38,6 +41,9 @@ class MainWindow : public QMainWindow {
     QLabel label {&frame};
     QToolBar transportControl {&frame};
     QAction playTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_FileIcon), "&PlayTrig", &transportControl};
+    actor_system& sys;
+    actor displayActor;
+    actor playbackActor;
 };
 
 } // Gui

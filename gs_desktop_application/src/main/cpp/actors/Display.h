@@ -6,10 +6,12 @@
 #define GSDISPLAY_H
 
 #include "caf/actor_ostream.hpp"
+#include "caf/actor_registry.hpp"
 #include "caf/actor_system.hpp"
 #include "caf/caf_main.hpp"
 #include "caf/event_based_actor.hpp"
 
+#include "./ActorIds.h"
 #include "../atoms.h"
 
 using namespace caf;
@@ -19,7 +21,9 @@ namespace Act {
 
 struct DisplayTrait {
 
-    using signatures = type_list<result<void>(strong_actor_ptr, init_display_a)>;
+    using signatures = type_list<result<void>(strong_actor_ptr /*replyTo*/, init_display_a),
+                                 result<void>(strong_actor_ptr /*replyTo*/, tc_trig_play_ar)
+                               >;
 
 };
 
@@ -33,6 +37,7 @@ struct DisplayState {
           self(self)
         {
            self->link_to(supervisor);
+           self->system().registry().put(ActorIds::DISPLAY, actor_cast<strong_actor_ptr>(self));
         }
 
      Display::behavior_type make_behavior() {
@@ -44,9 +49,12 @@ struct DisplayState {
              this->self->anon_send(
                  reply_to_actor,
                  actor_cast<strong_actor_ptr>(self),
-                 init_display_ar{},
+                 init_display_ar_v,
                  true
              );
+           },
+           [this](strong_actor_ptr reply_to, tc_trig_play_ar) {
+             std::cout << "Display  : tc_trig_play_ar" << std::endl;
            },
        };
      };
