@@ -16,7 +16,9 @@
 #include "caf/scoped_actor.hpp"
 
 #include "../actors/ActorIds.h"
-#include "../atoms.h"
+#include "../messaging/atoms.h"
+#include "../messaging/Envelope.h"
+#include "../enums/PlayStates.h"
 
 #include <QFrame>
 #include <QMainWindow>
@@ -35,6 +37,8 @@ namespace Gui {
 class MainWindow : public QMainWindow {
   public:
     MainWindow(actor_system& sys);
+    void setPlayState(Gs::PlayStates state);
+
 
   private:
     QFrame frame;
@@ -44,10 +48,12 @@ class MainWindow : public QMainWindow {
     actor_system& sys;
     actor displayActor;
     actor playbackActor;
+    Gs::PlayStates playState;
 };
 
 } // Gui
 } // Gs
+
 
 
 #endif //DISPLAY_H

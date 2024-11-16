@@ -43,11 +43,14 @@ add_subdirectory(
 add_executable(groovesprings
         main.h
         main.cpp
-        atoms.h
         actors/Supervisor.h
         actors/Display.h
         actors/Playback.h
-        actors/ActorIds.h)
+        actors/ActorIds.h
+        enums/PlayStates.h
+        messaging/atoms.h
+        messaging/Envelope.h
+)
 target_link_libraries(groovesprings
         PUBLIC
         CAF::core
