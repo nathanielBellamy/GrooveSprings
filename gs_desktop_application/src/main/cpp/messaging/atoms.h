@@ -2,14 +2,14 @@
 #ifndef ATOMS_H
 #define ATOMS_H
 
-#include "caf/actor_ostream.hpp"
-#include "caf/actor_system.hpp"
-#include "caf/caf_main.hpp"
-#include "caf/event_based_actor.hpp"
-
-using namespace caf;
+#include "./Envelope.h"
 
 CAF_BEGIN_TYPE_ID_BLOCK(groovesprings, first_custom_type_id)
+
+  // typeIds
+  CAF_ADD_TYPE_ID(groovesprings, (Envelope))
+
+  // atoms
 
   // Actor pairs (GsActorA, GsActorB) form a directed graph (oriented 1d CW complex) wherein
   //   - actors represent nodes
@@ -23,8 +23,6 @@ CAF_BEGIN_TYPE_ID_BLOCK(groovesprings, first_custom_type_id)
 
   CAF_ADD_ATOM(groovesprings, tc_trig_play_a)
   CAF_ADD_ATOM(groovesprings, tc_trig_play_ar)
-
-
 
 
 CAF_END_TYPE_ID_BLOCK(groovesprings)

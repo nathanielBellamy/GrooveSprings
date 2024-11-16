@@ -12,7 +12,7 @@
 #include "caf/event_based_actor.hpp"
 
 #include "./ActorIds.h"
-#include "../atoms.h"
+#include "../messaging/atoms.h"
 #include "./Display.h"
 #include "./Playback.h"
 

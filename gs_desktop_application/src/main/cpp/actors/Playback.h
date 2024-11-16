@@ -12,7 +12,8 @@
 #include "caf/event_based_actor.hpp"
 
 #include "./ActorIds.h"
-#include "../atoms.h"
+#include "../messaging/atoms.h"
+#include "../messaging/Envelope.h"
 
 using namespace caf;
 
@@ -21,7 +22,7 @@ namespace Act {
 
 struct PlaybackTrait {
 
-    using signatures = type_list<result<void>(strong_actor_ptr, tc_trig_play_a)>;
+    using signatures = type_list<result<void>(strong_actor_ptr, Envelope, tc_trig_play_a)>;
 
 };
 
@@ -40,13 +41,14 @@ struct PlaybackState {
 
      Playback::behavior_type make_behavior() {
        return {
-           [this](strong_actor_ptr reply_to, tc_trig_play_a) {
+           [this](strong_actor_ptr reply_to, Envelope mainWindowEnvelop, tc_trig_play_a) {
              std::cout << "Playback : tc_trig_play_a" << std::endl;
 
              actor replyToActor = actor_cast<actor>(reply_to);
              this->self->anon_send(
                  replyToActor,
                  actor_cast<strong_actor_ptr>(self),
+                 mainWindowEnvelop,
                  tc_trig_play_ar_v
              );
            },

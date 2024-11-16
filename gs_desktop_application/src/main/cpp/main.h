@@ -13,7 +13,7 @@
 #include "caf/caf_main.hpp"
 #include "caf/event_based_actor.hpp"
 
-#include "./atoms.h"
+#include "./messaging/atoms.h"
 #include "./actors/Supervisor.h"
 
 #include <QApplication>
