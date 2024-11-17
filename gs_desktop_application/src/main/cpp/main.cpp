@@ -14,7 +14,7 @@ void caf_main(int argc, char *argv[], actor_system& sys, Steinberg::Vst::AudioHo
 
   // init Qt App
   auto qtApp = QApplication {argc, argv};
-  auto mainWindow = MainWindow { sys };
+  auto mainWindow = Gs::Gui::MainWindow { sys };
   mainWindow.show();
   qtApp.exec();
 

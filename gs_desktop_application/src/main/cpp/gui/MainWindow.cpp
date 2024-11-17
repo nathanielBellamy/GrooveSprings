@@ -22,26 +22,24 @@ MainWindow::MainWindow(actor_system& sys)
   transportControl.setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
   connect(&playTrigAction, &QAction::triggered, [&] {
-    strong_actor_ptr displayPtr = sys.registry().get(Gs::Act::ActorIds::DISPLAY);
-    strong_actor_ptr playbackPtr = sys.registry().get(Gs::Act::ActorIds::PLAYBACK);
+    std::cout << "MainWindow : playTrigAction" << std::endl;
+    strong_actor_ptr appStateManagerPtr = sys.registry().get(Gs::Act::ActorIds::APP_STATE_MANAGER);
 
     EnvelopeQtPtr mainWindowEnvelope{ reinterpret_cast<long>(this) };
     scoped_actor self{sys};
     self->anon_send(
-        actor_cast<actor>(playbackPtr),
-        displayPtr,
+        actor_cast<actor>(appStateManagerPtr),
         mainWindowEnvelope,
         tc_trig_play_a_v
     );
-    std::cout << "PlayTrig" << std::endl;
   });
 
   addToolBar(Qt::BottomToolBarArea, &transportControl);
   setCentralWidget(&frame);
   setUnifiedTitleAndToolBarOnMac(true);
   setWindowTitle("GrooveSprings");
-//  resize(label.sizeHint());
-  resize(640, 480);
+  resize(label.sizeHint());
+//  resize(640, 480);
 }
 
 void MainWindow::setPlayState(Gs::PlayStates newState) {

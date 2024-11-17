@@ -15,10 +15,13 @@ CAF_BEGIN_TYPE_ID_BLOCK(groovesprings, first_custom_type_id)
   //   - actors represent nodes
   //   - atoms name directed edges connecting nodes
 
-  // (GsSupervisor, GsDisplay)
+  // (any, Supervisor)
+  CAF_ADD_ATOM(groovesprings, supervisor_status_a)
+
+  // (Supervisor, Display)
   CAF_ADD_ATOM(groovesprings, init_display_a)
 
-  // (GsDisplay, GsSupervisor)
+  // (Display, Supervisor)
   CAF_ADD_ATOM(groovesprings, init_display_ar)
 
   CAF_ADD_ATOM(groovesprings, tc_trig_play_a)

@@ -13,7 +13,7 @@
 
 #include "./ActorIds.h"
 #include "../messaging/atoms.h"
-#include "./Display.h"
+#include "./AppStateManager.h"
 #include "./Playback.h"
 
 using namespace caf;
@@ -23,7 +23,7 @@ namespace Act {
 
 struct SupervisorTrait {
 
-    using signatures = type_list<result<void>(strong_actor_ptr, init_display_ar, bool)>;
+    using signatures = type_list<result<void>(strong_actor_ptr, supervisor_status_a)>;
 
 };
 
@@ -31,9 +31,8 @@ using Supervisor = typed_actor<SupervisorTrait>;
 
 struct SupervisorState {
      bool running;
-     bool display;
-     strong_actor_ptr displayActorPtr;
      strong_actor_ptr playbackActorPtr;
+     strong_actor_ptr appStateManagerPtr;
      actor_system& sys;
 
      Supervisor::pointer self;
@@ -42,39 +41,29 @@ struct SupervisorState {
          self(self)
        , sys(sys)
        , running(false)
-       , display(false)
          {
            self->system().registry().put(ActorIds::SUPERVISOR, actor_cast<strong_actor_ptr>(self));
 //           auto gs_app_state_manager = sys.spawn(actor_from_state<gs_app_state_manager_state>);
 //           auto gs_controller = sys.spawn(actor_from_state<gs_controller_state
-           auto display = sys.spawn(actor_from_state<DisplayState>, actor_cast<strong_actor_ptr>(self));
-           displayActorPtr = actor_cast<strong_actor_ptr>(display);
-
            auto playback = sys.spawn(actor_from_state<PlaybackState>, actor_cast<strong_actor_ptr>(self));
            playbackActorPtr = actor_cast<strong_actor_ptr>(playback);
 
-           self->anon_send(
-               display,
-               actor_cast<strong_actor_ptr>(self),
-               init_display_a_v
-           );
+           auto appStateManager = sys.spawn(actor_from_state<AppStateManagerState>, actor_cast<strong_actor_ptr>(self));
+           appStateManagerPtr = actor_cast<strong_actor_ptr>(appStateManager);
+
+           running = true;
          }
 
      Supervisor::behavior_type make_behavior() {
        return {
-           [this](strong_actor_ptr replyToPtr, init_display_ar, bool success) {
-             this->display = success;
-             if (init_success())
-                 this->running = true;
-             std::cout << "Supervisor display : " << this->display << std::endl;
+           [this](strong_actor_ptr replyToPtr, supervisor_status_a) {
              std::cout << "Supervisor running : " << this->running << std::endl;
-             actor replyTo = actor_cast<actor>(replyToPtr);
+//             this->self->anon_send(
+//                 actor_cast<strong_actor_ptr>(replyToPtr),
+//                 this->running
+//             );
            },
        };
-     };
-
-     bool init_success() {
-         return this->display;
      };
 };
 
