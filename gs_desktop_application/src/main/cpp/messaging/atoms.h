@@ -2,12 +2,12 @@
 #ifndef ATOMS_H
 #define ATOMS_H
 
-#include "./Envelope.h"
+#include "./EnvelopeQtPtr.h"
 
 CAF_BEGIN_TYPE_ID_BLOCK(groovesprings, first_custom_type_id)
 
   // typeIds
-  CAF_ADD_TYPE_ID(groovesprings, (Envelope))
+  CAF_ADD_TYPE_ID(groovesprings, (EnvelopeQtPtr))
 
   // atoms
 
