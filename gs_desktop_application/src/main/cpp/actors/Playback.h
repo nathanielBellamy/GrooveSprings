@@ -13,7 +13,7 @@
 
 #include "./ActorIds.h"
 #include "../messaging/atoms.h"
-#include "../messaging/Envelope.h"
+#include "../messaging/EnvelopeQtPtr.h"
 
 using namespace caf;
 
@@ -22,7 +22,7 @@ namespace Act {
 
 struct PlaybackTrait {
 
-    using signatures = type_list<result<void>(strong_actor_ptr, Envelope, tc_trig_play_a)>;
+    using signatures = type_list<result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_play_a)>;
 
 };
 
@@ -41,7 +41,7 @@ struct PlaybackState {
 
      Playback::behavior_type make_behavior() {
        return {
-           [this](strong_actor_ptr reply_to, Envelope mainWindowEnvelop, tc_trig_play_a) {
+           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_play_a) {
              std::cout << "Playback : tc_trig_play_a" << std::endl;
 
              actor replyToActor = actor_cast<actor>(reply_to);

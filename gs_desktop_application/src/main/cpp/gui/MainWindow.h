@@ -17,7 +17,7 @@
 
 #include "../actors/ActorIds.h"
 #include "../messaging/atoms.h"
-#include "../messaging/Envelope.h"
+#include "../messaging/EnvelopeQtPtr.h"
 #include "../enums/PlayStates.h"
 
 #include <QFrame>

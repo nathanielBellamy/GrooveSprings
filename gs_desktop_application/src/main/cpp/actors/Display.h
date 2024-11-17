@@ -13,7 +13,7 @@
 
 #include "./ActorIds.h"
 #include "../messaging/atoms.h"
-#include "../messaging/Envelope.h"
+#include "../messaging/EnvelopeQtPtr.h"
 #include "../enums/PlayStates.h"
 
 #include "../gui/MainWindow.h"
@@ -27,7 +27,7 @@ namespace Act {
 struct DisplayTrait {
 
     using signatures = type_list<result<void>(strong_actor_ptr /*replyTo*/, init_display_a),
-                                 result<void>(strong_actor_ptr /*replyTo*/, Envelope, tc_trig_play_ar)
+                                 result<void>(strong_actor_ptr /*replyTo*/, EnvelopeQtPtr, tc_trig_play_ar)
                                >;
 
 };
@@ -58,7 +58,7 @@ struct DisplayState {
                  true
              );
            },
-           [this](strong_actor_ptr reply_to, Envelope mainWindowEnvelope, tc_trig_play_ar) {
+           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelope, tc_trig_play_ar) {
              std::cout << "Display  : tc_trig_play_ar" << std::endl;
              MainWindow* mainWindow = reinterpret_cast<MainWindow*>(mainWindowEnvelope.ptr);
              mainWindow->setPlayState(Gs::PlayStates::PLAY);

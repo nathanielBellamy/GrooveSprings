@@ -25,7 +25,7 @@ MainWindow::MainWindow(actor_system& sys)
     strong_actor_ptr displayPtr = sys.registry().get(Gs::Act::ActorIds::DISPLAY);
     strong_actor_ptr playbackPtr = sys.registry().get(Gs::Act::ActorIds::PLAYBACK);
 
-    Envelope mainWindowEnvelope{ reinterpret_cast<long>(this) };
+    EnvelopeQtPtr mainWindowEnvelope{ reinterpret_cast<long>(this) };
     scoped_actor self{sys};
     self->anon_send(
         actor_cast<actor>(playbackPtr),
@@ -47,7 +47,7 @@ MainWindow::MainWindow(actor_system& sys)
 void MainWindow::setPlayState(Gs::PlayStates newState) {
   playState = newState;
   std::cout << "New State :" << newState << std::endl;
-  label.setText(QString("New Play State Set - %1").arg(playState));
+  label.setText(QString("New Play State Set \n - %1").arg(playState));
 }
 
 } // Gui

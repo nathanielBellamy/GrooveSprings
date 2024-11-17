@@ -49,7 +49,7 @@ add_executable(groovesprings
         actors/ActorIds.h
         enums/PlayStates.h
         messaging/atoms.h
-        messaging/Envelope.h
+        messaging/EnvelopeQtPtr.h
 )
 target_link_libraries(groovesprings
         PUBLIC
