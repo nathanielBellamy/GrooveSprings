@@ -49,6 +49,7 @@ struct PlaybackState {
                  replyToActor,
                  actor_cast<strong_actor_ptr>(self),
                  mainWindowEnvelop,
+                 true, // TODO: spin up AudioThread and pass in result here
                  tc_trig_play_ar_v
              );
            },

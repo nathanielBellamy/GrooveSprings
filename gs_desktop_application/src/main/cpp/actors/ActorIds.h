@@ -10,6 +10,7 @@ namespace Act {
 
     enum ActorIds {
       SUPERVISOR,
+      APP_STATE_MANAGER,
       DISPLAY,
       PLAYBACK,
     };

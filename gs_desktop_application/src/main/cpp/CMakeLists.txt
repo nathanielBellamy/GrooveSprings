@@ -43,10 +43,12 @@ add_subdirectory(
 add_executable(groovesprings
         main.h
         main.cpp
+        AppState.h
+        AppState.cpp
         actors/Supervisor.h
-        actors/Display.h
         actors/Playback.h
         actors/ActorIds.h
+        actors/AppStateManager.h
         enums/PlayStates.h
         messaging/atoms.h
         messaging/EnvelopeQtPtr.h
