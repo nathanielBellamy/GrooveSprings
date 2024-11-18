@@ -5,17 +5,17 @@
 #ifndef APPSTATE_H
 #define APPSTATE_H
 
-#include "./enums/PlayStates.h"
+#include "./enums/PlayState.h"
 
 class AppState {
 
   public:
-    AppState(Gs::PlayStates playState);
+    AppState(Gs::PlayState playState);
 
-    static AppState setPlayState(AppState appState, Gs::PlayStates playState);
+    static AppState setPlayState(AppState appState, Gs::PlayState playState);
 
   private:
-    Gs::PlayStates playState;
+    Gs::PlayState playState;
 };
 
 #endif //APPSTATE_H

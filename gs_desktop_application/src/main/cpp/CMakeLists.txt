@@ -49,7 +49,7 @@ add_executable(groovesprings
         actors/Playback.h
         actors/ActorIds.h
         actors/AppStateManager.h
-        enums/PlayStates.h
+        enums/PlayState.h
         messaging/atoms.h
         messaging/EnvelopeQtPtr.h
 )
