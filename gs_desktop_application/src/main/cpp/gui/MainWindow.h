@@ -18,7 +18,7 @@
 #include "../actors/ActorIds.h"
 #include "../messaging/atoms.h"
 #include "../messaging/EnvelopeQtPtr.h"
-#include "../enums/PlayStates.h"
+#include "../enums/PlayState.h"
 
 #include <QFrame>
 #include <QMainWindow>
@@ -37,18 +37,22 @@ namespace Gui {
 class MainWindow : public QMainWindow {
   public:
     MainWindow(actor_system& sys);
-    void setPlayState(Gs::PlayStates state);
+    void setPlayState(Gs::PlayState state);
 
 
   private:
     QFrame frame;
     QLabel label {&frame};
     QToolBar transportControl {&frame};
-    QAction playTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_FileIcon), "&PlayTrig", &transportControl};
+    QAction playTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_MediaPlay), "", &transportControl};
+    QAction pauseTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_MediaPause), "", &transportControl};
+    QAction stopTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_MediaStop), "", &transportControl};
+    QAction rwTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_MediaSkipBackward), "", &transportControl};
+    QAction ffTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_MediaSkipForward), "", &transportControl};
     actor_system& sys;
     actor displayActor;
     actor playbackActor;
-    Gs::PlayStates playState;
+    Gs::PlayState playState;
 };
 
 } // Gui

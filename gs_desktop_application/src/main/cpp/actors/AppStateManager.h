@@ -20,7 +20,7 @@
 #include "../messaging/EnvelopeQtPtr.h"
 
 #include "../gui/MainWindow.h"
-#include "../enums/PlayStates.h"
+#include "../enums/PlayState.h"
 
 #include "../AppState.h"
 
@@ -32,8 +32,9 @@ namespace Act {
 
 struct AppStateManagerTrait {
 
-    using signatures = type_list<result<void>(EnvelopeQtPtr, tc_trig_play_a),
-                                 result<void>(strong_actor_ptr, EnvelopeQtPtr, bool, tc_trig_play_ar)
+    using signatures = type_list<
+                                 result<void>(EnvelopeQtPtr, int /* Gs::PlayState */, tc_trig_a),
+                                 result<void>(strong_actor_ptr, EnvelopeQtPtr, int /* Gs::PlayState */, bool, tc_trig_ar)
                                >;
 
 };
@@ -43,7 +44,7 @@ using AppStateManager = typed_actor<AppStateManagerTrait>;
 struct AppStateManagerState {
 
      AppStateManager::pointer self;
-     AppState appState = AppState(Gs::PlayStates::PLAY);
+     AppState appState = AppState(Gs::PlayState::PLAY);
      actor playback;
 
      AppStateManagerState(AppStateManager::pointer self, strong_actor_ptr supervisor) :
@@ -58,26 +59,50 @@ struct AppStateManagerState {
 
      AppStateManager::behavior_type make_behavior() {
        return {
-           [this](EnvelopeQtPtr mainWindowEnvelop, tc_trig_play_a) {
-             std::cout << "AppStateManager : tc_trig_play_a" << std::endl;
+           [this](EnvelopeQtPtr mainWindowEnvelop, int playStateInt, tc_trig_a) {
+             std::cout << "AppStateManager : tc_trig_a : " << playStateInt << std::endl;
 
              this->self->anon_send(
                  playback,
                  actor_cast<strong_actor_ptr>(self),
                  mainWindowEnvelop,
-                 tc_trig_play_a_v
+                 playStateInt,
+                 tc_trig_a_v
              );
            },
-           [this](strong_actor_ptr, EnvelopeQtPtr mainWindowEnvelop, bool success, tc_trig_play_ar) {
-             std::cout << "AppStateManager : tc_trig_play_ar" << std::endl;
+           [this](strong_actor_ptr, EnvelopeQtPtr mainWindowEnvelop, int playStateInt, bool success, tc_trig_ar) {
+             std::cout << "AppStateManager : tc_trig_ar : " << playStateInt << std::endl;
+             Gs::PlayState playState = Gs::intToPs(playStateInt);
 
              MainWindow* mainWindow = reinterpret_cast<MainWindow*>(mainWindowEnvelop.ptr);
-             if (success) {
-               appState = AppState::setPlayState(appState, Gs::PlayStates::PLAY);
-               mainWindow->setPlayState(Gs::PlayStates::PLAY);
-             } else {
-               appState = AppState::setPlayState(appState, Gs::PlayStates::STOP);
-               mainWindow->setPlayState(Gs::PlayStates::STOP);
+             if (!success) {
+               appState = AppState::setPlayState(appState, Gs::PlayState::STOP);
+               mainWindow->setPlayState(Gs::PlayState::STOP);
+             }
+
+             switch (playState) {
+               case Gs::PlayState::PLAY:
+                 appState = AppState::setPlayState(appState, Gs::PlayState::PLAY);
+                 mainWindow->setPlayState(Gs::PlayState::PLAY);
+                 break;
+               case Gs::PlayState::PAUSE:
+                 appState = AppState::setPlayState(appState, Gs::PlayState::PAUSE);
+                 mainWindow->setPlayState(Gs::PlayState::PAUSE);
+                 break;
+               case Gs::PlayState::STOP:
+                 appState = AppState::setPlayState(appState, Gs::PlayState::STOP);
+                 mainWindow->setPlayState(Gs::PlayState::STOP);
+                 break;
+               case Gs::PlayState::RW:
+                 appState = AppState::setPlayState(appState, Gs::PlayState::RW);
+                 mainWindow->setPlayState(Gs::PlayState::RW);
+                 break;
+               case Gs::PlayState::FF:
+                 appState = AppState::setPlayState(appState, Gs::PlayState::FF);
+                 mainWindow->setPlayState(Gs::PlayState::FF);
+                 break;
+               default:
+                 break;
              }
            },
        };

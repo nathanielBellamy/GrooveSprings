@@ -18,6 +18,11 @@ MainWindow::MainWindow(actor_system& sys)
 //  label.resize(label.sizeHint());
 
   transportControl.addAction(&playTrigAction);
+  transportControl.addAction(&pauseTrigAction);
+  transportControl.addAction(&stopTrigAction);
+  transportControl.addAction(&rwTrigAction);
+  transportControl.addAction(&ffTrigAction);
+
   transportControl.addSeparator();
   transportControl.setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
@@ -30,7 +35,64 @@ MainWindow::MainWindow(actor_system& sys)
     self->anon_send(
         actor_cast<actor>(appStateManagerPtr),
         mainWindowEnvelope,
-        tc_trig_play_a_v
+        Gs::psToInt(Gs::PlayState::PLAY),
+        tc_trig_a_v
+    );
+  });
+
+  connect(&pauseTrigAction, &QAction::triggered, [&] {
+    std::cout << "MainWindow : pauseTrigAction" << std::endl;
+    strong_actor_ptr appStateManagerPtr = sys.registry().get(Gs::Act::ActorIds::APP_STATE_MANAGER);
+
+    EnvelopeQtPtr mainWindowEnvelope{ reinterpret_cast<long>(this) };
+    scoped_actor self{sys};
+    self->anon_send(
+        actor_cast<actor>(appStateManagerPtr),
+        mainWindowEnvelope,
+        Gs::psToInt(Gs::PlayState::PAUSE),
+        tc_trig_a_v
+    );
+  });
+
+  connect(&stopTrigAction, &QAction::triggered, [&] {
+    std::cout << "MainWindow : stopTrigAction" << std::endl;
+    strong_actor_ptr appStateManagerPtr = sys.registry().get(Gs::Act::ActorIds::APP_STATE_MANAGER);
+
+    EnvelopeQtPtr mainWindowEnvelope{ reinterpret_cast<long>(this) };
+    scoped_actor self{sys};
+    self->anon_send(
+        actor_cast<actor>(appStateManagerPtr),
+        mainWindowEnvelope,
+        Gs::psToInt(Gs::PlayState::STOP),
+        tc_trig_a_v
+    );
+  });
+
+  connect(&rwTrigAction, &QAction::triggered, [&] {
+    std::cout << "MainWindow : rwTrigAction" << std::endl;
+    strong_actor_ptr appStateManagerPtr = sys.registry().get(Gs::Act::ActorIds::APP_STATE_MANAGER);
+
+    EnvelopeQtPtr mainWindowEnvelope{ reinterpret_cast<long>(this) };
+    scoped_actor self{sys};
+    self->anon_send(
+        actor_cast<actor>(appStateManagerPtr),
+        mainWindowEnvelope,
+        Gs::psToInt(Gs::PlayState::RW),
+        tc_trig_a_v
+    );
+  });
+
+  connect(&ffTrigAction, &QAction::triggered, [&] {
+    std::cout << "MainWindow : ffTrigAction" << std::endl;
+    strong_actor_ptr appStateManagerPtr = sys.registry().get(Gs::Act::ActorIds::APP_STATE_MANAGER);
+
+    EnvelopeQtPtr mainWindowEnvelope{ reinterpret_cast<long>(this) };
+    scoped_actor self{sys};
+    self->anon_send(
+        actor_cast<actor>(appStateManagerPtr),
+        mainWindowEnvelope,
+        Gs::psToInt(Gs::PlayState::FF),
+        tc_trig_a_v
     );
   });
 
@@ -42,7 +104,7 @@ MainWindow::MainWindow(actor_system& sys)
 //  resize(640, 480);
 }
 
-void MainWindow::setPlayState(Gs::PlayStates newState) {
+void MainWindow::setPlayState(Gs::PlayState newState) {
   playState = newState;
   std::cout << "New State :" << newState << std::endl;
   label.setText(QString("New Play State Set \n - %1").arg(playState));

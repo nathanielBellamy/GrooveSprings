@@ -15,6 +15,8 @@
 #include "../messaging/atoms.h"
 #include "../messaging/EnvelopeQtPtr.h"
 
+#include "../enums/PlayState.h"
+
 using namespace caf;
 
 namespace Gs {
@@ -22,7 +24,7 @@ namespace Act {
 
 struct PlaybackTrait {
 
-    using signatures = type_list<result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_play_a)>;
+    using signatures = type_list<result<void>(strong_actor_ptr, EnvelopeQtPtr, int /* Gs::PlayState */, tc_trig_a)>;
 
 };
 
@@ -41,16 +43,17 @@ struct PlaybackState {
 
      Playback::behavior_type make_behavior() {
        return {
-           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_play_a) {
-             std::cout << "Playback : tc_trig_play_a" << std::endl;
+           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, int playStateInt, tc_trig_a) {
+             std::cout << "Playback : tc_trig_a : " << playStateInt << std::endl;
 
              actor replyToActor = actor_cast<actor>(reply_to);
              this->self->anon_send(
                  replyToActor,
                  actor_cast<strong_actor_ptr>(self),
                  mainWindowEnvelop,
-                 true, // TODO: spin up AudioThread and pass in result here
-                 tc_trig_play_ar_v
+                 playStateInt,
+                 true, // TODO: manage AudioThread and pass in result here
+                 tc_trig_ar_v
              );
            },
        };
