@@ -24,7 +24,13 @@ namespace Act {
 
 struct PlaybackTrait {
 
-    using signatures = type_list<result<void>(strong_actor_ptr, EnvelopeQtPtr, int /* Gs::PlayState */, tc_trig_a)>;
+    using signatures = type_list<
+                                  result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_play_a),
+                                  result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_pause_a),
+                                  result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_stop_a),
+                                  result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_rw_a),
+                                  result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_ff_a)
+                       >;
 
 };
 
@@ -43,17 +49,64 @@ struct PlaybackState {
 
      Playback::behavior_type make_behavior() {
        return {
-           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, int playStateInt, tc_trig_a) {
-             std::cout << "Playback : tc_trig_a : " << playStateInt << std::endl;
+           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_play_a) {
+             std::cout << "Playback : tc_trig_play_a : " << std::endl;
 
              actor replyToActor = actor_cast<actor>(reply_to);
              this->self->anon_send(
                  replyToActor,
                  actor_cast<strong_actor_ptr>(self),
                  mainWindowEnvelop,
-                 playStateInt,
                  true, // TODO: manage AudioThread and pass in result here
-                 tc_trig_ar_v
+                 tc_trig_play_ar_v
+             );
+           },
+           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_pause_a) {
+             std::cout << "Playback : tc_trig_pause_a : " << std::endl;
+
+             actor replyToActor = actor_cast<actor>(reply_to);
+             this->self->anon_send(
+                 replyToActor,
+                 actor_cast<strong_actor_ptr>(self),
+                 mainWindowEnvelop,
+                 true, // TODO: manage AudioThread and pass in result here
+                 tc_trig_pause_ar_v
+             );
+           },
+           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_stop_a) {
+             std::cout << "Playback : tc_trig_stop_a : " << std::endl;
+
+             actor replyToActor = actor_cast<actor>(reply_to);
+             this->self->anon_send(
+                 replyToActor,
+                 actor_cast<strong_actor_ptr>(self),
+                 mainWindowEnvelop,
+                 true, // TODO: manage AudioThread and pass in result here
+                 tc_trig_stop_ar_v
+             );
+           },
+           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_rw_a) {
+             std::cout << "Playback : tc_trig_rw_a : " << std::endl;
+
+             actor replyToActor = actor_cast<actor>(reply_to);
+             this->self->anon_send(
+                 replyToActor,
+                 actor_cast<strong_actor_ptr>(self),
+                 mainWindowEnvelop,
+                 true, // TODO: manage AudioThread and pass in result here
+                 tc_trig_rw_ar_v
+             );
+           },
+           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_ff_a) {
+             std::cout << "Playback : tc_trig_ff_a : " << std::endl;
+
+             actor replyToActor = actor_cast<actor>(reply_to);
+             this->self->anon_send(
+                 replyToActor,
+                 actor_cast<strong_actor_ptr>(self),
+                 mainWindowEnvelop,
+                 true, // TODO: manage AudioThread and pass in result here
+                 tc_trig_ff_ar_v
              );
            },
        };
