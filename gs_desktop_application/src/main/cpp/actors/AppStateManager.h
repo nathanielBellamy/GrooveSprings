@@ -33,8 +33,16 @@ namespace Act {
 struct AppStateManagerTrait {
 
     using signatures = type_list<
-                                 result<void>(EnvelopeQtPtr, int /* Gs::PlayState */, tc_trig_a),
-                                 result<void>(strong_actor_ptr, EnvelopeQtPtr, int /* Gs::PlayState */, bool, tc_trig_ar)
+                                 result<void>(EnvelopeQtPtr, tc_trig_play_a),
+                                 result<void>(strong_actor_ptr, EnvelopeQtPtr, bool, tc_trig_play_ar),
+                                 result<void>(EnvelopeQtPtr, tc_trig_pause_a),
+                                 result<void>(strong_actor_ptr, EnvelopeQtPtr, bool, tc_trig_pause_ar),
+                                 result<void>(EnvelopeQtPtr, tc_trig_stop_a),
+                                 result<void>(strong_actor_ptr, EnvelopeQtPtr, bool, tc_trig_stop_ar),
+                                 result<void>(EnvelopeQtPtr, tc_trig_rw_a),
+                                 result<void>(strong_actor_ptr, EnvelopeQtPtr, bool, tc_trig_rw_ar),
+                                 result<void>(EnvelopeQtPtr, tc_trig_ff_a),
+                                 result<void>(strong_actor_ptr, EnvelopeQtPtr, bool, tc_trig_ff_ar)
                                >;
 
 };
@@ -59,52 +67,111 @@ struct AppStateManagerState {
 
      AppStateManager::behavior_type make_behavior() {
        return {
-           [this](EnvelopeQtPtr mainWindowEnvelop, int playStateInt, tc_trig_a) {
-             std::cout << "AppStateManager : tc_trig_a : " << playStateInt << std::endl;
+           [this](EnvelopeQtPtr mainWindowEnvelop, tc_trig_play_a) {
+             std::cout << "AppStateManager : tc_trig_play_a : " << std::endl;
 
              this->self->anon_send(
                  playback,
                  actor_cast<strong_actor_ptr>(self),
                  mainWindowEnvelop,
-                 playStateInt,
-                 tc_trig_a_v
+                 tc_trig_play_a_v
              );
            },
-           [this](strong_actor_ptr, EnvelopeQtPtr mainWindowEnvelop, int playStateInt, bool success, tc_trig_ar) {
-             std::cout << "AppStateManager : tc_trig_ar : " << playStateInt << std::endl;
-             Gs::PlayState playState = Gs::intToPs(playStateInt);
+           [this](strong_actor_ptr, EnvelopeQtPtr mainWindowEnvelop, bool success, tc_trig_play_ar) {
+             std::cout << "AppStateManager : tc_trig_play_ar : " << std::endl;
 
              MainWindow* mainWindow = reinterpret_cast<MainWindow*>(mainWindowEnvelop.ptr);
-             if (!success) {
+             if (success) {
+               appState = AppState::setPlayState(appState, Gs::PlayState::PLAY);
+               mainWindow->setPlayState(Gs::PlayState::PLAY);
+             } else {
                appState = AppState::setPlayState(appState, Gs::PlayState::STOP);
                mainWindow->setPlayState(Gs::PlayState::STOP);
              }
+           },
+           [this](EnvelopeQtPtr mainWindowEnvelop, tc_trig_pause_a) {
+             std::cout << "AppStateManager : tc_trig_pause_a : " << std::endl;
 
-             switch (playState) {
-               case Gs::PlayState::PLAY:
-                 appState = AppState::setPlayState(appState, Gs::PlayState::PLAY);
-                 mainWindow->setPlayState(Gs::PlayState::PLAY);
-                 break;
-               case Gs::PlayState::PAUSE:
-                 appState = AppState::setPlayState(appState, Gs::PlayState::PAUSE);
-                 mainWindow->setPlayState(Gs::PlayState::PAUSE);
-                 break;
-               case Gs::PlayState::STOP:
-                 appState = AppState::setPlayState(appState, Gs::PlayState::STOP);
-                 mainWindow->setPlayState(Gs::PlayState::STOP);
-                 break;
-               case Gs::PlayState::RW:
-                 appState = AppState::setPlayState(appState, Gs::PlayState::RW);
-                 mainWindow->setPlayState(Gs::PlayState::RW);
-                 break;
-               case Gs::PlayState::FF:
-                 appState = AppState::setPlayState(appState, Gs::PlayState::FF);
-                 mainWindow->setPlayState(Gs::PlayState::FF);
-                 break;
-               default:
-                 break;
+             this->self->anon_send(
+                 playback,
+                 actor_cast<strong_actor_ptr>(self),
+                 mainWindowEnvelop,
+                 tc_trig_pause_a_v
+             );
+           },
+           [this](strong_actor_ptr, EnvelopeQtPtr mainWindowEnvelop, bool success, tc_trig_pause_ar) {
+             std::cout << "AppStateManager : tc_trig_pause_ar : " << std::endl;
+
+             MainWindow* mainWindow = reinterpret_cast<MainWindow*>(mainWindowEnvelop.ptr);
+             if (success) {
+               appState = AppState::setPlayState(appState, Gs::PlayState::PAUSE);
+               mainWindow->setPlayState(Gs::PlayState::PAUSE);
+             } else {
+               appState = AppState::setPlayState(appState, Gs::PlayState::STOP);
+               mainWindow->setPlayState(Gs::PlayState::STOP);
              }
            },
+           [this](EnvelopeQtPtr mainWindowEnvelop, tc_trig_stop_a) {
+             std::cout << "AppStateManager : tc_trig_stop_a : " << std::endl;
+
+             this->self->anon_send(
+                 playback,
+                 actor_cast<strong_actor_ptr>(self),
+                 mainWindowEnvelop,
+                 tc_trig_stop_a_v
+             );
+           },
+           [this](strong_actor_ptr, EnvelopeQtPtr mainWindowEnvelop, bool success, tc_trig_stop_ar) {
+             std::cout << "AppStateManager : tc_trig_stop_ar : " << std::endl;
+
+             MainWindow* mainWindow = reinterpret_cast<MainWindow*>(mainWindowEnvelop.ptr);
+             appState = AppState::setPlayState(appState, Gs::PlayState::STOP);
+             mainWindow->setPlayState(Gs::PlayState::STOP);
+           },
+           [this](EnvelopeQtPtr mainWindowEnvelop, tc_trig_rw_a) {
+             std::cout << "AppStateManager : tc_trig_rw_a : " << std::endl;
+
+             this->self->anon_send(
+                 playback,
+                 actor_cast<strong_actor_ptr>(self),
+                 mainWindowEnvelop,
+                 tc_trig_rw_a_v
+             );
+           },
+           [this](strong_actor_ptr, EnvelopeQtPtr mainWindowEnvelop, bool success, tc_trig_rw_ar) {
+             std::cout << "AppStateManager : tc_trig_rw_ar : " << std::endl;
+
+             MainWindow* mainWindow = reinterpret_cast<MainWindow*>(mainWindowEnvelop.ptr);
+             if (success) {
+               appState = AppState::setPlayState(appState, Gs::PlayState::RW);
+               mainWindow->setPlayState(Gs::PlayState::RW);
+             } else {
+               appState = AppState::setPlayState(appState, Gs::PlayState::STOP);
+               mainWindow->setPlayState(Gs::PlayState::STOP);
+             }
+           },
+           [this](EnvelopeQtPtr mainWindowEnvelop, tc_trig_ff_a) {
+             std::cout << "AppStateManager : tc_trig_ff_a : " << std::endl;
+
+             this->self->anon_send(
+                 playback,
+                 actor_cast<strong_actor_ptr>(self),
+                 mainWindowEnvelop,
+                 tc_trig_ff_a_v
+             );
+           },
+           [this](strong_actor_ptr, EnvelopeQtPtr mainWindowEnvelop, bool success, tc_trig_ff_ar) {
+             std::cout << "AppStateManager : tc_trig_ff_ar : " << std::endl;
+
+             MainWindow* mainWindow = reinterpret_cast<MainWindow*>(mainWindowEnvelop.ptr);
+             if (success) {
+               appState = AppState::setPlayState(appState, Gs::PlayState::FF);
+               mainWindow->setPlayState(Gs::PlayState::FF);
+             } else {
+               appState = AppState::setPlayState(appState, Gs::PlayState::STOP);
+               mainWindow->setPlayState(Gs::PlayState::STOP);
+             }
+           }
        };
      };
 };

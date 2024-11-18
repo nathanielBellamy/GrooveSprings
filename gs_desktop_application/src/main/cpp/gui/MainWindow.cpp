@@ -35,8 +35,7 @@ MainWindow::MainWindow(actor_system& sys)
     self->anon_send(
         actor_cast<actor>(appStateManagerPtr),
         mainWindowEnvelope,
-        Gs::psToInt(Gs::PlayState::PLAY),
-        tc_trig_a_v
+        tc_trig_play_a_v
     );
   });
 
@@ -49,8 +48,7 @@ MainWindow::MainWindow(actor_system& sys)
     self->anon_send(
         actor_cast<actor>(appStateManagerPtr),
         mainWindowEnvelope,
-        Gs::psToInt(Gs::PlayState::PAUSE),
-        tc_trig_a_v
+        tc_trig_pause_a_v
     );
   });
 
@@ -63,8 +61,7 @@ MainWindow::MainWindow(actor_system& sys)
     self->anon_send(
         actor_cast<actor>(appStateManagerPtr),
         mainWindowEnvelope,
-        Gs::psToInt(Gs::PlayState::STOP),
-        tc_trig_a_v
+        tc_trig_stop_a_v
     );
   });
 
@@ -77,8 +74,7 @@ MainWindow::MainWindow(actor_system& sys)
     self->anon_send(
         actor_cast<actor>(appStateManagerPtr),
         mainWindowEnvelope,
-        Gs::psToInt(Gs::PlayState::RW),
-        tc_trig_a_v
+        tc_trig_rw_a_v
     );
   });
 
@@ -91,8 +87,7 @@ MainWindow::MainWindow(actor_system& sys)
     self->anon_send(
         actor_cast<actor>(appStateManagerPtr),
         mainWindowEnvelope,
-        Gs::psToInt(Gs::PlayState::FF),
-        tc_trig_a_v
+        tc_trig_ff_a_v
     );
   });
 
