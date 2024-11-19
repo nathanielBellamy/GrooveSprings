@@ -7,15 +7,29 @@
 
 #include "./enums/PlayState.h"
 
+namespace Gs {
+
+struct AppStatePacket {
+    int playState;
+};
+
+template <class Inspector>
+bool inspect(Inspector& f, AppStatePacket& x) {
+    return f.object(x).fields(f.field("", x.playState));
+}
+
 class AppState {
 
   public:
     AppState(Gs::PlayState playState);
-
-    static AppState setPlayState(AppState appState, Gs::PlayState playState);
-
-  private:
     Gs::PlayState playState;
+
+    AppStatePacket toPacket();
+
+    // mutations
+    static AppState setPlayState(AppState appState, Gs::PlayState playState);
 };
+
+} // Gs
 
 #endif //APPSTATE_H

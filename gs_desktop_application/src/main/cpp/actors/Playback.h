@@ -25,11 +25,11 @@ namespace Act {
 struct PlaybackTrait {
 
     using signatures = type_list<
-                                  result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_play_a),
-                                  result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_pause_a),
-                                  result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_stop_a),
-                                  result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_rw_a),
-                                  result<void>(strong_actor_ptr, EnvelopeQtPtr, tc_trig_ff_a)
+                                  result<void>(strong_actor_ptr, Gs::EnvelopeQtPtr, tc_trig_play_a),
+                                  result<void>(strong_actor_ptr, Gs::EnvelopeQtPtr, tc_trig_pause_a),
+                                  result<void>(strong_actor_ptr, Gs::EnvelopeQtPtr, tc_trig_stop_a),
+                                  result<void>(strong_actor_ptr, Gs::EnvelopeQtPtr, tc_trig_rw_a),
+                                  result<void>(strong_actor_ptr, Gs::EnvelopeQtPtr, tc_trig_ff_a)
                        >;
 
 };
@@ -49,7 +49,7 @@ struct PlaybackState {
 
      Playback::behavior_type make_behavior() {
        return {
-           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_play_a) {
+           [this](strong_actor_ptr reply_to, Gs::EnvelopeQtPtr mainWindowEnvelop, tc_trig_play_a) {
              std::cout << "Playback : tc_trig_play_a : " << std::endl;
 
              actor replyToActor = actor_cast<actor>(reply_to);
@@ -61,7 +61,7 @@ struct PlaybackState {
                  tc_trig_play_ar_v
              );
            },
-           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_pause_a) {
+           [this](strong_actor_ptr reply_to, Gs::EnvelopeQtPtr mainWindowEnvelop, tc_trig_pause_a) {
              std::cout << "Playback : tc_trig_pause_a : " << std::endl;
 
              actor replyToActor = actor_cast<actor>(reply_to);
@@ -73,7 +73,7 @@ struct PlaybackState {
                  tc_trig_pause_ar_v
              );
            },
-           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_stop_a) {
+           [this](strong_actor_ptr reply_to, Gs::EnvelopeQtPtr mainWindowEnvelop, tc_trig_stop_a) {
              std::cout << "Playback : tc_trig_stop_a : " << std::endl;
 
              actor replyToActor = actor_cast<actor>(reply_to);
@@ -85,7 +85,7 @@ struct PlaybackState {
                  tc_trig_stop_ar_v
              );
            },
-           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_rw_a) {
+           [this](strong_actor_ptr reply_to, Gs::EnvelopeQtPtr mainWindowEnvelop, tc_trig_rw_a) {
              std::cout << "Playback : tc_trig_rw_a : " << std::endl;
 
              actor replyToActor = actor_cast<actor>(reply_to);
@@ -97,7 +97,7 @@ struct PlaybackState {
                  tc_trig_rw_ar_v
              );
            },
-           [this](strong_actor_ptr reply_to, EnvelopeQtPtr mainWindowEnvelop, tc_trig_ff_a) {
+           [this](strong_actor_ptr reply_to, Gs::EnvelopeQtPtr mainWindowEnvelop, tc_trig_ff_a) {
              std::cout << "Playback : tc_trig_ff_a : " << std::endl;
 
              actor replyToActor = actor_cast<actor>(reply_to);

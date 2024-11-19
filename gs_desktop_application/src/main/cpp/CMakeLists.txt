@@ -52,6 +52,9 @@ add_executable(groovesprings
         enums/PlayState.h
         messaging/atoms.h
         messaging/EnvelopeQtPtr.h
+        gui/TransportControl.cpp
+        gui/TransportControl.h
+        actors/Display.h
 )
 target_link_libraries(groovesprings
         PUBLIC
