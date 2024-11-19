@@ -2,8 +2,8 @@
 // Created by ns on 11/4/24.
 //
 
-#ifndef DISPLAY_H
-#define DISPLAY_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <iostream>
 
@@ -19,6 +19,8 @@
 #include "../messaging/atoms.h"
 #include "../messaging/EnvelopeQtPtr.h"
 #include "../enums/PlayState.h"
+
+#include "./TransportControl.h"
 
 #include <QFrame>
 #include <QMainWindow>
@@ -37,18 +39,11 @@ namespace Gui {
 class MainWindow : public QMainWindow {
   public:
     MainWindow(actor_system& sys);
-    void setPlayState(Gs::PlayState state);
-
 
   private:
     QFrame frame;
     QLabel label {&frame};
-    QToolBar transportControl {&frame};
-    QAction playTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_MediaPlay), "", &transportControl};
-    QAction pauseTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_MediaPause), "", &transportControl};
-    QAction stopTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_MediaStop), "", &transportControl};
-    QAction rwTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_MediaSkipBackward), "", &transportControl};
-    QAction ffTrigAction {style()->standardIcon(QStyle::StandardPixmap::SP_MediaSkipForward), "", &transportControl};
+    TransportControl transportControl;
     actor_system& sys;
     actor displayActor;
     actor playbackActor;
@@ -60,4 +55,4 @@ class MainWindow : public QMainWindow {
 
 
 
-#endif //DISPLAY_H
+#endif //MAINWINDOW_H
