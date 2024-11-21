@@ -19,18 +19,9 @@
 ```bash
 cd gs-jni/src/main/java/dev/nateschieber/groovesprings/jni
 ```
-1. using makefile/gnu make or
+- using makefile/gnu make 
 ```bash
 make clean
 make lib
 ```
-2. using cmake
-
-```bash
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ../
-cmake --build .
-```
-
 ---
