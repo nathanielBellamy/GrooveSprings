@@ -1,10 +1,3 @@
-//
-// Created by ns on 11/17/24.
-//
-
-#ifndef DISPLAY_H
-#define DISPLAY_H
-
 // TODO:
 // - jk, we want a Display Actor
 // - we do not want Actors to have to know about Qt classes
@@ -18,8 +11,8 @@
 // Created by ns on 10/20/24.
 //
 
-#ifndef GSSUPERVISOR_H
-#define GSSUPERVISOR_H
+#ifndef DISPLAY_H
+#define DISPLAY_H
 
 #include "caf/actor_ostream.hpp"
 #include "caf/actor_registry.hpp"
@@ -31,6 +24,8 @@
 #include "../messaging/atoms.h"
 #include "./AppStateManager.h"
 #include "./Playback.h"
+#include "../AppState.h"
+#include "../gui/MainWindow.h"
 
 using namespace caf;
 
@@ -41,22 +36,21 @@ struct DisplayTrait {
 
     using signatures = type_list<
                                   result<void>(strong_actor_ptr, hydrate_display_a),
-                                  result<void>(strong_actor_ptr, current_state_a)
+                                  result<void>(strong_actor_ptr, Gs::AppStatePacket, current_state_a)
                                 >;
 
 };
 
-using Display = typed_actor<SupervisorTrait>;
+using Display = typed_actor<DisplayTrait>;
 
 struct DisplayState {
-     actor appStateManager;
-     MainWindow* mainWindow;
+     Gs::Gui::MainWindow* mainWindow;
 
      Display::pointer self;
 
-     DisplayState(Display::pointer self, strong_actor_ptr supervisor, actor appStateManager) :
+     DisplayState(Display::pointer self, strong_actor_ptr supervisor, Gs::Gui::MainWindow* mainWindow) :
          self(self)
-       , appStateManager(appStateManager)
+       , mainWindow(mainWindow)
        {
            self->link_to(supervisor);
            self->system().registry().put(ActorIds::DISPLAY, actor_cast<strong_actor_ptr>(self));
@@ -65,11 +59,18 @@ struct DisplayState {
      Display::behavior_type make_behavior() {
        return {
            [this](strong_actor_ptr replyToPtr, hydrate_display_a) {
-             std::cout << "Display running " << std::endl;
+             std::cout << "Display : hydrate_display_a " << std::endl;
+             strong_actor_ptr appStateManager = self->system().registry().get(ActorIds::APP_STATE_MANAGER);
              this->self->anon_send(
-                 appStateManager,
+                 actor_cast<actor>(appStateManager),
+                 actor_cast<strong_actor_ptr>(self),
                  read_state_a_v
              );
+           },
+           [this](strong_actor_ptr replyToPtr, Gs::AppStatePacket appStatePacket, current_state_a) {
+             std::cout << "Display : current_state_a " << std::endl;
+             if ( mainWindow->hydrateState(appStatePacket) )
+               std::cout << "Display : Error : unable to hydrate state " << std::endl;
            },
        };
      };
@@ -77,7 +78,5 @@ struct DisplayState {
 
 } // Act
 } // Gs
-
-#endif //GSSUPERVISOR_H
 
 #endif //DISPLAY_H

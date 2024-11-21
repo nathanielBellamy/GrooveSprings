@@ -20,4 +20,9 @@ AppStatePacket AppState::toPacket() {
     return packet;
 }
 
+AppState AppState::fromPacket(const AppStatePacket& packet) {
+    AppState appState { Gs::intToPs(packet.playState) };
+    return appState;
+};
+
 } // Gs

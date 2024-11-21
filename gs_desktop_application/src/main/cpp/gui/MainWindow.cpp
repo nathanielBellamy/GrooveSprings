@@ -25,5 +25,11 @@ MainWindow::MainWindow(actor_system& sys)
   resize(640, 480);
 }
 
+int MainWindow::hydrateState(const Gs::AppStatePacket& appStatePacket) {
+    std::cout << "MainWindow : hydrateState: " << std::endl;
+    transportControl.hydrateState(appStatePacket);
+    return 0;
+}
+
 } // Gui
 } // Gs
