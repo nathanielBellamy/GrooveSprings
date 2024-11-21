@@ -37,7 +37,8 @@ struct AppStateManagerTrait {
                                  result<void>(tc_trig_rw_a),
                                  result<void>(strong_actor_ptr, bool, tc_trig_rw_ar),
                                  result<void>(tc_trig_ff_a),
-                                 result<void>(strong_actor_ptr, bool, tc_trig_ff_ar)
+                                 result<void>(strong_actor_ptr, bool, tc_trig_ff_ar),
+                                 result<void>(strong_actor_ptr, read_state_a)
                                >;
 
 };
@@ -48,7 +49,8 @@ struct AppStateManagerState {
 
      AppStateManager::pointer self;
      Gs::AppState appState;
-     actor playback;
+     strong_actor_ptr playback;
+     strong_actor_ptr display;
 
      AppStateManagerState(AppStateManager::pointer self, strong_actor_ptr supervisor) :
           self(self)
@@ -57,17 +59,26 @@ struct AppStateManagerState {
            self->link_to(supervisor);
            self->system().registry().put(ActorIds::APP_STATE_MANAGER, actor_cast<strong_actor_ptr>(self));
 
-           playback = actor_cast<actor>(self->system().registry().get(ActorIds::PLAYBACK));
-
+           playback = self->system().registry().get(ActorIds::PLAYBACK);
+           display = self->system().registry().get(ActorIds::DISPLAY);
         }
 
      AppStateManager::behavior_type make_behavior() {
        return {
+           [this](strong_actor_ptr replyTo, read_state_a) {
+             std::cout << "AppStateManager : read_state_a : " << std::endl;
+             this->self->anon_send(
+                 actor_cast<actor>(replyTo),
+                 actor_cast<strong_actor_ptr>(self),
+                 appState.toPacket(),
+                 current_state_a_v
+             );
+           },
            [this](tc_trig_play_a) {
              std::cout << "AppStateManager : tc_trig_play_a : " << std::endl;
 
              this->self->anon_send(
-                 playback,
+                 actor_cast<actor>(playback),
                  actor_cast<strong_actor_ptr>(self),
                  tc_trig_play_a_v
              );
@@ -80,12 +91,18 @@ struct AppStateManagerState {
              } else {
                appState = Gs::AppState::setPlayState(appState, Gs::PlayState::STOP);
              }
+             strong_actor_ptr displayPtr = self->system().registry().get(ActorIds::DISPLAY);
+             this->self->anon_send(
+               actor_cast<actor>(displayPtr),
+               actor_cast<strong_actor_ptr>(self),
+               hydrate_display_a_v
+             );
            },
            [this](tc_trig_pause_a) {
              std::cout << "Gs::AppStateManager : tc_trig_pause_a : " << std::endl;
 
              this->self->anon_send(
-                 playback,
+                 actor_cast<actor>(playback),
                  actor_cast<strong_actor_ptr>(self),
                  tc_trig_pause_a_v
              );
@@ -103,21 +120,20 @@ struct AppStateManagerState {
              std::cout << "Gs::AppStateManager : tc_trig_stop_a : " << std::endl;
 
              this->self->anon_send(
-                 playback,
+                 actor_cast<actor>(playback),
                  actor_cast<strong_actor_ptr>(self),
                  tc_trig_stop_a_v
              );
            },
            [this](strong_actor_ptr, bool success, tc_trig_stop_ar) {
              std::cout << "Gs::AppStateManager : tc_trig_stop_ar : " << std::endl;
-
              appState = Gs::AppState::setPlayState(appState, Gs::PlayState::STOP);
            },
            [this](tc_trig_rw_a) {
              std::cout << "Gs::AppStateManager : tc_trig_rw_a : " << std::endl;
 
              this->self->anon_send(
-                 playback,
+                 actor_cast<actor>(playback),
                  actor_cast<strong_actor_ptr>(self),
                  tc_trig_rw_a_v
              );
@@ -135,7 +151,7 @@ struct AppStateManagerState {
              std::cout << "Gs::AppStateManager : tc_trig_ff_a : " << std::endl;
 
              this->self->anon_send(
-                 playback,
+                 actor_cast<actor>(playback),
                  actor_cast<strong_actor_ptr>(self),
                  tc_trig_ff_a_v
              );

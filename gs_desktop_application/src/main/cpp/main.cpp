@@ -10,11 +10,13 @@ using namespace std::literals;
 namespace Gs {
 
 void caf_main(int argc, char *argv[], actor_system& sys, Steinberg::Vst::AudioHost::App* vst3AudioHost) {
-  auto supervisor = sys.spawn(actor_from_state<Act::SupervisorState>, sys);
 
   // init Qt App
   auto qtApp = QApplication {argc, argv};
   auto mainWindow = Gs::Gui::MainWindow { sys };
+  // init ActorSystem
+  auto supervisor = sys.spawn(actor_from_state<Act::SupervisorState>, &mainWindow);
+
   mainWindow.show();
   qtApp.exec();
 

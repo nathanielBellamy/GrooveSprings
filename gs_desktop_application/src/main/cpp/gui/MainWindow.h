@@ -39,14 +39,13 @@ namespace Gui {
 class MainWindow : public QMainWindow {
   public:
     MainWindow(actor_system& sys);
+    int hydrateState(const Gs::AppStatePacket& appStatePacket);
 
   private:
     QFrame frame;
     QLabel label {&frame};
     TransportControl transportControl;
     actor_system& sys;
-    actor displayActor;
-    actor playbackActor;
     Gs::PlayState playState;
 };
 

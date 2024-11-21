@@ -25,6 +25,8 @@ class AppState {
     Gs::PlayState playState;
 
     AppStatePacket toPacket();
+     // TODO?
+    static AppState fromPacket(const AppStatePacket& packet);
 
     // mutations
     static AppState setPlayState(AppState appState, Gs::PlayState playState);

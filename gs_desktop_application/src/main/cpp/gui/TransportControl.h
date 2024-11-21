@@ -37,6 +37,7 @@ class TransportControl : public QToolBar {
 
   public:
     TransportControl(QWidget* parent, actor_system& sys);
+    int hydrateState(const Gs::AppStatePacket& appStatePacket);
     void setPlayState(Gs::PlayState state);
 
   private:

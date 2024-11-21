@@ -2,8 +2,8 @@
 // Created by ns on 10/20/24.
 //
 
-#ifndef GSSUPERVISOR_H
-#define GSSUPERVISOR_H
+#ifndef SUPERVISOR_H
+#define SUPERVISOR_H
 
 #include "caf/actor_ostream.hpp"
 #include "caf/actor_registry.hpp"
@@ -15,6 +15,9 @@
 #include "../messaging/atoms.h"
 #include "./AppStateManager.h"
 #include "./Playback.h"
+#include "./Display.h"
+
+#include "../gui/MainWindow.h"
 
 using namespace caf;
 
@@ -33,23 +36,34 @@ struct SupervisorState {
      bool running;
      strong_actor_ptr playbackActorPtr;
      strong_actor_ptr appStateManagerPtr;
-     actor_system& sys;
+     strong_actor_ptr displayPtr;
+     Gs::Gui::MainWindow* mainWindowPtr;
 
      Supervisor::pointer self;
 
-     SupervisorState(Supervisor::pointer self, actor_system& sys) :
+     SupervisorState(Supervisor::pointer self, Gs::Gui::MainWindow* mainWindowPtr) :
          self(self)
-       , sys(sys)
+       , mainWindowPtr(mainWindowPtr)
        , running(false)
          {
            self->system().registry().put(ActorIds::SUPERVISOR, actor_cast<strong_actor_ptr>(self));
 //           auto gs_app_state_manager = sys.spawn(actor_from_state<gs_app_state_manager_state>);
 //           auto gs_controller = sys.spawn(actor_from_state<gs_controller_state
-           auto playback = sys.spawn(actor_from_state<PlaybackState>, actor_cast<strong_actor_ptr>(self));
+           auto playback = self->system().spawn(actor_from_state<PlaybackState>, actor_cast<strong_actor_ptr>(self));
            playbackActorPtr = actor_cast<strong_actor_ptr>(playback);
 
-           auto appStateManager = sys.spawn(actor_from_state<AppStateManagerState>, actor_cast<strong_actor_ptr>(self));
+           auto appStateManager = self->system().spawn(
+               actor_from_state<AppStateManagerState>,
+               actor_cast<strong_actor_ptr>(self)
+           );
            appStateManagerPtr = actor_cast<strong_actor_ptr>(appStateManager);
+
+           auto display = self->system().spawn(
+               actor_from_state<DisplayState>,
+               actor_cast<strong_actor_ptr>(self),
+               mainWindowPtr
+           );
+           displayPtr = actor_cast<strong_actor_ptr>(display);
 
            running = true;
          }
@@ -70,4 +84,4 @@ struct SupervisorState {
 } // Act
 } // Gs
 
-#endif //GSSUPERVISOR_H
+#endif //SUPERVISOR_H
