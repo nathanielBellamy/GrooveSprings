@@ -79,6 +79,3 @@ final case class RespondTimerStart(id: String, replyTo: ActorRef[TimerStart]) ex
 
 final case class SendReadComplete() extends GsCommand
 final case class SendLastFrameId(lastFrameId: Long) extends GsCommand
-
-final case class InitVst3Host(replyTo: ActorRef[RespondInitVst3Host]) extends GsCommand
-final case class RespondInitVst3Host(replyTo: ActorRef[InitVst3Host]) extends GsCommand

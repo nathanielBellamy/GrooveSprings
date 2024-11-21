@@ -6,7 +6,6 @@
 #include "jni.h"
 #include "./audio_data.h"
 #include "./jni_data.h"
-#include "./effects/vst3/host/audiohost/source/audiohost.h"
 
 class Audio
 {
@@ -14,10 +13,9 @@ class Audio
         jlong threadId;
         char const* fileName;
         jlong initialFrameId;
-        jlong vst3HostPtr;
 
-      public:
-        Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameId, jlong vst3HostPtr);
+    public:
+        Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameId);
 
         int run();
 

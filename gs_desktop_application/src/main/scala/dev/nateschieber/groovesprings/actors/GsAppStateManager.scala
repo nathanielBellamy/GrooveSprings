@@ -63,9 +63,9 @@ object GsAppStateManager {
       given system: ActorSystem[Nothing] = context.system
 
       val manager = new GsAppStateManager(context, gsPlaybackRef, gsDisplayRef)
-//      println("==GS Startup State::")
+      println("==GS Startup State::")
       gsPlaybackRef ! InitialTrackSelect(manager.getAppState().currTrack)
-//      manager.printState()
+      manager.printState()
       manager
   }
 }

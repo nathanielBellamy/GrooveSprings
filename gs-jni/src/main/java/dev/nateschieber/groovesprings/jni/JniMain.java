@@ -18,13 +18,12 @@ public class JniMain {
 
   private native int addNative(int x, int y);
 
-  public static void initPlaybackLoop(Long threadId, String filePath, Long initialFrameId, Long vst3HostAppPtr) {
+  public static void initPlaybackLoop(Long threadId, String filePath, Long initialFrameId) {
     long initFrameId = initialFrameId == null ? 0l : initialFrameId.longValue();
-    long vst3Ptr = vst3HostAppPtr == null ? 0l : vst3HostAppPtr.longValue();
-    new JniMain().initPlaybackLoopNative(threadId, filePath, initFrameId, vst3Ptr);
+    new JniMain().initPlaybackLoopNative(threadId, filePath, initialFrameId);
   }
 
-  private native void initPlaybackLoopNative(long threadId, String filePath, long initialFrameId, long vst3HostAppPtr); // blocking
+  private native void initPlaybackLoopNative(long threadId, String filePath, long initialFrameId);
 
   public static SfInfo readSfInfo(String filePath) {
     SfInfo res = new JniMain().readSfInfoNative(filePath);
@@ -33,21 +32,4 @@ public class JniMain {
 
   private native SfInfo readSfInfoNative(String filePath);
 
-  public static long allocVst3Host() {
-    return new JniMain().allocVst3HostNative();
-  };
-
-  private native long allocVst3HostNative();
-
-  public static long deleteVst3Host(long vst3HostAppPtr) {
-    return new JniMain().deleteVst3HostNative(vst3HostAppPtr);
-  };
-
-  private native long deleteVst3HostNative(long vst3HostAppPtr);
-
-  public static void initVst3Host(long appPtr) {
-    new JniMain().initVst3HostNative(appPtr);
-  }
-
-  private native void initVst3HostNative(long appPtr); // blocking
 }
