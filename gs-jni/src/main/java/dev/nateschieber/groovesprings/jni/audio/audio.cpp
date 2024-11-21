@@ -8,19 +8,16 @@
 #include "./audio_data.h"
 #include "./constants.h"
 #include "./jni_data.h"
-#include "./effects/vst3/host/audiohost/source/audiohost.h"
 
 #define PA_SAMPLE_TYPE      paFloat32
 
 typedef float SAMPLE;
 
-Audio::Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameId, jlong vst3HostPtr) :
+Audio::Audio(JNIEnv* env, jlong threadId, jstring jFileName, jlong initialFrameId) :
   jniEnv(env)
   , threadId(threadId)
   , fileName(env->GetStringUTFChars(jFileName, 0))
-  , initialFrameId(initialFrameId)
-  , vst3HostPtr(vst3HostPtr)
-  {}
+  , initialFrameId(initialFrameId) {}
 
 void Audio::freeAudioData(AUDIO_DATA *audioData) {
   free(audioData->buffer);
@@ -37,39 +34,12 @@ int Audio::callback(const void *inputBuffer, void *outputBuffer,
                     PaStreamCallbackFlags statusFlags,
                     void *userData )
 {
-  SAMPLE *out = (SAMPLE*) outputBuffer;
+  SAMPLE *out = (SAMPLE*)outputBuffer;
   unsigned int i;
-  unsigned int c;
   (void) inputBuffer;
   (void) timeInfo; /* Prevent unused variable warnings. */
   (void) statusFlags;
-  AUDIO_DATA *audioData = (AUDIO_DATA*) userData;
-
-  // >> VST PROCESSING
-  Steinberg::Vst::AudioHost::App* vst3Host;
-  vst3Host = reinterpret_cast<Steinberg::Vst::AudioHost::App*>(audioData->vst3HostPtr);
-
-  // populate input buffers
-  for (c = 0; c < audioData->sfinfo.channels; c++) {
-      for (i = 0; i < framesPerBuffer; i++) {
-        vst3Host->chowTapeModelBuffers.inputs[c][i] = audioData->buffer[audioData->index + i + (framesPerBuffer * c)] * audioData->volume;
-      }
-  }
-
-  // process
-  vst3Host->vst3Processor->process(vst3Host->chowTapeModelBuffers, (int64_t) framesPerBuffer);
-
-  // write output buffers to output
-  for (i = 0; i < framesPerBuffer ; i++) {
-      for (c = 0; c < audioData->sfinfo.channels; c++) {
-          *out++ = vst3Host->chowTapeModelBuffers.outputs[c][i] * audioData->volume;
-      }
-  }
-
-  // TODO: early return here for testing
-  audioData->index += framesPerBuffer * audioData->sfinfo.channels;
-  return paContinue;
-  // << VST PROCESSING
+  AUDIO_DATA *audioData = (AUDIO_DATA *) userData;
 
   if( audioData->buffer == NULL )
   {
@@ -201,7 +171,7 @@ int Audio::run()
   }
 
   sf_count_t initialFrameId = (sf_count_t) Audio::initialFrameId;
-  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1, vst3HostPtr);
+  AUDIO_DATA audioData(buffer, file, sfinfo, initialFrameId, readcount, 1);
 
   // init jniData
   JNI_DATA jniData(Audio::jniEnv);
@@ -219,7 +189,7 @@ int Audio::run()
       fprintf(stderr,"\nError: No default input device.");
       goto error;
   }
-  // TODO: handle live input audio
+  // TODO: detect and set channelCount
   inputParameters.channelCount = 1;
   inputParameters.sampleFormat = PA_SAMPLE_TYPE;
   inputParameters.hostApiSpecificStreamInfo = NULL;
